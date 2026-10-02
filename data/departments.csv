@@ -1,0 +1,32 @@
+DeptID,DeptName,FacilityID,ServiceLine,UnitType,StaffedBeds,CostCenter
+D100,Emergency Department,F01,Emergency,Emergency,,6100
+D110,Medical-Surgical 4 West,F01,Medicine,Inpatient,36,6110
+D111,Medical-Surgical 5 East,F01,Medicine,Inpatient,32,6111
+D120,Cardiac Step-Down,F01,Cardiovascular,Inpatient,24,6120
+D130,Intensive Care Unit,F01,Critical Care,Critical Care,20,6130
+D140,Orthopedics & Spine,F01,Orthopedics,Inpatient,22,6140
+D150,Oncology,F01,Oncology,Inpatient,18,6150
+D160,Neuroscience & Stroke,F01,Neuroscience,Inpatient,16,6160
+D170,Labor & Delivery,F01,Women & Children,Inpatient,20,6170
+D180,Pediatrics,F01,Women & Children,Inpatient,14,6180
+D190,Behavioral Health,F01,Behavioral Health,Inpatient,18,6190
+D195,Observation Unit,F01,Medicine,Observation,12,6195
+D196,Perioperative Services,F01,Surgery,Ancillary,,6196
+D200,Emergency Department,F02,Emergency,Emergency,,6200
+D210,Medical-Surgical,F02,Medicine,Inpatient,28,6210
+D230,Intensive Care Unit,F02,Critical Care,Critical Care,8,6230
+D270,Labor & Delivery,F02,Women & Children,Inpatient,10,6270
+D300,Emergency Department,F03,Emergency,Emergency,,6300
+D310,Medical-Surgical,F03,Medicine,Inpatient,30,6310
+D320,Cardiac Step-Down,F03,Cardiovascular,Inpatient,16,6320
+D330,Intensive Care Unit,F03,Critical Care,Critical Care,12,6330
+D340,Orthopedics,F03,Orthopedics,Inpatient,14,6340
+D400,Primary Care Clinic,F04,Ambulatory,Outpatient,,6400
+D410,Cardiology Clinic,F04,Cardiovascular,Outpatient,,6410
+D420,Orthopedic Clinic,F04,Orthopedics,Outpatient,,6420
+D430,Infusion & Oncology Clinic,F04,Oncology,Outpatient,,6430
+D440,Endocrinology & Diabetes Clinic,F04,Ambulatory,Outpatient,,6440
+D450,Pediatric Clinic,F04,Women & Children,Outpatient,,6450
+D500,Laboratory,F01,Ancillary,Ancillary,,6500
+D510,Radiology,F01,Ancillary,Ancillary,,6510
+D520,Pharmacy,F01,Ancillary,Ancillary,,6520

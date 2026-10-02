@@ -1,0 +1,52 @@
+DxCode,DxDescription,DxCategory,ChronicCondition,ExpectedLOS
+A08.4,"Viral intestinal infection, unspecified",Infectious,N,2.1
+A41.9,"Sepsis, unspecified organism",Infectious,N,5.0
+C34.90,Malignant neoplasm of unspecified part of unspecified bronchus or lung,Neoplasms,Y,5.0
+C50.911,Malignant neoplasm of unspecified site of right female breast,Neoplasms,Y,3.0
+D70.1,Agranulocytosis secondary to cancer chemotherapy,Blood,N,4.5
+E11.65,Type 2 diabetes mellitus with hyperglycemia,Endocrine,Y,3.0
+E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,
+E78.5,"Hyperlipidemia, unspecified",Endocrine,Y,
+E86.0,Dehydration,Endocrine,N,2.4
+E87.1,Hypo-osmolality and hyponatremia,Endocrine,N,3.2
+F10.239,"Alcohol dependence with withdrawal, unspecified",Mental & Behavioral,Y,3.6
+F20.9,"Schizophrenia, unspecified",Mental & Behavioral,Y,8.9
+F32.9,"Major depressive disorder, single episode, unspecified",Mental & Behavioral,Y,6.8
+F41.9,"Anxiety disorder, unspecified",Mental & Behavioral,Y,
+G40.909,"Epilepsy, unspecified, not intractable, without status epilepticus",Nervous System,Y,2.5
+G43.909,"Migraine, unspecified, not intractable, without status migrainosus",Nervous System,Y,
+H66.90,"Otitis media, unspecified, unspecified ear",Ear,N,
+I10,Essential (primary) hypertension,Circulatory,Y,
+I21.4,Non-ST elevation (NSTEMI) myocardial infarction,Circulatory,N,3.4
+I48.91,Unspecified atrial fibrillation,Circulatory,Y,2.9
+I50.9,"Heart failure, unspecified",Circulatory,Y,4.1
+I63.9,"Cerebral infarction, unspecified",Circulatory,N,4.2
+J06.9,"Acute upper respiratory infection, unspecified",Respiratory,N,
+J18.9,"Pneumonia, unspecified organism",Respiratory,N,3.9
+J21.9,"Acute bronchiolitis, unspecified",Respiratory,N,2.4
+J44.1,Chronic obstructive pulmonary disease with (acute) exacerbation,Respiratory,Y,3.4
+J45.909,"Unspecified asthma, uncomplicated",Respiratory,Y,2.1
+J96.01,Acute respiratory failure with hypoxia,Respiratory,N,4.8
+K35.80,Unspecified acute appendicitis,Digestive,N,2.0
+K56.609,Unspecified intestinal obstruction,Digestive,N,4.6
+K80.20,Calculus of gallbladder without cholecystitis without obstruction,Digestive,N,1.9
+K92.2,"Gastrointestinal hemorrhage, unspecified",Digestive,N,3.5
+L03.115,Cellulitis of right lower limb,Skin,N,3.4
+M16.11,"Unilateral primary osteoarthritis, right hip",Musculoskeletal,Y,2.1
+M17.11,"Unilateral primary osteoarthritis, right knee",Musculoskeletal,Y,2.0
+M54.50,"Low back pain, unspecified",Musculoskeletal,N,
+N17.9,"Acute kidney failure, unspecified",Genitourinary,N,3.9
+N39.0,"Urinary tract infection, site not specified",Genitourinary,N,3.1
+O80,Encounter for full-term uncomplicated delivery,Pregnancy,N,2.0
+O82,Encounter for cesarean delivery without indication,Pregnancy,N,2.9
+R07.9,"Chest pain, unspecified",Symptoms & Signs,N,
+R10.9,Unspecified abdominal pain,Symptoms & Signs,N,
+R55,Syncope and collapse,Symptoms & Signs,N,2.0
+S06.0X0A,"Concussion without loss of consciousness, initial encounter",Injury,N,
+S72.001A,"Fracture of unspecified part of neck of right femur, initial encounter",Injury,N,4.6
+S93.401A,"Sprain of unspecified ligament of right ankle, initial encounter",Injury,N,
+U07.1,COVID-19,Respiratory,N,4.4
+Z00.00,Encounter for general adult medical examination without abnormal findings,Factors Influencing Health,N,
+Z00.129,Encounter for routine child health examination without abnormal findings,Factors Influencing Health,N,
+Z23,Encounter for immunization,Factors Influencing Health,N,
+Z51.11,Encounter for antineoplastic chemotherapy,Factors Influencing Health,N,

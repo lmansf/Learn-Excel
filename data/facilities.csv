@@ -1,0 +1,5 @@
+FacilityID,FacilityName,City,State,FacilityType,LicensedBeds,OpenedYear
+F01,Bluestone Memorial Hospital,Bluestone,OH,Tertiary Acute Care,300,1952
+F02,Ashby Falls Community Hospital,Ashby Falls,OH,Community Hospital,60,1978
+F03,Cedar Ridge Medical Center,Cedar Ridge,OH,Acute Care,90,1996
+F04,Bluestone Outpatient Pavilion,Bluestone,OH,Ambulatory Care Center,0,2015

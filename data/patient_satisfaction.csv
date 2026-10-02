@@ -1,0 +1,1824 @@
+SurveyID,EncounterID,FacilityID,DeptID,DischargeDate,SurveyReceivedDate,NurseCommunication,DoctorCommunication,StaffResponsiveness,Cleanliness,Quietness,MedicationExplained,DischargeInfoProvided,OverallRating,WouldRecommend,Comment
+SV30001,ENC100022,F02,D210,2024-01-05,2024-02-19,3,4,1,3,4,3,Yes,7,Probably Yes,
+SV30002,ENC100034,F01,D120,2024-01-05,2024-02-08,4,4,4,3,4,3,No,7,Probably No,Billing office was rude on the phone.
+SV30003,ENC100035,F03,D320,2024-01-11,2024-01-22,4,4,3,3,2,4,Yes,8,Definitely Yes,
+SV30004,ENC100038,F03,D310,2024-01-02,2024-01-12,4,4,3,4,4,3,Yes,9,Definitely Yes,
+SV30005,ENC100048,F01,D150,2024-01-08,2024-02-01,4,3,4,3,3,4,Yes,7,Probably Yes,
+SV30006,ENC100069,F01,D120,2024-01-04,2024-01-20,3,1,3,3,4,2,Yes,5,Definitely No,
+SV30007,ENC100078,F01,D110,2024-01-08,2024-02-15,4,4,1,4,3,2,No,7,Probably Yes,
+SV30008,ENC100113,F03,D330,2024-01-10,2024-02-23,4,4,4,2,4,4,Yes,10,Definitely Yes,
+SV30009,ENC100125,F01,D180,2024-01-05,2024-01-11,4,4,3,2,4,3,Yes,8,Definitely Yes,
+SV30010,ENC100149,F01,D110,2024-01-07,2024-02-24,4,4,3,2,4,4,Yes,7,Probably Yes,
+SV30011,ENC100150,F01,D111,2024-01-10,2024-02-09,4,4,4,4,1,3,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30012,ENC100152,F01,D140,2024-01-09,2024-02-03,2,4,3,4,4,4,No,8,Probably No,The nurses were wonderful and very attentive.
+SV30013,ENC100155,F01,D111,2024-01-22,2024-02-26,4,3,4,4,4,3,Yes,9,Definitely Yes,
+SV30014,ENC100160,F03,D340,2024-01-07,2024-01-25,4,4,4,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30015,ENC100169,F01,D195,2024-01-06,2024-01-26,4,4,4,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30016,ENC100170,F01,D120,2024-01-09,2024-01-22,4,4,4,3,3,3,Yes,8,Definitely Yes,
+SV30017,ENC100185,F02,D210,2024-01-07,2024-01-13,4,4,3,4,4,4,Yes,7,Probably Yes,
+SV30018,ENC100189,F03,D310,2024-01-09,2024-02-26,3,4,4,4,3,4,No,6,Probably No,
+SV30019,ENC100190,F03,D310,2024-01-07,2024-01-27,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30020,ENC100203,F01,D195,2024-01-08,2024-02-11,4,4,4,4,3,4,Yes,10,Probably Yes,
+SV30021,ENC100230,F02,D210,2024-01-08,2024-02-07,2,4,1,4,4,4,Yes,9,Definitely Yes,
+SV30022,ENC100233,F01,D120,2024-01-12,2024-02-16,2,3,1,4,4,1,Yes,7,Probably Yes,
+SV30023,ENC100239,F01,D111,2024-01-11,2024-02-28,4,3,4,1,1,4,No,5,Definitely No,
+SV30024,ENC100241,F01,D111,2024-01-11,2024-01-31,4,4,3,4,3,1,Yes,9,Definitely Yes,
+SV30025,ENC100254,F02,D210,2024-01-09,2024-01-26,4,4,4,4,3,3,Yes,9,Definitely Yes,
+SV30026,ENC100258,F03,D310,2024-01-09,2024-01-29,4,4,4,2,3,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30027,ENC100269,F01,D110,2024-01-10,2024-01-16,4,4,3,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30028,ENC100278,F01,D140,2024-01-10,2024-01-20,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV30029,ENC100296,F01,D195,2024-01-10,2024-01-26,4,4,4,4,4,3,No,10,Probably Yes,Thank you to the night shift nurses for the great care.
+SV30030,ENC100301,F01,D111,2024-01-13,2024-02-28,2,2,3,3,3,4,Yes,5,Definitely No,
+SV30031,ENC100392,F01,D190,2024-01-19,2024-02-20,4,4,4,3,3,4,No,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30032,ENC100398,F01,D180,2024-01-14,2024-02-17,4,3,4,3,4,4,Yes,9,Definitely Yes,Room was clean and the food was better than expected.
+SV30033,ENC100402,F01,D190,2024-01-20,2024-02-03,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV30034,ENC100406,F01,D150,2024-01-18,2024-01-24,4,4,4,4,2,4,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV30035,ENC100437,F01,D111,2024-01-18,2024-01-27,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30036,ENC100474,F01,D130,2024-01-20,2024-02-27,4,4,2,4,4,4,No,8,Probably Yes,Excellent communication from the care team.
+SV30037,ENC100536,F01,D195,2024-01-17,2024-02-17,4,3,3,4,3,1,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30038,ENC100538,F01,D111,2024-01-20,2024-02-21,3,4,4,4,1,4,Yes,8,Probably No,
+SV30039,ENC100555,F01,D120,2024-01-20,2024-02-24,4,4,3,3,3,2,Yes,6,Probably Yes,
+SV30040,ENC100559,F02,D210,2024-01-20,2024-02-13,4,4,4,3,4,3,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30041,ENC100560,F02,D210,2024-01-19,2024-02-01,4,2,4,1,3,3,Yes,6,Probably Yes,Bathroom was not cleaned during my stay.
+SV30042,ENC100561,F01,D170,2024-01-17,2024-02-22,4,4,2,4,4,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30043,ENC100563,F02,D210,2024-01-21,2024-02-08,4,4,3,4,3,2,Yes,8,Definitely Yes,
+SV30044,ENC100576,F01,D111,2024-01-20,2024-03-01,4,4,4,4,2,3,No,9,Definitely Yes,
+SV30045,ENC100582,F01,D120,2024-01-24,2024-02-29,4,3,4,4,3,4,Yes,7,Probably Yes,
+SV30046,ENC100593,F03,D310,2024-01-24,2024-03-05,3,3,4,3,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30047,ENC100601,F01,D195,2024-01-19,2024-02-25,3,4,4,4,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30048,ENC100612,F01,D195,2024-01-18,2024-02-18,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV30049,ENC100629,F02,D210,2024-01-22,2024-02-21,1,3,2,2,2,3,Yes,3,Probably No,Bathroom was not cleaned during my stay.
+SV30050,ENC100658,F02,D210,2024-01-23,2024-02-16,4,4,3,4,4,4,Yes,7,Probably Yes,Doctors were great; food needs improvement.
+SV30051,ENC100670,F02,D210,2024-01-26,2024-02-27,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30052,ENC100677,F01,D120,2024-01-22,2024-02-02,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30053,ENC100687,F01,D110,2024-01-26,2024-02-14,4,4,4,1,3,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV30054,ENC100694,F01,D111,2024-01-23,2024-03-07,4,4,3,3,3,3,No,8,Definitely Yes,Food was cold and arrived late.
+SV30055,ENC100696,F01,D195,2024-01-21,2024-03-01,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30056,ENC100702,F02,D210,2024-01-22,2024-01-30,2,4,3,3,3,4,Yes,9,Probably Yes,
+SV30057,ENC100706,F03,D320,2024-01-23,2024-02-17,4,3,3,3,4,3,Yes,6,Probably No,
+SV30058,ENC100726,F01,D111,2024-01-30,2024-03-03,4,1,4,2,2,1,Yes,6,Probably No,
+SV30059,ENC100737,F01,D195,2024-01-23,2024-01-29,4,4,3,4,4,4,Yes,6,Probably Yes,
+SV30060,ENC100781,F01,D140,2024-01-26,2024-02-25,3,4,3,4,3,4,Yes,7,Definitely Yes,
+SV30061,ENC100821,F01,D111,2024-01-27,2024-02-25,4,4,3,4,2,3,Yes,7,Definitely Yes,
+SV30062,ENC100823,F02,D270,2024-01-26,2024-02-05,4,4,1,2,2,2,Yes,7,Probably Yes,
+SV30063,ENC100832,F01,D110,2024-01-30,2024-02-22,4,4,4,4,2,4,No,8,Probably Yes,
+SV30064,ENC100833,F03,D310,2024-02-01,2024-02-18,4,3,4,4,3,4,Yes,9,Definitely Yes,
+SV30065,ENC100834,F03,D310,2024-01-29,2024-03-06,2,2,4,3,4,1,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV30066,ENC100838,F01,D110,2024-02-01,2024-03-14,1,4,2,2,3,4,No,6,Definitely No,Food was cold and arrived late.
+SV30067,ENC100853,F01,D130,2024-01-31,2024-02-26,4,4,3,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30068,ENC100858,F01,D195,2024-01-26,2024-02-12,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30069,ENC100859,F03,D310,2024-01-31,2024-02-12,4,4,2,1,4,3,Yes,8,Definitely Yes,
+SV30070,ENC100863,F01,D180,2024-01-28,2024-03-10,4,1,4,1,3,3,Yes,5,Definitely No,
+SV30071,ENC100886,F01,D111,2024-01-31,2024-02-20,4,4,3,4,4,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30072,ENC100894,F01,D111,2024-01-31,2024-02-17,4,2,4,2,4,3,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30073,ENC100901,F01,D111,2024-02-01,2024-02-09,3,4,1,4,3,3,Yes,8,Definitely Yes,
+SV30074,ENC100904,F01,D111,2024-02-01,2024-03-01,4,4,3,4,4,2,No,7,Definitely Yes,
+SV30075,ENC100938,F03,D310,2024-02-01,2024-03-04,3,4,3,4,4,3,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30076,ENC100947,F03,D310,2024-01-30,2024-02-10,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV30077,ENC100958,F02,D210,2024-02-02,2024-03-14,2,4,2,4,4,4,Yes,6,Probably No,Parking was expensive and hard to find.
+SV30078,ENC100966,F01,D195,2024-02-01,2024-03-20,4,4,4,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30079,ENC101030,F03,D310,2024-02-01,2024-02-18,4,3,3,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30080,ENC101051,F01,D195,2024-02-02,2024-02-14,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30081,ENC101057,F01,D111,2024-02-09,2024-03-09,4,4,4,4,4,3,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30082,ENC101077,F01,D180,2024-02-05,2024-02-18,4,4,2,3,4,4,No,8,Probably Yes,"Clean room, but the call light took too long."
+SV30083,ENC101087,F02,D210,2024-02-07,2024-02-24,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30084,ENC101088,F01,D160,2024-02-08,2024-02-20,4,4,4,4,4,4,Yes,8,Definitely Yes,"Clean room, but the call light took too long."
+SV30085,ENC101123,F03,D310,2024-02-05,2024-03-20,4,4,2,4,4,4,Yes,10,Definitely Yes,
+SV30086,ENC101134,F01,D110,2024-02-07,2024-03-01,4,2,4,3,4,2,Yes,8,Probably No,"Felt rushed by the doctor, questions not answered."
+SV30087,ENC101172,F03,D310,2024-02-07,2024-03-24,4,3,3,4,1,3,No,6,Probably No,"Felt rushed by the doctor, questions not answered."
+SV30088,ENC101187,F02,D210,2024-02-13,2024-03-25,4,4,4,4,3,4,No,10,Definitely Yes,
+SV30089,ENC101220,F01,D120,2024-02-12,2024-03-14,3,3,3,4,3,4,No,7,Probably No,"Very noisy hallway, hard to sleep."
+SV30090,ENC101227,F01,D170,2024-02-10,2024-02-29,2,2,3,4,4,3,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30091,ENC101253,F01,D110,2024-02-11,2024-03-02,4,4,4,4,2,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30092,ENC101255,F01,D111,2024-02-13,2024-03-02,3,4,3,3,1,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30093,ENC101270,F03,D330,2024-02-12,2024-03-14,4,4,4,4,4,4,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV30094,ENC101277,F01,D195,2024-02-09,2024-02-26,4,4,4,4,4,4,No,8,Probably Yes,
+SV30095,ENC101282,F03,D310,2024-02-09,2024-02-28,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30096,ENC101285,F01,D140,2024-02-13,2024-03-12,4,3,1,4,2,3,Yes,6,Definitely No,Waited too long for the call light to be answered at night.
+SV30097,ENC101335,F03,D310,2024-02-11,2024-03-26,4,4,2,4,4,4,Yes,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV30098,ENC101353,F01,D111,2024-02-18,2024-03-24,2,3,4,2,4,4,No,6,Probably No,"Very noisy hallway, hard to sleep."
+SV30099,ENC101359,F02,D230,2024-02-19,2024-03-25,4,4,4,4,4,4,Yes,8,Definitely Yes,Food was cold and arrived late.
+SV30100,ENC101360,F02,D210,2024-02-15,2024-03-22,3,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30101,ENC101367,F01,D195,2024-02-12,2024-03-24,4,4,4,4,4,3,Yes,8,Probably Yes,
+SV30102,ENC101368,F01,D111,2024-02-13,2024-02-22,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30103,ENC101391,F01,D140,2024-02-14,2024-03-27,4,4,3,4,4,4,No,8,Probably Yes,
+SV30104,ENC101400,F01,D111,2024-02-15,2024-02-21,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30105,ENC101403,F01,D110,2024-02-22,2024-03-06,4,3,3,4,2,2,Yes,9,Definitely Yes,
+SV30106,ENC101406,F03,D320,2024-02-17,2024-03-20,4,4,4,4,4,3,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30107,ENC101418,F02,D210,2024-02-13,2024-03-27,4,3,4,4,3,3,Yes,8,Probably Yes,Long wait in the emergency room before getting a bed.
+SV30108,ENC101420,F01,D160,2024-02-16,2024-03-07,4,4,4,3,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30109,ENC101425,F02,D210,2024-02-14,2024-03-19,2,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30110,ENC101427,F01,D195,2024-02-13,2024-02-21,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30111,ENC101430,F02,D210,2024-02-16,2024-03-27,4,3,4,3,4,4,Yes,8,Probably No,Doctors were great; food needs improvement.
+SV30112,ENC101465,F01,D130,2024-02-20,2024-03-31,4,3,4,4,2,2,Yes,4,Probably No,
+SV30113,ENC101467,F03,D310,2024-02-23,2024-03-10,4,4,4,3,2,3,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30114,ENC101469,F01,D111,2024-02-19,2024-03-17,1,3,1,2,3,4,Yes,4,Definitely No,
+SV30115,ENC101470,F01,D111,2024-02-17,2024-03-20,4,4,4,4,4,3,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30116,ENC101471,F01,D111,2024-02-19,2024-03-21,4,4,4,4,3,3,No,9,Probably Yes,
+SV30117,ENC101484,F01,D111,2024-02-16,2024-03-27,4,4,4,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30118,ENC101507,F01,D110,2024-02-16,2024-03-26,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV30119,ENC101509,F01,D110,2024-02-17,2024-02-24,4,4,4,4,3,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30120,ENC101510,F01,D111,2024-02-16,2024-03-22,4,4,4,4,4,4,No,8,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30121,ENC101511,F03,D310,2024-02-20,2024-03-28,4,4,4,4,4,3,Yes,7,Probably Yes,Staff were kind and respectful the whole stay.
+SV30122,ENC101517,F02,D210,2024-02-19,2024-03-13,2,3,2,3,4,4,Yes,6,Probably No,
+SV30123,ENC101545,F01,D120,2024-02-17,2024-02-25,4,1,4,3,4,4,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30124,ENC101547,F01,D195,2024-02-17,2024-03-16,4,4,2,4,3,4,Yes,8,Probably Yes,
+SV30125,ENC101561,F01,D111,2024-02-21,2024-03-30,4,4,4,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30126,ENC101563,F01,D111,2024-02-19,2024-03-16,4,4,2,4,4,4,Yes,9,Definitely Yes,
+SV30127,ENC101574,F01,D170,2024-02-20,2024-03-11,4,3,4,4,4,3,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30128,ENC101585,F01,D120,2024-02-21,2024-03-31,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30129,ENC101587,F03,D320,2024-02-22,2024-03-03,3,3,4,4,4,4,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV30130,ENC101589,F01,D190,2024-02-25,2024-04-01,4,4,4,4,2,4,No,9,Definitely Yes,
+SV30131,ENC101604,F03,D310,2024-02-22,2024-04-05,2,4,4,4,3,4,Yes,10,Definitely Yes,Doctors were great; food needs improvement.
+SV30132,ENC101605,F03,D310,2024-02-21,2024-03-05,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV30133,ENC101611,F01,D111,2024-02-21,2024-03-18,4,4,2,2,4,3,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV30134,ENC101613,F01,D130,2024-02-24,2024-03-20,4,3,2,3,3,3,Yes,7,Probably Yes,
+SV30135,ENC101616,F01,D120,2024-02-24,2024-03-09,4,4,3,4,3,2,Yes,9,Definitely Yes,
+SV30136,ENC101634,F02,D210,2024-02-22,2024-03-06,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30137,ENC101656,F01,D110,2024-02-23,2024-03-11,4,4,4,3,4,2,Yes,7,Probably Yes,
+SV30138,ENC101699,F01,D111,2024-02-23,2024-04-03,4,4,4,2,4,4,Yes,6,Probably Yes,
+SV30139,ENC101707,F01,D111,2024-03-03,2024-03-09,4,4,3,4,4,4,Yes,9,Probably Yes,
+SV30140,ENC101710,F03,D310,2024-02-26,2024-03-29,4,4,4,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30141,ENC101715,F01,D111,2024-02-25,2024-03-18,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30142,ENC101719,F02,D210,2024-02-27,2024-04-01,4,3,4,4,4,4,Yes,7,Probably Yes,The nurses were wonderful and very attentive.
+SV30143,ENC101721,F01,D110,2024-02-23,2024-03-31,4,3,4,3,2,4,Yes,7,Definitely Yes,Food was cold and arrived late.
+SV30144,ENC101722,F01,D195,2024-02-22,2024-03-16,2,1,2,1,2,3,Yes,5,Probably No,"Very noisy hallway, hard to sleep."
+SV30145,ENC101754,F01,D120,2024-02-29,2024-04-03,4,4,3,2,3,4,No,7,Probably No,
+SV30146,ENC101761,F01,D111,2024-02-26,2024-04-14,4,4,3,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30147,ENC101772,F03,D320,2024-02-25,2024-04-04,4,4,3,4,4,4,Yes,8,Probably No,Long wait in the emergency room before getting a bed.
+SV30148,ENC101783,F01,D190,2024-03-06,2024-04-21,4,1,3,2,4,2,Yes,6,Probably Yes,
+SV30149,ENC101798,F01,D160,2024-02-26,2024-04-04,3,4,4,4,4,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30150,ENC101827,F01,D195,2024-02-24,2024-03-23,4,4,3,4,4,1,Yes,7,Definitely Yes,
+SV30151,ENC101830,F03,D310,2024-02-26,2024-03-20,4,4,4,4,2,4,Yes,8,Probably Yes,
+SV30152,ENC101832,F01,D111,2024-02-28,2024-03-12,4,4,4,4,4,1,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30153,ENC101835,F01,D195,2024-02-25,2024-03-15,4,4,4,3,4,4,Yes,9,Probably No,
+SV30154,ENC101851,F01,D195,2024-02-25,2024-03-12,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV30155,ENC101853,F01,D195,2024-02-26,2024-03-21,4,4,4,4,3,3,Yes,9,Definitely Yes,
+SV30156,ENC101855,F01,D111,2024-02-27,2024-04-11,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30157,ENC101857,F01,D150,2024-02-29,2024-03-27,4,4,3,4,2,1,No,5,Probably No,
+SV30158,ENC101872,F01,D140,2024-03-03,2024-04-12,4,1,3,4,4,2,Yes,8,Definitely Yes,
+SV30159,ENC101891,F01,D110,2024-03-05,2024-03-19,3,3,2,4,4,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30160,ENC101903,F01,D111,2024-03-01,2024-03-11,1,4,4,4,4,3,No,7,Definitely Yes,
+SV30161,ENC101919,F01,D111,2024-02-29,2024-04-07,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30162,ENC101936,F01,D170,2024-02-29,2024-03-17,4,4,4,3,3,4,No,8,Probably Yes,Nobody explained my new medications before discharge.
+SV30163,ENC101937,F02,D210,2024-03-06,2024-04-05,4,3,4,3,3,4,No,9,Definitely Yes,
+SV30164,ENC101951,F01,D120,2024-03-02,2024-03-16,3,1,4,2,3,3,Yes,5,Probably No,Parking was expensive and hard to find.
+SV30165,ENC101956,F03,D310,2024-03-02,2024-04-02,4,3,3,3,3,2,Yes,8,Probably Yes,
+SV30166,ENC101965,F01,D111,2024-03-04,2024-03-28,3,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30167,ENC101976,F01,D110,2024-03-06,2024-04-10,3,3,3,4,4,4,Yes,9,Definitely Yes,
+SV30168,ENC101989,F01,D110,2024-03-05,2024-03-25,3,4,4,4,2,3,Yes,6,Definitely No,
+SV30169,ENC101994,F01,D120,2024-03-05,2024-03-24,4,4,3,4,3,4,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30170,ENC102009,F01,D195,2024-03-01,2024-04-16,3,4,3,4,3,4,Yes,7,Probably Yes,
+SV30171,ENC102015,F03,D310,2024-03-02,2024-03-31,3,4,1,4,3,1,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30172,ENC102018,F01,D195,2024-03-01,2024-03-22,4,4,4,3,4,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30173,ENC102019,F01,D120,2024-03-04,2024-04-11,4,4,4,4,3,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30174,ENC102021,F01,D111,2024-03-05,2024-04-02,4,4,3,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30175,ENC102026,F01,D195,2024-03-02,2024-04-11,4,4,4,4,3,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30176,ENC102036,F01,D140,2024-03-05,2024-04-12,4,4,4,3,4,3,Yes,8,Probably Yes,
+SV30177,ENC102049,F01,D195,2024-03-03,2024-03-12,3,3,1,3,3,3,No,6,Definitely No,Long wait in the emergency room before getting a bed.
+SV30178,ENC102053,F01,D195,2024-03-03,2024-04-06,4,4,4,3,4,2,Yes,8,Probably Yes,
+SV30179,ENC102067,F01,D150,2024-03-05,2024-04-15,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV30180,ENC102070,F01,D110,2024-03-05,2024-03-20,4,3,2,3,3,3,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30181,ENC102074,F01,D195,2024-03-03,2024-04-01,4,3,3,4,4,4,Yes,7,Definitely Yes,
+SV30182,ENC102077,F02,D210,2024-03-07,2024-03-29,2,3,2,4,3,4,Yes,8,Probably Yes,
+SV30183,ENC102086,F01,D110,2024-03-05,2024-04-05,4,4,4,4,4,4,Yes,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV30184,ENC102088,F01,D120,2024-03-07,2024-04-23,1,1,1,3,1,1,Yes,4,Probably No,
+SV30185,ENC102091,F03,D310,2024-03-05,2024-03-11,4,4,2,3,4,4,Yes,9,Definitely Yes,
+SV30186,ENC102098,F01,D110,2024-03-07,2024-04-12,1,4,3,4,4,4,Yes,9,Definitely Yes,
+SV30187,ENC102099,F03,D320,2024-03-07,2024-04-13,4,4,4,4,4,2,Yes,8,Definitely Yes,
+SV30188,ENC102103,F01,D170,2024-03-05,2024-04-02,4,3,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30189,ENC102137,F01,D170,2024-03-08,2024-04-07,4,4,4,4,1,1,Yes,7,Probably Yes,
+SV30190,ENC102145,F01,D111,2024-03-09,2024-04-19,4,4,4,4,4,4,No,9,Definitely Yes,
+SV30191,ENC102146,F02,D210,2024-03-06,2024-04-14,3,4,4,3,3,4,Yes,8,Probably Yes,Long wait in the emergency room before getting a bed.
+SV30192,ENC102165,F02,D210,2024-03-06,2024-04-07,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV30193,ENC102173,F01,D120,2024-03-08,2024-04-14,4,4,4,3,3,3,Yes,6,Definitely No,Food was cold and arrived late.
+SV30194,ENC102177,F01,D110,2024-03-09,2024-04-14,3,4,4,4,4,4,No,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30195,ENC102181,F03,D310,2024-03-08,2024-03-23,3,4,3,4,4,4,Yes,8,Probably Yes,
+SV30196,ENC102183,F01,D170,2024-03-07,2024-04-08,4,2,4,4,4,4,Yes,7,Probably Yes,
+SV30197,ENC102211,F01,D170,2024-03-09,2024-04-09,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30198,ENC102213,F03,D310,2024-03-08,2024-03-23,4,4,2,4,3,4,Yes,9,Probably Yes,Doctors were great; food needs improvement.
+SV30199,ENC102215,F01,D110,2024-03-11,2024-04-27,4,4,2,4,3,3,Yes,7,Probably Yes,
+SV30200,ENC102217,F01,D195,2024-03-07,2024-04-10,4,2,4,3,1,4,Yes,5,Definitely No,Nobody explained my new medications before discharge.
+SV30201,ENC102233,F01,D170,2024-03-10,2024-03-30,4,4,4,4,2,3,Yes,7,Definitely Yes,Nobody explained my new medications before discharge.
+SV30202,ENC102234,F01,D195,2024-03-08,2024-03-16,4,4,4,3,4,2,Yes,7,Definitely Yes,
+SV30203,ENC102243,F02,D210,2024-03-09,2024-04-09,4,4,3,3,3,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30204,ENC102253,F03,D310,2024-03-11,2024-03-27,4,3,2,4,3,3,Yes,5,Probably No,Bathroom was not cleaned during my stay.
+SV30205,ENC102256,F01,D195,2024-03-08,2024-03-17,3,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30206,ENC102258,F03,D310,2024-03-09,2024-03-15,4,4,3,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30207,ENC102263,F01,D195,2024-03-10,2024-03-29,4,4,3,4,3,4,Yes,7,Probably Yes,
+SV30208,ENC102281,F02,D210,2024-03-10,2024-04-20,3,4,3,1,3,3,Yes,6,Definitely No,
+SV30209,ENC102282,F01,D111,2024-03-11,2024-03-25,4,3,4,4,4,2,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30210,ENC102286,F01,D111,2024-03-16,2024-04-25,4,4,3,3,4,4,Yes,8,Probably Yes,
+SV30211,ENC102294,F01,D111,2024-03-17,2024-04-03,4,3,4,4,2,4,Yes,8,Probably Yes,Long wait in the emergency room before getting a bed.
+SV30212,ENC102297,F01,D195,2024-03-10,2024-03-19,3,4,2,4,4,4,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV30213,ENC102307,F01,D195,2024-03-10,2024-04-13,4,4,4,2,3,3,No,8,Definitely No,Dr. explained everything clearly. Excellent care.
+SV30214,ENC102309,F01,D110,2024-03-11,2024-03-28,4,4,4,4,4,4,Yes,7,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30215,ENC102310,F01,D160,2024-03-21,2024-04-12,2,4,4,4,2,4,No,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30216,ENC102328,F01,D110,2024-03-16,2024-04-20,4,4,2,1,3,4,Yes,8,Definitely Yes,Billing office was rude on the phone.
+SV30217,ENC102334,F03,D310,2024-03-19,2024-04-28,4,4,4,4,4,4,No,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30218,ENC102350,F01,D195,2024-03-12,2024-03-27,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30219,ENC102352,F01,D110,2024-03-18,2024-04-27,4,4,4,4,3,3,Yes,5,Definitely No,
+SV30220,ENC102387,F02,D210,2024-03-16,2024-03-23,4,4,3,4,4,2,Yes,8,Probably Yes,
+SV30221,ENC102399,F01,D120,2024-03-14,2024-04-13,3,2,3,4,4,3,Yes,7,Probably Yes,
+SV30222,ENC102430,F01,D110,2024-03-17,2024-04-16,4,1,3,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30223,ENC102434,F01,D160,2024-03-18,2024-04-18,3,4,4,4,3,4,Yes,6,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30224,ENC102448,F02,D210,2024-03-15,2024-04-13,3,4,4,4,4,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30225,ENC102466,F02,D270,2024-03-17,2024-04-15,4,4,4,4,4,4,Yes,10,Probably Yes,Excellent communication from the care team.
+SV30226,ENC102471,F01,D110,2024-03-17,2024-04-22,4,4,4,3,4,3,Yes,8,Definitely Yes,
+SV30227,ENC102474,F01,D170,2024-03-20,2024-04-16,4,1,3,3,3,4,Yes,8,Probably Yes,
+SV30228,ENC102487,F01,D190,2024-03-22,2024-05-02,4,4,3,3,3,4,Yes,5,Probably No,Food was cold and arrived late.
+SV30229,ENC102494,F01,D111,2024-03-18,2024-05-02,2,2,4,1,3,3,No,6,Definitely No,"Very noisy hallway, hard to sleep."
+SV30230,ENC102503,F01,D190,2024-03-24,2024-04-21,4,4,2,4,4,4,Yes,10,Definitely Yes,
+SV30231,ENC102508,F03,D310,2024-03-22,2024-03-30,4,4,4,4,4,3,No,8,Probably No,
+SV30232,ENC102517,F01,D195,2024-03-17,2024-03-26,4,4,3,4,4,4,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30233,ENC102529,F01,D120,2024-03-21,2024-04-21,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30234,ENC102536,F01,D111,2024-03-21,2024-05-04,3,4,4,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30235,ENC102546,F02,D210,2024-03-19,2024-04-19,3,4,4,4,4,3,No,8,Probably No,
+SV30236,ENC102563,F03,D310,2024-03-23,2024-04-30,4,4,4,4,3,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30237,ENC102567,F01,D140,2024-03-26,2024-04-01,4,3,4,4,3,4,Yes,8,Probably Yes,
+SV30238,ENC102613,F01,D110,2024-03-21,2024-04-06,4,3,4,4,3,4,Yes,9,Definitely Yes,
+SV30239,ENC102614,F01,D195,2024-03-21,2024-04-15,4,3,4,3,3,3,Yes,5,Probably Yes,Nobody explained my new medications before discharge.
+SV30240,ENC102615,F01,D120,2024-03-22,2024-04-11,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30241,ENC102621,F01,D140,2024-03-22,2024-04-17,4,3,4,4,4,4,Yes,8,Definitely Yes,
+SV30242,ENC102634,F01,D111,2024-03-22,2024-05-05,4,3,3,4,3,4,No,7,Definitely No,
+SV30243,ENC102643,F01,D170,2024-03-23,2024-04-20,4,4,2,1,3,4,Yes,6,Probably Yes,
+SV30244,ENC102648,F02,D210,2024-03-23,2024-04-04,2,3,4,3,3,1,Yes,6,Definitely No,"Very noisy hallway, hard to sleep."
+SV30245,ENC102651,F02,D210,2024-03-24,2024-03-30,3,4,3,4,3,4,Yes,8,Definitely Yes,
+SV30246,ENC102668,F02,D210,2024-03-26,2024-04-15,4,3,4,2,1,3,No,6,Definitely No,
+SV30247,ENC102679,F03,D310,2024-03-27,2024-04-07,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30248,ENC102683,F01,D110,2024-03-26,2024-04-28,4,4,4,4,2,3,Yes,10,Definitely Yes,
+SV30249,ENC102687,F01,D110,2024-03-25,2024-05-03,4,4,3,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30250,ENC102689,F01,D140,2024-03-26,2024-04-14,3,4,4,4,4,4,Yes,8,Probably Yes,
+SV30251,ENC102728,F01,D110,2024-03-27,2024-04-05,4,4,3,4,4,4,Yes,8,Definitely Yes,
+SV30252,ENC102729,F01,D110,2024-03-28,2024-05-03,4,4,4,4,4,4,Yes,10,Definitely Yes,"Care was fine, room was noisy at night."
+SV30253,ENC102734,F03,D320,2024-03-30,2024-04-05,4,4,2,4,4,4,Yes,7,Probably Yes,Billing office was rude on the phone.
+SV30254,ENC102765,F01,D130,2024-03-29,2024-04-17,3,4,3,4,4,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30255,ENC102769,F01,D170,2024-03-27,2024-04-10,4,4,3,2,3,4,No,7,Definitely Yes,Waited too long for the call light to be answered at night.
+SV30256,ENC102780,F03,D310,2024-04-03,2024-05-04,4,4,4,4,3,4,Yes,8,Definitely Yes,
+SV30257,ENC102814,F03,D310,2024-03-29,2024-04-08,3,3,4,1,4,4,Yes,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30258,ENC102818,F01,D140,2024-03-29,2024-04-22,4,3,4,4,4,4,Yes,10,Definitely Yes,
+SV30259,ENC102819,F01,D140,2024-03-27,2024-04-07,3,1,4,1,4,3,Yes,7,Probably No,Good nurses but the wait for discharge was very long.
+SV30260,ENC102842,F02,D230,2024-04-01,2024-04-20,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30261,ENC102874,F01,D111,2024-03-30,2024-04-15,3,4,3,3,2,2,Yes,8,Definitely Yes,
+SV30262,ENC102882,F03,D310,2024-03-28,2024-04-24,4,4,4,4,4,4,Yes,9,Probably No,Thank you to the night shift nurses for the great care.
+SV30263,ENC102884,F01,D120,2024-04-05,2024-05-23,4,4,4,4,3,3,Yes,6,Probably Yes,
+SV30264,ENC102904,F01,D195,2024-03-30,2024-04-18,2,4,4,4,2,2,Yes,7,Probably Yes,
+SV30265,ENC102924,F01,D111,2024-04-05,2024-05-15,1,4,4,4,4,4,No,7,Probably Yes,
+SV30266,ENC102948,F01,D110,2024-04-08,2024-05-20,4,4,3,4,3,3,Yes,9,Definitely Yes,
+SV30267,ENC102954,F03,D310,2024-04-03,2024-04-19,4,4,4,4,4,4,No,7,Probably Yes,"Care was fine, room was noisy at night."
+SV30268,ENC102972,F01,D111,2024-04-03,2024-05-04,4,3,2,4,4,4,Yes,10,Definitely Yes,
+SV30269,ENC102975,F01,D120,2024-04-03,2024-05-10,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30270,ENC102985,F03,D330,2024-04-07,2024-04-27,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30271,ENC103001,F03,D330,2024-04-05,2024-04-16,3,1,3,1,4,1,Yes,6,Probably No,Nobody explained my new medications before discharge.
+SV30272,ENC103027,F01,D170,2024-04-06,2024-05-23,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30273,ENC103028,F03,D310,2024-04-06,2024-05-20,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30274,ENC103033,F03,D310,2024-04-04,2024-05-16,4,4,3,4,4,4,No,6,Definitely No,Billing office was rude on the phone.
+SV30275,ENC103035,F02,D210,2024-04-06,2024-05-07,4,4,4,4,4,2,Yes,8,Definitely No,
+SV30276,ENC103044,F01,D110,2024-04-07,2024-04-23,4,4,4,4,4,4,No,9,Definitely Yes,Everyone was professional and caring.
+SV30277,ENC103050,F03,D310,2024-04-04,2024-05-13,4,4,4,4,4,3,Yes,9,Probably Yes,
+SV30278,ENC103055,F03,D310,2024-04-04,2024-05-15,4,4,3,3,2,3,Yes,8,Definitely Yes,
+SV30279,ENC103075,F01,D111,2024-04-06,2024-05-12,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30280,ENC103081,F01,D111,2024-04-07,2024-05-16,4,4,4,4,4,2,Yes,10,Definitely Yes,
+SV30281,ENC103084,F01,D110,2024-04-08,2024-05-22,1,4,4,4,2,2,Yes,7,Definitely Yes,
+SV30282,ENC103087,F01,D110,2024-04-06,2024-05-01,4,4,4,4,4,4,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30283,ENC103092,F01,D110,2024-04-05,2024-05-08,4,4,3,4,1,4,Yes,8,Probably No,
+SV30284,ENC103121,F03,D310,2024-04-11,2024-05-07,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30285,ENC103122,F01,D140,2024-04-06,2024-05-02,4,4,4,3,3,4,Yes,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV30286,ENC103139,F01,D195,2024-04-06,2024-05-07,4,4,3,3,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30287,ENC103146,F02,D210,2024-04-14,2024-04-27,4,4,1,4,3,4,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV30288,ENC103180,F03,D310,2024-04-09,2024-04-22,4,4,3,4,4,3,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30289,ENC103201,F01,D195,2024-04-09,2024-05-07,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV30290,ENC103210,F01,D140,2024-04-10,2024-04-23,4,3,2,3,3,3,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30291,ENC103219,F01,D120,2024-04-12,2024-05-30,1,1,4,3,2,1,Yes,4,Probably No,
+SV30292,ENC103236,F01,D195,2024-04-11,2024-05-08,4,4,2,4,4,2,Yes,7,Definitely No,
+SV30293,ENC103246,F01,D110,2024-04-14,2024-05-13,4,4,4,4,2,4,Yes,9,Definitely Yes,
+SV30294,ENC103251,F02,D210,2024-04-11,2024-04-24,4,4,4,4,3,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30295,ENC103264,F01,D111,2024-04-15,2024-05-19,3,3,4,4,3,3,Yes,7,Definitely Yes,"Very noisy hallway, hard to sleep."
+SV30296,ENC103265,F01,D110,2024-04-16,2024-05-28,4,4,3,1,2,1,No,7,Probably Yes,
+SV30297,ENC103276,F02,D210,2024-04-15,2024-05-12,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30298,ENC103296,F03,D310,2024-04-12,2024-05-13,3,4,3,4,4,2,Yes,8,Probably Yes,
+SV30299,ENC103314,F02,D210,2024-04-14,2024-05-29,4,4,3,4,3,4,Yes,9,Definitely Yes,Room was clean and the food was better than expected.
+SV30300,ENC103325,F01,D160,2024-04-17,2024-06-01,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30301,ENC103327,F01,D110,2024-04-15,2024-05-10,4,4,4,4,2,3,Yes,9,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30302,ENC103351,F01,D110,2024-04-18,2024-04-24,4,4,4,3,4,1,Yes,6,Definitely No,
+SV30303,ENC103358,F01,D195,2024-04-16,2024-05-24,2,4,4,4,3,2,No,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30304,ENC103360,F01,D195,2024-04-15,2024-05-24,4,1,4,3,2,3,Yes,8,Probably Yes,
+SV30305,ENC103389,F01,D195,2024-04-16,2024-04-22,4,4,4,4,4,3,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30306,ENC103390,F01,D195,2024-04-16,2024-04-30,4,4,2,4,4,4,Yes,6,Definitely No,Billing office was rude on the phone.
+SV30307,ENC103397,F01,D140,2024-04-17,2024-06-03,4,4,4,3,4,3,Yes,7,Probably No,"Care was fine, room was noisy at night."
+SV30308,ENC103425,F01,D195,2024-04-18,2024-06-05,3,3,3,4,3,3,No,4,Definitely No,Billing office was rude on the phone.
+SV30309,ENC103431,F03,D310,2024-04-20,2024-05-14,4,4,2,4,3,4,Yes,7,Probably Yes,
+SV30310,ENC103435,F03,D310,2024-04-19,2024-06-01,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30311,ENC103453,F01,D170,2024-04-20,2024-05-09,4,2,3,4,3,4,Yes,7,Definitely Yes,
+SV30312,ENC103458,F01,D170,2024-04-20,2024-05-22,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30313,ENC103478,F01,D120,2024-04-20,2024-05-19,4,4,3,4,2,1,Yes,6,Probably No,
+SV30314,ENC103486,F01,D170,2024-04-24,2024-05-26,4,4,4,3,3,1,Yes,8,Probably Yes,Room was clean and the food was better than expected.
+SV30315,ENC103487,F01,D110,2024-04-20,2024-04-29,4,4,4,4,3,3,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30316,ENC103492,F01,D140,2024-04-25,2024-05-30,4,4,4,2,4,4,No,8,Probably No,Doctors were great; food needs improvement.
+SV30317,ENC103512,F02,D210,2024-04-22,2024-06-01,4,4,2,4,2,3,No,7,Probably No,Billing office was rude on the phone.
+SV30318,ENC103516,F01,D195,2024-04-22,2024-05-29,4,4,3,4,4,4,Yes,7,Definitely Yes,
+SV30319,ENC103518,F01,D130,2024-04-27,2024-05-20,1,1,3,3,1,1,No,3,Probably Yes,Food was cold and arrived late.
+SV30320,ENC103535,F01,D110,2024-04-24,2024-05-03,4,3,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30321,ENC103549,F03,D310,2024-04-24,2024-05-13,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30322,ENC103556,F01,D120,2024-04-29,2024-05-18,4,4,4,4,3,3,No,9,Probably Yes,Doctors were great; food needs improvement.
+SV30323,ENC103577,F01,D160,2024-04-29,2024-05-06,4,1,3,4,1,2,Yes,6,Probably No,
+SV30324,ENC103584,F02,D230,2024-04-25,2024-06-07,4,4,4,4,3,3,Yes,8,Probably Yes,
+SV30325,ENC103594,F01,D110,2024-04-30,2024-05-27,4,4,4,2,4,2,Yes,10,Definitely Yes,
+SV30326,ENC103615,F03,D310,2024-04-26,2024-05-06,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30327,ENC103621,F01,D111,2024-04-25,2024-05-28,4,3,3,3,3,4,Yes,6,Probably Yes,Waited too long for the call light to be answered at night.
+SV30328,ENC103627,F03,D310,2024-04-28,2024-05-06,4,4,3,3,4,4,Yes,9,Definitely Yes,
+SV30329,ENC103636,F01,D140,2024-04-28,2024-05-05,3,4,3,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30330,ENC103655,F01,D195,2024-04-26,2024-05-13,3,3,4,4,4,1,Yes,9,Definitely Yes,
+SV30331,ENC103658,F02,D270,2024-04-27,2024-05-17,3,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30332,ENC103659,F03,D340,2024-04-27,2024-05-24,4,4,2,4,4,4,Yes,7,Probably No,
+SV30333,ENC103705,F01,D195,2024-04-27,2024-05-28,4,2,4,4,3,1,Yes,5,Probably No,Nobody explained my new medications before discharge.
+SV30334,ENC103734,F02,D210,2024-05-04,2024-06-13,4,4,4,4,4,3,Yes,10,Probably Yes,Room was clean and the food was better than expected.
+SV30335,ENC103738,F01,D111,2024-04-29,2024-06-10,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30336,ENC103755,F02,D210,2024-04-30,2024-06-15,3,2,4,4,4,4,Yes,9,Definitely Yes,
+SV30337,ENC103773,F01,D170,2024-05-01,2024-05-26,4,4,3,3,4,4,Yes,10,Definitely Yes,
+SV30338,ENC103780,F02,D210,2024-05-01,2024-06-08,4,4,4,3,4,4,Yes,5,Definitely No,
+SV30339,ENC103784,F01,D160,2024-05-08,2024-05-18,4,3,4,2,1,3,Yes,6,Definitely No,Long wait in the emergency room before getting a bed.
+SV30340,ENC103788,F01,D170,2024-05-01,2024-05-31,4,4,4,2,4,2,Yes,8,Probably Yes,Billing office was rude on the phone.
+SV30341,ENC103797,F01,D120,2024-05-02,2024-05-26,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30342,ENC103812,F01,D110,2024-05-02,2024-06-16,3,4,4,2,3,1,No,6,Probably No,Parking was expensive and hard to find.
+SV30343,ENC103823,F01,D111,2024-05-04,2024-05-13,3,1,4,3,3,1,Yes,6,Definitely No,Bathroom was not cleaned during my stay.
+SV30344,ENC103825,F01,D195,2024-05-02,2024-06-16,4,4,3,4,4,3,Yes,7,Definitely Yes,
+SV30345,ENC103828,F01,D140,2024-05-07,2024-05-25,3,4,1,4,4,4,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30346,ENC103875,F01,D170,2024-05-03,2024-06-06,2,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30347,ENC103883,F01,D110,2024-05-05,2024-05-16,4,4,4,1,2,4,Yes,6,Definitely No,"Very noisy hallway, hard to sleep."
+SV30348,ENC103904,F01,D110,2024-05-05,2024-06-11,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV30349,ENC103938,F01,D195,2024-05-05,2024-06-04,1,3,2,4,3,3,No,6,Probably No,
+SV30350,ENC103951,F02,D210,2024-05-06,2024-06-05,4,4,3,2,3,1,Yes,8,Definitely Yes,Nobody explained my new medications before discharge.
+SV30351,ENC103963,F01,D170,2024-05-09,2024-06-20,2,3,3,3,4,3,Yes,6,Definitely No,
+SV30352,ENC103995,F01,D110,2024-05-09,2024-05-20,1,4,3,3,3,4,Yes,6,Probably Yes,Bathroom was not cleaned during my stay.
+SV30353,ENC104000,F01,D111,2024-05-10,2024-06-16,4,2,3,4,4,4,Yes,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV30354,ENC104011,F01,D140,2024-05-13,2024-05-19,3,3,4,4,4,4,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV30355,ENC104018,F01,D110,2024-05-14,2024-06-07,4,2,3,1,3,4,No,7,Probably Yes,
+SV30356,ENC104040,F02,D210,2024-05-09,2024-06-09,4,4,4,4,4,3,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30357,ENC104051,F01,D110,2024-05-10,2024-06-07,4,3,4,4,3,4,No,8,Definitely Yes,Parking was expensive and hard to find.
+SV30358,ENC104052,F01,D130,2024-05-14,2024-06-26,4,4,4,4,2,4,Yes,9,Probably Yes,
+SV30359,ENC104057,F01,D160,2024-05-11,2024-06-28,4,4,4,2,2,4,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30360,ENC104058,F01,D111,2024-05-10,2024-06-16,2,4,2,3,2,2,Yes,7,Probably No,
+SV30361,ENC104071,F01,D111,2024-05-14,2024-06-05,4,3,4,2,4,1,Yes,8,Probably Yes,Food was cold and arrived late.
+SV30362,ENC104082,F01,D150,2024-05-11,2024-06-05,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30363,ENC104093,F01,D111,2024-05-19,2024-06-04,4,3,4,4,4,3,Yes,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30364,ENC104107,F02,D210,2024-05-13,2024-06-06,4,4,4,4,4,2,Yes,9,Definitely Yes,
+SV30365,ENC104110,F01,D150,2024-05-21,2024-05-28,4,4,4,4,3,3,Yes,8,Probably Yes,
+SV30366,ENC104112,F01,D110,2024-05-13,2024-06-28,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30367,ENC104114,F02,D270,2024-05-12,2024-06-24,4,4,4,4,4,4,Yes,10,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30368,ENC104120,F01,D170,2024-05-11,2024-06-26,4,1,4,2,2,3,No,8,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30369,ENC104135,F01,D120,2024-05-17,2024-05-28,4,4,3,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30370,ENC104159,F03,D310,2024-05-16,2024-05-28,1,2,1,3,3,3,Yes,7,Definitely Yes,
+SV30371,ENC104183,F01,D111,2024-05-16,2024-06-26,4,3,4,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30372,ENC104190,F01,D140,2024-05-16,2024-06-15,4,4,4,4,3,3,No,9,Definitely Yes,
+SV30373,ENC104191,F02,D210,2024-05-15,2024-06-11,4,3,4,4,4,4,Yes,9,Definitely Yes,
+SV30374,ENC104200,F02,D270,2024-05-17,2024-06-05,4,4,3,4,3,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30375,ENC104213,F02,D210,2024-05-18,2024-06-03,4,4,4,4,4,4,Yes,8,Probably No,Food was cold and arrived late.
+SV30376,ENC104217,F01,D140,2024-05-17,2024-06-22,4,4,4,4,2,3,Yes,9,Definitely Yes,
+SV30377,ENC104241,F01,D120,2024-05-22,2024-07-09,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV30378,ENC104261,F02,D210,2024-05-20,2024-06-25,4,4,4,3,2,3,Yes,9,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30379,ENC104264,F01,D111,2024-05-22,2024-06-04,4,3,4,4,4,4,No,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30380,ENC104267,F01,D120,2024-05-19,2024-05-27,3,2,4,4,4,2,Yes,7,Definitely Yes,Parking was expensive and hard to find.
+SV30381,ENC104271,F01,D110,2024-05-20,2024-06-23,4,4,4,4,4,3,Yes,7,Probably Yes,
+SV30382,ENC104293,F01,D160,2024-05-23,2024-07-04,4,4,3,3,4,4,Yes,8,Probably Yes,
+SV30383,ENC104299,F01,D195,2024-05-19,2024-06-20,3,4,1,4,1,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30384,ENC104306,F01,D120,2024-05-24,2024-07-03,3,4,3,4,4,4,Yes,6,Definitely No,Billing office was rude on the phone.
+SV30385,ENC104312,F01,D130,2024-05-24,2024-06-19,4,4,2,4,3,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30386,ENC104320,F01,D120,2024-05-25,2024-06-03,4,4,3,4,4,3,Yes,10,Definitely Yes,
+SV30387,ENC104337,F03,D340,2024-05-23,2024-06-19,4,4,4,3,4,3,Yes,8,Probably No,
+SV30388,ENC104359,F02,D210,2024-05-26,2024-06-07,4,4,3,3,4,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30389,ENC104365,F02,D210,2024-05-22,2024-06-13,4,4,3,4,2,4,Yes,7,Probably No,
+SV30390,ENC104374,F01,D120,2024-05-25,2024-05-31,4,3,4,3,4,2,No,6,Probably No,
+SV30391,ENC104389,F02,D210,2024-05-24,2024-07-08,4,4,3,1,3,3,Yes,7,Probably No,Bathroom was not cleaned during my stay.
+SV30392,ENC104391,F03,D310,2024-05-23,2024-06-26,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30393,ENC104423,F01,D120,2024-05-27,2024-06-09,4,4,4,3,4,4,Yes,7,Probably Yes,"Clean room, but the call light took too long."
+SV30394,ENC104447,F01,D111,2024-05-30,2024-07-11,3,4,4,4,4,4,Yes,7,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30395,ENC104456,F01,D130,2024-05-31,2024-06-09,4,4,4,4,4,4,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30396,ENC104457,F03,D340,2024-05-25,2024-06-07,4,4,4,2,4,4,No,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30397,ENC104464,F01,D130,2024-05-29,2024-07-03,4,4,2,3,4,4,Yes,8,Probably No,
+SV30398,ENC104467,F01,D195,2024-05-26,2024-07-07,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30399,ENC104480,F01,D140,2024-06-05,2024-06-23,4,4,3,3,4,3,Yes,7,Probably Yes,
+SV30400,ENC104484,F01,D111,2024-05-27,2024-07-10,3,4,4,1,3,1,Yes,7,Probably Yes,
+SV30401,ENC104485,F01,D111,2024-05-30,2024-06-21,4,4,3,2,4,4,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30402,ENC104489,F01,D120,2024-05-31,2024-06-26,4,4,2,3,3,4,Yes,9,Probably Yes,Room was clean and the food was better than expected.
+SV30403,ENC104490,F03,D310,2024-05-29,2024-07-08,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30404,ENC104506,F01,D195,2024-05-28,2024-06-22,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30405,ENC104510,F01,D170,2024-05-31,2024-07-18,4,1,4,4,4,4,Yes,6,Probably No,Food was cold and arrived late.
+SV30406,ENC104537,F01,D111,2024-05-30,2024-07-08,4,4,3,4,1,2,Yes,8,Probably Yes,
+SV30407,ENC104542,F03,D320,2024-05-30,2024-07-14,4,4,3,1,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30408,ENC104563,F01,D110,2024-05-31,2024-06-28,4,4,2,4,4,4,Yes,9,Definitely Yes,
+SV30409,ENC104598,F03,D310,2024-05-30,2024-07-17,4,4,3,4,3,4,Yes,7,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30410,ENC104615,F02,D210,2024-05-31,2024-06-23,4,4,3,4,1,4,No,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30411,ENC104632,F01,D111,2024-06-01,2024-07-03,3,4,4,4,4,4,Yes,8,Probably Yes,
+SV30412,ENC104634,F01,D110,2024-06-03,2024-06-14,4,4,3,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30413,ENC104638,F01,D110,2024-06-04,2024-07-03,4,2,3,4,4,3,No,8,Definitely Yes,Doctors were great; food needs improvement.
+SV30414,ENC104646,F03,D310,2024-06-06,2024-06-15,3,3,4,3,4,3,Yes,7,Probably Yes,
+SV30415,ENC104676,F01,D120,2024-06-05,2024-06-19,4,4,2,4,4,3,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30416,ENC104679,F02,D210,2024-06-09,2024-07-23,4,4,2,4,4,4,Yes,9,Definitely Yes,
+SV30417,ENC104691,F01,D170,2024-06-04,2024-07-14,3,4,4,3,4,4,Yes,6,Definitely No,Parking was expensive and hard to find.
+SV30418,ENC104697,F03,D310,2024-06-07,2024-07-22,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30419,ENC104747,F02,D210,2024-06-06,2024-06-20,3,4,1,3,3,3,Yes,6,Probably No,"Very noisy hallway, hard to sleep."
+SV30420,ENC104756,F01,D111,2024-06-09,2024-07-14,4,4,4,3,3,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30421,ENC104778,F01,D195,2024-06-07,2024-07-16,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30422,ENC104806,F03,D310,2024-06-11,2024-07-24,4,4,4,4,3,4,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30423,ENC104813,F01,D111,2024-06-09,2024-06-28,4,4,4,4,3,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30424,ENC104819,F01,D110,2024-06-10,2024-06-20,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30425,ENC104839,F01,D110,2024-06-11,2024-06-18,4,4,3,3,3,4,Yes,7,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30426,ENC104846,F01,D120,2024-06-12,2024-07-18,4,3,3,4,4,4,Yes,8,Probably Yes,
+SV30427,ENC104852,F01,D111,2024-06-12,2024-06-29,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30428,ENC104860,F01,D160,2024-06-14,2024-06-25,4,4,3,4,3,4,Yes,8,Definitely Yes,
+SV30429,ENC104883,F01,D111,2024-06-14,2024-07-21,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30430,ENC104886,F03,D310,2024-06-13,2024-06-30,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30431,ENC104897,F01,D130,2024-06-17,2024-07-21,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV30432,ENC104916,F01,D120,2024-06-17,2024-06-30,4,4,1,3,4,3,Yes,6,Probably Yes,
+SV30433,ENC104940,F01,D110,2024-06-15,2024-07-30,1,4,4,4,4,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30434,ENC104941,F01,D110,2024-06-15,2024-07-08,4,3,4,4,1,2,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30435,ENC104946,F02,D210,2024-06-13,2024-07-07,4,4,4,4,4,4,Yes,10,Probably No,
+SV30436,ENC104974,F01,D111,2024-06-17,2024-08-03,4,4,2,4,4,1,Yes,6,Definitely No,
+SV30437,ENC104983,F01,D110,2024-06-16,2024-07-05,4,4,4,4,4,3,Yes,9,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30438,ENC104985,F03,D320,2024-06-17,2024-07-09,3,3,1,3,2,3,No,5,Definitely No,"Felt rushed by the doctor, questions not answered."
+SV30439,ENC104989,F01,D110,2024-06-17,2024-08-02,2,4,3,4,4,3,No,9,Definitely Yes,
+SV30440,ENC105014,F02,D210,2024-06-17,2024-07-05,4,3,3,3,2,3,No,7,Definitely No,
+SV30441,ENC105057,F01,D111,2024-06-23,2024-07-18,3,4,4,4,4,4,Yes,9,Probably Yes,
+SV30442,ENC105065,F02,D210,2024-06-22,2024-08-06,4,4,4,4,3,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30443,ENC105067,F01,D170,2024-06-19,2024-07-04,4,4,4,4,4,4,Yes,9,Probably Yes,
+SV30444,ENC105075,F01,D120,2024-06-23,2024-07-25,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30445,ENC105076,F01,D170,2024-06-20,2024-06-29,4,3,3,4,3,4,No,7,Probably Yes,
+SV30446,ENC105081,F01,D190,2024-06-23,2024-07-10,4,4,1,4,3,1,Yes,6,Probably Yes,Waited too long for the call light to be answered at night.
+SV30447,ENC105093,F03,D310,2024-06-20,2024-07-16,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30448,ENC105105,F01,D170,2024-06-22,2024-07-05,4,2,3,4,4,4,Yes,7,Probably No,Billing office was rude on the phone.
+SV30449,ENC105109,F02,D210,2024-06-21,2024-07-01,4,3,4,3,4,4,Yes,8,Definitely Yes,
+SV30450,ENC105130,F03,D320,2024-06-25,2024-07-05,2,4,4,3,4,4,Yes,6,Definitely No,
+SV30451,ENC105134,F03,D330,2024-07-01,2024-08-14,4,4,3,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30452,ENC105135,F01,D170,2024-06-24,2024-07-13,4,3,3,3,2,4,Yes,8,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30453,ENC105151,F03,D310,2024-06-24,2024-07-31,4,4,4,4,3,3,Yes,5,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30454,ENC105164,F01,D110,2024-06-22,2024-07-11,4,4,4,2,4,4,No,6,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30455,ENC105167,F03,D310,2024-06-25,2024-08-06,3,4,4,4,4,3,Yes,7,Definitely Yes,"Clean room, but the call light took too long."
+SV30456,ENC105170,F01,D120,2024-06-23,2024-07-06,4,4,4,2,4,4,Yes,9,Definitely Yes,
+SV30457,ENC105175,F01,D190,2024-06-30,2024-07-08,4,4,4,4,1,3,Yes,8,Definitely Yes,The nurses were wonderful and very attentive.
+SV30458,ENC105179,F01,D111,2024-06-24,2024-07-26,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV30459,ENC105186,F03,D310,2024-06-27,2024-07-28,4,4,2,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30460,ENC105187,F01,D195,2024-06-24,2024-08-11,4,4,1,2,2,4,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30461,ENC105228,F01,D140,2024-06-26,2024-07-20,4,3,4,4,4,4,Yes,7,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30462,ENC105229,F02,D210,2024-06-27,2024-08-14,4,3,4,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30463,ENC105238,F01,D195,2024-06-26,2024-07-24,4,4,4,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30464,ENC105287,F01,D195,2024-06-28,2024-08-06,4,4,4,4,4,4,Yes,10,Probably Yes,Room was clean and the food was better than expected.
+SV30465,ENC105290,F02,D270,2024-06-29,2024-08-16,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30466,ENC105299,F03,D320,2024-06-29,2024-07-12,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30467,ENC105301,F01,D140,2024-07-01,2024-08-11,4,2,4,4,3,1,Yes,10,Definitely Yes,
+SV30468,ENC105310,F01,D120,2024-07-01,2024-08-06,4,3,4,4,3,4,Yes,7,Probably No,
+SV30469,ENC105321,F01,D170,2024-07-02,2024-08-02,4,4,4,4,2,3,Yes,8,Probably Yes,
+SV30470,ENC105322,F01,D111,2024-06-29,2024-07-17,1,3,2,4,4,2,Yes,9,Definitely Yes,
+SV30471,ENC105344,F01,D111,2024-07-03,2024-07-28,3,4,4,4,3,4,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30472,ENC105348,F01,D120,2024-07-01,2024-07-21,4,4,3,4,4,4,Yes,7,Definitely Yes,Nobody explained my new medications before discharge.
+SV30473,ENC105362,F01,D120,2024-07-01,2024-07-16,4,4,4,4,4,2,Yes,9,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30474,ENC105375,F01,D195,2024-07-01,2024-08-01,4,4,4,4,3,3,Yes,7,Probably Yes,
+SV30475,ENC105384,F02,D210,2024-07-04,2024-07-15,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30476,ENC105395,F01,D140,2024-07-03,2024-08-08,4,3,4,4,4,4,Yes,9,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30477,ENC105409,F03,D310,2024-07-09,2024-07-19,4,4,3,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30478,ENC105424,F01,D195,2024-07-04,2024-08-18,4,3,3,2,1,4,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV30479,ENC105428,F01,D110,2024-07-09,2024-08-17,4,4,4,4,4,3,Yes,7,Definitely Yes,The nurses were wonderful and very attentive.
+SV30480,ENC105442,F01,D195,2024-07-03,2024-07-17,4,3,4,2,3,2,No,7,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30481,ENC105465,F01,D110,2024-07-07,2024-08-15,4,4,3,3,4,3,No,6,Probably No,
+SV30482,ENC105469,F01,D120,2024-07-09,2024-08-06,4,4,3,4,4,4,No,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30483,ENC105484,F01,D190,2024-07-14,2024-07-23,3,4,3,4,4,4,Yes,7,Definitely Yes,
+SV30484,ENC105494,F01,D190,2024-07-21,2024-07-28,4,2,2,4,3,4,Yes,9,Definitely Yes,
+SV30485,ENC105498,F01,D160,2024-07-08,2024-08-05,4,4,4,3,2,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30486,ENC105507,F01,D130,2024-07-11,2024-08-26,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30487,ENC105510,F01,D110,2024-07-15,2024-08-28,4,4,4,2,2,3,Yes,6,Probably Yes,
+SV30488,ENC105520,F03,D340,2024-07-06,2024-08-14,4,3,3,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30489,ENC105525,F03,D310,2024-07-07,2024-08-17,4,4,4,4,3,4,Yes,10,Probably Yes,Discharge instructions were clear and easy to follow.
+SV30490,ENC105534,F02,D210,2024-07-10,2024-08-25,4,4,3,4,4,3,Yes,7,Probably Yes,
+SV30491,ENC105535,F01,D111,2024-07-07,2024-08-12,4,4,4,4,3,4,Yes,9,Probably Yes,"Clean room, but the call light took too long."
+SV30492,ENC105544,F01,D170,2024-07-08,2024-08-24,3,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30493,ENC105549,F01,D120,2024-07-11,2024-08-25,4,4,3,1,2,4,Yes,8,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30494,ENC105550,F03,D310,2024-07-07,2024-08-18,4,4,4,4,4,4,No,10,Definitely Yes,
+SV30495,ENC105561,F01,D195,2024-07-08,2024-08-22,4,3,3,2,2,4,No,7,Probably Yes,Food was cold and arrived late.
+SV30496,ENC105572,F01,D195,2024-07-09,2024-08-15,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30497,ENC105576,F02,D210,2024-07-09,2024-07-20,4,4,4,2,4,4,Yes,9,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30498,ENC105579,F01,D160,2024-07-11,2024-07-22,4,3,4,4,4,4,No,6,Probably Yes,
+SV30499,ENC105581,F01,D140,2024-07-10,2024-07-24,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30500,ENC105598,F01,D110,2024-07-13,2024-08-12,3,2,4,4,3,4,Yes,9,Definitely Yes,
+SV30501,ENC105632,F01,D110,2024-07-12,2024-08-11,4,4,3,4,4,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV30502,ENC105672,F01,D111,2024-07-16,2024-08-07,4,3,3,4,1,4,Yes,7,Definitely Yes,Waited too long for the call light to be answered at night.
+SV30503,ENC105691,F02,D210,2024-07-18,2024-08-29,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30504,ENC105737,F01,D110,2024-07-17,2024-08-08,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30505,ENC105738,F01,D195,2024-07-15,2024-08-30,4,4,3,2,4,3,Yes,8,Probably Yes,
+SV30506,ENC105739,F02,D210,2024-07-14,2024-08-20,1,3,4,3,1,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30507,ENC105753,F03,D320,2024-07-17,2024-08-24,4,1,3,3,1,1,No,6,Definitely No,
+SV30508,ENC105754,F02,D270,2024-07-15,2024-08-21,1,4,4,3,3,3,Yes,5,Probably No,
+SV30509,ENC105758,F01,D111,2024-07-18,2024-08-14,4,4,4,4,4,2,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30510,ENC105760,F03,D310,2024-07-24,2024-08-01,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30511,ENC105798,F01,D110,2024-07-18,2024-08-23,4,4,4,4,4,3,Yes,8,Probably Yes,
+SV30512,ENC105811,F01,D110,2024-07-20,2024-08-21,4,3,3,1,2,3,Yes,8,Probably Yes,Waited too long for the call light to be answered at night.
+SV30513,ENC105815,F01,D111,2024-07-23,2024-08-26,4,4,3,2,4,3,No,8,Definitely Yes,
+SV30514,ENC105828,F01,D111,2024-07-19,2024-09-04,3,4,4,4,4,4,Yes,8,Definitely No,"Care was fine, room was noisy at night."
+SV30515,ENC105845,F02,D270,2024-07-20,2024-08-23,4,3,3,1,1,4,Yes,9,Definitely Yes,Billing office was rude on the phone.
+SV30516,ENC105848,F03,D340,2024-07-20,2024-09-06,3,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30517,ENC105850,F01,D120,2024-07-24,2024-08-28,1,3,4,4,3,3,Yes,6,Definitely No,Waited too long for the call light to be answered at night.
+SV30518,ENC105869,F02,D210,2024-07-24,2024-09-01,4,4,4,4,4,4,Yes,10,Probably Yes,The nurses were wonderful and very attentive.
+SV30519,ENC105877,F01,D190,2024-07-29,2024-08-24,4,2,4,4,4,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV30520,ENC105880,F01,D111,2024-07-21,2024-08-25,4,3,4,4,2,3,No,8,Definitely Yes,"Felt rushed by the doctor, questions not answered."
+SV30521,ENC105900,F03,D310,2024-07-23,2024-08-29,4,4,4,3,3,4,Yes,9,Definitely Yes,
+SV30522,ENC105909,F01,D110,2024-07-22,2024-09-04,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV30523,ENC105926,F01,D111,2024-07-23,2024-09-05,1,3,3,4,1,4,Yes,7,Probably Yes,
+SV30524,ENC105937,F01,D170,2024-07-24,2024-09-01,3,4,3,4,4,3,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV30525,ENC105938,F01,D110,2024-07-24,2024-08-21,4,4,3,4,4,2,Yes,10,Definitely Yes,
+SV30526,ENC105966,F01,D160,2024-07-27,2024-08-09,4,4,3,4,2,4,Yes,7,Definitely Yes,Parking was expensive and hard to find.
+SV30527,ENC105980,F01,D110,2024-07-25,2024-09-09,4,4,3,4,3,4,Yes,9,Probably Yes,
+SV30528,ENC106001,F01,D170,2024-07-27,2024-09-03,4,4,2,4,4,3,Yes,8,Probably Yes,
+SV30529,ENC106003,F01,D190,2024-07-30,2024-09-08,4,4,1,3,2,2,Yes,7,Probably Yes,
+SV30530,ENC106010,F01,D120,2024-07-28,2024-08-21,4,4,3,1,4,4,No,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV30531,ENC106014,F01,D130,2024-08-02,2024-08-10,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30532,ENC106027,F03,D310,2024-07-31,2024-08-10,4,4,3,4,4,2,Yes,5,Definitely No,Parking was expensive and hard to find.
+SV30533,ENC106028,F01,D111,2024-07-27,2024-09-10,4,4,3,4,4,4,Yes,8,Definitely Yes,
+SV30534,ENC106043,F01,D160,2024-08-03,2024-09-01,3,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30535,ENC106057,F02,D210,2024-07-26,2024-08-02,4,4,4,4,4,3,Yes,8,Probably No,
+SV30536,ENC106058,F01,D170,2024-07-26,2024-08-05,4,2,4,4,4,4,Yes,8,Definitely Yes,
+SV30537,ENC106073,F03,D310,2024-08-01,2024-08-28,4,4,4,4,4,4,Yes,9,Definitely Yes,Excellent communication from the care team.
+SV30538,ENC106074,F02,D210,2024-07-30,2024-09-04,4,4,4,2,4,4,Yes,9,Definitely Yes,Room was clean and the food was better than expected.
+SV30539,ENC106098,F01,D120,2024-08-06,2024-09-20,4,2,3,3,3,4,Yes,7,Definitely Yes,
+SV30540,ENC106104,F01,D111,2024-07-29,2024-09-13,3,4,4,3,3,3,Yes,8,Probably Yes,
+SV30541,ENC106112,F01,D150,2024-07-31,2024-09-04,4,4,4,2,2,2,Yes,7,Probably Yes,
+SV30542,ENC106117,F01,D111,2024-08-01,2024-08-29,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV30543,ENC106124,F01,D170,2024-08-02,2024-08-27,1,4,3,3,3,4,Yes,7,Probably Yes,Long wait in the emergency room before getting a bed.
+SV30544,ENC106126,F01,D140,2024-07-31,2024-09-03,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30545,ENC106135,F02,D270,2024-07-31,2024-08-15,4,3,4,4,4,3,Yes,6,Definitely No,
+SV30546,ENC106137,F01,D110,2024-08-06,2024-09-23,4,4,3,4,4,3,Yes,9,Definitely Yes,
+SV30547,ENC106210,F01,D140,2024-08-04,2024-09-14,4,4,1,1,1,3,Yes,6,Definitely No,Waited too long for the call light to be answered at night.
+SV30548,ENC106224,F03,D310,2024-08-04,2024-09-05,4,4,2,4,2,4,Yes,7,Probably Yes,The nurses were wonderful and very attentive.
+SV30549,ENC106242,F01,D111,2024-08-06,2024-09-07,4,3,3,3,3,4,Yes,7,Definitely Yes,
+SV30550,ENC106247,F03,D310,2024-08-05,2024-08-13,4,4,3,4,3,4,No,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30551,ENC106251,F01,D111,2024-08-11,2024-08-24,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30552,ENC106266,F01,D111,2024-08-06,2024-09-10,3,4,4,4,3,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30553,ENC106274,F03,D310,2024-08-20,2024-09-04,4,4,4,3,3,4,No,6,Probably No,"Very noisy hallway, hard to sleep."
+SV30554,ENC106276,F01,D195,2024-08-04,2024-08-31,4,3,4,4,3,3,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30555,ENC106278,F01,D130,2024-08-17,2024-09-10,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30556,ENC106281,F01,D170,2024-08-07,2024-09-08,4,1,3,3,2,3,Yes,6,Probably Yes,
+SV30557,ENC106282,F01,D111,2024-08-08,2024-09-03,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30558,ENC106300,F02,D270,2024-08-07,2024-08-30,4,4,2,2,3,4,Yes,9,Definitely Yes,
+SV30559,ENC106302,F01,D120,2024-08-15,2024-08-26,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV30560,ENC106329,F01,D130,2024-08-11,2024-09-15,4,4,4,4,3,4,Yes,8,Probably Yes,
+SV30561,ENC106346,F01,D130,2024-08-13,2024-09-11,2,3,4,4,4,3,Yes,7,Probably Yes,
+SV30562,ENC106364,F01,D111,2024-08-09,2024-08-29,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30563,ENC106368,F01,D120,2024-08-09,2024-08-23,4,4,3,3,4,4,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30564,ENC106397,F01,D130,2024-08-20,2024-09-15,4,4,4,4,2,4,Yes,8,Probably Yes,
+SV30565,ENC106402,F01,D170,2024-08-09,2024-09-13,4,4,4,4,4,2,Yes,8,Probably Yes,Food was cold and arrived late.
+SV30566,ENC106409,F01,D120,2024-08-10,2024-09-22,4,2,4,4,4,3,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30567,ENC106423,F01,D120,2024-08-12,2024-08-27,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30568,ENC106424,F01,D195,2024-08-10,2024-08-17,4,4,4,4,3,4,Yes,10,Probably No,
+SV30569,ENC106445,F01,D111,2024-08-18,2024-10-03,4,4,4,4,4,4,Yes,8,Probably Yes,Food was cold and arrived late.
+SV30570,ENC106447,F01,D111,2024-08-12,2024-09-18,4,2,4,4,4,3,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30571,ENC106455,F02,D210,2024-08-16,2024-09-02,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30572,ENC106470,F01,D110,2024-08-15,2024-08-30,4,4,3,4,4,2,Yes,8,Probably Yes,
+SV30573,ENC106479,F01,D120,2024-08-19,2024-09-15,4,3,4,4,2,4,Yes,7,Definitely No,
+SV30574,ENC106481,F03,D310,2024-08-15,2024-09-21,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30575,ENC106518,F01,D170,2024-08-14,2024-10-01,4,4,4,4,3,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30576,ENC106526,F02,D210,2024-08-19,2024-09-27,4,3,3,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30577,ENC106529,F02,D210,2024-08-17,2024-09-19,4,4,3,3,4,4,No,8,Definitely Yes,
+SV30578,ENC106532,F01,D140,2024-08-14,2024-09-17,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30579,ENC106542,F01,D111,2024-08-17,2024-09-13,4,4,4,4,3,3,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30580,ENC106544,F03,D320,2024-08-17,2024-09-30,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30581,ENC106548,F01,D111,2024-08-16,2024-08-23,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV30582,ENC106560,F01,D190,2024-08-18,2024-09-04,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV30583,ENC106589,F01,D110,2024-08-18,2024-09-29,4,3,3,4,3,3,Yes,6,Probably No,
+SV30584,ENC106591,F01,D111,2024-08-16,2024-09-19,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30585,ENC106596,F01,D120,2024-08-23,2024-10-06,4,4,4,4,4,3,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30586,ENC106600,F01,D111,2024-08-18,2024-09-07,4,4,4,4,4,4,Yes,8,Probably No,
+SV30587,ENC106648,F02,D210,2024-08-20,2024-09-16,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30588,ENC106649,F01,D130,2024-08-25,2024-10-06,4,4,3,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30589,ENC106650,F01,D170,2024-08-19,2024-09-20,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30590,ENC106664,F01,D130,2024-08-23,2024-09-27,4,4,4,3,1,3,Yes,7,Definitely Yes,
+SV30591,ENC106668,F01,D170,2024-08-20,2024-08-30,4,4,4,4,3,4,Yes,8,Probably No,
+SV30592,ENC106671,F01,D120,2024-08-21,2024-08-27,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30593,ENC106674,F01,D140,2024-08-22,2024-09-30,2,4,4,4,3,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV30594,ENC106676,F01,D195,2024-08-19,2024-09-19,2,3,4,2,2,4,Yes,4,Probably No,Billing office was rude on the phone.
+SV30595,ENC106679,F01,D195,2024-08-19,2024-09-11,4,3,4,4,3,4,Yes,9,Definitely Yes,
+SV30596,ENC106738,F01,D110,2024-08-23,2024-09-03,4,4,3,4,2,4,Yes,8,Probably Yes,
+SV30597,ENC106743,F01,D110,2024-08-25,2024-09-10,4,4,4,4,4,4,Yes,8,Probably No,Dr. explained everything clearly. Excellent care.
+SV30598,ENC106766,F03,D310,2024-09-03,2024-09-09,4,4,4,3,3,3,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30599,ENC106776,F01,D110,2024-08-25,2024-09-04,4,4,3,4,4,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30600,ENC106798,F02,D210,2024-08-24,2024-10-06,4,4,4,4,4,4,Yes,10,Probably Yes,Discharge instructions were clear and easy to follow.
+SV30601,ENC106802,F01,D195,2024-08-23,2024-09-17,4,4,3,4,4,4,Yes,7,Probably Yes,
+SV30602,ENC106826,F02,D210,2024-08-24,2024-09-05,4,4,2,4,4,3,No,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30603,ENC106837,F01,D111,2024-09-01,2024-10-07,1,4,4,4,2,4,Yes,7,Probably No,
+SV30604,ENC106844,F03,D320,2024-09-01,2024-09-18,4,3,2,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30605,ENC106856,F01,D195,2024-08-26,2024-09-07,4,4,4,4,4,4,No,9,Definitely Yes,
+SV30606,ENC106859,F01,D120,2024-08-27,2024-10-10,4,4,4,4,2,4,Yes,9,Definitely Yes,
+SV30607,ENC106860,F03,D310,2024-09-05,2024-10-08,4,4,2,4,3,4,Yes,8,Probably Yes,
+SV30608,ENC106863,F01,D111,2024-08-28,2024-10-14,4,1,3,3,1,3,Yes,5,Probably No,Parking was expensive and hard to find.
+SV30609,ENC106868,F02,D210,2024-08-30,2024-09-10,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30610,ENC106883,F01,D120,2024-08-29,2024-10-16,4,4,4,3,2,4,Yes,7,Probably Yes,
+SV30611,ENC106887,F02,D210,2024-08-29,2024-10-11,4,4,4,1,4,4,Yes,6,Definitely No,
+SV30612,ENC106889,F03,D310,2024-08-29,2024-09-29,4,4,4,3,3,3,No,6,Definitely No,Billing office was rude on the phone.
+SV30613,ENC106896,F02,D210,2024-09-01,2024-10-10,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30614,ENC106903,F01,D195,2024-08-28,2024-09-25,4,3,4,3,1,3,No,7,Probably Yes,
+SV30615,ENC106906,F02,D210,2024-09-04,2024-10-21,2,1,2,4,4,4,Yes,7,Probably No,Nobody explained my new medications before discharge.
+SV30616,ENC106910,F01,D195,2024-08-28,2024-09-15,4,3,4,4,4,4,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30617,ENC106941,F02,D210,2024-09-01,2024-09-27,4,3,4,3,1,4,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30618,ENC106950,F01,D111,2024-09-01,2024-09-25,4,4,3,3,1,3,Yes,6,Probably No,Parking was expensive and hard to find.
+SV30619,ENC106974,F01,D111,2024-09-03,2024-09-27,4,4,4,4,3,4,No,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30620,ENC106978,F03,D310,2024-09-04,2024-10-04,4,3,4,4,3,4,Yes,8,Definitely Yes,
+SV30621,ENC107001,F01,D111,2024-09-04,2024-10-16,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV30622,ENC107020,F03,D310,2024-09-03,2024-10-13,4,1,4,4,4,3,Yes,6,Definitely No,
+SV30623,ENC107023,F01,D110,2024-09-03,2024-09-30,3,4,3,4,4,4,Yes,9,Definitely Yes,
+SV30624,ENC107028,F01,D110,2024-09-06,2024-10-02,4,4,4,4,3,3,Yes,6,Probably Yes,
+SV30625,ENC107032,F03,D310,2024-09-05,2024-09-23,4,3,4,4,4,4,Yes,7,Probably Yes,
+SV30626,ENC107042,F01,D111,2024-09-05,2024-09-15,3,1,3,2,3,4,Yes,6,Definitely No,
+SV30627,ENC107043,F03,D310,2024-09-04,2024-10-05,4,4,4,4,2,4,Yes,8,Definitely Yes,
+SV30628,ENC107044,F01,D120,2024-09-05,2024-10-02,3,4,4,4,3,4,No,7,Probably Yes,Doctors were great; food needs improvement.
+SV30629,ENC107065,F01,D120,2024-09-07,2024-09-15,3,4,4,4,4,4,Yes,8,Probably No,Long wait in the emergency room before getting a bed.
+SV30630,ENC107069,F02,D210,2024-09-03,2024-10-21,4,4,4,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30631,ENC107100,F01,D195,2024-09-05,2024-10-09,4,4,4,4,4,4,No,10,Definitely Yes,
+SV30632,ENC107130,F01,D195,2024-09-05,2024-09-19,3,4,3,4,3,4,Yes,10,Definitely Yes,
+SV30633,ENC107140,F01,D170,2024-09-08,2024-10-14,4,4,3,3,4,3,Yes,6,Definitely No,
+SV30634,ENC107159,F01,D110,2024-09-09,2024-09-15,3,3,3,4,3,2,Yes,8,Probably Yes,
+SV30635,ENC107167,F01,D120,2024-09-08,2024-10-18,4,4,4,4,4,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV30636,ENC107168,F01,D140,2024-09-10,2024-10-21,4,4,4,3,4,4,Yes,7,Probably Yes,
+SV30637,ENC107176,F01,D110,2024-09-09,2024-10-16,4,4,4,2,3,4,Yes,6,Probably No,
+SV30638,ENC107188,F01,D130,2024-09-14,2024-10-16,3,4,3,3,3,3,Yes,7,Definitely Yes,"Felt rushed by the doctor, questions not answered."
+SV30639,ENC107197,F01,D150,2024-09-14,2024-10-04,3,1,4,4,3,2,No,7,Probably Yes,Food was cold and arrived late.
+SV30640,ENC107199,F01,D195,2024-09-09,2024-09-15,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30641,ENC107201,F02,D210,2024-09-14,2024-09-28,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV30642,ENC107209,F03,D310,2024-09-11,2024-09-23,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30643,ENC107246,F01,D150,2024-09-13,2024-10-11,4,4,3,4,4,4,Yes,7,Probably Yes,
+SV30644,ENC107251,F01,D110,2024-09-14,2024-10-26,4,4,4,4,3,4,No,8,Definitely No,
+SV30645,ENC107256,F02,D210,2024-09-13,2024-10-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30646,ENC107348,F02,D210,2024-09-19,2024-09-26,4,4,4,4,3,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30647,ENC107349,F01,D160,2024-09-14,2024-10-14,4,4,3,3,2,3,Yes,6,Definitely No,Food was cold and arrived late.
+SV30648,ENC107362,F01,D110,2024-09-14,2024-10-28,4,4,4,3,4,3,Yes,8,Probably Yes,
+SV30649,ENC107369,F01,D140,2024-09-19,2024-10-19,4,4,4,4,4,4,Yes,9,Probably Yes,"Clean room, but the call light took too long."
+SV30650,ENC107373,F01,D130,2024-09-16,2024-10-21,4,4,3,3,3,4,Yes,7,Probably Yes,
+SV30651,ENC107377,F01,D120,2024-09-17,2024-09-24,4,4,2,4,3,3,No,10,Definitely Yes,"Care was fine, room was noisy at night."
+SV30652,ENC107383,F01,D110,2024-09-16,2024-11-02,4,2,3,2,2,4,Yes,5,Definitely No,"Very noisy hallway, hard to sleep."
+SV30653,ENC107392,F01,D195,2024-09-16,2024-10-01,4,2,4,4,4,2,Yes,9,Definitely Yes,
+SV30654,ENC107401,F02,D210,2024-09-16,2024-10-21,4,4,2,3,3,4,Yes,6,Probably No,"Felt rushed by the doctor, questions not answered."
+SV30655,ENC107408,F01,D140,2024-09-20,2024-11-06,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30656,ENC107436,F01,D111,2024-09-29,2024-11-05,4,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30657,ENC107440,F01,D110,2024-09-20,2024-10-11,4,4,4,4,4,4,Yes,8,Probably No,"Clean room, but the call light took too long."
+SV30658,ENC107450,F01,D110,2024-09-22,2024-10-05,4,3,4,4,4,4,Yes,8,Probably Yes,Billing office was rude on the phone.
+SV30659,ENC107455,F01,D140,2024-09-20,2024-10-21,4,3,3,4,3,4,Yes,5,Probably No,Billing office was rude on the phone.
+SV30660,ENC107456,F01,D170,2024-09-19,2024-10-23,4,4,4,4,4,4,No,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30661,ENC107461,F01,D140,2024-09-20,2024-10-06,4,4,4,3,4,4,Yes,9,Probably Yes,
+SV30662,ENC107472,F03,D320,2024-09-22,2024-10-05,4,2,4,3,4,2,Yes,6,Probably Yes,
+SV30663,ENC107485,F01,D120,2024-09-21,2024-10-16,4,4,4,2,4,4,Yes,10,Definitely Yes,
+SV30664,ENC107497,F03,D320,2024-09-26,2024-10-22,4,1,3,4,2,3,Yes,6,Probably No,
+SV30665,ENC107557,F02,D210,2024-09-26,2024-10-07,4,4,4,3,3,4,Yes,8,Definitely Yes,
+SV30666,ENC107560,F01,D140,2024-09-29,2024-10-27,4,4,4,2,3,1,Yes,8,Probably Yes,Parking was expensive and hard to find.
+SV30667,ENC107564,F01,D130,2024-09-28,2024-11-03,4,4,4,4,2,4,Yes,9,Definitely Yes,
+SV30668,ENC107568,F02,D210,2024-09-22,2024-10-09,4,4,2,4,4,4,Yes,10,Definitely Yes,Doctors were great; food needs improvement.
+SV30669,ENC107579,F01,D195,2024-09-23,2024-10-31,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30670,ENC107585,F01,D110,2024-09-24,2024-10-27,3,4,4,3,2,2,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30671,ENC107598,F01,D120,2024-09-28,2024-10-18,4,4,3,4,3,3,Yes,7,Definitely No,Parking was expensive and hard to find.
+SV30672,ENC107615,F03,D310,2024-10-02,2024-10-12,3,3,4,3,3,3,No,3,Definitely No,Parking was expensive and hard to find.
+SV30673,ENC107620,F01,D120,2024-10-03,2024-10-27,4,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30674,ENC107628,F01,D195,2024-09-24,2024-11-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30675,ENC107651,F01,D195,2024-09-25,2024-11-06,1,4,2,3,4,4,Yes,7,Definitely Yes,
+SV30676,ENC107656,F01,D120,2024-10-01,2024-10-09,4,4,3,3,1,3,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30677,ENC107679,F01,D120,2024-09-30,2024-10-20,2,3,3,3,4,3,Yes,7,Definitely Yes,
+SV30678,ENC107693,F02,D210,2024-09-27,2024-10-30,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30679,ENC107702,F01,D190,2024-10-01,2024-11-16,4,4,3,4,4,3,Yes,8,Definitely Yes,
+SV30680,ENC107717,F01,D110,2024-09-28,2024-10-28,3,3,2,4,3,2,Yes,6,Probably Yes,
+SV30681,ENC107725,F01,D111,2024-09-29,2024-11-12,4,4,4,4,4,2,No,10,Definitely Yes,
+SV30682,ENC107738,F01,D110,2024-09-30,2024-11-02,4,4,4,4,4,4,No,9,Definitely Yes,
+SV30683,ENC107743,F03,D310,2024-09-29,2024-10-30,4,4,2,4,1,4,Yes,8,Probably No,
+SV30684,ENC107773,F01,D195,2024-09-29,2024-10-18,1,4,3,2,4,4,Yes,8,Probably Yes,
+SV30685,ENC107793,F01,D120,2024-10-02,2024-11-06,4,4,4,4,3,4,Yes,8,Probably Yes,
+SV30686,ENC107812,F01,D110,2024-10-02,2024-10-09,4,4,3,3,4,4,Yes,7,Definitely Yes,
+SV30687,ENC107819,F03,D310,2024-10-04,2024-11-18,4,4,4,3,3,4,Yes,7,Probably Yes,
+SV30688,ENC107828,F01,D195,2024-10-03,2024-10-30,3,4,2,3,2,4,Yes,8,Definitely Yes,
+SV30689,ENC107830,F01,D111,2024-10-05,2024-11-10,3,4,4,3,4,4,No,6,Probably Yes,
+SV30690,ENC107843,F01,D111,2024-10-05,2024-11-07,4,4,4,4,1,2,Yes,7,Definitely Yes,
+SV30691,ENC107844,F01,D111,2024-10-09,2024-11-13,4,4,3,3,2,4,No,8,Probably No,
+SV30692,ENC107848,F01,D120,2024-10-05,2024-10-28,4,4,4,4,3,4,Yes,8,Probably No,Doctors were great; food needs improvement.
+SV30693,ENC107854,F01,D110,2024-10-06,2024-11-05,3,1,1,4,4,2,Yes,6,Definitely No,
+SV30694,ENC107878,F01,D140,2024-10-05,2024-10-14,2,4,4,4,3,4,Yes,6,Definitely No,
+SV30695,ENC107886,F03,D340,2024-10-05,2024-10-16,1,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30696,ENC107912,F01,D110,2024-10-06,2024-11-20,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30697,ENC107923,F01,D120,2024-10-06,2024-11-04,4,4,3,4,4,4,No,8,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30698,ENC107926,F01,D170,2024-10-06,2024-11-10,4,4,4,4,2,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30699,ENC107930,F01,D160,2024-10-06,2024-10-19,4,4,4,4,1,1,Yes,7,Definitely Yes,"Clean room, but the call light took too long."
+SV30700,ENC107932,F01,D140,2024-10-10,2024-11-04,4,4,4,4,4,1,Yes,9,Definitely Yes,
+SV30701,ENC107959,F01,D160,2024-10-13,2024-10-29,4,4,2,4,1,1,Yes,6,Probably No,Nobody explained my new medications before discharge.
+SV30702,ENC107964,F01,D170,2024-10-07,2024-11-14,4,2,4,4,4,4,Yes,7,Probably Yes,
+SV30703,ENC107970,F01,D120,2024-10-09,2024-10-21,3,4,4,4,4,3,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30704,ENC107974,F01,D110,2024-10-09,2024-11-05,3,4,3,1,3,4,Yes,7,Definitely Yes,Parking was expensive and hard to find.
+SV30705,ENC107977,F03,D330,2024-10-10,2024-11-15,4,2,4,4,3,3,Yes,9,Definitely Yes,
+SV30706,ENC107993,F01,D110,2024-10-11,2024-11-14,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30707,ENC108016,F01,D195,2024-10-09,2024-11-12,4,4,4,3,4,4,Yes,10,Definitely Yes,
+SV30708,ENC108018,F01,D170,2024-10-09,2024-11-01,1,4,4,2,3,3,Yes,7,Definitely Yes,
+SV30709,ENC108022,F03,D310,2024-10-10,2024-10-22,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30710,ENC108024,F01,D195,2024-10-09,2024-11-25,3,1,3,4,4,1,Yes,7,Definitely Yes,
+SV30711,ENC108041,F01,D195,2024-10-09,2024-10-25,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30712,ENC108042,F03,D320,2024-10-15,2024-11-04,4,4,4,4,3,4,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV30713,ENC108045,F01,D195,2024-10-09,2024-11-11,4,4,4,3,2,4,No,9,Definitely Yes,
+SV30714,ENC108079,F01,D110,2024-10-14,2024-12-01,4,3,1,2,4,1,Yes,6,Probably No,Parking was expensive and hard to find.
+SV30715,ENC108101,F02,D210,2024-10-11,2024-10-31,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30716,ENC108122,F02,D210,2024-10-15,2024-11-17,4,3,4,3,4,4,Yes,8,Probably Yes,
+SV30717,ENC108139,F02,D210,2024-10-16,2024-11-10,4,4,4,4,2,2,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV30718,ENC108148,F02,D210,2024-10-16,2024-10-30,4,3,4,4,4,4,Yes,7,Definitely Yes,
+SV30719,ENC108167,F01,D195,2024-10-14,2024-11-30,4,4,4,4,4,4,No,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30720,ENC108180,F03,D310,2024-10-14,2024-10-23,4,4,4,4,4,3,Yes,7,Probably Yes,
+SV30721,ENC108181,F01,D140,2024-10-23,2024-11-24,4,3,1,2,3,3,Yes,6,Probably No,Parking was expensive and hard to find.
+SV30722,ENC108204,F02,D210,2024-10-17,2024-11-15,4,3,4,4,3,3,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30723,ENC108251,F03,D330,2024-10-20,2024-11-15,4,4,4,4,4,4,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV30724,ENC108257,F01,D110,2024-10-20,2024-11-30,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30725,ENC108277,F01,D160,2024-10-22,2024-11-16,4,4,2,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30726,ENC108288,F03,D310,2024-10-21,2024-10-29,4,1,2,4,4,3,No,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30727,ENC108307,F01,D170,2024-10-20,2024-12-06,3,4,3,4,4,4,Yes,9,Probably Yes,
+SV30728,ENC108315,F01,D170,2024-10-20,2024-10-28,3,3,3,4,2,2,Yes,6,Probably No,Long wait in the emergency room before getting a bed.
+SV30729,ENC108330,F01,D110,2024-10-23,2024-11-12,4,4,4,4,4,4,Yes,8,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30730,ENC108333,F01,D110,2024-10-25,2024-11-05,4,4,4,1,3,4,Yes,9,Definitely Yes,
+SV30731,ENC108339,F01,D111,2024-10-20,2024-10-26,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30732,ENC108343,F01,D195,2024-10-19,2024-11-10,2,4,4,4,3,3,Yes,8,Definitely No,Nobody explained my new medications before discharge.
+SV30733,ENC108355,F01,D190,2024-11-03,2024-12-05,4,4,4,2,4,4,Yes,9,Definitely Yes,
+SV30734,ENC108358,F01,D195,2024-10-20,2024-11-05,4,4,3,3,3,4,Yes,7,Probably Yes,
+SV30735,ENC108376,F01,D110,2024-10-24,2024-11-03,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30736,ENC108405,F01,D111,2024-10-28,2024-11-13,3,3,3,1,4,4,Yes,5,Probably No,Food was cold and arrived late.
+SV30737,ENC108410,F01,D190,2024-10-26,2024-11-28,4,4,4,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30738,ENC108415,F01,D110,2024-10-26,2024-11-05,2,4,3,1,1,1,Yes,6,Probably No,"Very noisy hallway, hard to sleep."
+SV30739,ENC108423,F02,D210,2024-10-25,2024-11-01,4,3,4,4,1,4,Yes,10,Definitely Yes,
+SV30740,ENC108427,F01,D120,2024-11-05,2024-11-14,3,4,3,4,4,3,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30741,ENC108434,F01,D190,2024-11-01,2024-11-22,4,4,4,4,2,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30742,ENC108452,F03,D320,2024-10-28,2024-12-03,4,4,4,3,3,4,Yes,7,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30743,ENC108466,F01,D190,2024-10-28,2024-11-27,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30744,ENC108468,F01,D170,2024-10-26,2024-11-11,4,4,4,3,3,4,Yes,10,Definitely Yes,
+SV30745,ENC108500,F01,D110,2024-11-01,2024-12-18,4,4,1,4,1,3,No,8,Probably Yes,
+SV30746,ENC108502,F01,D110,2024-10-29,2024-11-20,4,4,4,4,2,3,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30747,ENC108533,F01,D130,2024-10-31,2024-11-06,4,4,3,3,1,3,Yes,6,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30748,ENC108535,F01,D195,2024-10-27,2024-11-25,4,4,4,2,4,4,No,8,Definitely Yes,
+SV30749,ENC108540,F01,D120,2024-10-29,2024-11-23,4,4,4,2,4,4,Yes,8,Definitely Yes,Billing office was rude on the phone.
+SV30750,ENC108544,F02,D210,2024-10-29,2024-11-28,2,4,1,4,4,4,Yes,7,Probably No,"Care was fine, room was noisy at night."
+SV30751,ENC108554,F02,D210,2024-11-04,2024-12-21,4,4,3,4,4,4,Yes,6,Definitely No,"Very noisy hallway, hard to sleep."
+SV30752,ENC108558,F01,D130,2024-11-11,2024-11-19,4,4,3,2,4,3,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30753,ENC108560,F01,D170,2024-11-02,2024-12-05,4,4,1,4,4,3,Yes,7,Probably No,
+SV30754,ENC108579,F01,D195,2024-10-29,2024-11-06,4,4,2,4,4,3,Yes,8,Probably No,
+SV30755,ENC108590,F03,D340,2024-10-30,2024-11-20,4,4,3,4,4,3,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30756,ENC108601,F01,D110,2024-11-02,2024-11-17,4,4,4,3,3,4,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30757,ENC108617,F02,D210,2024-11-01,2024-11-21,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30758,ENC108631,F01,D195,2024-10-30,2024-12-13,4,1,2,3,3,3,Yes,5,Definitely No,Waited too long for the call light to be answered at night.
+SV30759,ENC108642,F01,D111,2024-11-01,2024-12-02,4,4,2,2,1,3,Yes,6,Probably No,Billing office was rude on the phone.
+SV30760,ENC108652,F01,D190,2024-11-15,2024-11-29,4,4,4,4,3,3,Yes,9,Definitely Yes,
+SV30761,ENC108668,F01,D150,2024-11-03,2024-11-30,4,4,3,2,4,4,Yes,7,Probably Yes,
+SV30762,ENC108672,F01,D120,2024-11-06,2024-11-14,4,4,3,4,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30763,ENC108681,F01,D111,2024-11-03,2024-11-24,3,4,4,4,4,4,No,9,Definitely Yes,
+SV30764,ENC108686,F01,D195,2024-11-01,2024-12-04,4,4,3,4,4,4,No,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30765,ENC108697,F01,D110,2024-11-05,2024-11-26,3,1,3,3,4,4,No,7,Probably Yes,
+SV30766,ENC108701,F01,D120,2024-11-06,2024-12-04,3,3,3,4,4,2,Yes,9,Probably Yes,
+SV30767,ENC108709,F01,D130,2024-11-09,2024-12-11,4,4,4,4,4,4,Yes,8,Probably No,Dr. explained everything clearly. Excellent care.
+SV30768,ENC108721,F01,D111,2024-11-08,2024-12-26,4,4,3,1,1,3,No,7,Probably No,Bathroom was not cleaned during my stay.
+SV30769,ENC108746,F01,D111,2024-11-06,2024-12-18,4,4,4,4,3,3,Yes,10,Probably Yes,
+SV30770,ENC108751,F01,D120,2024-11-08,2024-12-26,2,2,3,2,3,3,No,6,Probably No,"Very noisy hallway, hard to sleep."
+SV30771,ENC108754,F01,D170,2024-11-06,2024-12-15,4,4,4,4,2,4,Yes,10,Definitely Yes,
+SV30772,ENC108755,F01,D195,2024-11-05,2024-11-16,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30773,ENC108760,F01,D110,2024-11-10,2024-12-03,4,4,4,3,3,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30774,ENC108795,F01,D140,2024-11-07,2024-12-23,4,4,4,3,3,4,Yes,7,Probably Yes,
+SV30775,ENC108800,F01,D130,2024-11-09,2024-12-21,3,4,2,2,1,3,Yes,5,Probably Yes,
+SV30776,ENC108805,F03,D320,2024-11-10,2024-12-13,4,4,4,4,1,2,Yes,7,Definitely Yes,"Felt rushed by the doctor, questions not answered."
+SV30777,ENC108842,F01,D195,2024-11-06,2024-11-14,4,4,4,3,4,4,Yes,10,Definitely Yes,
+SV30778,ENC108848,F01,D130,2024-11-11,2024-12-23,4,4,4,4,3,3,Yes,9,Definitely Yes,Excellent communication from the care team.
+SV30779,ENC108849,F01,D130,2024-11-15,2024-12-31,4,4,4,4,2,2,Yes,6,Probably No,
+SV30780,ENC108863,F02,D210,2024-11-07,2024-12-17,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30781,ENC108873,F01,D111,2024-11-11,2024-12-22,3,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30782,ENC108880,F01,D130,2024-11-15,2025-01-02,4,3,4,2,4,4,Yes,8,Probably No,Dr. explained everything clearly. Excellent care.
+SV30783,ENC108899,F01,D150,2024-11-13,2024-12-15,2,2,3,3,3,1,Yes,5,Probably Yes,
+SV30784,ENC108907,F02,D210,2024-11-10,2024-12-28,4,4,3,4,4,3,Yes,7,Probably Yes,Nobody explained my new medications before discharge.
+SV30785,ENC108920,F02,D210,2024-11-10,2024-11-17,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30786,ENC108923,F01,D170,2024-11-09,2024-12-14,2,4,4,3,3,4,Yes,7,Probably Yes,Staff were kind and respectful the whole stay.
+SV30787,ENC108934,F02,D210,2024-11-13,2024-12-13,3,3,1,3,3,4,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30788,ENC108946,F02,D210,2024-11-14,2024-12-15,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30789,ENC108947,F01,D195,2024-11-09,2024-11-18,4,4,4,4,4,4,Yes,8,Probably No,
+SV30790,ENC108970,F01,D110,2024-11-11,2024-12-02,4,4,2,4,2,4,Yes,6,Probably Yes,
+SV30791,ENC108982,F01,D140,2024-11-13,2024-12-09,4,4,3,4,2,4,Yes,10,Definitely Yes,
+SV30792,ENC108984,F01,D111,2024-11-14,2024-11-25,4,4,4,4,3,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30793,ENC108994,F01,D140,2024-11-19,2024-12-22,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30794,ENC109023,F01,D195,2024-11-12,2024-12-05,4,4,3,4,1,3,Yes,9,Definitely Yes,Parking was expensive and hard to find.
+SV30795,ENC109036,F01,D111,2024-11-20,2024-12-17,4,3,4,3,3,4,Yes,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30796,ENC109041,F01,D120,2024-11-19,2024-12-12,4,4,3,1,3,3,Yes,6,Probably No,
+SV30797,ENC109065,F01,D195,2024-11-13,2024-11-30,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30798,ENC109075,F01,D120,2024-11-19,2024-12-10,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV30799,ENC109104,F01,D140,2024-11-18,2024-11-25,4,4,3,4,4,3,Yes,7,Probably Yes,
+SV30800,ENC109106,F01,D190,2024-11-18,2024-12-18,4,4,4,4,1,2,Yes,6,Probably No,"Felt rushed by the doctor, questions not answered."
+SV30801,ENC109147,F01,D160,2024-11-19,2024-11-27,4,4,4,4,4,2,No,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30802,ENC109164,F01,D180,2024-11-17,2024-12-10,4,4,4,2,4,4,Yes,9,Definitely Yes,
+SV30803,ENC109172,F02,D210,2024-11-16,2024-12-17,4,4,4,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV30804,ENC109180,F01,D120,2024-11-20,2025-01-01,4,3,3,3,1,1,Yes,6,Probably No,
+SV30805,ENC109186,F01,D110,2024-11-20,2024-12-24,4,4,3,1,4,2,Yes,5,Probably No,
+SV30806,ENC109195,F02,D210,2024-11-22,2024-12-06,1,4,3,3,4,3,Yes,7,Probably Yes,
+SV30807,ENC109208,F03,D310,2024-11-25,2024-12-12,4,4,4,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30808,ENC109209,F01,D140,2024-11-21,2024-11-29,4,2,4,4,4,3,No,9,Definitely Yes,
+SV30809,ENC109216,F01,D111,2024-11-23,2024-12-21,4,2,4,4,3,3,Yes,8,Definitely Yes,
+SV30810,ENC109240,F01,D170,2024-11-21,2025-01-03,4,4,4,4,3,4,Yes,10,Definitely Yes,Doctors were great; food needs improvement.
+SV30811,ENC109266,F01,D120,2024-11-29,2024-12-28,4,4,4,4,4,4,Yes,7,Definitely Yes,
+SV30812,ENC109269,F01,D130,2024-12-01,2024-12-29,4,4,3,4,1,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV30813,ENC109271,F02,D210,2024-11-19,2024-12-08,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30814,ENC109272,F01,D110,2024-11-25,2025-01-05,4,4,2,4,2,4,Yes,6,Probably No,Food was cold and arrived late.
+SV30815,ENC109273,F03,D310,2024-11-22,2024-12-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30816,ENC109294,F03,D320,2024-11-22,2024-11-29,3,1,1,4,1,4,Yes,6,Probably No,Parking was expensive and hard to find.
+SV30817,ENC109296,F03,D310,2024-11-20,2024-12-11,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30818,ENC109300,F01,D120,2024-11-23,2024-12-14,4,4,4,4,1,1,Yes,6,Probably No,
+SV30819,ENC109318,F03,D320,2024-11-23,2024-12-26,4,4,4,4,4,4,No,9,Definitely Yes,
+SV30820,ENC109331,F01,D111,2024-11-24,2024-12-04,2,2,4,4,3,4,Yes,7,Definitely Yes,Waited too long for the call light to be answered at night.
+SV30821,ENC109340,F03,D330,2024-12-01,2024-12-26,4,2,3,4,4,4,Yes,7,Probably No,
+SV30822,ENC109344,F02,D210,2024-11-22,2024-12-05,4,4,4,4,3,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30823,ENC109355,F01,D170,2024-11-23,2024-12-04,2,1,4,4,2,4,Yes,7,Definitely Yes,
+SV30824,ENC109364,F01,D195,2024-11-23,2025-01-05,3,4,4,3,4,2,Yes,7,Probably Yes,
+SV30825,ENC109378,F01,D195,2024-11-23,2024-12-08,4,4,4,4,4,2,No,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30826,ENC109381,F03,D320,2024-11-26,2024-12-17,2,4,4,2,4,4,Yes,10,Definitely Yes,
+SV30827,ENC109391,F01,D111,2024-11-30,2024-12-17,2,4,3,4,2,2,Yes,7,Probably Yes,Nobody explained my new medications before discharge.
+SV30828,ENC109392,F01,D111,2024-11-26,2024-12-07,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30829,ENC109396,F03,D310,2024-11-28,2025-01-09,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV30830,ENC109399,F02,D210,2024-12-02,2024-12-09,4,4,4,2,4,4,Yes,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30831,ENC109400,F01,D190,2024-11-28,2024-12-11,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30832,ENC109409,F02,D210,2024-11-29,2025-01-09,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30833,ENC109416,F01,D111,2024-11-27,2024-12-17,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30834,ENC109426,F01,D195,2024-11-26,2024-12-04,4,3,1,2,3,3,Yes,7,Definitely Yes,Bathroom was not cleaned during my stay.
+SV30835,ENC109435,F01,D111,2024-11-30,2025-01-07,4,4,4,4,1,4,Yes,8,Probably Yes,
+SV30836,ENC109455,F01,D111,2024-11-28,2024-12-15,4,4,3,4,4,4,Yes,10,Probably No,Excellent communication from the care team.
+SV30837,ENC109462,F02,D210,2024-11-30,2024-12-20,3,4,4,3,1,2,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV30838,ENC109518,F03,D310,2024-11-29,2024-12-26,4,4,4,1,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30839,ENC109524,F01,D170,2024-11-29,2024-12-14,4,3,2,3,4,3,No,5,Definitely No,
+SV30840,ENC109534,F01,D180,2024-11-29,2024-12-22,4,4,4,4,4,4,No,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30841,ENC109538,F01,D111,2024-12-01,2025-01-12,3,1,1,4,3,2,Yes,4,Probably No,Food was cold and arrived late.
+SV30842,ENC109543,F01,D195,2024-11-29,2024-12-19,4,4,4,4,4,4,No,10,Probably Yes,
+SV30843,ENC109554,F01,D110,2024-12-12,2024-12-29,4,4,4,3,2,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30844,ENC109582,F01,D111,2024-12-03,2025-01-08,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30845,ENC109597,F01,D110,2024-12-02,2024-12-15,4,2,4,1,3,3,Yes,8,Probably Yes,
+SV30846,ENC109598,F01,D111,2024-12-03,2025-01-11,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30847,ENC109599,F01,D111,2024-12-02,2024-12-23,4,4,2,4,2,4,Yes,8,Probably No,
+SV30848,ENC109615,F01,D120,2024-12-03,2024-12-09,4,4,3,4,4,4,Yes,8,Probably Yes,Parking was expensive and hard to find.
+SV30849,ENC109634,F01,D190,2024-12-05,2025-01-06,3,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30850,ENC109638,F01,D110,2024-12-04,2024-12-19,4,4,4,1,4,3,Yes,7,Probably Yes,"Clean room, but the call light took too long."
+SV30851,ENC109644,F01,D110,2024-12-05,2024-12-15,4,3,4,4,4,4,Yes,9,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30852,ENC109676,F03,D310,2024-12-05,2025-01-12,4,4,3,3,4,4,Yes,6,Probably No,
+SV30853,ENC109678,F01,D111,2024-12-07,2025-01-09,4,4,3,4,1,4,Yes,6,Probably No,
+SV30854,ENC109685,F01,D130,2024-12-15,2025-01-02,4,3,4,3,2,4,Yes,7,Definitely Yes,
+SV30855,ENC109711,F01,D195,2024-12-06,2025-01-07,4,4,3,4,4,4,Yes,6,Probably Yes,
+SV30856,ENC109749,F02,D210,2024-12-07,2025-01-17,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV30857,ENC109763,F01,D140,2024-12-10,2025-01-14,3,3,3,4,4,4,Yes,8,Probably Yes,
+SV30858,ENC109764,F01,D110,2024-12-13,2024-12-23,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30859,ENC109791,F01,D110,2024-12-09,2025-01-26,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30860,ENC109826,F01,D190,2024-12-13,2025-01-14,4,4,4,3,3,4,Yes,9,Definitely Yes,
+SV30861,ENC109844,F01,D110,2024-12-09,2025-01-26,4,4,1,4,3,3,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV30862,ENC109845,F01,D111,2024-12-12,2025-01-27,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30863,ENC109848,F03,D310,2024-12-19,2025-02-05,4,4,3,3,3,4,No,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30864,ENC109864,F01,D111,2024-12-12,2025-01-19,4,4,1,4,4,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30865,ENC109867,F01,D110,2024-12-13,2025-01-10,4,4,4,4,4,3,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30866,ENC109875,F01,D111,2024-12-13,2025-01-13,4,3,4,4,4,4,Yes,8,Probably Yes,Food was cold and arrived late.
+SV30867,ENC109879,F03,D330,2024-12-19,2025-01-23,4,4,4,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30868,ENC109917,F01,D160,2024-12-15,2025-01-14,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV30869,ENC109930,F01,D190,2024-12-16,2025-01-25,4,4,3,4,3,4,Yes,9,Definitely Yes,
+SV30870,ENC109971,F01,D111,2024-12-15,2025-02-01,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV30871,ENC110017,F02,D210,2024-12-18,2025-02-03,4,4,4,3,4,1,No,9,Probably Yes,
+SV30872,ENC110024,F01,D110,2024-12-13,2025-01-05,4,4,4,4,4,2,Yes,7,Definitely Yes,
+SV30873,ENC110040,F01,D195,2024-12-14,2024-12-30,4,2,4,2,4,4,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV30874,ENC110052,F01,D111,2024-12-19,2025-01-25,4,4,3,4,4,4,Yes,10,Probably Yes,
+SV30875,ENC110055,F03,D320,2024-12-17,2025-01-01,2,3,4,4,4,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30876,ENC110068,F02,D210,2024-12-15,2025-01-25,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30877,ENC110076,F01,D190,2024-12-23,2025-02-08,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30878,ENC110084,F02,D210,2024-12-18,2025-02-02,3,4,4,4,3,2,Yes,4,Probably No,
+SV30879,ENC110096,F02,D270,2024-12-18,2025-01-13,4,4,4,4,4,2,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30880,ENC110116,F02,D210,2024-12-15,2025-01-30,4,4,4,3,4,3,Yes,10,Probably Yes,
+SV30881,ENC110121,F01,D111,2024-12-16,2025-01-21,4,4,4,4,2,4,Yes,9,Probably Yes,
+SV30882,ENC110135,F01,D140,2024-12-19,2025-01-17,4,4,4,4,4,2,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30883,ENC110139,F01,D150,2024-12-20,2024-12-28,4,4,3,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV30884,ENC110178,F03,D320,2024-12-22,2025-01-05,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV30885,ENC110179,F01,D170,2024-12-19,2025-01-05,4,4,4,3,4,3,Yes,8,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30886,ENC110184,F03,D310,2024-12-20,2025-01-05,4,4,4,3,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30887,ENC110189,F01,D160,2024-12-22,2025-02-08,2,2,1,3,3,1,Yes,3,Probably No,Nobody explained my new medications before discharge.
+SV30888,ENC110218,F01,D170,2024-12-21,2025-01-21,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30889,ENC110224,F01,D111,2024-12-25,2025-02-03,4,4,3,4,2,4,No,8,Probably Yes,
+SV30890,ENC110263,F01,D110,2024-12-23,2025-01-04,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV30891,ENC110302,F01,D160,2024-12-24,2025-02-06,4,4,4,4,3,4,Yes,8,Probably Yes,Thank you to the night shift nurses for the great care.
+SV30892,ENC110372,F01,D130,2025-01-03,2025-01-23,3,4,4,4,3,2,Yes,7,Probably Yes,
+SV30893,ENC110410,F02,D210,2024-12-28,2025-01-05,3,4,4,4,3,4,Yes,9,Probably Yes,
+SV30894,ENC110428,F03,D340,2024-12-25,2025-01-07,3,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30895,ENC110468,F01,D160,2024-12-30,2025-01-20,4,4,2,4,4,4,Yes,10,Definitely Yes,
+SV30896,ENC110500,F01,D110,2024-12-28,2025-02-14,4,4,3,4,3,3,Yes,8,Definitely Yes,
+SV30897,ENC110505,F01,D111,2024-12-29,2025-01-05,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30898,ENC110513,F01,D111,2025-01-02,2025-01-25,3,4,3,4,4,4,Yes,9,Definitely Yes,
+SV30899,ENC110515,F02,D210,2024-12-27,2025-01-04,4,3,3,4,4,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV30900,ENC110527,F01,D111,2024-12-30,2025-01-13,4,1,3,3,4,4,Yes,8,Definitely Yes,Nobody explained my new medications before discharge.
+SV30901,ENC110541,F01,D195,2024-12-27,2025-01-20,4,4,3,3,2,4,Yes,9,Definitely Yes,
+SV30902,ENC110560,F03,D310,2024-12-31,2025-01-26,4,4,4,4,1,3,Yes,5,Definitely No,
+SV30903,ENC110581,F01,D120,2025-01-03,2025-02-20,3,4,4,4,4,4,Yes,10,Probably Yes,
+SV30904,ENC110598,F02,D210,2025-01-03,2025-02-04,4,4,4,4,3,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV30905,ENC110600,F01,D110,2024-12-31,2025-01-31,4,3,4,4,3,3,Yes,9,Definitely Yes,
+SV30906,ENC110604,F01,D170,2024-12-31,2025-02-09,3,4,4,4,4,1,Yes,10,Definitely Yes,"Clean room, but the call light took too long."
+SV30907,ENC110608,F03,D310,2025-01-03,2025-01-30,4,4,4,4,1,3,Yes,8,Definitely Yes,
+SV30908,ENC110615,F01,D195,2024-12-30,2025-01-20,4,4,3,4,4,3,Yes,8,Probably Yes,Nobody explained my new medications before discharge.
+SV30909,ENC110624,F01,D195,2024-12-31,2025-02-10,4,3,4,3,1,4,No,8,Probably Yes,Nobody explained my new medications before discharge.
+SV30910,ENC110630,F01,D110,2025-01-02,2025-01-10,4,2,4,1,4,2,Yes,6,Probably Yes,Waited too long for the call light to be answered at night.
+SV30911,ENC110632,F01,D195,2024-12-31,2025-01-09,4,4,4,3,4,3,Yes,8,Probably Yes,
+SV30912,ENC110642,F02,D210,2025-01-03,2025-02-01,4,2,4,3,1,4,Yes,8,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30913,ENC110648,F03,D330,2025-01-03,2025-02-03,4,2,4,4,4,3,Yes,10,Definitely Yes,
+SV30914,ENC110656,F01,D195,2024-12-31,2025-02-08,4,4,4,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30915,ENC110664,F01,D110,2025-01-04,2025-01-10,4,2,4,3,4,4,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV30916,ENC110665,F03,D320,2025-01-03,2025-01-30,4,4,3,4,3,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30917,ENC110677,F02,D210,2025-01-03,2025-01-17,4,4,3,4,4,2,Yes,10,Definitely Yes,
+SV30918,ENC110687,F01,D195,2025-01-02,2025-01-22,4,3,4,4,3,2,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV30919,ENC110705,F03,D310,2025-01-04,2025-01-13,4,4,4,4,3,2,No,7,Probably No,"Very noisy hallway, hard to sleep."
+SV30920,ENC110707,F03,D310,2025-01-07,2025-01-14,4,4,4,4,4,4,Yes,10,Probably Yes,The nurses were wonderful and very attentive.
+SV30921,ENC110726,F03,D320,2025-01-07,2025-02-09,4,4,3,2,3,4,No,3,Probably No,
+SV30922,ENC110743,F01,D170,2025-01-02,2025-01-19,4,3,4,4,3,4,Yes,9,Definitely Yes,
+SV30923,ENC110788,F01,D111,2025-01-06,2025-02-07,4,4,4,2,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30924,ENC110795,F01,D195,2025-01-03,2025-01-11,4,3,4,4,2,3,Yes,8,Probably Yes,Waited too long for the call light to be answered at night.
+SV30925,ENC110802,F01,D160,2025-01-08,2025-02-06,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV30926,ENC110810,F01,D170,2025-01-05,2025-02-07,4,4,4,4,4,3,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30927,ENC110817,F02,D210,2025-01-09,2025-02-05,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30928,ENC110821,F01,D170,2025-01-05,2025-02-03,4,4,3,2,2,4,Yes,7,Definitely Yes,
+SV30929,ENC110848,F01,D130,2025-01-11,2025-01-19,4,4,2,2,4,4,Yes,9,Definitely Yes,
+SV30930,ENC110849,F02,D210,2025-01-05,2025-01-18,4,4,4,4,4,4,No,9,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV30931,ENC110873,F02,D270,2025-01-08,2025-01-18,4,4,4,4,4,4,No,10,Definitely Yes,
+SV30932,ENC110874,F03,D310,2025-01-12,2025-02-16,4,4,4,4,4,4,Yes,10,Probably Yes,Excellent communication from the care team.
+SV30933,ENC110876,F02,D210,2025-01-12,2025-01-22,4,1,4,4,2,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30934,ENC110878,F01,D170,2025-01-08,2025-01-14,4,4,4,4,4,2,Yes,6,Probably No,Long wait in the emergency room before getting a bed.
+SV30935,ENC110883,F01,D130,2025-01-18,2025-02-24,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV30936,ENC110889,F01,D120,2025-01-08,2025-01-23,4,3,4,4,4,4,Yes,8,Definitely Yes,"Very noisy hallway, hard to sleep."
+SV30937,ENC110891,F01,D150,2025-01-11,2025-02-15,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30938,ENC110892,F02,D210,2025-01-07,2025-02-13,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30939,ENC110924,F02,D210,2025-01-09,2025-01-25,4,4,4,4,4,2,Yes,10,Definitely Yes,
+SV30940,ENC110925,F01,D170,2025-01-08,2025-02-19,4,4,4,4,3,4,Yes,9,Probably Yes,
+SV30941,ENC110967,F03,D310,2025-01-11,2025-02-15,4,3,4,4,3,4,Yes,9,Definitely Yes,
+SV30942,ENC110984,F01,D111,2025-01-11,2025-01-25,4,4,4,4,2,3,No,7,Probably Yes,"Clean room, but the call light took too long."
+SV30943,ENC110998,F02,D210,2025-01-10,2025-02-16,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV30944,ENC111012,F01,D110,2025-01-14,2025-02-17,4,4,4,4,4,3,Yes,10,Probably Yes,
+SV30945,ENC111042,F03,D310,2025-01-10,2025-02-13,4,4,1,3,3,4,Yes,8,Probably Yes,
+SV30946,ENC111055,F01,D170,2025-01-12,2025-02-22,4,4,4,4,2,1,Yes,10,Definitely Yes,"Clean room, but the call light took too long."
+SV30947,ENC111057,F01,D110,2025-01-14,2025-01-26,4,4,4,3,3,4,No,8,Definitely Yes,
+SV30948,ENC111062,F01,D195,2025-01-11,2025-01-17,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30949,ENC111067,F01,D111,2025-01-14,2025-02-05,4,3,1,2,2,3,No,6,Definitely No,
+SV30950,ENC111080,F01,D150,2025-01-18,2025-01-29,3,3,3,3,3,4,No,8,Definitely Yes,Waited too long for the call light to be answered at night.
+SV30951,ENC111085,F01,D195,2025-01-11,2025-02-17,4,4,4,3,4,4,Yes,9,Probably Yes,Good nurses but the wait for discharge was very long.
+SV30952,ENC111088,F01,D110,2025-01-15,2025-02-11,4,4,4,4,2,3,Yes,6,Probably Yes,
+SV30953,ENC111089,F01,D140,2025-01-16,2025-01-31,3,3,4,4,4,3,No,8,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30954,ENC111094,F03,D310,2025-01-13,2025-02-14,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30955,ENC111101,F03,D310,2025-01-14,2025-02-21,4,3,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV30956,ENC111102,F01,D160,2025-01-13,2025-02-21,3,4,4,4,2,4,Yes,7,Probably Yes,
+SV30957,ENC111117,F01,D120,2025-01-18,2025-01-27,4,4,4,1,3,4,Yes,8,Definitely Yes,
+SV30958,ENC111138,F01,D110,2025-01-24,2025-02-19,3,3,4,3,1,4,No,5,Definitely No,Bathroom was not cleaned during my stay.
+SV30959,ENC111159,F01,D110,2025-01-15,2025-01-24,4,4,3,2,3,3,Yes,7,Probably Yes,
+SV30960,ENC111161,F01,D195,2025-01-14,2025-02-25,4,4,3,4,3,4,Yes,10,Definitely Yes,
+SV30961,ENC111169,F01,D110,2025-01-20,2025-02-25,3,4,4,1,3,4,Yes,6,Definitely No,Waited too long for the call light to be answered at night.
+SV30962,ENC111170,F02,D210,2025-01-17,2025-01-31,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV30963,ENC111181,F01,D110,2025-01-18,2025-02-07,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30964,ENC111220,F01,D195,2025-01-15,2025-01-24,4,4,3,4,4,4,Yes,7,Probably Yes,Long wait in the emergency room before getting a bed.
+SV30965,ENC111249,F03,D310,2025-01-19,2025-02-22,4,4,1,4,1,3,Yes,6,Probably No,
+SV30966,ENC111257,F03,D320,2025-01-21,2025-02-20,4,4,4,3,3,3,Yes,7,Definitely Yes,
+SV30967,ENC111265,F01,D195,2025-01-17,2025-02-01,4,4,3,3,4,4,Yes,8,Definitely Yes,Food was cold and arrived late.
+SV30968,ENC111335,F01,D110,2025-01-20,2025-02-06,4,4,4,4,2,3,No,7,Definitely No,Waited too long for the call light to be answered at night.
+SV30969,ENC111343,F01,D120,2025-01-20,2025-03-07,4,4,1,2,1,2,Yes,6,Probably Yes,"Very noisy hallway, hard to sleep."
+SV30970,ENC111348,F01,D120,2025-01-23,2025-02-23,4,4,4,3,3,4,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV30971,ENC111352,F01,D120,2025-01-23,2025-02-17,3,1,1,3,3,2,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV30972,ENC111357,F01,D111,2025-01-22,2025-02-12,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30973,ENC111368,F01,D195,2025-01-20,2025-02-01,3,4,4,1,4,4,Yes,8,Probably Yes,
+SV30974,ENC111382,F01,D160,2025-01-24,2025-01-31,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV30975,ENC111384,F01,D120,2025-01-22,2025-02-13,4,4,4,4,4,4,Yes,8,Probably No,
+SV30976,ENC111389,F01,D170,2025-01-22,2025-02-17,4,4,3,4,3,4,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV30977,ENC111409,F01,D130,2025-01-25,2025-03-07,1,4,2,4,2,3,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30978,ENC111410,F01,D110,2025-01-26,2025-02-09,2,4,4,1,4,2,Yes,7,Probably Yes,
+SV30979,ENC111437,F01,D190,2025-02-06,2025-02-27,4,3,4,4,4,4,Yes,7,Probably Yes,Food was cold and arrived late.
+SV30980,ENC111438,F01,D111,2025-01-24,2025-02-08,3,4,4,3,3,4,No,7,Probably Yes,
+SV30981,ENC111439,F01,D195,2025-01-22,2025-02-05,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV30982,ENC111476,F03,D310,2025-01-25,2025-03-04,4,4,4,4,4,2,Yes,7,Definitely Yes,
+SV30983,ENC111482,F01,D110,2025-01-29,2025-03-07,4,4,4,2,3,3,Yes,5,Probably No,
+SV30984,ENC111487,F01,D110,2025-01-26,2025-03-10,4,3,4,3,2,4,Yes,7,Probably Yes,
+SV30985,ENC111493,F01,D195,2025-01-24,2025-02-25,4,4,3,4,3,4,Yes,9,Definitely Yes,
+SV30986,ENC111499,F01,D140,2025-01-25,2025-03-07,4,4,3,4,3,4,No,9,Definitely Yes,
+SV30987,ENC111509,F01,D160,2025-01-30,2025-02-28,4,4,4,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV30988,ENC111513,F01,D111,2025-01-25,2025-02-19,4,4,3,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV30989,ENC111536,F01,D120,2025-01-25,2025-02-22,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV30990,ENC111547,F01,D110,2025-01-28,2025-03-07,4,4,4,4,1,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV30991,ENC111551,F01,D195,2025-01-26,2025-02-03,4,4,3,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30992,ENC111580,F01,D110,2025-02-03,2025-02-14,4,4,4,4,4,2,Yes,9,Definitely Yes,
+SV30993,ENC111597,F01,D160,2025-02-02,2025-02-19,4,4,3,3,3,4,Yes,6,Probably No,
+SV30994,ENC111600,F01,D111,2025-01-28,2025-02-26,3,4,2,4,4,4,Yes,7,Definitely Yes,Billing office was rude on the phone.
+SV30995,ENC111616,F01,D180,2025-01-30,2025-02-25,3,4,3,4,1,4,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV30996,ENC111628,F01,D120,2025-02-01,2025-02-10,4,4,3,4,4,3,No,10,Definitely Yes,
+SV30997,ENC111630,F03,D310,2025-01-30,2025-03-07,4,4,4,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV30998,ENC111636,F01,D111,2025-02-01,2025-02-26,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV30999,ENC111643,F02,D210,2025-01-28,2025-02-15,4,3,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31000,ENC111660,F01,D111,2025-02-04,2025-02-10,4,4,4,4,2,2,Yes,7,Probably Yes,
+SV31001,ENC111674,F02,D210,2025-01-30,2025-03-01,4,4,4,4,4,4,Yes,9,Probably Yes,The nurses were wonderful and very attentive.
+SV31002,ENC111687,F03,D340,2025-01-29,2025-02-27,4,2,4,4,4,4,Yes,9,Definitely Yes,
+SV31003,ENC111694,F02,D210,2025-02-01,2025-02-15,4,4,4,4,4,4,Yes,9,Probably Yes,
+SV31004,ENC111726,F03,D310,2025-01-30,2025-02-07,2,4,4,4,2,3,Yes,6,Probably No,Billing office was rude on the phone.
+SV31005,ENC111737,F03,D320,2025-01-31,2025-03-09,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31006,ENC111742,F03,D310,2025-02-08,2025-03-25,4,2,3,4,4,4,Yes,9,Definitely Yes,
+SV31007,ENC111748,F02,D210,2025-01-30,2025-03-09,4,4,4,4,4,2,Yes,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31008,ENC111749,F01,D111,2025-02-02,2025-02-13,3,4,4,4,4,4,No,10,Definitely Yes,
+SV31009,ENC111763,F01,D120,2025-02-05,2025-02-12,4,4,4,3,4,4,Yes,9,Definitely Yes,Food was cold and arrived late.
+SV31010,ENC111766,F01,D160,2025-02-02,2025-02-08,4,4,4,4,3,4,Yes,8,Probably Yes,
+SV31011,ENC111767,F01,D190,2025-02-03,2025-03-03,1,3,1,3,2,3,No,7,Definitely Yes,Food was cold and arrived late.
+SV31012,ENC111771,F01,D111,2025-02-03,2025-02-10,4,4,4,4,4,3,No,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31013,ENC111773,F01,D160,2025-02-01,2025-03-07,4,3,3,1,1,3,Yes,4,Definitely No,Nobody explained my new medications before discharge.
+SV31014,ENC111774,F01,D140,2025-01-31,2025-02-10,4,4,4,4,4,4,Yes,8,Probably No,"Felt rushed by the doctor, questions not answered."
+SV31015,ENC111779,F01,D160,2025-02-03,2025-02-15,4,3,2,4,4,4,Yes,9,Probably Yes,"Clean room, but the call light took too long."
+SV31016,ENC111786,F01,D170,2025-02-01,2025-02-08,4,3,1,4,4,1,No,7,Probably Yes,
+SV31017,ENC111795,F01,D110,2025-02-01,2025-02-15,4,4,4,3,3,4,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31018,ENC111819,F01,D140,2025-02-02,2025-02-09,3,4,4,4,4,3,Yes,8,Definitely Yes,"Clean room, but the call light took too long."
+SV31019,ENC111829,F01,D110,2025-02-02,2025-02-14,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31020,ENC111830,F01,D160,2025-02-02,2025-02-08,4,4,3,1,3,2,Yes,7,Probably Yes,
+SV31021,ENC111839,F01,D195,2025-02-01,2025-02-08,4,4,4,4,3,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31022,ENC111850,F01,D195,2025-02-02,2025-03-12,4,4,2,4,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31023,ENC111856,F01,D195,2025-02-02,2025-02-12,4,4,4,3,4,4,Yes,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV31024,ENC111865,F01,D195,2025-02-02,2025-03-09,4,3,4,4,1,4,Yes,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV31025,ENC111871,F02,D210,2025-02-07,2025-03-04,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31026,ENC111877,F01,D111,2025-02-08,2025-02-24,4,4,2,4,3,3,Yes,6,Definitely No,
+SV31027,ENC111880,F03,D330,2025-02-15,2025-03-16,4,4,4,4,3,4,Yes,8,Definitely Yes,The nurses were wonderful and very attentive.
+SV31028,ENC111883,F01,D195,2025-02-03,2025-02-13,4,4,4,4,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV31029,ENC111887,F01,D195,2025-02-04,2025-03-19,4,4,4,3,4,4,Yes,10,Definitely Yes,
+SV31030,ENC111898,F01,D120,2025-02-07,2025-02-21,4,4,3,4,3,3,No,9,Probably Yes,
+SV31031,ENC111899,F01,D140,2025-02-05,2025-02-12,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31032,ENC111911,F01,D111,2025-02-09,2025-02-16,2,4,4,1,4,4,Yes,8,Probably Yes,
+SV31033,ENC111939,F03,D310,2025-02-07,2025-03-11,4,4,4,4,3,3,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31034,ENC111942,F03,D310,2025-02-11,2025-03-15,4,4,4,3,4,4,Yes,8,Definitely Yes,Food was cold and arrived late.
+SV31035,ENC111958,F01,D180,2025-02-05,2025-03-12,3,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31036,ENC111998,F03,D310,2025-02-09,2025-03-13,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31037,ENC112031,F01,D110,2025-02-09,2025-02-28,4,4,4,3,3,3,Yes,7,Probably Yes,
+SV31038,ENC112033,F02,D210,2025-02-11,2025-03-19,4,3,4,2,4,4,Yes,9,Definitely Yes,Excellent communication from the care team.
+SV31039,ENC112036,F01,D140,2025-02-08,2025-03-06,4,4,4,2,3,4,Yes,9,Probably Yes,
+SV31040,ENC112038,F01,D190,2025-02-14,2025-02-20,4,3,1,2,4,1,Yes,5,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31041,ENC112040,F02,D210,2025-02-11,2025-03-08,4,4,4,1,4,2,Yes,8,Probably Yes,Food was cold and arrived late.
+SV31042,ENC112067,F01,D130,2025-02-14,2025-03-20,3,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31043,ENC112076,F01,D111,2025-02-14,2025-03-09,4,4,2,4,4,1,Yes,9,Definitely Yes,
+SV31044,ENC112077,F01,D170,2025-02-07,2025-03-10,4,4,4,4,4,4,No,9,Definitely Yes,
+SV31045,ENC112080,F01,D120,2025-02-15,2025-03-24,4,3,4,3,3,2,No,7,Probably Yes,Parking was expensive and hard to find.
+SV31046,ENC112082,F02,D210,2025-02-09,2025-03-25,2,3,4,4,2,4,Yes,7,Probably Yes,Billing office was rude on the phone.
+SV31047,ENC112086,F03,D340,2025-02-10,2025-02-25,4,4,4,4,4,3,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV31048,ENC112095,F03,D320,2025-02-10,2025-03-28,4,4,4,3,4,4,No,9,Definitely Yes,
+SV31049,ENC112100,F01,D110,2025-02-14,2025-03-03,4,4,3,4,3,3,Yes,9,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV31050,ENC112112,F03,D310,2025-02-12,2025-03-16,3,4,3,4,4,2,Yes,8,Probably Yes,
+SV31051,ENC112124,F01,D120,2025-02-14,2025-04-02,2,4,4,2,4,3,Yes,7,Definitely Yes,
+SV31052,ENC112129,F01,D130,2025-02-16,2025-03-02,4,4,1,2,4,3,Yes,6,Probably Yes,
+SV31053,ENC112138,F01,D110,2025-02-21,2025-03-26,4,4,3,4,4,1,Yes,7,Probably Yes,Nobody explained my new medications before discharge.
+SV31054,ENC112148,F01,D150,2025-02-14,2025-03-27,4,4,2,3,4,4,No,8,Probably Yes,
+SV31055,ENC112161,F02,D210,2025-02-10,2025-03-21,4,4,4,4,2,4,Yes,9,Definitely Yes,
+SV31056,ENC112162,F03,D310,2025-02-11,2025-03-07,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31057,ENC112174,F03,D310,2025-02-13,2025-03-12,1,2,4,4,1,3,Yes,4,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31058,ENC112177,F02,D210,2025-02-12,2025-02-19,4,4,4,4,4,4,No,10,Probably Yes,
+SV31059,ENC112201,F01,D160,2025-02-13,2025-03-20,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31060,ENC112208,F01,D195,2025-02-13,2025-03-19,4,3,4,4,4,2,No,6,Probably Yes,
+SV31061,ENC112212,F01,D110,2025-02-14,2025-03-26,4,4,4,4,3,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31062,ENC112220,F01,D110,2025-02-12,2025-02-27,4,4,3,4,3,4,Yes,7,Probably No,Food was cold and arrived late.
+SV31063,ENC112246,F01,D130,2025-02-16,2025-03-09,2,4,4,4,3,4,No,10,Definitely Yes,Everyone was professional and caring.
+SV31064,ENC112281,F01,D195,2025-02-14,2025-03-06,4,4,4,4,4,3,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31065,ENC112282,F01,D111,2025-02-15,2025-03-16,3,4,4,4,4,4,No,8,Probably Yes,
+SV31066,ENC112295,F01,D111,2025-02-23,2025-04-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31067,ENC112297,F03,D310,2025-02-17,2025-03-21,4,4,4,4,4,4,Yes,7,Definitely Yes,
+SV31068,ENC112324,F01,D110,2025-02-16,2025-03-27,4,4,3,4,4,2,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31069,ENC112330,F01,D110,2025-02-20,2025-03-22,4,4,4,3,3,3,Yes,6,Probably No,"Very noisy hallway, hard to sleep."
+SV31070,ENC112339,F03,D330,2025-02-18,2025-03-22,4,4,4,4,4,3,Yes,9,Probably Yes,
+SV31071,ENC112345,F01,D111,2025-02-16,2025-03-26,4,4,4,4,3,3,Yes,9,Definitely Yes,
+SV31072,ENC112355,F01,D110,2025-02-17,2025-03-28,4,4,4,4,4,4,Yes,9,Probably Yes,Excellent communication from the care team.
+SV31073,ENC112363,F02,D210,2025-02-24,2025-03-11,4,4,4,4,3,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31074,ENC112365,F01,D111,2025-02-20,2025-03-18,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV31075,ENC112367,F01,D160,2025-02-19,2025-03-29,4,2,3,2,3,1,Yes,6,Probably Yes,
+SV31076,ENC112370,F01,D110,2025-02-20,2025-03-12,4,2,4,4,3,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31077,ENC112381,F01,D120,2025-02-18,2025-04-02,4,3,4,4,3,3,Yes,6,Probably No,
+SV31078,ENC112404,F01,D195,2025-02-18,2025-04-01,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV31079,ENC112405,F01,D170,2025-02-19,2025-04-06,4,4,2,4,4,4,Yes,8,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31080,ENC112427,F01,D111,2025-02-24,2025-03-22,4,4,4,3,3,3,Yes,5,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31081,ENC112430,F02,D230,2025-03-02,2025-04-18,4,4,4,4,4,4,Yes,9,Probably Yes,
+SV31082,ENC112440,F01,D120,2025-02-20,2025-03-13,3,4,4,4,4,4,Yes,7,Definitely Yes,"Care was fine, room was noisy at night."
+SV31083,ENC112443,F01,D120,2025-02-22,2025-04-02,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV31084,ENC112448,F01,D111,2025-02-21,2025-04-02,3,4,4,1,4,4,Yes,8,Probably Yes,
+SV31085,ENC112471,F02,D210,2025-02-23,2025-03-28,4,4,3,1,3,4,Yes,7,Probably Yes,
+SV31086,ENC112492,F01,D110,2025-02-22,2025-04-01,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31087,ENC112497,F01,D110,2025-02-21,2025-03-26,4,4,4,1,4,4,No,8,Probably Yes,The nurses were wonderful and very attentive.
+SV31088,ENC112506,F01,D111,2025-02-21,2025-02-27,3,3,1,3,2,4,Yes,7,Definitely Yes,
+SV31089,ENC112507,F01,D110,2025-02-24,2025-04-09,4,4,1,4,3,2,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV31090,ENC112532,F01,D110,2025-02-22,2025-03-23,3,3,3,4,2,3,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV31091,ENC112533,F01,D111,2025-02-22,2025-04-04,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV31092,ENC112535,F01,D110,2025-02-22,2025-03-05,2,1,4,2,1,3,Yes,7,Definitely Yes,
+SV31093,ENC112546,F01,D111,2025-02-24,2025-03-14,4,3,4,4,2,4,Yes,7,Probably Yes,
+SV31094,ENC112550,F01,D110,2025-02-26,2025-04-09,4,4,3,4,3,2,Yes,9,Probably Yes,
+SV31095,ENC112573,F01,D111,2025-03-01,2025-03-24,4,4,4,3,4,2,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31096,ENC112576,F01,D195,2025-02-23,2025-04-09,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31097,ENC112600,F01,D190,2025-02-26,2025-03-18,4,4,4,4,4,4,No,8,Probably Yes,"Care was fine, room was noisy at night."
+SV31098,ENC112615,F02,D210,2025-03-03,2025-03-20,4,4,4,4,4,4,Yes,6,Probably Yes,
+SV31099,ENC112642,F01,D170,2025-02-24,2025-03-25,4,4,4,4,4,4,Yes,9,Probably No,
+SV31100,ENC112646,F01,D111,2025-02-27,2025-04-06,3,4,3,2,3,4,No,5,Probably Yes,Parking was expensive and hard to find.
+SV31101,ENC112657,F01,D140,2025-02-26,2025-03-19,4,4,3,4,4,4,No,9,Definitely Yes,
+SV31102,ENC112667,F01,D195,2025-02-26,2025-03-13,4,4,3,4,4,4,Yes,10,Probably Yes,
+SV31103,ENC112708,F01,D195,2025-02-26,2025-03-25,4,4,4,4,4,4,Yes,10,Probably No,Excellent communication from the care team.
+SV31104,ENC112717,F01,D110,2025-03-01,2025-03-08,4,1,4,4,1,4,Yes,5,Probably No,Billing office was rude on the phone.
+SV31105,ENC112721,F01,D190,2025-03-05,2025-03-14,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31106,ENC112742,F01,D180,2025-02-27,2025-04-11,3,2,4,3,4,3,Yes,5,Probably No,
+SV31107,ENC112756,F01,D110,2025-03-02,2025-03-10,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31108,ENC112758,F01,D140,2025-02-27,2025-03-25,4,2,3,4,3,1,Yes,4,Probably Yes,Bathroom was not cleaned during my stay.
+SV31109,ENC112797,F01,D111,2025-03-06,2025-04-21,4,2,3,4,3,4,No,8,Probably Yes,
+SV31110,ENC112816,F01,D111,2025-03-02,2025-04-11,4,4,4,4,4,2,Yes,8,Definitely Yes,
+SV31111,ENC112827,F01,D140,2025-03-04,2025-04-14,4,4,2,4,4,4,Yes,10,Definitely Yes,
+SV31112,ENC112835,F01,D140,2025-03-03,2025-03-22,4,4,4,1,3,4,No,10,Definitely Yes,"Clean room, but the call light took too long."
+SV31113,ENC112841,F01,D111,2025-03-09,2025-04-05,4,4,2,3,4,3,Yes,7,Probably Yes,
+SV31114,ENC112851,F01,D195,2025-03-01,2025-04-15,4,4,4,2,3,4,Yes,8,Probably Yes,
+SV31115,ENC112859,F01,D111,2025-03-13,2025-03-24,4,4,3,3,3,3,Yes,10,Definitely Yes,"Care was fine, room was noisy at night."
+SV31116,ENC112894,F01,D195,2025-03-03,2025-03-28,4,4,3,4,4,4,Yes,7,Probably Yes,Billing office was rude on the phone.
+SV31117,ENC112897,F03,D340,2025-03-04,2025-03-31,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV31118,ENC112899,F01,D120,2025-03-11,2025-04-17,4,3,4,4,1,4,Yes,9,Definitely Yes,
+SV31119,ENC112917,F03,D310,2025-03-07,2025-03-24,4,2,3,3,3,4,Yes,6,Probably Yes,
+SV31120,ENC112920,F01,D110,2025-03-06,2025-04-16,2,4,4,4,1,3,Yes,7,Probably Yes,
+SV31121,ENC112926,F01,D170,2025-03-04,2025-04-03,3,4,3,3,4,4,Yes,10,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31122,ENC112929,F02,D230,2025-03-19,2025-04-12,4,4,4,4,2,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31123,ENC112933,F01,D110,2025-03-06,2025-03-31,4,3,4,2,4,4,Yes,7,Probably Yes,
+SV31124,ENC112950,F01,D120,2025-03-07,2025-04-18,4,4,3,4,4,3,Yes,6,Probably No,Waited too long for the call light to be answered at night.
+SV31125,ENC112955,F01,D195,2025-03-06,2025-04-11,4,4,3,4,4,3,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31126,ENC112961,F02,D210,2025-03-10,2025-03-23,4,2,3,4,4,4,Yes,8,Definitely Yes,
+SV31127,ENC112973,F02,D210,2025-03-07,2025-03-13,4,4,4,4,4,4,Yes,8,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31128,ENC112995,F02,D210,2025-03-07,2025-03-29,4,3,4,4,3,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31129,ENC113032,F01,D160,2025-03-10,2025-04-10,2,4,4,4,3,4,No,8,Probably Yes,
+SV31130,ENC113066,F02,D210,2025-03-12,2025-04-06,3,4,4,4,4,4,No,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31131,ENC113071,F01,D120,2025-03-12,2025-04-12,4,4,4,4,4,4,No,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31132,ENC113073,F01,D111,2025-03-13,2025-04-18,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31133,ENC113075,F01,D195,2025-03-10,2025-04-18,4,4,4,4,4,4,Yes,10,Definitely Yes,"Care was fine, room was noisy at night."
+SV31134,ENC113077,F02,D210,2025-03-14,2025-04-10,2,4,4,4,4,3,Yes,5,Probably No,
+SV31135,ENC113120,F01,D111,2025-03-14,2025-04-12,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31136,ENC113132,F01,D195,2025-03-11,2025-04-13,4,4,2,4,3,4,Yes,6,Probably No,Parking was expensive and hard to find.
+SV31137,ENC113133,F01,D160,2025-03-14,2025-03-24,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV31138,ENC113150,F03,D310,2025-03-14,2025-04-11,3,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31139,ENC113175,F01,D160,2025-03-22,2025-04-20,4,3,4,4,4,4,Yes,8,Definitely No,
+SV31140,ENC113178,F01,D130,2025-03-16,2025-04-09,4,4,4,2,3,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31141,ENC113179,F01,D110,2025-03-13,2025-04-28,4,3,1,3,2,4,Yes,7,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31142,ENC113182,F03,D310,2025-03-15,2025-04-13,4,4,3,3,4,4,Yes,9,Definitely Yes,
+SV31143,ENC113183,F02,D210,2025-03-15,2025-03-27,4,4,4,4,4,4,Yes,9,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31144,ENC113189,F01,D180,2025-03-14,2025-03-29,4,4,2,4,4,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31145,ENC113196,F01,D110,2025-03-15,2025-03-29,4,3,3,4,2,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31146,ENC113209,F01,D110,2025-03-18,2025-04-19,4,4,4,4,3,2,No,6,Definitely No,
+SV31147,ENC113211,F03,D310,2025-03-13,2025-03-25,2,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31148,ENC113212,F03,D340,2025-03-19,2025-04-15,4,4,2,3,4,4,Yes,8,Probably Yes,
+SV31149,ENC113215,F01,D130,2025-03-16,2025-03-25,2,4,3,4,2,3,Yes,7,Probably No,
+SV31150,ENC113217,F03,D310,2025-03-16,2025-04-04,3,3,3,2,4,4,Yes,6,Probably No,
+SV31151,ENC113221,F01,D195,2025-03-15,2025-03-30,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31152,ENC113222,F01,D111,2025-03-16,2025-04-14,1,4,3,3,3,4,Yes,8,Probably Yes,
+SV31153,ENC113255,F01,D195,2025-03-15,2025-04-29,3,4,4,4,4,4,No,10,Definitely Yes,
+SV31154,ENC113281,F01,D160,2025-03-18,2025-04-20,3,3,4,3,2,1,Yes,7,Probably No,
+SV31155,ENC113296,F01,D195,2025-03-16,2025-04-16,4,4,1,4,4,4,Yes,7,Probably Yes,Staff were kind and respectful the whole stay.
+SV31156,ENC113299,F01,D195,2025-03-16,2025-04-19,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31157,ENC113300,F01,D111,2025-03-23,2025-03-31,2,4,3,4,4,3,Yes,8,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31158,ENC113309,F01,D195,2025-03-16,2025-04-16,4,4,4,4,3,3,Yes,8,Probably Yes,
+SV31159,ENC113324,F02,D210,2025-03-23,2025-04-29,4,1,4,4,2,3,No,7,Probably Yes,
+SV31160,ENC113326,F01,D130,2025-03-21,2025-05-03,4,4,4,3,4,3,Yes,7,Definitely Yes,
+SV31161,ENC113327,F01,D110,2025-03-24,2025-04-07,4,4,4,3,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31162,ENC113329,F01,D120,2025-03-21,2025-04-09,4,4,3,4,3,4,Yes,8,Definitely Yes,
+SV31163,ENC113336,F01,D195,2025-03-18,2025-04-11,4,4,2,3,4,4,Yes,8,Probably Yes,
+SV31164,ENC113340,F01,D111,2025-03-22,2025-04-27,4,4,4,4,4,3,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31165,ENC113367,F02,D210,2025-03-19,2025-04-05,4,4,4,4,1,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31166,ENC113375,F01,D140,2025-03-21,2025-05-04,4,4,3,4,4,4,Yes,7,Probably Yes,
+SV31167,ENC113405,F01,D120,2025-03-22,2025-04-20,4,4,3,4,3,3,Yes,8,Definitely Yes,
+SV31168,ENC113406,F03,D310,2025-03-23,2025-05-09,4,4,4,3,4,2,Yes,8,Probably Yes,
+SV31169,ENC113407,F02,D230,2025-03-25,2025-05-08,1,3,4,4,4,4,Yes,9,Definitely Yes,
+SV31170,ENC113424,F01,D195,2025-03-20,2025-04-30,4,4,1,3,4,4,No,7,Definitely Yes,
+SV31171,ENC113434,F02,D210,2025-03-20,2025-04-13,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31172,ENC113435,F01,D150,2025-03-23,2025-04-21,4,4,4,4,3,2,Yes,8,Probably Yes,
+SV31173,ENC113439,F01,D195,2025-03-20,2025-04-11,4,3,1,4,4,4,Yes,7,Definitely Yes,
+SV31174,ENC113441,F01,D120,2025-03-22,2025-04-11,4,3,2,3,4,2,No,6,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31175,ENC113458,F03,D320,2025-03-22,2025-04-22,1,4,4,4,4,4,Yes,7,Definitely Yes,
+SV31176,ENC113463,F01,D120,2025-03-27,2025-04-29,3,4,3,1,2,1,Yes,7,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31177,ENC113495,F02,D210,2025-03-26,2025-04-21,4,4,4,4,4,3,Yes,7,Probably Yes,The nurses were wonderful and very attentive.
+SV31178,ENC113501,F01,D111,2025-03-26,2025-05-07,3,4,3,3,4,3,Yes,8,Probably No,
+SV31179,ENC113514,F01,D170,2025-03-22,2025-04-17,4,3,1,4,3,4,Yes,7,Definitely Yes,
+SV31180,ENC113519,F01,D111,2025-03-23,2025-04-09,4,4,4,4,3,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31181,ENC113534,F01,D195,2025-03-24,2025-05-03,4,2,4,2,4,4,Yes,9,Definitely Yes,
+SV31182,ENC113552,F03,D310,2025-03-26,2025-04-22,4,4,4,4,4,4,Yes,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV31183,ENC113555,F01,D111,2025-03-26,2025-04-10,4,4,4,4,3,4,No,8,Probably Yes,Doctors were great; food needs improvement.
+SV31184,ENC113562,F01,D120,2025-03-28,2025-04-22,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31185,ENC113570,F01,D170,2025-03-26,2025-04-27,4,4,3,3,4,3,No,7,Probably No,Long wait in the emergency room before getting a bed.
+SV31186,ENC113575,F01,D170,2025-03-27,2025-04-30,4,4,4,4,2,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31187,ENC113581,F01,D190,2025-03-30,2025-04-19,4,4,4,4,4,4,Yes,9,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31188,ENC113589,F01,D110,2025-03-27,2025-04-19,3,4,1,1,4,4,Yes,7,Probably Yes,
+SV31189,ENC113593,F01,D110,2025-03-28,2025-04-07,4,4,3,4,3,4,Yes,10,Probably Yes,Excellent communication from the care team.
+SV31190,ENC113595,F03,D310,2025-04-01,2025-04-24,4,4,4,4,3,3,Yes,8,Probably Yes,Food was cold and arrived late.
+SV31191,ENC113602,F03,D320,2025-03-28,2025-04-21,4,4,1,4,3,4,Yes,9,Definitely Yes,
+SV31192,ENC113633,F01,D110,2025-03-29,2025-04-07,4,3,4,4,4,4,Yes,9,Definitely Yes,
+SV31193,ENC113636,F01,D110,2025-03-30,2025-05-16,4,3,1,4,4,3,Yes,8,Probably Yes,
+SV31194,ENC113646,F01,D110,2025-03-29,2025-04-13,4,4,1,4,4,1,Yes,7,Probably Yes,
+SV31195,ENC113662,F02,D230,2025-04-03,2025-05-08,4,4,2,4,2,2,Yes,5,Definitely No,
+SV31196,ENC113669,F01,D195,2025-03-28,2025-04-09,4,4,2,3,4,2,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV31197,ENC113671,F01,D170,2025-03-30,2025-05-07,4,4,4,4,3,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31198,ENC113701,F03,D310,2025-03-29,2025-05-11,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31199,ENC113707,F01,D120,2025-03-30,2025-04-12,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31200,ENC113711,F01,D111,2025-04-01,2025-05-06,4,4,4,3,4,4,Yes,8,Definitely Yes,
+SV31201,ENC113715,F01,D195,2025-03-29,2025-05-07,4,4,3,4,4,4,Yes,10,Probably No,"Clean room, but the call light took too long."
+SV31202,ENC113730,F01,D110,2025-04-01,2025-05-15,4,2,4,4,4,4,Yes,9,Definitely Yes,
+SV31203,ENC113741,F03,D310,2025-03-29,2025-05-10,4,4,4,4,4,4,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV31204,ENC113748,F01,D111,2025-04-03,2025-04-22,4,4,4,3,4,2,Yes,9,Definitely Yes,
+SV31205,ENC113753,F01,D195,2025-03-30,2025-04-05,4,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31206,ENC113771,F01,D190,2025-04-02,2025-04-15,4,3,1,4,4,3,Yes,9,Probably No,
+SV31207,ENC113774,F01,D110,2025-04-02,2025-04-22,4,4,3,1,2,3,No,9,Definitely Yes,
+SV31208,ENC113814,F01,D110,2025-04-03,2025-05-06,2,4,4,4,4,4,Yes,6,Definitely No,
+SV31209,ENC113829,F01,D160,2025-04-12,2025-05-20,4,4,4,4,3,4,No,7,Probably No,"Felt rushed by the doctor, questions not answered."
+SV31210,ENC113831,F01,D110,2025-04-09,2025-05-18,4,4,4,4,4,4,Yes,10,Definitely Yes,"Clean room, but the call light took too long."
+SV31211,ENC113859,F01,D111,2025-04-10,2025-05-27,4,4,4,4,3,2,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31212,ENC113863,F01,D195,2025-04-04,2025-04-21,4,4,4,4,4,3,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31213,ENC113868,F01,D140,2025-04-07,2025-04-18,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31214,ENC113877,F01,D130,2025-04-09,2025-04-25,4,4,4,4,2,4,Yes,7,Probably Yes,Staff were kind and respectful the whole stay.
+SV31215,ENC113884,F01,D160,2025-04-14,2025-05-02,3,3,4,1,3,2,No,6,Definitely No,
+SV31216,ENC113886,F03,D340,2025-04-04,2025-05-05,4,4,3,4,4,3,Yes,10,Definitely Yes,
+SV31217,ENC113887,F02,D270,2025-04-04,2025-05-01,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31218,ENC113921,F01,D110,2025-04-08,2025-05-15,4,3,2,4,4,4,Yes,8,Probably Yes,
+SV31219,ENC113946,F02,D210,2025-04-07,2025-04-13,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31220,ENC113953,F01,D195,2025-04-06,2025-05-05,4,4,4,4,4,4,No,10,Definitely Yes,
+SV31221,ENC113956,F01,D110,2025-04-09,2025-05-03,4,4,4,3,4,2,Yes,8,Definitely Yes,
+SV31222,ENC113957,F01,D195,2025-04-07,2025-04-26,4,4,4,4,4,4,Yes,8,Definitely No,"Very noisy hallway, hard to sleep."
+SV31223,ENC113964,F02,D210,2025-04-18,2025-05-25,3,4,1,4,1,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31224,ENC114009,F01,D110,2025-04-12,2025-04-23,4,3,4,4,3,3,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31225,ENC114032,F03,D310,2025-04-12,2025-05-14,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31226,ENC114039,F01,D111,2025-04-16,2025-05-24,2,4,4,4,2,3,No,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31227,ENC114057,F03,D330,2025-04-16,2025-05-29,2,2,4,4,3,4,No,7,Probably No,
+SV31228,ENC114058,F01,D111,2025-04-11,2025-05-08,4,4,4,4,1,3,Yes,9,Probably No,
+SV31229,ENC114065,F01,D130,2025-04-16,2025-05-06,4,4,3,2,1,4,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV31230,ENC114097,F03,D310,2025-04-16,2025-05-07,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV31231,ENC114114,F01,D110,2025-04-20,2025-04-28,4,4,4,4,4,4,No,9,Definitely Yes,
+SV31232,ENC114130,F03,D320,2025-04-16,2025-04-23,4,4,4,4,2,4,Yes,8,Probably No,
+SV31233,ENC114148,F02,D230,2025-04-17,2025-05-03,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31234,ENC114150,F02,D210,2025-04-16,2025-05-05,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31235,ENC114151,F01,D110,2025-04-15,2025-04-23,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31236,ENC114156,F01,D130,2025-04-21,2025-06-01,1,3,3,4,4,3,No,5,Probably No,Bathroom was not cleaned during my stay.
+SV31237,ENC114160,F03,D310,2025-04-15,2025-04-30,4,4,3,2,4,3,No,8,Probably No,Parking was expensive and hard to find.
+SV31238,ENC114162,F01,D110,2025-04-16,2025-05-06,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV31239,ENC114191,F01,D195,2025-04-15,2025-05-14,4,1,4,4,4,4,No,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV31240,ENC114223,F01,D111,2025-04-19,2025-06-01,4,4,2,2,4,3,Yes,7,Probably Yes,
+SV31241,ENC114238,F02,D210,2025-04-18,2025-05-26,4,4,4,3,4,4,Yes,10,Definitely Yes,
+SV31242,ENC114244,F02,D230,2025-04-20,2025-05-27,4,4,3,3,4,4,Yes,9,Probably No,
+SV31243,ENC114276,F03,D310,2025-04-18,2025-05-25,4,3,2,4,4,3,Yes,7,Definitely Yes,
+SV31244,ENC114292,F01,D150,2025-04-26,2025-06-03,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV31245,ENC114297,F01,D111,2025-04-24,2025-05-23,4,4,3,2,3,4,Yes,7,Probably No,Food was cold and arrived late.
+SV31246,ENC114305,F03,D310,2025-04-20,2025-05-13,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31247,ENC114314,F03,D310,2025-04-19,2025-05-21,4,4,4,4,4,3,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31248,ENC114319,F01,D111,2025-04-23,2025-05-02,4,4,4,4,4,1,No,6,Probably No,
+SV31249,ENC114331,F03,D320,2025-04-23,2025-06-05,4,4,4,4,1,4,Yes,7,Probably Yes,Nobody explained my new medications before discharge.
+SV31250,ENC114354,F01,D195,2025-04-21,2025-05-22,4,4,4,4,4,4,Yes,10,Probably Yes,Excellent communication from the care team.
+SV31251,ENC114364,F02,D210,2025-04-23,2025-06-07,4,4,4,4,4,4,No,8,Probably Yes,"Care was fine, room was noisy at night."
+SV31252,ENC114368,F01,D140,2025-04-23,2025-05-04,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31253,ENC114383,F01,D195,2025-04-22,2025-05-28,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31254,ENC114400,F03,D310,2025-04-23,2025-05-12,4,3,4,4,3,4,Yes,7,Probably Yes,
+SV31255,ENC114401,F01,D140,2025-04-27,2025-06-13,4,4,3,4,2,3,Yes,9,Definitely Yes,
+SV31256,ENC114423,F01,D120,2025-05-03,2025-05-27,3,3,3,4,3,4,Yes,8,Probably Yes,
+SV31257,ENC114430,F01,D120,2025-04-23,2025-05-09,2,4,4,4,1,4,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV31258,ENC114432,F01,D160,2025-04-27,2025-05-23,4,4,4,4,3,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31259,ENC114443,F01,D110,2025-04-28,2025-06-01,1,4,4,4,4,3,Yes,7,Probably Yes,
+SV31260,ENC114471,F02,D230,2025-05-01,2025-06-16,4,4,3,4,4,3,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31261,ENC114472,F03,D310,2025-04-26,2025-06-11,4,4,4,4,4,4,Yes,9,Probably Yes,The nurses were wonderful and very attentive.
+SV31262,ENC114475,F01,D170,2025-04-25,2025-05-08,4,4,4,4,3,3,Yes,10,Probably Yes,
+SV31263,ENC114479,F03,D310,2025-04-26,2025-05-29,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31264,ENC114504,F03,D310,2025-04-26,2025-05-26,4,3,4,4,4,3,No,8,Definitely Yes,
+SV31265,ENC114528,F01,D111,2025-04-29,2025-05-05,4,4,3,4,1,3,Yes,8,Probably Yes,
+SV31266,ENC114545,F01,D110,2025-04-30,2025-06-14,4,4,4,3,2,3,Yes,8,Probably Yes,Food was cold and arrived late.
+SV31267,ENC114559,F01,D111,2025-05-05,2025-05-28,4,4,3,4,4,4,No,9,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31268,ENC114562,F01,D120,2025-05-04,2025-06-21,4,4,4,4,2,4,Yes,10,Definitely Yes,
+SV31269,ENC114566,F01,D160,2025-05-03,2025-05-18,2,4,1,4,3,4,Yes,7,Probably Yes,
+SV31270,ENC114603,F03,D310,2025-05-02,2025-05-16,4,4,4,4,4,3,Yes,8,Probably Yes,Good nurses but the wait for discharge was very long.
+SV31271,ENC114643,F01,D140,2025-05-06,2025-05-29,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31272,ENC114646,F01,D190,2025-05-04,2025-05-28,3,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31273,ENC114649,F01,D140,2025-05-02,2025-05-09,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31274,ENC114655,F01,D150,2025-05-05,2025-05-13,2,4,3,3,4,1,Yes,5,Definitely No,
+SV31275,ENC114707,F01,D120,2025-05-05,2025-05-26,4,4,4,3,4,1,Yes,8,Definitely Yes,
+SV31276,ENC114720,F01,D110,2025-05-06,2025-06-22,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV31277,ENC114733,F01,D195,2025-05-05,2025-06-21,4,4,1,4,3,4,Yes,7,Definitely Yes,
+SV31278,ENC114745,F03,D310,2025-05-11,2025-06-03,4,4,2,3,3,1,Yes,5,Definitely No,Food was cold and arrived late.
+SV31279,ENC114756,F01,D140,2025-05-09,2025-06-12,4,4,2,1,3,3,Yes,6,Probably Yes,
+SV31280,ENC114773,F01,D111,2025-05-07,2025-06-06,3,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31281,ENC114776,F01,D140,2025-05-11,2025-05-31,4,4,2,4,3,3,Yes,7,Probably No,
+SV31282,ENC114787,F01,D195,2025-05-06,2025-05-12,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31283,ENC114801,F03,D310,2025-05-07,2025-05-27,3,3,3,3,4,4,Yes,7,Probably Yes,
+SV31284,ENC114805,F01,D195,2025-05-07,2025-05-28,3,4,4,4,4,4,Yes,8,Probably Yes,
+SV31285,ENC114806,F03,D340,2025-05-07,2025-06-24,4,4,4,4,3,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31286,ENC114841,F01,D120,2025-05-11,2025-06-22,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31287,ENC114860,F01,D195,2025-05-08,2025-06-07,4,4,4,4,4,4,Yes,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV31288,ENC114869,F01,D195,2025-05-10,2025-05-24,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31289,ENC114872,F01,D170,2025-05-10,2025-05-25,4,4,3,3,3,4,Yes,6,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31290,ENC114873,F01,D150,2025-05-11,2025-05-18,4,4,2,3,3,4,Yes,8,Definitely Yes,
+SV31291,ENC114898,F01,D110,2025-05-18,2025-06-18,4,4,4,4,4,4,Yes,9,Probably Yes,Everyone was professional and caring.
+SV31292,ENC114899,F02,D210,2025-05-10,2025-06-24,4,1,4,1,3,4,No,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV31293,ENC114910,F01,D195,2025-05-10,2025-05-23,2,4,4,3,3,3,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV31294,ENC114913,F01,D120,2025-05-16,2025-05-30,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31295,ENC114924,F01,D111,2025-05-12,2025-06-06,3,4,4,4,3,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31296,ENC114937,F01,D160,2025-05-14,2025-05-31,3,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31297,ENC114962,F01,D190,2025-05-17,2025-05-30,4,4,3,4,4,4,Yes,8,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31298,ENC114975,F01,D195,2025-05-13,2025-06-19,4,3,3,4,3,1,Yes,8,Definitely Yes,Parking was expensive and hard to find.
+SV31299,ENC114979,F01,D150,2025-05-22,2025-06-13,4,4,3,4,4,4,No,9,Definitely Yes,Everyone was professional and caring.
+SV31300,ENC114980,F01,D195,2025-05-13,2025-05-23,4,4,3,4,3,4,No,9,Definitely Yes,
+SV31301,ENC115007,F01,D120,2025-05-15,2025-05-29,4,3,4,3,2,3,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV31302,ENC115036,F01,D195,2025-05-15,2025-06-20,2,4,3,3,3,4,Yes,10,Definitely Yes,
+SV31303,ENC115056,F01,D111,2025-05-18,2025-06-18,4,4,3,3,3,4,Yes,8,Probably Yes,
+SV31304,ENC115062,F02,D210,2025-05-19,2025-05-25,4,4,4,4,3,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31305,ENC115064,F01,D110,2025-05-23,2025-06-01,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31306,ENC115073,F01,D170,2025-05-16,2025-06-11,4,4,1,4,4,4,Yes,8,Probably Yes,
+SV31307,ENC115087,F02,D270,2025-05-16,2025-06-18,4,3,4,4,3,4,Yes,10,Definitely Yes,
+SV31308,ENC115098,F01,D195,2025-05-16,2025-07-03,4,4,4,3,3,3,No,10,Definitely Yes,Everyone was professional and caring.
+SV31309,ENC115104,F01,D130,2025-05-20,2025-06-26,3,4,3,4,2,3,Yes,7,Probably Yes,
+SV31310,ENC115112,F02,D210,2025-05-21,2025-07-05,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31311,ENC115127,F01,D110,2025-05-20,2025-06-30,4,4,3,4,4,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV31312,ENC115131,F03,D310,2025-05-21,2025-05-31,3,3,3,4,3,4,Yes,6,Definitely No,Bathroom was not cleaned during my stay.
+SV31313,ENC115132,F01,D170,2025-05-19,2025-06-07,4,4,4,3,4,3,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31314,ENC115134,F01,D140,2025-05-19,2025-06-01,3,4,3,4,2,2,Yes,8,Probably Yes,
+SV31315,ENC115135,F02,D270,2025-05-21,2025-06-27,4,4,4,4,3,1,Yes,8,Probably Yes,
+SV31316,ENC115141,F01,D140,2025-05-22,2025-06-25,3,4,3,4,1,4,Yes,7,Probably Yes,
+SV31317,ENC115146,F01,D110,2025-05-24,2025-07-06,2,4,4,2,4,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31318,ENC115173,F01,D170,2025-05-24,2025-06-20,3,4,2,4,4,4,Yes,9,Definitely Yes,
+SV31319,ENC115205,F01,D140,2025-05-22,2025-07-08,4,4,4,4,3,4,Yes,8,Probably No,"Care was fine, room was noisy at night."
+SV31320,ENC115222,F01,D190,2025-05-24,2025-06-09,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV31321,ENC115226,F01,D150,2025-05-27,2025-06-15,3,4,3,4,4,4,No,8,Probably Yes,Nobody explained my new medications before discharge.
+SV31322,ENC115227,F01,D111,2025-06-01,2025-06-09,4,2,4,3,4,4,Yes,8,Probably Yes,
+SV31323,ENC115251,F03,D310,2025-05-23,2025-06-09,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31324,ENC115254,F01,D170,2025-05-24,2025-07-04,4,4,3,4,3,4,No,9,Probably Yes,Staff were kind and respectful the whole stay.
+SV31325,ENC115261,F01,D111,2025-05-25,2025-06-02,4,4,4,4,4,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV31326,ENC115324,F01,D111,2025-05-25,2025-06-14,4,2,3,1,2,4,No,9,Definitely Yes,
+SV31327,ENC115341,F01,D140,2025-06-03,2025-06-21,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31328,ENC115351,F03,D310,2025-05-31,2025-06-27,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31329,ENC115356,F01,D110,2025-05-29,2025-06-12,4,4,3,4,1,4,Yes,9,Probably No,The nurses were wonderful and very attentive.
+SV31330,ENC115357,F01,D190,2025-06-03,2025-06-17,4,4,3,1,4,4,No,8,Definitely Yes,
+SV31331,ENC115362,F01,D110,2025-05-30,2025-06-07,2,1,4,4,1,3,No,4,Probably No,
+SV31332,ENC115371,F01,D140,2025-05-28,2025-07-12,4,3,3,1,2,4,Yes,4,Probably No,"Felt rushed by the doctor, questions not answered."
+SV31333,ENC115378,F01,D150,2025-05-29,2025-07-12,4,1,4,4,3,3,Yes,6,Definitely No,"Felt rushed by the doctor, questions not answered."
+SV31334,ENC115392,F01,D111,2025-06-02,2025-07-03,4,3,3,1,2,3,Yes,7,Definitely Yes,Food was cold and arrived late.
+SV31335,ENC115404,F01,D195,2025-05-28,2025-07-08,4,4,3,3,3,1,No,5,Probably Yes,
+SV31336,ENC115417,F01,D111,2025-05-29,2025-07-16,4,4,2,3,1,2,Yes,6,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31337,ENC115435,F03,D310,2025-06-05,2025-06-28,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31338,ENC115436,F02,D210,2025-05-30,2025-06-25,3,4,3,4,4,4,No,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31339,ENC115466,F03,D310,2025-06-02,2025-06-09,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31340,ENC115474,F03,D310,2025-06-01,2025-07-01,1,1,2,4,1,4,Yes,6,Probably Yes,
+SV31341,ENC115495,F01,D111,2025-05-31,2025-06-17,4,4,4,3,3,1,Yes,8,Definitely Yes,
+SV31342,ENC115496,F01,D130,2025-06-07,2025-07-06,4,4,4,4,3,4,Yes,10,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31343,ENC115502,F01,D190,2025-06-03,2025-07-15,4,4,4,4,3,3,Yes,10,Definitely Yes,
+SV31344,ENC115521,F03,D320,2025-06-05,2025-06-16,2,3,3,3,1,3,Yes,6,Probably No,
+SV31345,ENC115529,F01,D120,2025-06-04,2025-06-17,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31346,ENC115533,F01,D110,2025-06-03,2025-07-17,3,2,4,3,2,4,Yes,6,Definitely No,
+SV31347,ENC115540,F01,D111,2025-06-17,2025-07-08,4,4,3,3,4,4,Yes,8,Probably Yes,Parking was expensive and hard to find.
+SV31348,ENC115546,F01,D195,2025-06-02,2025-06-25,3,4,4,4,4,3,Yes,8,Probably Yes,
+SV31349,ENC115554,F01,D195,2025-06-02,2025-06-20,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV31350,ENC115559,F01,D195,2025-06-02,2025-06-17,1,1,4,3,3,1,Yes,6,Probably No,
+SV31351,ENC115563,F02,D270,2025-06-03,2025-06-17,4,4,4,4,3,3,Yes,7,Probably Yes,Billing office was rude on the phone.
+SV31352,ENC115584,F01,D160,2025-06-07,2025-06-15,4,4,3,4,1,4,No,6,Definitely No,
+SV31353,ENC115590,F01,D111,2025-06-05,2025-07-16,4,4,2,4,3,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV31354,ENC115615,F01,D160,2025-06-07,2025-07-06,4,3,2,4,3,4,Yes,7,Definitely Yes,"Clean room, but the call light took too long."
+SV31355,ENC115619,F03,D310,2025-06-06,2025-07-04,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV31356,ENC115624,F01,D195,2025-06-04,2025-06-24,4,4,3,4,3,3,Yes,9,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31357,ENC115658,F03,D320,2025-06-09,2025-06-25,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31358,ENC115686,F02,D210,2025-06-11,2025-07-11,3,4,4,4,4,3,Yes,9,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31359,ENC115692,F01,D111,2025-06-08,2025-06-16,4,4,4,4,4,4,Yes,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV31360,ENC115723,F01,D195,2025-06-08,2025-06-30,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV31361,ENC115724,F02,D210,2025-06-09,2025-07-14,4,3,3,4,3,3,Yes,8,Probably Yes,Good nurses but the wait for discharge was very long.
+SV31362,ENC115728,F01,D111,2025-06-13,2025-07-03,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31363,ENC115729,F03,D310,2025-06-09,2025-06-21,4,4,4,4,4,4,Yes,9,Probably Yes,
+SV31364,ENC115744,F01,D170,2025-06-10,2025-07-09,4,4,4,4,3,4,Yes,8,Probably Yes,
+SV31365,ENC115745,F01,D195,2025-06-10,2025-06-20,2,1,2,3,3,1,No,6,Definitely No,
+SV31366,ENC115753,F02,D210,2025-06-09,2025-07-12,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31367,ENC115755,F01,D111,2025-06-10,2025-07-15,4,3,4,4,3,4,Yes,7,Definitely Yes,
+SV31368,ENC115796,F01,D111,2025-06-12,2025-07-30,4,4,4,4,4,4,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31369,ENC115820,F03,D310,2025-06-11,2025-07-15,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31370,ENC115855,F03,D340,2025-06-13,2025-06-29,4,2,3,4,3,2,Yes,7,Probably Yes,Nobody explained my new medications before discharge.
+SV31371,ENC115862,F01,D160,2025-06-15,2025-06-28,4,4,4,4,4,4,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31372,ENC115886,F01,D195,2025-06-13,2025-07-16,4,4,3,2,1,1,Yes,6,Probably No,"Felt rushed by the doctor, questions not answered."
+SV31373,ENC115902,F01,D111,2025-06-17,2025-06-29,4,4,4,4,4,3,Yes,8,Definitely Yes,
+SV31374,ENC115910,F01,D160,2025-06-17,2025-07-01,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31375,ENC115928,F03,D310,2025-06-17,2025-07-07,4,4,3,4,4,4,No,9,Definitely Yes,
+SV31376,ENC115947,F01,D111,2025-06-18,2025-07-02,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31377,ENC115988,F03,D310,2025-06-19,2025-07-26,3,4,4,2,4,2,Yes,8,Probably Yes,
+SV31378,ENC116005,F01,D195,2025-06-18,2025-08-02,3,3,4,4,2,4,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV31379,ENC116015,F01,D195,2025-06-19,2025-08-04,4,4,4,3,3,3,Yes,8,Probably Yes,
+SV31380,ENC116018,F01,D120,2025-06-20,2025-08-04,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31381,ENC116042,F01,D195,2025-06-19,2025-07-31,4,4,3,3,3,2,Yes,8,Probably Yes,
+SV31382,ENC116047,F03,D320,2025-06-23,2025-07-11,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31383,ENC116055,F01,D111,2025-06-24,2025-07-28,4,4,4,4,2,4,Yes,9,Probably Yes,The nurses were wonderful and very attentive.
+SV31384,ENC116057,F01,D160,2025-06-22,2025-07-20,3,4,4,2,4,4,No,9,Probably Yes,Doctors were great; food needs improvement.
+SV31385,ENC116059,F01,D170,2025-06-20,2025-07-15,3,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31386,ENC116075,F01,D150,2025-06-24,2025-08-01,4,3,3,4,4,2,Yes,7,Probably No,
+SV31387,ENC116102,F01,D111,2025-06-27,2025-07-18,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV31388,ENC116114,F01,D120,2025-06-26,2025-08-03,4,4,4,4,3,1,Yes,8,Probably Yes,
+SV31389,ENC116134,F03,D310,2025-06-23,2025-07-23,3,3,4,4,4,4,No,7,Probably Yes,
+SV31390,ENC116139,F01,D190,2025-07-02,2025-08-06,4,2,4,4,3,3,Yes,8,Probably Yes,
+SV31391,ENC116140,F01,D111,2025-06-26,2025-07-26,4,3,4,2,4,2,Yes,6,Probably No,
+SV31392,ENC116147,F01,D190,2025-06-26,2025-07-23,3,2,4,4,4,3,No,8,Definitely No,
+SV31393,ENC116158,F02,D210,2025-06-24,2025-08-03,4,3,2,4,1,1,Yes,6,Probably Yes,Bathroom was not cleaned during my stay.
+SV31394,ENC116160,F01,D150,2025-06-28,2025-07-05,3,4,3,3,4,3,Yes,7,Probably Yes,
+SV31395,ENC116163,F03,D310,2025-06-24,2025-07-12,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31396,ENC116167,F01,D150,2025-06-28,2025-08-14,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31397,ENC116222,F02,D210,2025-06-26,2025-08-04,4,3,1,3,4,4,Yes,8,Definitely Yes,
+SV31398,ENC116236,F03,D310,2025-06-27,2025-07-24,4,4,4,4,3,4,No,9,Definitely Yes,Parking was expensive and hard to find.
+SV31399,ENC116239,F02,D210,2025-06-26,2025-08-10,4,4,4,4,4,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31400,ENC116265,F03,D310,2025-07-04,2025-07-27,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV31401,ENC116302,F01,D110,2025-06-29,2025-08-08,4,4,4,1,3,4,Yes,6,Probably Yes,
+SV31402,ENC116306,F01,D110,2025-07-01,2025-07-08,4,3,3,1,2,4,Yes,7,Definitely Yes,
+SV31403,ENC116309,F03,D310,2025-06-30,2025-08-05,2,4,4,3,2,4,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV31404,ENC116321,F03,D330,2025-07-11,2025-07-21,4,4,4,4,4,3,No,8,Probably Yes,
+SV31405,ENC116333,F01,D180,2025-06-30,2025-07-14,4,4,4,4,4,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV31406,ENC116336,F02,D210,2025-07-06,2025-08-22,4,4,4,4,4,4,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31407,ENC116354,F03,D310,2025-07-02,2025-08-16,4,3,3,4,3,3,Yes,6,Probably No,
+SV31408,ENC116356,F01,D195,2025-06-29,2025-07-07,4,4,3,4,4,4,No,8,Probably Yes,Good nurses but the wait for discharge was very long.
+SV31409,ENC116365,F01,D195,2025-06-30,2025-07-26,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31410,ENC116373,F01,D110,2025-07-03,2025-08-16,4,3,4,4,3,2,Yes,8,Definitely Yes,
+SV31411,ENC116396,F01,D111,2025-07-05,2025-08-10,3,4,4,3,4,4,Yes,10,Definitely Yes,
+SV31412,ENC116399,F01,D190,2025-07-09,2025-07-16,3,4,4,2,2,4,Yes,6,Definitely No,Nobody explained my new medications before discharge.
+SV31413,ENC116404,F01,D190,2025-07-03,2025-07-20,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31414,ENC116419,F02,D270,2025-07-03,2025-08-06,4,4,2,4,3,3,Yes,7,Probably Yes,
+SV31415,ENC116423,F01,D120,2025-07-03,2025-07-28,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV31416,ENC116463,F01,D110,2025-07-06,2025-07-30,2,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31417,ENC116469,F01,D140,2025-07-04,2025-08-10,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31418,ENC116491,F01,D110,2025-07-11,2025-07-23,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31419,ENC116492,F01,D195,2025-07-04,2025-08-16,4,4,4,3,3,4,Yes,9,Probably Yes,
+SV31420,ENC116494,F01,D150,2025-07-06,2025-08-18,4,4,4,4,3,4,Yes,8,Definitely Yes,
+SV31421,ENC116506,F01,D110,2025-07-10,2025-08-02,4,4,3,2,2,3,Yes,7,Definitely Yes,
+SV31422,ENC116510,F03,D310,2025-07-07,2025-07-31,3,4,4,4,3,3,Yes,6,Definitely No,Food was cold and arrived late.
+SV31423,ENC116513,F01,D111,2025-07-09,2025-07-17,4,4,3,4,4,3,Yes,9,Definitely Yes,
+SV31424,ENC116518,F01,D111,2025-07-11,2025-07-28,4,4,4,4,4,4,No,9,Definitely Yes,
+SV31425,ENC116537,F01,D111,2025-07-09,2025-07-20,4,4,4,4,3,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31426,ENC116539,F01,D195,2025-07-07,2025-08-12,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31427,ENC116540,F03,D310,2025-07-18,2025-08-01,4,4,4,2,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV31428,ENC116557,F01,D110,2025-07-09,2025-07-17,4,4,3,4,4,2,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV31429,ENC116575,F01,D195,2025-07-08,2025-07-20,4,3,3,4,4,3,Yes,8,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31430,ENC116587,F01,D120,2025-07-11,2025-08-05,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31431,ENC116598,F01,D170,2025-07-10,2025-07-23,4,4,4,4,3,4,Yes,8,Probably No,Doctors were great; food needs improvement.
+SV31432,ENC116609,F02,D210,2025-07-09,2025-08-07,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31433,ENC116615,F01,D160,2025-07-13,2025-08-01,3,4,2,3,3,4,Yes,7,Probably Yes,Food was cold and arrived late.
+SV31434,ENC116645,F01,D111,2025-07-12,2025-08-13,4,4,4,4,4,4,Yes,10,Probably Yes,Excellent communication from the care team.
+SV31435,ENC116656,F01,D150,2025-07-13,2025-07-24,4,4,4,4,3,4,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31436,ENC116663,F02,D210,2025-07-13,2025-08-19,4,4,2,4,4,3,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31437,ENC116664,F01,D120,2025-07-11,2025-07-17,3,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31438,ENC116666,F03,D320,2025-07-12,2025-07-26,1,3,3,4,1,2,Yes,6,Definitely No,"Very noisy hallway, hard to sleep."
+SV31439,ENC116667,F01,D170,2025-07-12,2025-07-18,1,4,4,1,3,2,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV31440,ENC116677,F01,D120,2025-07-13,2025-08-17,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31441,ENC116699,F01,D150,2025-07-15,2025-08-10,3,4,4,4,1,1,Yes,8,Definitely Yes,Parking was expensive and hard to find.
+SV31442,ENC116703,F01,D111,2025-07-13,2025-07-28,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31443,ENC116731,F01,D110,2025-07-15,2025-08-08,4,4,4,4,4,4,Yes,7,Probably No,
+SV31444,ENC116735,F01,D160,2025-07-15,2025-07-25,3,4,4,4,4,3,Yes,7,Probably No,
+SV31445,ENC116737,F01,D195,2025-07-12,2025-08-21,4,4,3,4,3,4,Yes,9,Definitely Yes,
+SV31446,ENC116744,F01,D190,2025-07-18,2025-08-08,2,1,3,4,3,4,Yes,7,Definitely Yes,
+SV31447,ENC116747,F01,D110,2025-07-15,2025-08-16,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31448,ENC116760,F01,D195,2025-07-15,2025-08-02,3,3,4,4,4,3,Yes,10,Definitely Yes,
+SV31449,ENC116764,F03,D310,2025-07-16,2025-08-04,4,4,4,4,4,2,Yes,7,Probably Yes,
+SV31450,ENC116796,F01,D190,2025-07-18,2025-08-31,1,4,3,4,4,4,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31451,ENC116805,F03,D320,2025-07-19,2025-08-06,4,4,4,4,4,4,No,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31452,ENC116820,F01,D110,2025-07-27,2025-08-06,3,4,4,4,4,4,Yes,8,Probably Yes,Waited too long for the call light to be answered at night.
+SV31453,ENC116837,F01,D195,2025-07-17,2025-07-26,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31454,ENC116852,F01,D150,2025-07-22,2025-08-25,3,4,4,4,4,4,Yes,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV31455,ENC116858,F01,D195,2025-07-17,2025-08-17,4,4,4,4,3,3,Yes,7,Probably Yes,
+SV31456,ENC116865,F01,D111,2025-07-19,2025-08-14,3,4,4,1,3,3,Yes,5,Probably No,Long wait in the emergency room before getting a bed.
+SV31457,ENC116891,F01,D111,2025-07-21,2025-07-30,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31458,ENC116903,F01,D111,2025-07-21,2025-08-18,3,4,4,3,3,3,Yes,8,Probably Yes,
+SV31459,ENC116915,F01,D195,2025-07-19,2025-07-30,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31460,ENC116919,F01,D110,2025-07-22,2025-09-05,4,4,4,4,4,3,Yes,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV31461,ENC116929,F02,D210,2025-07-25,2025-08-30,4,4,4,4,3,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV31462,ENC116934,F01,D120,2025-07-22,2025-07-29,4,4,2,3,3,4,Yes,7,Probably Yes,"Clean room, but the call light took too long."
+SV31463,ENC116937,F01,D195,2025-07-21,2025-08-19,4,4,3,4,3,4,Yes,8,Definitely Yes,
+SV31464,ENC116943,F01,D120,2025-08-01,2025-08-27,4,3,4,4,4,4,Yes,10,Definitely Yes,
+SV31465,ENC116954,F02,D210,2025-07-22,2025-09-08,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31466,ENC116963,F01,D140,2025-07-22,2025-07-28,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31467,ENC117011,F01,D120,2025-07-27,2025-08-04,4,4,4,4,4,4,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31468,ENC117012,F02,D210,2025-07-23,2025-09-06,3,4,4,4,4,3,No,9,Definitely Yes,
+SV31469,ENC117023,F01,D110,2025-07-25,2025-09-01,4,4,4,4,4,3,Yes,5,Probably No,
+SV31470,ENC117028,F01,D120,2025-07-25,2025-08-21,4,4,3,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31471,ENC117096,F01,D130,2025-08-05,2025-09-04,4,2,4,4,3,3,Yes,7,Probably Yes,
+SV31472,ENC117097,F01,D195,2025-07-25,2025-08-17,4,3,4,4,1,3,Yes,6,Probably No,Bathroom was not cleaned during my stay.
+SV31473,ENC117115,F01,D195,2025-07-26,2025-08-11,4,4,4,2,2,4,Yes,7,Probably Yes,Billing office was rude on the phone.
+SV31474,ENC117118,F02,D210,2025-07-29,2025-08-05,4,4,4,3,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31475,ENC117124,F01,D160,2025-07-28,2025-08-24,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31476,ENC117132,F02,D270,2025-07-29,2025-08-31,4,4,4,4,3,4,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31477,ENC117141,F01,D195,2025-07-27,2025-08-10,4,3,1,2,4,2,Yes,6,Probably No,Parking was expensive and hard to find.
+SV31478,ENC117160,F01,D160,2025-07-31,2025-08-28,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31479,ENC117162,F01,D140,2025-07-29,2025-08-29,3,4,3,4,1,4,Yes,6,Probably No,
+SV31480,ENC117163,F01,D140,2025-07-30,2025-08-16,2,4,4,4,2,2,Yes,8,Probably Yes,
+SV31481,ENC117169,F01,D130,2025-08-03,2025-08-31,4,3,2,4,1,2,Yes,8,Probably Yes,
+SV31482,ENC117185,F01,D111,2025-08-03,2025-08-19,4,4,4,4,4,4,No,8,Probably Yes,Staff were kind and respectful the whole stay.
+SV31483,ENC117193,F01,D110,2025-08-01,2025-08-23,3,4,4,3,3,4,Yes,6,Probably No,
+SV31484,ENC117194,F03,D340,2025-08-03,2025-08-22,4,4,2,4,3,3,Yes,10,Definitely Yes,
+SV31485,ENC117211,F01,D120,2025-08-08,2025-09-08,4,3,3,4,3,1,Yes,6,Definitely No,
+SV31486,ENC117214,F01,D190,2025-08-05,2025-09-07,4,3,3,4,1,4,Yes,7,Definitely Yes,
+SV31487,ENC117215,F01,D120,2025-08-05,2025-09-14,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31488,ENC117218,F01,D111,2025-08-01,2025-08-08,3,4,2,4,4,4,Yes,7,Definitely Yes,
+SV31489,ENC117223,F03,D330,2025-08-13,2025-08-30,4,4,3,4,4,4,No,7,Probably No,
+SV31490,ENC117245,F03,D310,2025-08-02,2025-08-23,3,1,4,4,1,1,Yes,4,Probably No,
+SV31491,ENC117256,F01,D190,2025-08-03,2025-08-11,4,3,1,4,4,4,Yes,7,Probably Yes,
+SV31492,ENC117274,F01,D111,2025-08-04,2025-09-18,4,4,2,3,1,1,Yes,5,Probably No,
+SV31493,ENC117287,F01,D195,2025-08-01,2025-09-07,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31494,ENC117295,F01,D110,2025-08-03,2025-09-01,4,4,3,4,4,3,Yes,10,Definitely Yes,
+SV31495,ENC117300,F01,D195,2025-08-02,2025-09-15,4,4,4,3,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV31496,ENC117302,F01,D110,2025-08-02,2025-08-09,4,4,2,3,4,4,No,8,Probably Yes,
+SV31497,ENC117323,F01,D111,2025-08-13,2025-09-10,3,4,3,3,3,4,No,7,Definitely No,
+SV31498,ENC117330,F01,D160,2025-08-05,2025-09-12,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31499,ENC117335,F03,D310,2025-08-04,2025-09-11,4,1,4,3,4,3,Yes,6,Probably No,
+SV31500,ENC117337,F03,D310,2025-08-06,2025-09-13,4,4,3,4,4,3,Yes,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31501,ENC117350,F01,D195,2025-08-06,2025-08-13,3,4,1,1,3,3,Yes,5,Probably No,Parking was expensive and hard to find.
+SV31502,ENC117352,F01,D195,2025-08-05,2025-09-16,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31503,ENC117355,F01,D110,2025-08-07,2025-09-17,4,4,4,3,1,4,Yes,6,Definitely No,Doctors were great; food needs improvement.
+SV31504,ENC117361,F01,D120,2025-08-07,2025-09-10,3,4,2,4,4,4,Yes,7,Definitely Yes,
+SV31505,ENC117394,F01,D120,2025-08-10,2025-09-17,4,3,4,4,3,4,Yes,8,Definitely Yes,
+SV31506,ENC117408,F01,D111,2025-08-09,2025-09-07,3,4,4,4,3,3,Yes,9,Definitely Yes,
+SV31507,ENC117412,F02,D210,2025-08-07,2025-09-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31508,ENC117445,F01,D111,2025-08-10,2025-09-02,4,4,4,2,3,4,Yes,8,Probably Yes,
+SV31509,ENC117465,F01,D160,2025-08-11,2025-09-28,4,4,4,4,3,4,Yes,8,Definitely Yes,
+SV31510,ENC117468,F03,D340,2025-08-12,2025-09-14,4,3,3,1,4,2,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31511,ENC117477,F03,D310,2025-08-11,2025-08-30,4,4,4,3,4,3,Yes,10,Probably Yes,Staff were kind and respectful the whole stay.
+SV31512,ENC117481,F02,D210,2025-08-12,2025-09-21,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31513,ENC117485,F01,D110,2025-08-11,2025-08-27,4,4,4,4,4,3,Yes,7,Definitely Yes,
+SV31514,ENC117498,F03,D340,2025-08-13,2025-09-27,4,3,4,4,4,3,No,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31515,ENC117499,F01,D190,2025-08-19,2025-09-01,3,3,4,4,4,3,Yes,4,Probably Yes,Food was cold and arrived late.
+SV31516,ENC117508,F01,D195,2025-08-10,2025-09-20,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31517,ENC117516,F02,D210,2025-08-11,2025-09-12,4,4,4,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31518,ENC117524,F01,D195,2025-08-11,2025-08-17,4,4,4,4,4,4,No,10,Definitely Yes,The nurses were wonderful and very attentive.
+SV31519,ENC117531,F03,D310,2025-08-14,2025-09-05,4,4,4,4,1,4,Yes,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31520,ENC117532,F01,D140,2025-08-12,2025-08-25,4,4,4,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31521,ENC117556,F01,D195,2025-08-12,2025-09-29,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31522,ENC117559,F03,D310,2025-08-14,2025-09-20,4,4,4,4,4,3,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31523,ENC117561,F01,D170,2025-08-14,2025-09-08,4,4,3,3,1,3,No,5,Probably No,
+SV31524,ENC117563,F01,D140,2025-08-14,2025-09-08,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31525,ENC117571,F01,D110,2025-08-17,2025-09-07,4,4,4,4,3,3,Yes,10,Definitely Yes,
+SV31526,ENC117611,F01,D111,2025-08-18,2025-08-24,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31527,ENC117625,F03,D320,2025-08-20,2025-09-19,1,4,3,4,3,4,Yes,9,Definitely Yes,
+SV31528,ENC117632,F01,D140,2025-08-16,2025-09-14,4,4,4,2,4,3,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV31529,ENC117634,F01,D130,2025-08-26,2025-09-18,4,2,4,3,3,3,Yes,9,Definitely Yes,
+SV31530,ENC117652,F01,D111,2025-08-19,2025-09-14,1,4,3,4,1,4,Yes,6,Definitely No,Parking was expensive and hard to find.
+SV31531,ENC117654,F03,D340,2025-08-19,2025-09-10,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31532,ENC117681,F01,D111,2025-08-18,2025-08-27,4,4,1,4,3,3,Yes,6,Definitely No,Long wait in the emergency room before getting a bed.
+SV31533,ENC117682,F01,D150,2025-08-21,2025-09-22,4,4,4,4,4,3,Yes,8,Definitely Yes,
+SV31534,ENC117689,F01,D150,2025-08-18,2025-10-03,2,4,4,2,4,4,Yes,8,Probably Yes,The nurses were wonderful and very attentive.
+SV31535,ENC117695,F03,D310,2025-08-20,2025-09-03,4,4,3,4,4,4,No,8,Definitely Yes,
+SV31536,ENC117711,F02,D210,2025-08-20,2025-09-13,2,1,4,2,4,3,Yes,5,Probably No,Parking was expensive and hard to find.
+SV31537,ENC117713,F01,D110,2025-08-21,2025-09-01,4,4,2,3,3,4,No,7,Probably No,"Very noisy hallway, hard to sleep."
+SV31538,ENC117718,F01,D110,2025-08-22,2025-08-28,4,4,4,4,4,4,No,9,Definitely Yes,
+SV31539,ENC117720,F01,D195,2025-08-18,2025-09-05,4,3,4,4,4,4,Yes,10,Definitely Yes,
+SV31540,ENC117735,F01,D111,2025-08-21,2025-09-15,4,1,4,4,4,3,Yes,8,Definitely Yes,Bathroom was not cleaned during my stay.
+SV31541,ENC117738,F01,D170,2025-08-21,2025-09-11,1,4,3,4,2,3,Yes,6,Definitely No,
+SV31542,ENC117746,F01,D110,2025-08-26,2025-10-10,3,4,4,4,4,4,No,10,Definitely Yes,
+SV31543,ENC117747,F01,D111,2025-08-20,2025-09-15,4,4,3,4,3,3,Yes,7,Definitely Yes,
+SV31544,ENC117780,F03,D310,2025-08-22,2025-09-15,2,4,2,4,3,4,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV31545,ENC117783,F01,D140,2025-08-22,2025-09-25,4,4,2,4,4,3,Yes,8,Probably Yes,Nobody explained my new medications before discharge.
+SV31546,ENC117791,F02,D210,2025-08-25,2025-09-11,4,4,4,3,4,4,No,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31547,ENC117799,F01,D110,2025-08-24,2025-09-22,4,4,3,4,4,4,Yes,8,Probably No,"Care was fine, room was noisy at night."
+SV31548,ENC117815,F01,D170,2025-08-22,2025-09-24,2,4,3,2,3,4,Yes,7,Definitely Yes,Parking was expensive and hard to find.
+SV31549,ENC117818,F01,D190,2025-08-27,2025-10-01,3,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31550,ENC117840,F01,D110,2025-08-24,2025-09-19,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31551,ENC117848,F01,D160,2025-09-01,2025-10-14,4,4,4,4,4,1,Yes,9,Definitely Yes,
+SV31552,ENC117868,F01,D120,2025-08-25,2025-08-31,4,3,2,1,3,4,Yes,7,Definitely Yes,Parking was expensive and hard to find.
+SV31553,ENC117881,F01,D110,2025-08-25,2025-09-17,4,3,2,3,4,4,Yes,6,Definitely No,
+SV31554,ENC117891,F01,D120,2025-08-28,2025-10-05,4,4,3,4,3,4,Yes,8,Definitely Yes,
+SV31555,ENC117896,F01,D111,2025-08-26,2025-09-22,4,3,3,2,3,4,Yes,6,Definitely No,
+SV31556,ENC117914,F02,D210,2025-08-28,2025-09-10,4,4,3,3,4,4,No,7,Definitely Yes,
+SV31557,ENC117923,F01,D111,2025-08-30,2025-09-10,4,4,4,2,3,3,Yes,7,Probably Yes,"Felt rushed by the doctor, questions not answered."
+SV31558,ENC117927,F02,D210,2025-08-28,2025-09-09,1,1,3,2,3,2,Yes,4,Probably Yes,
+SV31559,ENC117938,F01,D120,2025-08-31,2025-10-11,4,4,4,2,3,4,Yes,9,Definitely Yes,
+SV31560,ENC117956,F03,D310,2025-08-30,2025-09-07,4,4,4,3,2,2,Yes,7,Probably Yes,
+SV31561,ENC117966,F01,D110,2025-09-02,2025-09-27,3,4,2,1,1,3,No,5,Definitely No,"Very noisy hallway, hard to sleep."
+SV31562,ENC117971,F01,D195,2025-08-27,2025-09-26,4,4,4,4,3,3,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31563,ENC117975,F02,D270,2025-08-29,2025-10-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31564,ENC117978,F01,D111,2025-09-05,2025-10-09,4,4,4,3,3,4,Yes,8,Probably Yes,Doctors were great; food needs improvement.
+SV31565,ENC117991,F01,D150,2025-08-31,2025-09-17,4,3,1,4,3,4,No,8,Probably Yes,
+SV31566,ENC117992,F01,D195,2025-08-28,2025-10-08,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31567,ENC117994,F02,D210,2025-08-30,2025-10-04,4,4,3,4,4,4,Yes,9,Definitely Yes,
+SV31568,ENC118048,F02,D210,2025-09-08,2025-10-09,4,3,4,4,4,2,Yes,8,Definitely Yes,The nurses were wonderful and very attentive.
+SV31569,ENC118061,F01,D111,2025-09-04,2025-10-22,4,4,2,4,4,4,Yes,9,Probably Yes,Excellent communication from the care team.
+SV31570,ENC118063,F01,D110,2025-09-03,2025-09-10,4,4,3,3,4,4,No,8,Probably Yes,Dr. explained everything clearly. Excellent care.
+SV31571,ENC118082,F01,D160,2025-09-02,2025-09-20,4,3,4,4,4,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31572,ENC118093,F01,D120,2025-09-04,2025-09-22,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV31573,ENC118115,F01,D111,2025-09-08,2025-09-27,2,3,4,3,3,4,Yes,6,Definitely No,Food was cold and arrived late.
+SV31574,ENC118126,F01,D120,2025-09-05,2025-09-27,4,4,4,3,4,4,Yes,10,Probably Yes,
+SV31575,ENC118127,F01,D140,2025-09-05,2025-10-19,4,4,3,3,3,4,Yes,7,Definitely Yes,Long wait in the emergency room before getting a bed.
+SV31576,ENC118132,F01,D130,2025-09-07,2025-10-02,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31577,ENC118137,F01,D110,2025-09-05,2025-09-30,2,4,4,3,4,3,Yes,8,Probably Yes,
+SV31578,ENC118157,F01,D120,2025-09-07,2025-09-28,3,4,4,4,4,4,Yes,8,Probably Yes,
+SV31579,ENC118175,F01,D111,2025-09-06,2025-10-08,4,4,3,4,3,4,Yes,8,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31580,ENC118184,F01,D195,2025-09-05,2025-09-23,4,4,4,4,2,4,Yes,10,Probably Yes,Everyone was professional and caring.
+SV31581,ENC118188,F01,D110,2025-09-08,2025-09-20,4,4,4,4,1,3,Yes,10,Probably Yes,
+SV31582,ENC118199,F01,D110,2025-09-10,2025-10-24,4,4,4,4,4,2,No,8,Probably Yes,"Clean room, but the call light took too long."
+SV31583,ENC118227,F03,D310,2025-09-08,2025-09-24,4,4,3,4,4,3,Yes,7,Probably Yes,Parking was expensive and hard to find.
+SV31584,ENC118235,F01,D170,2025-09-06,2025-10-13,4,4,3,4,4,2,Yes,8,Definitely Yes,
+SV31585,ENC118249,F01,D110,2025-09-08,2025-10-14,3,3,3,3,1,4,Yes,7,Probably Yes,Food was cold and arrived late.
+SV31586,ENC118252,F01,D111,2025-09-10,2025-10-08,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31587,ENC118254,F02,D210,2025-09-10,2025-10-23,4,4,4,4,4,4,Yes,10,Definitely Yes,Excellent communication from the care team.
+SV31588,ENC118255,F01,D195,2025-09-07,2025-10-12,3,2,3,1,3,4,Yes,6,Probably Yes,Bathroom was not cleaned during my stay.
+SV31589,ENC118274,F02,D210,2025-09-08,2025-10-14,4,4,4,4,3,4,Yes,10,Probably Yes,
+SV31590,ENC118282,F01,D110,2025-09-12,2025-10-18,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31591,ENC118283,F01,D130,2025-09-15,2025-10-24,2,4,4,3,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31592,ENC118301,F01,D150,2025-09-13,2025-09-30,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31593,ENC118325,F01,D120,2025-09-15,2025-10-06,3,4,2,3,4,2,Yes,6,Definitely No,
+SV31594,ENC118339,F01,D195,2025-09-10,2025-10-15,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31595,ENC118372,F01,D110,2025-09-11,2025-10-24,4,4,4,3,4,4,Yes,10,Definitely Yes,
+SV31596,ENC118426,F02,D210,2025-09-18,2025-10-15,4,4,3,4,4,4,Yes,8,Probably Yes,
+SV31597,ENC118429,F01,D195,2025-09-13,2025-10-16,4,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31598,ENC118436,F01,D110,2025-09-15,2025-10-15,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31599,ENC118437,F01,D170,2025-09-15,2025-10-22,4,4,4,4,3,4,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31600,ENC118447,F02,D210,2025-09-17,2025-10-09,4,4,4,2,4,2,No,6,Probably Yes,Food was cold and arrived late.
+SV31601,ENC118451,F01,D195,2025-09-15,2025-10-09,4,4,4,4,4,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31602,ENC118461,F01,D111,2025-09-28,2025-10-15,4,4,3,4,4,3,Yes,7,Definitely Yes,
+SV31603,ENC118474,F01,D190,2025-09-23,2025-11-01,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31604,ENC118475,F03,D320,2025-09-21,2025-10-19,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31605,ENC118501,F01,D110,2025-09-22,2025-10-30,4,4,3,3,2,4,Yes,7,Probably Yes,Bathroom was not cleaned during my stay.
+SV31606,ENC118507,F03,D310,2025-09-19,2025-10-06,4,4,3,4,4,3,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31607,ENC118514,F01,D160,2025-09-23,2025-10-18,3,4,3,4,4,3,Yes,7,Definitely Yes,
+SV31608,ENC118519,F01,D120,2025-09-19,2025-09-28,4,1,4,3,2,4,Yes,7,Definitely Yes,"Very noisy hallway, hard to sleep."
+SV31609,ENC118529,F01,D195,2025-09-18,2025-10-16,3,3,4,3,3,3,Yes,5,Definitely No,Bathroom was not cleaned during my stay.
+SV31610,ENC118546,F01,D195,2025-09-18,2025-10-16,4,4,4,4,4,4,Yes,7,Probably Yes,
+SV31611,ENC118547,F01,D195,2025-09-20,2025-09-26,4,4,2,4,4,4,Yes,8,Probably Yes,
+SV31612,ENC118557,F01,D190,2025-09-23,2025-10-19,4,4,4,4,2,4,No,9,Definitely Yes,
+SV31613,ENC118569,F01,D120,2025-09-21,2025-11-06,4,4,3,3,2,3,Yes,7,Definitely Yes,Waited too long for the call light to be answered at night.
+SV31614,ENC118578,F01,D195,2025-09-20,2025-10-13,4,4,4,3,4,4,Yes,8,Definitely Yes,
+SV31615,ENC118582,F02,D210,2025-09-21,2025-11-02,2,4,1,4,4,4,Yes,7,Probably Yes,"Care was fine, room was noisy at night."
+SV31616,ENC118600,F02,D210,2025-09-24,2025-11-02,4,3,4,4,4,4,Yes,9,Probably Yes,The nurses were wonderful and very attentive.
+SV31617,ENC118609,F01,D195,2025-09-20,2025-09-30,4,4,4,3,4,4,No,6,Probably No,
+SV31618,ENC118616,F03,D310,2025-09-22,2025-11-08,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31619,ENC118617,F01,D150,2025-09-25,2025-10-11,4,4,4,4,4,3,Yes,10,Definitely Yes,Doctors were great; food needs improvement.
+SV31620,ENC118629,F01,D111,2025-09-26,2025-10-12,4,4,4,4,3,4,No,10,Definitely Yes,
+SV31621,ENC118646,F01,D170,2025-09-23,2025-10-25,3,4,3,4,3,4,No,7,Probably Yes,
+SV31622,ENC118647,F03,D310,2025-09-25,2025-11-10,4,4,4,3,4,3,Yes,7,Probably Yes,Waited too long for the call light to be answered at night.
+SV31623,ENC118657,F03,D310,2025-09-25,2025-10-07,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31624,ENC118686,F01,D111,2025-09-27,2025-10-03,4,3,4,4,4,4,No,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31625,ENC118691,F01,D195,2025-09-24,2025-10-29,4,3,3,2,1,3,Yes,6,Probably No,"Very noisy hallway, hard to sleep."
+SV31626,ENC118701,F01,D110,2025-10-02,2025-11-08,4,4,4,4,4,4,Yes,6,Probably No,
+SV31627,ENC118710,F02,D210,2025-09-27,2025-11-14,3,4,4,4,4,4,Yes,7,Probably No,
+SV31628,ENC118711,F01,D111,2025-09-27,2025-11-06,4,3,4,4,4,3,Yes,9,Definitely Yes,
+SV31629,ENC118712,F01,D111,2025-09-30,2025-10-17,4,4,2,4,4,4,Yes,9,Definitely Yes,
+SV31630,ENC118715,F01,D195,2025-09-25,2025-11-01,4,4,3,4,3,4,Yes,10,Definitely Yes,
+SV31631,ENC118758,F03,D310,2025-10-02,2025-10-09,4,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31632,ENC118766,F01,D110,2025-09-29,2025-10-21,4,4,3,4,1,4,Yes,9,Definitely Yes,
+SV31633,ENC118789,F01,D150,2025-09-30,2025-10-13,4,4,4,4,4,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31634,ENC118798,F03,D310,2025-09-28,2025-10-21,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31635,ENC118802,F01,D110,2025-10-03,2025-10-16,4,4,3,4,4,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31636,ENC118805,F03,D310,2025-09-29,2025-10-24,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31637,ENC118807,F01,D111,2025-10-01,2025-11-02,3,4,1,3,4,4,Yes,6,Probably Yes,Waited too long for the call light to be answered at night.
+SV31638,ENC118821,F01,D170,2025-09-30,2025-10-07,4,4,4,4,3,3,Yes,10,Definitely Yes,
+SV31639,ENC118826,F01,D195,2025-10-01,2025-11-02,4,3,4,3,1,3,Yes,9,Definitely Yes,
+SV31640,ENC118830,F03,D310,2025-10-04,2025-10-20,1,3,3,1,3,3,Yes,5,Probably Yes,Billing office was rude on the phone.
+SV31641,ENC118853,F03,D310,2025-10-08,2025-11-03,1,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31642,ENC118855,F01,D140,2025-10-03,2025-10-20,4,3,3,4,2,3,Yes,8,Probably No,Food was cold and arrived late.
+SV31643,ENC118886,F01,D190,2025-10-09,2025-10-15,4,1,4,4,4,3,No,7,Probably Yes,
+SV31644,ENC118887,F01,D140,2025-10-03,2025-11-01,2,4,3,1,4,4,Yes,7,Probably Yes,
+SV31645,ENC118894,F01,D195,2025-10-03,2025-11-01,4,4,4,4,4,4,Yes,6,Probably Yes,Nobody explained my new medications before discharge.
+SV31646,ENC118897,F02,D210,2025-10-02,2025-11-09,4,4,4,4,4,4,Yes,9,Probably Yes,
+SV31647,ENC118917,F01,D140,2025-10-04,2025-10-24,4,4,1,4,3,4,Yes,6,Definitely No,Billing office was rude on the phone.
+SV31648,ENC118934,F01,D111,2025-10-06,2025-10-13,3,4,3,4,4,4,Yes,7,Probably Yes,
+SV31649,ENC118954,F03,D310,2025-10-07,2025-11-05,2,1,3,4,4,4,Yes,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV31650,ENC118976,F01,D110,2025-10-07,2025-10-22,3,4,4,4,3,1,Yes,6,Definitely No,Parking was expensive and hard to find.
+SV31651,ENC118988,F01,D110,2025-10-06,2025-10-13,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31652,ENC118990,F01,D195,2025-10-06,2025-11-21,4,3,4,4,4,3,Yes,8,Probably Yes,
+SV31653,ENC119006,F01,D110,2025-10-08,2025-11-14,4,3,3,4,1,3,Yes,7,Definitely Yes,
+SV31654,ENC119007,F01,D195,2025-10-06,2025-10-19,4,2,4,4,4,4,Yes,8,Definitely Yes,
+SV31655,ENC119034,F01,D111,2025-10-08,2025-11-14,4,4,4,4,3,2,Yes,9,Definitely Yes,
+SV31656,ENC119035,F03,D340,2025-10-13,2025-11-03,4,2,2,1,4,4,Yes,8,Probably No,
+SV31657,ENC119052,F01,D160,2025-10-16,2025-11-06,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31658,ENC119068,F03,D310,2025-10-09,2025-11-23,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31659,ENC119074,F02,D210,2025-10-08,2025-11-24,4,2,2,3,2,3,Yes,5,Probably No,
+SV31660,ENC119084,F02,D210,2025-10-10,2025-11-17,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31661,ENC119103,F01,D111,2025-10-11,2025-11-25,4,4,4,4,4,2,Yes,9,Definitely Yes,
+SV31662,ENC119116,F01,D111,2025-10-12,2025-11-28,4,4,4,4,3,4,Yes,10,Probably Yes,
+SV31663,ENC119119,F01,D195,2025-10-10,2025-10-27,4,4,3,4,3,4,No,10,Probably Yes,
+SV31664,ENC119177,F01,D190,2025-10-23,2025-11-25,4,2,4,4,4,4,Yes,9,Definitely Yes,
+SV31665,ENC119180,F01,D170,2025-10-14,2025-11-08,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31666,ENC119194,F01,D170,2025-10-13,2025-10-24,4,3,4,2,3,4,Yes,10,Probably Yes,"Clean room, but the call light took too long."
+SV31667,ENC119199,F02,D210,2025-10-14,2025-11-25,4,3,4,1,4,4,Yes,9,Definitely Yes,The nurses were wonderful and very attentive.
+SV31668,ENC119206,F01,D110,2025-10-16,2025-10-25,4,4,4,4,4,4,Yes,9,Probably Yes,Good nurses but the wait for discharge was very long.
+SV31669,ENC119209,F01,D160,2025-10-17,2025-11-26,4,3,4,4,4,3,No,8,Probably Yes,
+SV31670,ENC119212,F02,D210,2025-10-16,2025-11-24,4,4,3,4,4,3,Yes,8,Probably Yes,
+SV31671,ENC119216,F01,D110,2025-10-16,2025-10-27,4,4,3,4,3,4,Yes,8,Probably Yes,
+SV31672,ENC119236,F01,D110,2025-10-20,2025-11-05,4,4,3,4,4,1,Yes,8,Probably Yes,
+SV31673,ENC119274,F01,D111,2025-10-19,2025-11-20,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31674,ENC119300,F01,D110,2025-10-17,2025-11-14,4,4,4,4,2,3,Yes,8,Probably Yes,
+SV31675,ENC119301,F01,D120,2025-10-19,2025-11-13,4,4,3,2,4,4,Yes,8,Probably Yes,
+SV31676,ENC119317,F01,D195,2025-10-16,2025-10-26,4,4,3,4,3,4,Yes,8,Probably Yes,"Care was fine, room was noisy at night."
+SV31677,ENC119337,F01,D111,2025-10-25,2025-12-10,4,4,4,4,3,4,Yes,9,Definitely Yes,
+SV31678,ENC119379,F03,D320,2025-10-21,2025-12-03,4,4,4,4,4,3,Yes,10,Definitely Yes,
+SV31679,ENC119383,F01,D195,2025-10-18,2025-11-03,4,4,4,2,4,4,Yes,10,Definitely Yes,
+SV31680,ENC119385,F01,D195,2025-10-19,2025-11-10,4,2,4,4,4,4,Yes,8,Definitely Yes,
+SV31681,ENC119388,F02,D210,2025-10-21,2025-12-03,4,2,4,4,4,4,Yes,9,Definitely Yes,
+SV31682,ENC119389,F01,D130,2025-10-28,2025-11-28,3,1,4,4,1,3,Yes,7,Definitely Yes,"Felt rushed by the doctor, questions not answered."
+SV31683,ENC119411,F01,D195,2025-10-20,2025-11-26,4,3,4,3,4,4,Yes,9,Definitely Yes,
+SV31684,ENC119412,F01,D195,2025-10-21,2025-11-19,4,4,4,4,3,4,Yes,8,Probably No,"Clean room, but the call light took too long."
+SV31685,ENC119416,F03,D310,2025-10-20,2025-10-27,4,4,4,4,3,4,Yes,10,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31686,ENC119419,F03,D310,2025-10-24,2025-11-30,4,4,4,4,4,2,Yes,10,Definitely Yes,
+SV31687,ENC119424,F01,D110,2025-10-24,2025-11-21,4,3,4,2,4,4,Yes,8,Definitely Yes,"Clean room, but the call light took too long."
+SV31688,ENC119433,F01,D111,2025-10-23,2025-11-27,1,3,4,4,1,4,Yes,9,Definitely Yes,Billing office was rude on the phone.
+SV31689,ENC119444,F01,D130,2025-10-27,2025-11-28,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31690,ENC119446,F03,D310,2025-10-26,2025-11-12,3,4,4,3,2,4,No,9,Definitely Yes,
+SV31691,ENC119449,F01,D111,2025-10-24,2025-11-09,3,4,4,4,3,4,Yes,9,Definitely Yes,
+SV31692,ENC119451,F02,D210,2025-10-22,2025-12-08,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31693,ENC119456,F01,D111,2025-10-24,2025-12-06,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31694,ENC119459,F01,D110,2025-10-29,2025-12-08,4,4,4,3,4,4,Yes,8,Definitely Yes,
+SV31695,ENC119467,F01,D120,2025-10-30,2025-11-27,3,4,2,4,4,3,No,5,Probably No,
+SV31696,ENC119477,F01,D110,2025-10-23,2025-11-12,4,4,4,4,4,3,Yes,9,Definitely Yes,
+SV31697,ENC119480,F01,D130,2025-10-29,2025-12-03,3,4,3,4,4,3,Yes,8,Probably No,Long wait in the emergency room before getting a bed.
+SV31698,ENC119494,F01,D120,2025-10-26,2025-11-22,4,4,4,4,2,4,Yes,10,Definitely Yes,
+SV31699,ENC119500,F01,D110,2025-10-25,2025-11-03,3,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31700,ENC119502,F01,D111,2025-10-24,2025-12-01,4,3,4,4,4,4,Yes,10,Definitely Yes,
+SV31701,ENC119514,F01,D110,2025-10-31,2025-11-16,3,4,4,4,4,3,Yes,8,Probably Yes,
+SV31702,ENC119518,F02,D210,2025-11-04,2025-12-03,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31703,ENC119522,F02,D210,2025-10-27,2025-11-03,4,3,4,4,4,4,Yes,7,Probably Yes,
+SV31704,ENC119526,F01,D110,2025-10-24,2025-12-11,4,4,3,4,1,4,No,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV31705,ENC119549,F01,D111,2025-10-26,2025-11-18,3,4,4,4,3,4,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV31706,ENC119564,F01,D160,2025-10-31,2025-11-26,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV31707,ENC119580,F01,D140,2025-10-29,2025-11-27,4,4,4,4,4,4,Yes,8,Probably Yes,
+SV31708,ENC119587,F02,D210,2025-10-31,2025-11-11,4,4,2,4,3,4,No,8,Probably Yes,Doctors were great; food needs improvement.
+SV31709,ENC119600,F01,D120,2025-10-28,2025-11-18,2,4,3,2,3,4,Yes,6,Probably No,"Felt rushed by the doctor, questions not answered."
+SV31710,ENC119601,F02,D210,2025-10-28,2025-11-10,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31711,ENC119603,F01,D160,2025-11-03,2025-12-18,4,2,4,3,4,3,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31712,ENC119606,F01,D160,2025-10-30,2025-11-20,4,4,4,4,4,4,Yes,6,Probably Yes,
+SV31713,ENC119608,F01,D111,2025-10-31,2025-11-11,4,4,1,3,3,3,Yes,5,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31714,ENC119618,F01,D140,2025-10-29,2025-11-04,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31715,ENC119623,F03,D310,2025-10-29,2025-12-12,4,4,4,4,4,4,Yes,9,Probably No,
+SV31716,ENC119640,F01,D195,2025-10-29,2025-11-09,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31717,ENC119642,F02,D210,2025-10-31,2025-11-13,4,4,3,4,4,2,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31718,ENC119645,F02,D210,2025-11-04,2025-11-13,4,4,4,4,4,4,Yes,10,Probably Yes,Staff were kind and respectful the whole stay.
+SV31719,ENC119648,F01,D195,2025-10-29,2025-11-12,4,3,3,3,4,2,Yes,7,Definitely Yes,
+SV31720,ENC119680,F01,D195,2025-10-29,2025-12-14,4,4,4,4,4,4,No,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31721,ENC119683,F03,D310,2025-11-03,2025-11-19,4,4,3,4,4,3,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31722,ENC119684,F01,D120,2025-11-03,2025-11-18,4,4,4,3,3,4,No,7,Definitely Yes,Billing office was rude on the phone.
+SV31723,ENC119687,F02,D210,2025-10-31,2025-12-18,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31724,ENC119688,F01,D110,2025-11-01,2025-12-06,4,4,4,4,4,3,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31725,ENC119695,F01,D170,2025-11-01,2025-11-30,4,2,1,4,3,4,No,5,Definitely No,
+SV31726,ENC119701,F01,D170,2025-11-02,2025-12-01,3,3,4,4,1,4,Yes,6,Probably No,
+SV31727,ENC119704,F01,D111,2025-11-01,2025-11-10,4,4,4,4,3,4,Yes,8,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31728,ENC119705,F03,D330,2025-11-08,2025-11-23,4,4,4,4,4,4,Yes,8,Definitely Yes,"Care was fine, room was noisy at night."
+SV31729,ENC119708,F01,D195,2025-10-30,2025-12-03,3,4,3,4,3,4,Yes,8,Probably Yes,Bathroom was not cleaned during my stay.
+SV31730,ENC119711,F02,D210,2025-11-01,2025-12-02,4,4,4,3,3,4,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31731,ENC119720,F03,D310,2025-11-01,2025-11-21,3,4,3,4,4,4,Yes,7,Definitely Yes,
+SV31732,ENC119749,F01,D195,2025-10-31,2025-11-10,4,4,4,4,4,4,Yes,8,Definitely Yes,
+SV31733,ENC119783,F02,D230,2025-11-05,2025-11-11,4,4,4,4,4,4,Yes,8,Definitely Yes,The nurses were wonderful and very attentive.
+SV31734,ENC119793,F01,D195,2025-11-02,2025-11-28,4,4,2,4,4,4,Yes,8,Probably No,
+SV31735,ENC119797,F01,D120,2025-11-04,2025-12-04,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31736,ENC119801,F02,D230,2025-11-06,2025-12-24,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31737,ENC119806,F03,D310,2025-11-03,2025-11-21,4,4,4,4,4,3,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31738,ENC119810,F02,D210,2025-11-05,2025-11-29,4,4,4,4,2,4,Yes,9,Definitely Yes,Thank you to the night shift nurses for the great care.
+SV31739,ENC119812,F03,D310,2025-11-02,2025-11-25,4,3,4,3,4,4,Yes,8,Probably Yes,
+SV31740,ENC119822,F03,D310,2025-11-03,2025-12-01,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31741,ENC119824,F01,D110,2025-11-05,2025-12-15,4,3,3,3,4,4,Yes,6,Definitely No,
+SV31742,ENC119835,F01,D170,2025-11-06,2025-11-21,3,4,4,4,4,4,No,10,Definitely Yes,
+SV31743,ENC119836,F01,D111,2025-11-08,2025-11-20,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31744,ENC119853,F02,D210,2025-11-09,2025-11-27,4,4,3,4,3,3,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31745,ENC119862,F01,D111,2025-11-12,2025-12-12,4,3,2,3,3,4,No,6,Probably Yes,Bathroom was not cleaned during my stay.
+SV31746,ENC119874,F01,D111,2025-11-10,2025-12-23,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31747,ENC119875,F01,D140,2025-11-06,2025-12-11,4,4,4,4,4,4,Yes,10,Probably Yes,
+SV31748,ENC119896,F03,D310,2025-11-06,2025-12-19,3,4,4,3,4,4,Yes,9,Definitely Yes,
+SV31749,ENC119903,F01,D110,2025-11-13,2025-12-24,1,3,3,3,3,1,Yes,7,Probably Yes,Long wait in the emergency room before getting a bed.
+SV31750,ENC119914,F01,D110,2025-11-07,2025-12-24,4,4,4,4,4,3,Yes,10,Probably Yes,
+SV31751,ENC119919,F01,D110,2025-11-07,2025-11-28,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31752,ENC119926,F02,D210,2025-11-07,2025-12-06,4,4,4,3,4,4,Yes,8,Definitely Yes,Waited too long for the call light to be answered at night.
+SV31753,ENC119935,F01,D111,2025-11-08,2025-12-24,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31754,ENC119938,F01,D111,2025-11-09,2025-12-06,4,4,4,4,4,4,Yes,9,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31755,ENC119972,F01,D111,2025-11-14,2025-12-01,1,3,3,3,3,3,No,6,Definitely No,Bathroom was not cleaned during my stay.
+SV31756,ENC119974,F01,D110,2025-11-12,2025-12-07,4,4,3,4,3,3,Yes,8,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31757,ENC119980,F01,D120,2025-11-07,2025-11-20,4,4,4,3,4,3,Yes,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31758,ENC119982,F02,D210,2025-11-10,2025-12-17,2,4,2,4,3,2,Yes,6,Definitely No,
+SV31759,ENC119985,F01,D195,2025-11-07,2025-11-17,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31760,ENC119995,F01,D195,2025-11-09,2025-11-16,4,3,4,3,4,4,No,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31761,ENC120011,F01,D110,2025-11-11,2025-12-16,4,4,4,4,4,4,Yes,9,Definitely Yes,"Care was fine, room was noisy at night."
+SV31762,ENC120027,F01,D111,2025-11-11,2025-12-23,4,4,4,4,1,2,Yes,8,Probably No,Staff were kind and respectful the whole stay.
+SV31763,ENC120032,F01,D120,2025-11-18,2025-12-22,4,4,4,4,3,4,Yes,10,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31764,ENC120033,F01,D110,2025-11-10,2025-12-18,4,4,4,4,4,4,Yes,7,Definitely Yes,
+SV31765,ENC120034,F03,D310,2025-11-11,2025-11-19,4,3,4,3,4,4,Yes,9,Definitely Yes,
+SV31766,ENC120044,F01,D195,2025-11-10,2025-12-15,2,4,3,2,2,1,Yes,10,Probably No,
+SV31767,ENC120045,F01,D111,2025-11-13,2025-11-22,4,3,3,1,4,4,Yes,7,Probably Yes,
+SV31768,ENC120051,F01,D110,2025-11-14,2025-12-07,2,4,4,1,3,4,No,7,Probably Yes,"Very noisy hallway, hard to sleep."
+SV31769,ENC120054,F01,D170,2025-11-14,2025-12-27,4,4,4,2,4,2,No,8,Definitely Yes,Doctors were great; food needs improvement.
+SV31770,ENC120056,F02,D210,2025-11-15,2025-12-17,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31771,ENC120078,F01,D120,2025-11-14,2025-11-21,4,4,4,4,2,3,No,6,Probably No,
+SV31772,ENC120100,F03,D320,2025-11-15,2025-12-12,4,4,4,4,3,4,No,10,Definitely Yes,Doctors were great; food needs improvement.
+SV31773,ENC120139,F01,D111,2025-11-14,2025-12-27,4,4,1,3,3,3,Yes,7,Definitely Yes,
+SV31774,ENC120142,F02,D270,2025-11-15,2025-12-15,4,4,4,4,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31775,ENC120143,F01,D111,2025-11-15,2025-11-28,4,4,4,4,4,4,Yes,9,Definitely Yes,Everyone was professional and caring.
+SV31776,ENC120167,F01,D110,2025-11-20,2025-12-19,3,2,3,4,3,3,Yes,6,Probably No,Long wait in the emergency room before getting a bed.
+SV31777,ENC120176,F01,D190,2025-11-21,2025-12-13,4,4,4,4,4,3,Yes,8,Probably Yes,
+SV31778,ENC120183,F03,D310,2025-11-15,2025-12-07,4,4,3,4,4,3,Yes,9,Definitely Yes,
+SV31779,ENC120206,F01,D111,2025-11-17,2025-11-24,4,4,2,4,4,3,Yes,5,Probably Yes,Billing office was rude on the phone.
+SV31780,ENC120212,F03,D320,2025-11-15,2025-12-16,4,4,2,4,3,4,Yes,8,Probably Yes,Good nurses but the wait for discharge was very long.
+SV31781,ENC120231,F01,D111,2025-11-18,2025-12-19,4,1,4,4,4,4,Yes,7,Probably No,
+SV31782,ENC120241,F01,D190,2025-11-22,2025-12-02,2,2,3,3,3,3,No,3,Probably Yes,
+SV31783,ENC120265,F01,D110,2025-11-18,2025-12-12,4,4,4,3,4,1,Yes,9,Definitely Yes,"Clean room, but the call light took too long."
+SV31784,ENC120266,F01,D150,2025-11-21,2025-12-16,3,4,3,4,3,3,Yes,8,Probably No,
+SV31785,ENC120268,F01,D111,2025-11-21,2025-12-19,4,4,4,4,4,4,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31786,ENC120271,F01,D195,2025-11-17,2025-11-24,4,4,4,4,3,2,Yes,9,Definitely Yes,
+SV31787,ENC120285,F01,D170,2025-11-20,2025-12-28,4,3,3,4,3,3,Yes,9,Definitely Yes,Doctors were great; food needs improvement.
+SV31788,ENC120304,F02,D210,2025-11-20,2025-12-28,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31789,ENC120309,F01,D110,2025-11-24,2025-12-31,4,4,4,4,4,4,Yes,10,Definitely Yes,
+SV31790,ENC120316,F01,D110,2025-11-22,2025-12-09,4,4,3,4,4,4,Yes,10,Definitely Yes,
+SV31791,ENC120323,F01,D195,2025-11-20,2025-12-01,4,3,3,4,4,3,Yes,9,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31792,ENC120356,F01,D110,2025-11-20,2025-12-13,4,4,4,3,3,4,Yes,9,Definitely Yes,Good nurses but the wait for discharge was very long.
+SV31793,ENC120358,F01,D160,2025-11-25,2025-12-24,4,4,4,4,3,4,No,10,Definitely Yes,
+SV31794,ENC120367,F01,D120,2025-11-22,2025-12-20,4,4,3,3,3,2,Yes,6,Probably No,Parking was expensive and hard to find.
+SV31795,ENC120371,F02,D210,2025-11-25,2025-12-27,4,1,4,4,3,4,No,9,Probably Yes,
+SV31796,ENC120380,F01,D110,2025-11-23,2025-12-28,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31797,ENC120519,F01,D111,2025-11-27,2025-12-27,3,4,4,4,4,4,Yes,9,Definitely Yes,Room was clean and the food was better than expected.
+SV31798,ENC120525,F02,D210,2025-11-29,2025-12-26,4,4,4,4,4,3,Yes,10,Definitely Yes,Discharge instructions were clear and easy to follow.
+SV31799,ENC120553,F03,D320,2025-11-28,2025-12-08,4,4,4,4,4,4,Yes,10,Definitely Yes,Dr. explained everything clearly. Excellent care.
+SV31800,ENC120564,F01,D120,2025-12-01,2025-12-15,4,4,4,4,4,4,Yes,8,Definitely Yes,"Clean room, but the call light took too long."
+SV31801,ENC120571,F01,D120,2025-11-29,2025-12-09,4,2,4,4,4,3,Yes,8,Probably Yes,
+SV31802,ENC120573,F01,D111,2025-11-28,2025-12-28,4,4,4,4,4,4,Yes,7,Probably Yes,Food was cold and arrived late.
+SV31803,ENC120604,F01,D195,2025-11-27,2025-12-10,3,4,4,3,2,4,Yes,8,Definitely Yes,
+SV31804,ENC120643,F01,D111,2025-11-30,2025-12-12,4,3,4,4,4,4,Yes,9,Definitely Yes,
+SV31805,ENC120656,F03,D310,2025-12-01,2025-12-26,4,4,3,4,4,4,Yes,7,Definitely Yes,
+SV31806,ENC120670,F01,D170,2025-12-01,2025-12-07,4,4,3,4,4,4,No,6,Probably No,"Very noisy hallway, hard to sleep."
+SV31807,ENC120682,F01,D111,2025-12-02,2025-12-29,4,4,4,4,4,3,Yes,10,Definitely Yes,Room was clean and the food was better than expected.
+SV31808,ENC120683,F02,D210,2025-12-06,2025-12-20,4,4,4,3,4,4,Yes,9,Definitely Yes,Staff were kind and respectful the whole stay.
+SV31809,ENC120728,F01,D110,2025-12-07,2025-12-19,4,4,4,4,4,4,Yes,7,Definitely Yes,
+SV31810,ENC120734,F01,D195,2025-12-02,2025-12-11,4,4,4,4,4,4,Yes,10,Definitely Yes,Everyone was professional and caring.
+SV31811,ENC120770,F01,D111,2025-12-08,2025-12-27,3,2,1,2,2,3,No,4,Definitely No,Nobody explained my new medications before discharge.
+SV31812,ENC120779,F01,D160,2025-12-08,2025-12-14,4,4,2,2,3,2,Yes,5,Probably No,
+SV31813,ENC120790,F01,D195,2025-12-03,2025-12-15,4,4,4,4,2,3,Yes,8,Probably Yes,
+SV31814,ENC120834,F01,D110,2025-12-06,2025-12-19,4,4,4,3,1,3,No,9,Definitely Yes,
+SV31815,ENC120868,F03,D310,2025-12-05,2025-12-16,4,1,4,4,2,4,Yes,8,Probably Yes,Parking was expensive and hard to find.
+SV31816,ENC120956,F01,D120,2025-12-08,2025-12-30,4,1,4,4,4,3,No,8,Definitely Yes,Waited too long for the call light to be answered at night.
+SV31817,ENC120970,F02,D210,2025-12-09,2025-12-22,2,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31818,ENC120979,F03,D310,2025-12-16,2025-12-29,2,3,2,2,2,1,Yes,6,Probably No,
+SV31819,ENC120988,F03,D310,2025-12-08,2025-12-16,4,4,4,4,3,4,Yes,10,Definitely Yes,
+SV31820,ENC120999,F01,D111,2025-12-13,2025-12-30,4,3,3,2,3,3,Yes,8,Probably Yes,"Clean room, but the call light took too long."
+SV31821,ENC121050,F01,D195,2025-12-10,2025-12-19,4,4,4,4,4,4,Yes,9,Definitely Yes,
+SV31822,ENC121089,F02,D230,2025-12-14,2025-12-28,2,4,3,4,4,3,Yes,10,Definitely Yes,
+SV31823,ENC121219,F01,D120,2025-12-16,2025-12-25,4,4,4,4,3,2,Yes,6,Probably No,

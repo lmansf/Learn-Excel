@@ -1,0 +1,148 @@
+ProviderID,FirstName,LastName,Credential,Specialty,PrimaryDeptID,FacilityID,HireDate,FTE
+PRV1001,Roy,Ferguson,MD,Emergency Medicine,D100,F01,2011-09-17,1.0
+PRV1002,Mia,Cruz,MD,Emergency Medicine,D100,F01,2007-08-03,0.9
+PRV1003,Jordan,Morris,MD,Emergency Medicine,D100,F01,2005-06-26,1.0
+PRV1004,Jesse,Elliott,MD,Emergency Medicine,D100,F01,2012-09-13,1.0
+PRV1005,Christian,Olson,DO,Emergency Medicine,D100,F01,2008-04-16,1.0
+PRV1006,James,Kowalski,MD,Emergency Medicine,D100,F01,2002-01-27,1.0
+PRV1007,Alexander,Mendoza,MD,Emergency Medicine,D100,F01,2021-02-06,1.0
+PRV1008,Jacob,Sullivan,DO,Emergency Medicine,D100,F01,2001-01-07,0.9
+PRV1009,Patrick,Foster,DO,Emergency Medicine,D100,F01,2008-02-28,1.0
+PRV1010,Nancy,Payne,MD,Emergency Medicine,D100,F01,2018-01-23,1.0
+PRV1011,Mia,Gonzales,PA,Emergency Medicine,D100,F01,2009-12-30,1.0
+PRV1012,Bruce,Vasquez,NP,Emergency Medicine,D100,F01,2023-07-30,0.5
+PRV1013,Doris,Myers,PA,Emergency Medicine,D100,F01,2017-08-29,1.0
+PRV1014,Wayne,Jordan,PA,Emergency Medicine,D100,F01,2002-05-05,1.0
+PRV1015,Margaret,Walker,MD,Emergency Medicine,D200,F02,2001-01-22,1.0
+PRV1016,Mei,Richardson,MD,Emergency Medicine,D200,F02,2009-05-31,0.8
+PRV1017,Bruce,Wright,MD,Emergency Medicine,D200,F02,2008-12-03,1.0
+PRV1018,Frank,Collins,MD,Emergency Medicine,D200,F02,2018-02-15,1.0
+PRV1019,Lisa,Marshall,DO,Emergency Medicine,D200,F02,2001-09-22,1.0
+PRV1020,Megan,Peters,NP,Emergency Medicine,D200,F02,2008-09-11,1.0
+PRV1021,Brenda,Henry,MD,Emergency Medicine,D300,F03,2008-07-24,1.0
+PRV1022,Anna,Schmidt,MD,Emergency Medicine,D300,F03,1999-02-01,1.0
+PRV1023,Gary,Barnes,DO,Emergency Medicine,D300,F03,2008-05-18,1.0
+PRV1024,Michael,Andrews,DO,Emergency Medicine,D300,F03,2010-10-30,1.0
+PRV1025,Victoria,Warren,MD,Emergency Medicine,D300,F03,2012-02-20,0.6
+PRV1026,Linda,Munoz,DO,Emergency Medicine,D300,F03,2015-09-19,0.8
+PRV1027,Wayne,Pena,NP,Emergency Medicine,D300,F03,2019-03-18,1.0
+PRV1028,Shirley,Riley,PA,Emergency Medicine,D300,F03,2023-12-07,1.0
+PRV1029,Kelly,Simpson,MD,Hospital Medicine,D110,F01,1998-06-28,1.0
+PRV1030,Judith,Cox,DO,Hospital Medicine,D110,F01,2010-01-21,1.0
+PRV1031,Tyler,Alvarado,MD,Hospital Medicine,D110,F01,2009-04-23,1.0
+PRV1032,Roger,Cruz,MD,Hospital Medicine,D110,F01,2007-01-26,1.0
+PRV1033,Hassan,Abdi,DO,Hospital Medicine,D110,F01,2005-07-15,0.5
+PRV1034,Alan,Wallace,MD,Hospital Medicine,D110,F01,2004-05-06,1.0
+PRV1035,Juan,Price,MD,Hospital Medicine,D110,F01,2015-09-22,0.8
+PRV1036,Emma,Ramirez,MD,Hospital Medicine,D111,F01,2021-05-18,0.9
+PRV1037,Joe,Yilmaz,MD,Hospital Medicine,D111,F01,2018-05-22,1.0
+PRV1038,Jose,Vasquez,MD,Hospital Medicine,D111,F01,2013-06-21,1.0
+PRV1039,Richard,Hunt,MD,Hospital Medicine,D111,F01,2002-08-16,0.9
+PRV1040,Jean,Allen,DO,Hospital Medicine,D111,F01,2021-07-14,0.8
+PRV1041,Larry,Russell,MD,Hospital Medicine,D111,F01,2013-07-25,1.0
+PRV1042,Kathleen,Abbott,NP,Hospital Medicine,D195,F01,1998-06-19,1.0
+PRV1043,Ashley,Watson,NP,Hospital Medicine,D195,F01,1999-02-05,1.0
+PRV1044,Melissa,Moreno,MD,Hospital Medicine,D210,F02,2023-08-03,1.0
+PRV1045,Philip,Carroll,DO,Hospital Medicine,D210,F02,2005-05-20,1.0
+PRV1046,Stephanie,Murray,DO,Hospital Medicine,D210,F02,2013-11-06,0.8
+PRV1047,Karen,Carter,MD,Hospital Medicine,D210,F02,2016-08-12,0.6
+PRV1048,Doris,Hall,DO,Hospital Medicine,D310,F03,2013-02-10,1.0
+PRV1049,Minh,Berry,MD,Hospital Medicine,D310,F03,2004-06-09,1.0
+PRV1050,Wei,Hansen,MD,Hospital Medicine,D310,F03,2009-03-11,1.0
+PRV1051,Frank,Peters,MD,Hospital Medicine,D310,F03,2017-07-16,1.0
+PRV1052,Harper,Reyes,MD,Hospital Medicine,D310,F03,2019-10-11,1.0
+PRV1053,Tyler,Payne,MD,Hospital Medicine,D310,F03,2007-02-24,0.6
+PRV1054,Jonathan,Taylor,MD,Cardiology,D120,F01,2003-04-20,1.0
+PRV1055,Michelle,Guzman,MD,Cardiology,D120,F01,2017-01-26,1.0
+PRV1056,Shirley,Boyd,MD,Cardiology,D120,F01,1998-10-11,1.0
+PRV1057,Charles,Evans,MD,Cardiology,D120,F01,2001-02-19,1.0
+PRV1058,Edward,Gonzales,MD,Cardiology,D320,F03,2002-08-09,1.0
+PRV1059,Leila,Vazquez,MD,Cardiology,D320,F03,2023-12-27,0.6
+PRV1060,Edward,Brooks,MD,Cardiology,D410,F04,1999-04-30,1.0
+PRV1061,Mateo,Gomez,MD,Cardiology,D410,F04,2007-07-03,1.0
+PRV1062,Brittany,Jenkins,DO,Cardiology,D410,F04,2001-04-30,1.0
+PRV1063,Grace,Allen,MD,Pulmonary & Critical Care,D130,F01,2006-02-23,1.0
+PRV1064,Bruce,Hawkins,MD,Pulmonary & Critical Care,D130,F01,2021-06-06,1.0
+PRV1065,Janet,Bryant,DO,Pulmonary & Critical Care,D130,F01,2010-06-13,1.0
+PRV1066,Adam,Diaz,MD,Pulmonary & Critical Care,D130,F01,1998-02-22,0.8
+PRV1067,Leila,Hamilton,DO,Pulmonary & Critical Care,D130,F01,2003-08-06,1.0
+PRV1068,Donald,Gutierrez,MD,Pulmonary & Critical Care,D230,F02,2006-08-12,1.0
+PRV1069,Frank,Wallace,DO,Pulmonary & Critical Care,D230,F02,2010-11-20,1.0
+PRV1070,Leila,Abbott,MD,Pulmonary & Critical Care,D330,F03,1999-07-13,1.0
+PRV1071,Danielle,White,MD,Pulmonary & Critical Care,D330,F03,1999-11-21,1.0
+PRV1072,Beverly,Guzman,DO,Pulmonary & Critical Care,D330,F03,2021-02-25,1.0
+PRV1073,Pamela,Woods,DO,Orthopedic Surgery,D140,F01,2010-03-15,1.0
+PRV1074,Grace,Santos,DO,Orthopedic Surgery,D140,F01,2008-05-15,0.8
+PRV1075,Leila,King,DO,Orthopedic Surgery,D140,F01,2018-04-13,1.0
+PRV1076,Anthony,Richards,DO,Orthopedic Surgery,D140,F01,2013-06-24,0.9
+PRV1077,Brittany,Yilmaz,MD,Orthopedic Surgery,D340,F03,2000-10-13,1.0
+PRV1078,Billy,Hudson,MD,Orthopedic Surgery,D340,F03,2008-11-14,1.0
+PRV1079,Carlos,Wagner,MD,Orthopedic Surgery,D420,F04,2015-11-14,1.0
+PRV1080,Kyle,Hernandez,MD,Orthopedic Surgery,D420,F04,2016-11-25,0.9
+PRV1081,Jonathan,Lewis,PA,Orthopedic Surgery,D420,F04,2008-05-15,1.0
+PRV1082,Lori,Cox,PA,Orthopedic Surgery,D420,F04,2005-06-01,0.6
+PRV1083,Kathleen,White,MD,General Surgery,D196,F01,2020-01-19,0.5
+PRV1084,Teresa,Lopez,MD,General Surgery,D196,F01,1999-03-25,0.9
+PRV1085,Jordan,Ramirez,MD,General Surgery,D196,F01,2009-04-17,1.0
+PRV1086,David,Haddad,MD,General Surgery,D196,F01,2016-07-11,1.0
+PRV1087,Jeffrey,Kim,DO,General Surgery,D196,F01,2020-03-25,1.0
+PRV1088,Stephen,Perkins,MD,General Surgery,D210,F02,2016-04-20,1.0
+PRV1089,Dylan,Lane,DO,General Surgery,D310,F03,2002-09-15,0.8
+PRV1090,Carol,Price,MD,General Surgery,D310,F03,2007-10-18,1.0
+PRV1091,Frank,Watson,MD,Obstetrics & Gynecology,D170,F01,2004-05-14,0.6
+PRV1092,Nicole,Bradley,MD,Obstetrics & Gynecology,D170,F01,2023-09-18,1.0
+PRV1093,Pamela,James,DO,Obstetrics & Gynecology,D170,F01,2014-07-23,0.5
+PRV1094,Andrea,Hill,DO,Obstetrics & Gynecology,D170,F01,2014-02-03,1.0
+PRV1095,Lauren,Taylor,MD,Obstetrics & Gynecology,D170,F01,2021-06-14,1.0
+PRV1096,Marie,Arnold,CNM,Obstetrics & Gynecology,D170,F01,2012-03-22,1.0
+PRV1097,Sophia,Phillips,CNM,Obstetrics & Gynecology,D170,F01,2010-01-10,0.8
+PRV1098,Frances,Rivera,MD,Obstetrics & Gynecology,D270,F02,2001-06-13,1.0
+PRV1099,Jeremy,Gardner,MD,Obstetrics & Gynecology,D270,F02,1998-06-01,1.0
+PRV1100,Michael,Soto,MD,Pediatrics,D180,F01,2002-05-11,1.0
+PRV1101,Emma,Soto,MD,Pediatrics,D180,F01,2017-05-30,1.0
+PRV1102,Sara,Wagner,MD,Pediatrics,D180,F01,2022-03-17,1.0
+PRV1103,Jose,Osei,MD,Pediatrics,D180,F01,2000-04-09,1.0
+PRV1104,Christian,Herrera,MD,Pediatrics,D450,F04,2009-04-22,1.0
+PRV1105,Kevin,Wallace,MD,Pediatrics,D450,F04,2007-05-15,0.6
+PRV1106,Susan,Alvarez,DO,Pediatrics,D450,F04,2023-05-12,0.8
+PRV1107,Linh,Aguilar,MD,Pediatrics,D450,F04,2002-03-19,1.0
+PRV1108,Stephanie,Brown,NP,Pediatrics,D450,F04,2002-06-20,1.0
+PRV1109,Eric,Robertson,MD,Hematology & Oncology,D150,F01,2008-03-22,1.0
+PRV1110,Larry,Hughes,MD,Hematology & Oncology,D150,F01,2003-06-19,1.0
+PRV1111,Fatima,Gray,MD,Hematology & Oncology,D150,F01,2011-05-17,0.8
+PRV1112,Zachary,Hicks,MD,Hematology & Oncology,D430,F04,2009-11-09,1.0
+PRV1113,Fatima,Long,MD,Hematology & Oncology,D430,F04,2003-01-08,1.0
+PRV1114,Logan,Cooper,MD,Hematology & Oncology,D430,F04,2005-03-19,1.0
+PRV1115,Bradley,Robinson,NP,Hematology & Oncology,D430,F04,2011-08-15,1.0
+PRV1116,Isabella,Abbott,MD,Neurology,D160,F01,2021-09-11,1.0
+PRV1117,Alexis,Garcia,MD,Neurology,D160,F01,2002-10-20,1.0
+PRV1118,Frank,Stone,MD,Neurology,D160,F01,2000-11-21,0.9
+PRV1119,Joe,Lindqvist,MD,Psychiatry,D190,F01,2015-12-26,1.0
+PRV1120,Emma,Elliott,MD,Psychiatry,D190,F01,2012-09-27,1.0
+PRV1121,Ivan,Herrera,MD,Psychiatry,D190,F01,2021-10-20,1.0
+PRV1122,Frank,Clark,DO,Psychiatry,D190,F01,2006-02-04,1.0
+PRV1123,Amina,Delgado,NP,Psychiatry,D190,F01,2000-11-24,1.0
+PRV1124,Rebecca,Torres,MD,Family Medicine,D400,F04,2010-11-09,0.9
+PRV1125,Julie,Osei,MD,Family Medicine,D400,F04,2010-11-11,1.0
+PRV1126,Brandon,Fisher,MD,Family Medicine,D400,F04,2020-07-15,1.0
+PRV1127,Mei,Chen,DO,Family Medicine,D400,F04,2022-05-01,1.0
+PRV1128,Catherine,Arnold,DO,Family Medicine,D400,F04,2006-01-19,1.0
+PRV1129,Nancy,Black,MD,Family Medicine,D400,F04,2005-05-14,0.6
+PRV1130,Brenda,Sullivan,MD,Family Medicine,D400,F04,2015-09-22,1.0
+PRV1131,Douglas,Elliott,DO,Family Medicine,D400,F04,2015-06-25,1.0
+PRV1132,George,Alvarado,NP,Family Medicine,D400,F04,2006-01-17,0.5
+PRV1133,Edward,Santos,NP,Family Medicine,D400,F04,2019-07-08,1.0
+PRV1134,Carolyn,Vazquez,NP,Family Medicine,D400,F04,1998-09-13,1.0
+PRV1135,Doris,Petrov,PA,Family Medicine,D400,F04,2021-03-17,1.0
+PRV1136,Lucia,Myers,PA,Family Medicine,D400,F04,1999-06-22,0.8
+PRV1137,Isabella,Nguyen,MD,Internal Medicine,D400,F04,2022-04-07,1.0
+PRV1138,Randy,Bennett,DO,Internal Medicine,D400,F04,2008-01-29,1.0
+PRV1139,Richard,Yilmaz,MD,Internal Medicine,D400,F04,2018-01-29,1.0
+PRV1140,Kelly,Black,MD,Internal Medicine,D400,F04,2000-02-04,1.0
+PRV1141,Scott,Rivera,MD,Endocrinology,D440,F04,2008-08-16,0.8
+PRV1142,Larry,Woods,MD,Endocrinology,D440,F04,2022-12-04,1.0
+PRV1143,Amber,Lee,NP,Endocrinology,D440,F04,2012-12-28,1.0
+PRV1144,Helen,Hoffman,MD,Radiology,D510,F01,2003-12-27,1.0
+PRV1145,Roger,Henry,MD,Radiology,D510,F01,2009-04-12,0.5
+PRV1146,Joan,Walker,MD,Radiology,D510,F01,2023-09-07,0.9
+PRV1147,Natalie,Wagner,MD,Pathology,D500,F01,2011-04-22,1.0

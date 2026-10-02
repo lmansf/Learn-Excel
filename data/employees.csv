@@ -1,0 +1,555 @@
+EmployeeID,FirstName,LastName,JobTitle,DeptID,FacilityID,EmploymentType,FTE,HourlyRate,HireDate,TermDate,Status,ShiftPreference,Certifications
+EMP2001,Mary,Patel,Registered Nurse,D100,F01,Per Diem,0.0,49.14,2011-09-17,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2002,Kelly,Patterson,Registered Nurse,D100,F01,Full-Time,1.0,50.55,2009-07-04,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2003,Sara,Freeman,Registered Nurse,D100,F01,Full-Time,1.0,39.49,2024-08-04,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2004,Mei,Howard,Registered Nurse,D100,F01,Full-Time,1.0,42.00,2021-10-29,,Active,Day,BLS
+EMP2005,Mia,Snyder,Registered Nurse,D100,F01,Full-Time,0.9,39.77,2024-10-10,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2006,Rosa,Romero,Registered Nurse,D100,F01,Part-Time,0.7,39.92,2023-04-22,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2007,Laura,Gordon,Registered Nurse,D100,F01,Full-Time,0.9,42.43,2020-07-14,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2008,Angela,Peters,Registered Nurse,D100,F01,Full-Time,0.9,37.35,2025-05-08,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2009,Alexander,Weaver,Registered Nurse,D100,F01,Agency,0.9,104.50,2025-09-14,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2010,Barbara,Ellis,Registered Nurse,D100,F01,Full-Time,0.9,40.62,2021-12-12,,Active,Rotating,BLS
+EMP2011,Judith,Nakamura,Registered Nurse,D100,F01,Full-Time,0.9,41.08,2022-07-03,2024-11-12,Terminated,Rotating,BLS;ACLS;PALS;TNCC
+EMP2012,Susan,Harrison,Registered Nurse,D100,F01,Full-Time,0.9,44.77,2018-01-25,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2013,Patricia,Holmes,Registered Nurse,D100,F01,Full-Time,1.0,41.30,2020-07-09,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2014,Mary,Morris,Registered Nurse,D100,F01,Full-Time,0.9,47.97,2014-10-17,,Active,Rotating,BLS
+EMP2015,Janet,Sanders,Registered Nurse,D100,F01,Full-Time,0.9,52.18,2007-11-22,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2016,Sandra,Hamilton,Registered Nurse,D100,F01,Full-Time,0.9,43.31,2018-05-20,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2017,Deborah,Dixon,Registered Nurse,D100,F01,Part-Time,0.6,49.30,2012-02-14,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2018,Brenda,Alexander,Registered Nurse,D100,F01,Full-Time,0.9,44.00,2017-06-17,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2019,Diana,Barnes,Registered Nurse,D100,F01,Part-Time,0.6,43.42,2019-12-06,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2020,Rosa,West,Registered Nurse,D100,F01,Full-Time,1.0,49.50,2012-09-26,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2021,Zachary,Evans,Registered Nurse,D100,F01,Full-Time,0.9,58.00,1994-10-04,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2022,Bruce,Ford,Registered Nurse,D100,F01,Agency,0.9,113.72,2025-02-14,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2023,Carolyn,Romero,Registered Nurse,D100,F01,Full-Time,1.0,37.53,2024-12-01,,Active,Night,BLS;ACLS;PALS;TNCC
+EMP2024,Brittany,Myers,Registered Nurse,D100,F01,Full-Time,0.9,37.66,2024-10-14,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2025,Helen,Flores,Registered Nurse,D100,F01,Full-Time,1.0,56.10,2004-07-15,,Active,Night,BLS
+EMP2026,Anna,Boyd,Registered Nurse,D100,F01,Part-Time,0.6,41.65,2020-12-07,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2027,Rebecca,Cruz,Registered Nurse,D100,F01,Full-Time,0.9,39.23,2023-05-30,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2028,Elizabeth,Weaver,Registered Nurse,D100,F01,Full-Time,1.0,39.30,2024-05-26,2025-04-14,Terminated,Day,BLS;ACLS;PALS;TNCC
+EMP2029,Jacqueline,Vargas,Registered Nurse,D100,F01,Full-Time,0.9,38.23,2025-12-28,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2030,Isabella,Morris,Registered Nurse,D100,F01,Per Diem,0.0,42.91,2020-12-07,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2031,Catherine,Boyd,Registered Nurse,D100,F01,Full-Time,0.9,41.44,2021-12-27,,Active,Night,BLS
+EMP2032,David,Coleman,Registered Nurse,D100,F01,Full-Time,1.0,41.93,2021-04-25,,Active,Day,BLS
+EMP2033,Abigail,Hernandez,Registered Nurse,D100,F01,Full-Time,0.9,56.60,2003-04-05,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2034,Angela,Ross,Registered Nurse,D100,F01,Full-Time,0.9,41.78,2021-04-20,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2035,Helen,Herrera,Registered Nurse,D100,F01,Part-Time,0.5,54.19,2005-09-08,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2036,Aaliyah,Perry,Registered Nurse,D100,F01,Full-Time,0.9,50.80,2011-06-09,,Active,Night,BLS
+EMP2037,Jason,Chavez,Registered Nurse,D100,F01,Per Diem,0.0,44.41,2017-02-28,2025-03-21,Terminated,Rotating,BLS;ACLS;PALS;TNCC
+EMP2038,Sharon,Adams,Registered Nurse,D100,F01,Full-Time,0.9,47.51,2015-03-31,,Active,Night,BLS
+EMP2039,Elizabeth,Gomez,Registered Nurse,D100,F01,Full-Time,1.0,58.00,1998-08-08,,Active,Rotating,BLS;ACLS;PALS;TNCC
+EMP2040,Marie,Black,Registered Nurse,D100,F01,Full-Time,1.0,55.36,2006-04-04,,Active,Day,BLS;ACLS;PALS;TNCC
+EMP2041,Sandra,Vazquez,Licensed Practical Nurse,D100,F01,Full-Time,0.9,30.54,2012-09-20,,Leave of Absence,Day,BLS
+EMP2042,Maria,Perkins,Licensed Practical Nurse,D100,F01,Full-Time,1.0,25.97,2022-09-19,,Active,Rotating,BLS
+EMP2043,Russell,Schmidt,Patient Care Technician,D100,F01,Full-Time,1.0,20.81,2023-05-20,,Active,Night,BLS
+EMP2044,Elizabeth,Silva,Patient Care Technician,D100,F01,Part-Time,0.7,19.99,2019-02-20,,Active,Night,BLS
+EMP2045,Mary,Freeman,Patient Care Technician,D100,F01,Full-Time,0.9,23.40,2011-07-07,,Active,Day,BLS
+EMP2046,Joshua,Ortiz,Patient Care Technician,D100,F01,Full-Time,0.9,23.90,2012-12-22,,Active,Night,BLS
+EMP2047,Willie,Armstrong,Patient Care Technician,D100,F01,Per Diem,0.0,22.43,2011-03-21,,Active,Day,BLS
+EMP2048,Lucas,Kennedy,Patient Care Technician,D100,F01,Full-Time,0.9,23.67,2009-09-03,,Active,Day,BLS
+EMP2049,Bradley,Soto,Patient Care Technician,D100,F01,Part-Time,0.5,19.71,2019-08-15,,Active,Day,BLS
+EMP2050,Brenda,Alvarez,Patient Care Technician,D100,F01,Full-Time,0.9,20.87,2016-06-29,,Active,Night,BLS
+EMP2051,Donna,Richardson,Patient Care Technician,D100,F01,Part-Time,0.6,20.40,2022-07-31,,Active,Rotating,BLS
+EMP2052,Benjamin,Hawkins,Patient Care Technician,D100,F01,Full-Time,0.9,18.91,2025-03-15,,Active,Night,BLS
+EMP2053,Susan,Holmes,Unit Secretary,D100,F01,Full-Time,0.9,18.41,2025-07-29,,Active,Day,
+EMP2054,Ava,Williams,Unit Secretary,D100,F01,Full-Time,1.0,18.86,2019-02-19,,Active,Rotating,
+EMP2055,Lucia,Nguyen,Unit Secretary,D100,F01,Full-Time,1.0,18.65,2017-06-26,,Active,Night,
+EMP2056,Virginia,Simpson,Unit Secretary,D100,F01,Full-Time,1.0,18.00,2022-03-21,,Active,Night,
+EMP2057,Virginia,Cunningham,Unit Secretary,D100,F01,Part-Time,0.7,17.50,2025-10-30,,Active,Night,
+EMP2058,Keith,Gray,Nurse Manager,D100,F01,Full-Time,1.0,55.26,2020-02-08,,Active,Day,
+EMP2059,Nicole,Price,Registered Nurse,D110,F01,Full-Time,0.9,38.73,2023-11-21,,Active,Rotating,BLS
+EMP2060,Amber,Gutierrez,Registered Nurse,D110,F01,Full-Time,1.0,39.37,2024-10-21,,Active,Day,BLS
+EMP2061,Randy,Castro,Registered Nurse,D110,F01,Full-Time,0.9,38.50,2025-07-22,,Active,Rotating,BLS;ACLS
+EMP2062,Lauren,Rogers,Registered Nurse,D110,F01,Full-Time,0.9,38.11,2024-10-15,,Active,Night,BLS
+EMP2063,Sarah,Cox,Registered Nurse,D110,F01,Part-Time,0.6,46.74,2016-01-17,,Active,Night,BLS
+EMP2064,Sarah,Moore,Registered Nurse,D110,F01,Per Diem,0.0,38.40,2025-04-12,,Active,Rotating,BLS
+EMP2065,Samantha,Washington,Registered Nurse,D110,F01,Full-Time,0.9,39.80,2023-02-01,2025-09-02,Terminated,Day,BLS
+EMP2066,Rosa,Simmons,Registered Nurse,D110,F01,Full-Time,0.9,44.73,2018-01-17,,Active,Night,BLS;ACLS
+EMP2067,Natalie,Rose,Registered Nurse,D110,F01,Full-Time,0.9,37.82,2025-01-16,,Active,Night,BLS
+EMP2068,Abigail,Castro,Registered Nurse,D110,F01,Full-Time,1.0,44.00,2019-09-28,,Active,Rotating,BLS;ACLS
+EMP2069,Jeremy,Richards,Registered Nurse,D110,F01,Full-Time,1.0,39.96,2024-08-21,,Active,Night,BLS
+EMP2070,Melissa,Simpson,Registered Nurse,D110,F01,Full-Time,0.9,54.06,2005-08-31,,Active,Day,BLS
+EMP2071,Amina,Gordon,Registered Nurse,D110,F01,Part-Time,0.5,37.87,2024-05-26,,Active,Day,BLS
+EMP2072,Jean,Herrera,Registered Nurse,D110,F01,Full-Time,1.0,41.52,2021-06-14,,Active,Rotating,BLS
+EMP2073,Sarah,Ross,Registered Nurse,D110,F01,Full-Time,0.9,39.87,2022-03-01,,Active,Day,BLS;ACLS
+EMP2074,Andrea,Henry,Registered Nurse,D110,F01,Part-Time,0.7,42.75,2019-05-08,,Active,Rotating,BLS;ACLS
+EMP2075,Sharon,Rogers,Registered Nurse,D110,F01,Full-Time,1.0,42.60,2021-01-06,,Active,Day,BLS
+EMP2076,Theresa,Fox,Registered Nurse,D110,F01,Per Diem,0.0,40.83,2021-12-26,,Active,Day,BLS;ACLS
+EMP2077,Nicole,Foster,Registered Nurse,D110,F01,Full-Time,0.9,51.72,2008-04-07,,Active,Night,BLS;ACLS
+EMP2078,Mia,Duncan,Registered Nurse,D110,F01,Part-Time,0.6,39.35,2024-10-15,,Active,Rotating,BLS;ACLS
+EMP2079,Natalie,Hayes,Registered Nurse,D110,F01,Per Diem,0.0,52.74,2007-04-10,,Active,Rotating,BLS
+EMP2080,Danielle,Simpson,Registered Nurse,D110,F01,Part-Time,0.5,40.20,2023-01-15,,Active,Night,BLS
+EMP2081,Samantha,Russell,Registered Nurse,D110,F01,Per Diem,0.0,45.31,2017-11-17,,Active,Night,BLS;ACLS
+EMP2082,Wei,Reyes,Registered Nurse,D110,F01,Full-Time,0.9,44.15,2017-01-22,,Active,Night,BLS;ACLS
+EMP2083,Barbara,Ross,Registered Nurse,D110,F01,Full-Time,0.9,43.06,2019-03-01,,Active,Day,BLS
+EMP2084,Sarah,Ferguson,Registered Nurse,D110,F01,Full-Time,0.9,49.02,2013-08-03,,Active,Night,BLS;ACLS
+EMP2085,Doris,Gonzalez,Registered Nurse,D110,F01,Full-Time,0.9,45.20,2017-06-03,,Active,Day,BLS
+EMP2086,Anna,Dunn,Registered Nurse,D110,F01,Full-Time,1.0,58.00,1995-08-28,,Active,Day,BLS;ACLS
+EMP2087,Jessica,Aguilar,Registered Nurse,D110,F01,Full-Time,0.9,41.00,2022-03-03,,Active,Day,BLS
+EMP2088,Amber,Mendoza,Registered Nurse,D110,F01,Full-Time,1.0,39.16,2024-05-23,,Active,Day,BLS
+EMP2089,Mary,Brooks,Registered Nurse,D110,F01,Full-Time,1.0,41.06,2022-09-22,,Active,Day,BLS
+EMP2090,Juan,Roberts,Registered Nurse,D110,F01,Full-Time,0.9,44.61,2016-07-26,,Active,Night,BLS;ACLS
+EMP2091,Thomas,Sullivan,Registered Nurse,D110,F01,Part-Time,0.5,38.94,2025-10-05,,Active,Day,BLS;ACLS
+EMP2092,Wei,Payne,Registered Nurse,D110,F01,Part-Time,0.7,36.97,2025-09-26,,Active,Rotating,BLS
+EMP2093,Jennifer,Patterson,Registered Nurse,D110,F01,Full-Time,1.0,41.68,2020-10-17,,Active,Rotating,BLS
+EMP2094,Emily,Sandoval,Registered Nurse,D110,F01,Full-Time,0.9,39.88,2024-04-21,,Active,Night,BLS;ACLS
+EMP2095,Paul,Lewis,Registered Nurse,D110,F01,Full-Time,0.9,52.29,2009-10-07,,Active,Night,BLS;ACLS
+EMP2096,Alexander,Abbott,Registered Nurse,D110,F01,Full-Time,1.0,53.40,2007-09-02,,Active,Day,BLS
+EMP2097,Megan,Parker,Registered Nurse,D110,F01,Full-Time,0.9,38.99,2024-05-14,,Active,Night,BLS;ACLS
+EMP2098,Ashley,Gordon,Registered Nurse,D110,F01,Full-Time,1.0,51.14,2010-10-03,,Active,Rotating,BLS
+EMP2099,Frances,Parker,Registered Nurse,D110,F01,Full-Time,0.9,56.61,2004-10-11,,Active,Rotating,BLS
+EMP2100,Mary,Marshall,Registered Nurse,D110,F01,Full-Time,0.9,56.91,2003-01-16,,Active,Day,BLS
+EMP2101,Shirley,Garza,Registered Nurse,D110,F01,Part-Time,0.6,51.63,2009-10-21,,Active,Day,BLS;ACLS
+EMP2102,Michelle,Petrov,Registered Nurse,D110,F01,Full-Time,0.9,37.95,2025-02-15,,Active,Day,BLS;ACLS
+EMP2103,Brittany,Baker,Registered Nurse,D110,F01,Part-Time,0.6,39.16,2023-05-07,,Active,Night,BLS;ACLS
+EMP2104,Frances,Meyer,Licensed Practical Nurse,D110,F01,Per Diem,0.0,33.00,2006-03-26,,Active,Day,BLS
+EMP2105,Jean,Patterson,Licensed Practical Nurse,D110,F01,Per Diem,0.0,30.73,2012-09-18,,Active,Day,BLS
+EMP2106,Mei,Gibson,Licensed Practical Nurse,D110,F01,Full-Time,1.0,28.80,2017-07-09,,Active,Day,BLS
+EMP2107,Jessica,Williams,Licensed Practical Nurse,D110,F01,Full-Time,0.9,26.46,2024-09-17,2025-10-02,Terminated,Day,BLS
+EMP2108,Linh,Warren,Certified Nursing Assistant,D110,F01,Full-Time,1.0,23.50,1999-01-10,,Active,Night,BLS
+EMP2109,Alexis,Fisher,Certified Nursing Assistant,D110,F01,Part-Time,0.5,23.13,2006-12-31,,Active,Night,BLS
+EMP2110,Douglas,Kelley,Certified Nursing Assistant,D110,F01,Per Diem,0.0,17.06,2025-03-13,,Active,Day,BLS
+EMP2111,Nancy,Martinez,Certified Nursing Assistant,D110,F01,Full-Time,0.9,18.63,2021-12-15,2025-03-02,Terminated,Rotating,BLS
+EMP2112,Amber,Carter,Certified Nursing Assistant,D110,F01,Full-Time,1.0,23.50,2006-07-26,,Active,Day,BLS
+EMP2113,Alan,Roberts,Certified Nursing Assistant,D110,F01,Full-Time,1.0,20.24,2014-07-19,,Active,Rotating,BLS
+EMP2114,Emily,Willis,Certified Nursing Assistant,D110,F01,Part-Time,0.6,18.48,2024-09-10,,Active,Day,BLS
+EMP2115,Jack,Murray,Certified Nursing Assistant,D110,F01,Full-Time,1.0,18.05,2024-05-23,,Active,Night,BLS
+EMP2116,Sharon,Weaver,Certified Nursing Assistant,D110,F01,Part-Time,0.5,16.82,2025-01-07,,Active,Night,BLS
+EMP2117,Rachel,Stevens,Certified Nursing Assistant,D110,F01,Part-Time,0.5,19.78,2016-11-21,,Active,Day,BLS
+EMP2118,Pamela,Yilmaz,Certified Nursing Assistant,D110,F01,Full-Time,0.9,19.61,2016-10-02,,Active,Night,BLS
+EMP2119,Andrea,Carter,Certified Nursing Assistant,D110,F01,Full-Time,1.0,23.50,1996-06-14,,Active,Rotating,BLS
+EMP2120,Donna,Peterson,Certified Nursing Assistant,D110,F01,Full-Time,0.9,23.50,2006-03-23,,Active,Day,BLS
+EMP2121,Alice,Turner,Certified Nursing Assistant,D110,F01,Full-Time,0.9,20.66,2017-05-09,,Active,Day,BLS
+EMP2122,Susan,Lopez,Certified Nursing Assistant,D110,F01,Full-Time,1.0,19.20,2024-09-19,,Active,Day,BLS
+EMP2123,Rosa,Lee,Certified Nursing Assistant,D110,F01,Full-Time,1.0,21.49,2012-10-12,,Active,Day,BLS
+EMP2124,Michelle,Freeman,Unit Secretary,D110,F01,Full-Time,0.9,19.83,2020-08-03,,Active,Day,
+EMP2125,Minh,Tran,Unit Secretary,D110,F01,Part-Time,0.7,16.97,2025-01-16,,Active,Night,
+EMP2126,Jonathan,Evans,Unit Secretary,D110,F01,Full-Time,0.9,18.96,2022-11-28,,Active,Day,
+EMP2127,Patrick,Sanchez,Nurse Manager,D110,F01,Full-Time,1.0,61.96,2010-09-24,,Active,Day,
+EMP2128,Judy,Herrera,Respiratory Therapist,D110,F01,Per Diem,0.0,35.36,2019-10-25,,Active,Rotating,BLS;ACLS;RRT
+EMP2129,Kayla,Gonzalez,Respiratory Therapist,D110,F01,Full-Time,1.0,32.66,2024-10-15,,Active,Day,BLS;ACLS;RRT
+EMP2130,Alexander,Arnold,Respiratory Therapist,D110,F01,Per Diem,0.0,39.47,2013-08-22,,Active,Day,BLS;ACLS;RRT
+EMP2131,Ruth,Carpenter,Registered Nurse,D111,F01,Full-Time,0.9,37.71,2024-10-13,,Active,Rotating,BLS;ACLS
+EMP2132,Sandra,Ward,Registered Nurse,D111,F01,Agency,0.9,98.18,2025-05-01,,Active,Day,BLS
+EMP2133,Joyce,Lopez,Registered Nurse,D111,F01,Full-Time,1.0,38.23,2024-03-26,,Active,Night,BLS
+EMP2134,Heather,Matthews,Registered Nurse,D111,F01,Full-Time,0.9,40.27,2024-03-19,2024-07-30,Terminated,Rotating,BLS;ACLS
+EMP2135,Pamela,Hunter,Registered Nurse,D111,F01,Full-Time,1.0,42.17,2020-12-18,,Active,Day,BLS
+EMP2136,Theresa,Pierce,Registered Nurse,D111,F01,Part-Time,0.7,38.92,2023-08-31,,Active,Day,BLS;ACLS
+EMP2137,Emily,Stewart,Registered Nurse,D111,F01,Full-Time,1.0,52.37,2009-02-02,,Active,Rotating,BLS;ACLS
+EMP2138,Amber,Price,Registered Nurse,D111,F01,Full-Time,0.9,39.78,2024-06-24,,Active,Day,BLS;ACLS
+EMP2139,Camila,Price,Registered Nurse,D111,F01,Agency,0.9,88.73,2025-03-26,,Active,Night,BLS
+EMP2140,Kimberly,Pierce,Registered Nurse,D111,F01,Full-Time,1.0,38.38,2024-06-26,,Active,Day,BLS;ACLS
+EMP2141,Amanda,Romero,Registered Nurse,D111,F01,Full-Time,0.9,38.85,2023-06-23,2025-03-23,Terminated,Night,BLS
+EMP2142,Victoria,Nguyen,Registered Nurse,D111,F01,Per Diem,0.0,44.93,2018-08-25,,Active,Day,BLS;ACLS
+EMP2143,Theresa,Ellis,Registered Nurse,D111,F01,Full-Time,0.9,39.42,2024-08-29,,Active,Day,BLS;ACLS
+EMP2144,Ruth,Bradley,Registered Nurse,D111,F01,Full-Time,0.9,52.69,2007-10-10,,Active,Day,BLS
+EMP2145,Joan,Martin,Registered Nurse,D111,F01,Full-Time,0.9,44.78,2019-02-01,,Active,Day,BLS
+EMP2146,Hannah,Contreras,Registered Nurse,D111,F01,Per Diem,0.0,45.05,2017-09-21,,Active,Night,BLS;ACLS
+EMP2147,Jennifer,Hansen,Registered Nurse,D111,F01,Full-Time,0.9,45.04,2018-08-01,,Active,Night,BLS;ACLS
+EMP2148,Teresa,Cruz,Registered Nurse,D111,F01,Full-Time,0.9,40.88,2022-08-26,,Active,Day,BLS
+EMP2149,Brandon,Lopez,Registered Nurse,D111,F01,Full-Time,1.0,42.63,2021-05-15,2024-01-25,Terminated,Rotating,BLS
+EMP2150,Laura,Warren,Registered Nurse,D111,F01,Part-Time,0.7,47.83,2014-04-01,,Active,Night,BLS;ACLS
+EMP2151,Olivia,Hunt,Registered Nurse,D111,F01,Full-Time,0.9,39.79,2023-11-10,,Active,Day,BLS
+EMP2152,Abigail,Bryant,Registered Nurse,D111,F01,Full-Time,1.0,45.20,2015-12-24,,Active,Day,BLS;ACLS
+EMP2153,Amina,Stewart,Registered Nurse,D111,F01,Part-Time,0.6,38.92,2025-10-07,,Active,Day,BLS;ACLS
+EMP2154,Teresa,Tucker,Registered Nurse,D111,F01,Per Diem,0.0,36.72,2025-11-13,,Active,Night,BLS
+EMP2155,Dorothy,Ferguson,Registered Nurse,D111,F01,Full-Time,1.0,39.23,2025-09-19,,Active,Day,BLS;ACLS
+EMP2156,Megan,Gomez,Registered Nurse,D111,F01,Part-Time,0.5,39.91,2023-03-04,,Active,Rotating,BLS;ACLS
+EMP2157,Michael,Tucker,Registered Nurse,D111,F01,Part-Time,0.6,46.58,2014-06-26,,Active,Day,BLS;ACLS
+EMP2158,Jacqueline,Carroll,Registered Nurse,D111,F01,Part-Time,0.7,41.12,2022-02-02,,Active,Day,BLS
+EMP2159,Hannah,Nguyen,Registered Nurse,D111,F01,Per Diem,0.0,39.82,2024-09-10,,Active,Day,BLS;ACLS
+EMP2160,Marilyn,Jackson,Registered Nurse,D111,F01,Full-Time,1.0,38.68,2023-08-25,,Active,Rotating,BLS;ACLS
+EMP2161,Elizabeth,Johnston,Registered Nurse,D111,F01,Full-Time,0.9,48.91,2013-06-24,,Active,Day,BLS
+EMP2162,Michelle,Simmons,Registered Nurse,D111,F01,Full-Time,0.9,37.71,2025-05-07,,Active,Rotating,BLS
+EMP2163,Ava,Kelly,Registered Nurse,D111,F01,Per Diem,0.0,53.30,2008-09-25,,Active,Night,BLS;ACLS
+EMP2164,Evelyn,Cruz,Registered Nurse,D111,F01,Full-Time,0.9,37.34,2025-11-03,,Active,Day,BLS
+EMP2165,Harper,Lopez,Registered Nurse,D111,F01,Full-Time,0.9,39.15,2025-06-02,,Active,Day,BLS
+EMP2166,Alexander,Alvarez,Registered Nurse,D111,F01,Full-Time,1.0,42.79,2019-03-30,,Active,Night,BLS;ACLS
+EMP2167,Doris,Wood,Registered Nurse,D111,F01,Full-Time,0.9,39.04,2024-12-02,,Active,Rotating,BLS;ACLS
+EMP2168,George,Torres,Registered Nurse,D111,F01,Per Diem,0.0,42.26,2022-01-26,,Active,Night,BLS
+EMP2169,Kayla,Carpenter,Registered Nurse,D111,F01,Full-Time,0.9,39.20,2024-07-29,,Active,Day,BLS;ACLS
+EMP2170,Madison,Burns,Registered Nurse,D111,F01,Full-Time,0.9,49.30,2012-04-01,,Active,Day,BLS
+EMP2171,Frances,Mills,Licensed Practical Nurse,D111,F01,Full-Time,1.0,27.73,2021-09-22,,Active,Rotating,BLS
+EMP2172,Janet,White,Licensed Practical Nurse,D111,F01,Full-Time,1.0,26.80,2024-11-03,,Active,Day,BLS
+EMP2173,Mary,Bradley,Licensed Practical Nurse,D111,F01,Full-Time,0.9,26.50,2024-01-19,2024-02-19,Terminated,Night,BLS
+EMP2174,Kathryn,Hansen,Certified Nursing Assistant,D111,F01,Full-Time,0.9,23.49,2006-09-05,,Active,Rotating,BLS
+EMP2175,Sara,Moore,Certified Nursing Assistant,D111,F01,Part-Time,0.6,19.43,2021-08-05,,Active,Night,BLS
+EMP2176,Bruce,Carpenter,Certified Nursing Assistant,D111,F01,Full-Time,0.9,19.10,2020-10-10,,Active,Rotating,BLS
+EMP2177,Kathleen,Ward,Certified Nursing Assistant,D111,F01,Full-Time,1.0,18.74,2021-05-25,,Active,Night,BLS
+EMP2178,Karen,Nakamura,Certified Nursing Assistant,D111,F01,Full-Time,1.0,17.95,2024-10-18,,Active,Day,BLS
+EMP2179,Minh,Wallace,Certified Nursing Assistant,D111,F01,Full-Time,0.9,19.43,2018-03-16,,Active,Night,BLS
+EMP2180,Christian,Robertson,Certified Nursing Assistant,D111,F01,Full-Time,1.0,20.03,2020-05-14,,Active,Rotating,BLS
+EMP2181,Bryan,Nguyen,Certified Nursing Assistant,D111,F01,Per Diem,0.0,18.50,2024-10-08,,Active,Rotating,BLS
+EMP2182,Linda,Gardner,Certified Nursing Assistant,D111,F01,Part-Time,0.5,17.48,2023-08-13,,Active,Day,BLS
+EMP2183,Kimberly,Abbott,Certified Nursing Assistant,D111,F01,Full-Time,1.0,18.95,2018-12-27,,Active,Day,BLS
+EMP2184,Emily,Shaw,Certified Nursing Assistant,D111,F01,Part-Time,0.5,20.95,2019-05-14,,Active,Day,BLS
+EMP2185,Emma,Torres,Certified Nursing Assistant,D111,F01,Full-Time,0.9,17.17,2024-03-11,,Active,Night,BLS
+EMP2186,Deborah,Gray,Certified Nursing Assistant,D111,F01,Full-Time,1.0,20.44,2015-09-29,,Active,Rotating,BLS
+EMP2187,Vincent,Richards,Certified Nursing Assistant,D111,F01,Per Diem,0.0,20.15,2019-12-21,,Active,Day,BLS
+EMP2188,Kayla,Abbott,Unit Secretary,D111,F01,Per Diem,0.0,18.18,2024-07-30,,Active,Rotating,
+EMP2189,Rosa,Olson,Unit Secretary,D111,F01,Full-Time,1.0,19.28,2019-04-19,,Active,Day,
+EMP2190,Grace,James,Unit Secretary,D111,F01,Full-Time,0.9,20.73,2014-10-29,,Active,Day,
+EMP2191,Ann,Yilmaz,Nurse Manager,D111,F01,Full-Time,1.0,51.83,2025-11-20,,Active,Day,
+EMP2192,Ryan,Dunn,Respiratory Therapist,D111,F01,Part-Time,0.7,43.00,2006-01-29,,Active,Day,BLS;ACLS;RRT
+EMP2193,Roger,Stevens,Respiratory Therapist,D111,F01,Full-Time,1.0,33.21,2021-03-27,,Active,Night,BLS;ACLS;RRT
+EMP2194,Timothy,Lane,Respiratory Therapist,D111,F01,Part-Time,0.7,43.00,2005-09-23,,Active,Rotating,BLS;ACLS;RRT
+EMP2195,Judy,Wells,Registered Nurse,D120,F01,Per Diem,0.0,55.36,2006-05-07,,Active,Day,BLS;ACLS
+EMP2196,Linda,Matthews,Registered Nurse,D120,F01,Full-Time,1.0,58.00,1999-10-29,,Active,Day,BLS;ACLS
+EMP2197,Sophia,Abdi,Registered Nurse,D120,F01,Part-Time,0.6,42.74,2020-04-27,,Active,Day,BLS;ACLS
+EMP2198,Ronald,Webb,Registered Nurse,D120,F01,Full-Time,0.9,39.59,2024-09-18,,Active,Rotating,BLS;ACLS
+EMP2199,Danielle,Hunter,Registered Nurse,D120,F01,Full-Time,1.0,38.80,2025-07-21,,Leave of Absence,Night,BLS;ACLS
+EMP2200,Cheryl,Carpenter,Registered Nurse,D120,F01,Full-Time,0.9,47.86,2013-06-27,,Active,Night,BLS;ACLS
+EMP2201,Lisa,Graham,Registered Nurse,D120,F01,Part-Time,0.6,41.61,2021-04-07,,Active,Day,BLS;ACLS
+EMP2202,Helen,Powell,Registered Nurse,D120,F01,Full-Time,0.9,41.54,2020-10-23,,Active,Night,BLS;ACLS
+EMP2203,Eugene,West,Registered Nurse,D120,F01,Per Diem,0.0,44.05,2018-11-26,,Active,Day,BLS;ACLS
+EMP2204,Hannah,Roberts,Registered Nurse,D120,F01,Full-Time,0.9,41.97,2020-09-09,2024-04-22,Terminated,Day,BLS
+EMP2205,Lisa,Morales,Registered Nurse,D120,F01,Full-Time,1.0,52.01,2010-05-06,,Active,Day,BLS;ACLS
+EMP2206,Heather,Fernandez,Registered Nurse,D120,F01,Full-Time,0.9,41.35,2021-10-05,,Active,Day,BLS;ACLS
+EMP2207,Charlotte,Vasquez,Registered Nurse,D120,F01,Full-Time,1.0,51.50,2010-12-06,,Active,Day,BLS;ACLS
+EMP2208,Sandra,Russell,Registered Nurse,D120,F01,Part-Time,0.7,42.00,2022-04-12,,Active,Rotating,BLS;ACLS
+EMP2209,Elizabeth,Morales,Registered Nurse,D120,F01,Part-Time,0.5,38.95,2023-06-09,,Active,Night,BLS;ACLS
+EMP2210,Alexis,Ross,Registered Nurse,D120,F01,Full-Time,0.9,42.08,2020-12-30,,Active,Day,BLS
+EMP2211,Lucia,Adams,Registered Nurse,D120,F01,Full-Time,1.0,41.30,2022-05-14,2025-04-30,Terminated,Night,BLS;ACLS
+EMP2212,Vincent,Carroll,Registered Nurse,D120,F01,Full-Time,1.0,46.47,2016-05-16,,Active,Night,BLS;ACLS
+EMP2213,Gloria,Garcia,Registered Nurse,D120,F01,Full-Time,1.0,39.04,2025-07-31,,Active,Day,BLS;ACLS
+EMP2214,Abigail,Phillips,Registered Nurse,D120,F01,Per Diem,0.0,58.00,1990-01-01,,Active,Rotating,BLS;ACLS
+EMP2215,Noah,Turner,Registered Nurse,D120,F01,Full-Time,0.9,38.62,2023-11-23,,Active,Day,BLS;ACLS
+EMP2216,Laura,Robinson,Registered Nurse,D120,F01,Full-Time,1.0,48.00,2015-05-05,,Active,Day,BLS;ACLS
+EMP2217,Teresa,Hayes,Registered Nurse,D120,F01,Full-Time,0.9,53.16,2007-03-08,,Active,Day,BLS;ACLS
+EMP2218,Hassan,Palmer,Registered Nurse,D120,F01,Full-Time,1.0,51.66,2010-09-18,,Active,Night,BLS;ACLS
+EMP2219,Kayla,Castillo,Registered Nurse,D120,F01,Full-Time,0.9,43.72,2019-03-23,,Active,Rotating,BLS;ACLS
+EMP2220,Doris,Salazar,Registered Nurse,D120,F01,Part-Time,0.7,48.76,2012-06-17,,Active,Rotating,BLS;ACLS
+EMP2221,Kimberly,Rivera,Registered Nurse,D120,F01,Full-Time,0.9,44.53,2018-10-22,,Active,Day,BLS;ACLS
+EMP2222,Angela,Hudson,Registered Nurse,D120,F01,Full-Time,1.0,40.83,2022-01-08,,Active,Day,BLS;ACLS
+EMP2223,Bruce,Bryant,Registered Nurse,D120,F01,Full-Time,0.9,58.00,1997-06-09,,Active,Day,BLS;ACLS
+EMP2224,Virginia,Murphy,Registered Nurse,D120,F01,Full-Time,1.0,38.45,2025-08-12,,Active,Rotating,BLS;ACLS
+EMP2225,Shirley,Andrews,Licensed Practical Nurse,D120,F01,Full-Time,0.9,27.98,2020-02-26,,Active,Night,BLS
+EMP2226,Betty,Carpenter,Licensed Practical Nurse,D120,F01,Full-Time,1.0,33.00,2004-12-12,2025-08-02,Terminated,Night,BLS
+EMP2227,Hannah,Matthews,Certified Nursing Assistant,D120,F01,Full-Time,0.9,19.14,2021-08-14,,Active,Day,BLS
+EMP2228,Sara,Soto,Certified Nursing Assistant,D120,F01,Full-Time,0.9,19.84,2022-09-20,,Active,Rotating,BLS
+EMP2229,Janice,Sullivan,Certified Nursing Assistant,D120,F01,Full-Time,1.0,18.03,2023-10-08,,Active,Day,BLS
+EMP2230,Charlotte,Morgan,Certified Nursing Assistant,D120,F01,Per Diem,0.0,19.78,2019-12-26,,Active,Day,BLS
+EMP2231,Debra,Ramos,Certified Nursing Assistant,D120,F01,Full-Time,1.0,19.15,2018-01-04,,Active,Night,BLS
+EMP2232,Victoria,Harris,Certified Nursing Assistant,D120,F01,Part-Time,0.7,19.31,2024-05-13,,Active,Night,BLS
+EMP2233,Heather,Moore,Certified Nursing Assistant,D120,F01,Full-Time,1.0,22.46,2013-04-27,,Active,Rotating,BLS
+EMP2234,Isabella,Wagner,Certified Nursing Assistant,D120,F01,Full-Time,0.9,18.58,2024-08-12,2025-03-02,Terminated,Night,BLS
+EMP2235,Alexis,Rodriguez,Certified Nursing Assistant,D120,F01,Part-Time,0.5,21.14,2013-03-08,,Active,Rotating,BLS
+EMP2236,Angela,Jones,Certified Nursing Assistant,D120,F01,Full-Time,0.9,19.37,2021-07-12,2025-09-17,Terminated,Night,BLS
+EMP2237,Elizabeth,Carter,Certified Nursing Assistant,D120,F01,Full-Time,0.9,17.64,2025-04-08,,Active,Day,BLS
+EMP2238,Liam,Berry,Unit Secretary,D120,F01,Full-Time,1.0,19.01,2020-10-27,,Active,Day,
+EMP2239,Kathleen,Evans,Unit Secretary,D120,F01,Full-Time,1.0,21.51,2014-07-10,,Active,Night,
+EMP2240,William,Hunter,Unit Secretary,D120,F01,Full-Time,1.0,19.14,2023-11-01,,Active,Day,
+EMP2241,Samuel,Ray,Nurse Manager,D120,F01,Full-Time,1.0,51.47,2025-04-18,,Active,Day,
+EMP2242,Evelyn,Hunt,Respiratory Therapist,D120,F01,Full-Time,1.0,31.06,2025-08-31,,Active,Night,BLS;ACLS;RRT
+EMP2243,Amber,Fox,Respiratory Therapist,D120,F01,Full-Time,1.0,31.02,2024-08-16,,Active,Night,BLS;ACLS;RRT
+EMP2244,Debra,Simmons,Registered Nurse,D130,F01,Part-Time,0.5,38.75,2024-04-27,,Active,Night,BLS;ACLS;CCRN
+EMP2245,Ahmed,Abbott,Registered Nurse,D130,F01,Per Diem,0.0,44.63,2017-08-20,2024-06-07,Terminated,Day,BLS
+EMP2246,Deborah,Morales,Registered Nurse,D130,F01,Full-Time,1.0,40.94,2022-08-21,,Active,Night,BLS;ACLS;CCRN
+EMP2247,Karen,Johnston,Registered Nurse,D130,F01,Per Diem,0.0,45.91,2015-12-05,,Active,Night,BLS;ACLS;CCRN
+EMP2248,Virginia,Peters,Registered Nurse,D130,F01,Full-Time,1.0,39.99,2023-03-17,,Active,Day,BLS;ACLS;CCRN
+EMP2249,Amanda,Hughes,Registered Nurse,D130,F01,Per Diem,0.0,39.71,2024-08-25,,Active,Night,BLS;ACLS;CCRN
+EMP2250,Melissa,Meyer,Registered Nurse,D130,F01,Agency,0.9,107.49,2025-02-07,,Active,Night,BLS;ACLS;CCRN
+EMP2251,Danielle,Hernandez,Registered Nurse,D130,F01,Full-Time,1.0,37.44,2025-07-27,,Active,Rotating,BLS;ACLS;CCRN
+EMP2252,Ana,Mills,Registered Nurse,D130,F01,Full-Time,1.0,40.29,2023-02-15,,Active,Rotating,BLS;ACLS;CCRN
+EMP2253,Sharon,Guzman,Registered Nurse,D130,F01,Part-Time,0.5,45.32,2016-12-05,,Active,Day,BLS;ACLS;CCRN
+EMP2254,Christine,Bryant,Registered Nurse,D130,F01,Per Diem,0.0,42.59,2019-07-17,,Active,Day,BLS;ACLS;CCRN
+EMP2255,Dorothy,Castillo,Registered Nurse,D130,F01,Full-Time,1.0,40.03,2022-10-17,,Active,Rotating,BLS;ACLS;CCRN
+EMP2256,Beverly,Gordon,Registered Nurse,D130,F01,Full-Time,1.0,46.03,2015-06-23,,Active,Day,BLS
+EMP2257,Betty,Torres,Registered Nurse,D130,F01,Part-Time,0.7,42.90,2018-08-20,,Leave of Absence,Day,BLS
+EMP2258,Kathryn,Bell,Registered Nurse,D130,F01,Full-Time,0.9,54.23,2007-07-15,,Active,Day,BLS;ACLS;CCRN
+EMP2259,Edward,Armstrong,Registered Nurse,D130,F01,Full-Time,0.9,38.75,2023-06-10,,Active,Day,BLS;ACLS;CCRN
+EMP2260,Dennis,Murray,Registered Nurse,D130,F01,Full-Time,1.0,37.94,2025-07-04,2025-10-25,Terminated,Day,BLS;ACLS;CCRN
+EMP2261,Heather,Stewart,Registered Nurse,D130,F01,Full-Time,1.0,43.39,2018-10-10,,Active,Rotating,BLS;ACLS;CCRN
+EMP2262,Hannah,Fisher,Registered Nurse,D130,F01,Full-Time,1.0,38.14,2025-01-13,,Active,Night,BLS;ACLS;CCRN
+EMP2263,Judy,Howard,Registered Nurse,D130,F01,Part-Time,0.5,46.31,2015-11-14,,Active,Day,BLS;ACLS;CCRN
+EMP2264,Diana,Vasquez,Registered Nurse,D130,F01,Full-Time,1.0,38.25,2023-12-19,,Active,Night,BLS;ACLS;CCRN
+EMP2265,Emma,Holmes,Registered Nurse,D130,F01,Full-Time,1.0,40.00,2024-08-06,,Active,Night,BLS;ACLS;CCRN
+EMP2266,Catherine,Vargas,Registered Nurse,D130,F01,Agency,0.9,101.81,2025-05-15,,Active,Night,BLS;ACLS;CCRN
+EMP2267,Amanda,Morris,Registered Nurse,D130,F01,Full-Time,1.0,39.78,2023-03-31,,Active,Rotating,BLS;ACLS;CCRN
+EMP2268,Anna,Porter,Registered Nurse,D130,F01,Full-Time,0.9,41.61,2021-04-16,,Active,Rotating,BLS;ACLS;CCRN
+EMP2269,Katherine,Morgan,Registered Nurse,D130,F01,Full-Time,1.0,40.43,2023-10-02,,Active,Day,BLS;ACLS;CCRN
+EMP2270,Christina,Carpenter,Registered Nurse,D130,F01,Full-Time,1.0,44.98,2017-01-07,,Active,Day,BLS;ACLS;CCRN
+EMP2271,Isabella,Alexander,Registered Nurse,D130,F01,Full-Time,0.9,44.91,2018-07-03,,Active,Day,BLS;ACLS;CCRN
+EMP2272,Jack,Rice,Registered Nurse,D130,F01,Part-Time,0.6,42.85,2019-10-29,,Active,Day,BLS;ACLS;CCRN
+EMP2273,Linh,Phillips,Registered Nurse,D130,F01,Full-Time,0.9,38.39,2024-05-18,,Active,Day,BLS;ACLS;CCRN
+EMP2274,Timothy,Rogers,Registered Nurse,D130,F01,Full-Time,1.0,39.36,2023-12-13,,Active,Rotating,BLS
+EMP2275,Brenda,Mason,Registered Nurse,D130,F01,Part-Time,0.7,41.66,2020-07-27,,Active,Day,BLS;ACLS;CCRN
+EMP2276,Victoria,Moreno,Registered Nurse,D130,F01,Part-Time,0.7,40.36,2023-04-30,,Active,Night,BLS;ACLS;CCRN
+EMP2277,Joseph,Campbell,Registered Nurse,D130,F01,Full-Time,0.9,38.02,2024-09-17,,Active,Day,BLS;ACLS;CCRN
+EMP2278,Carolyn,Riley,Registered Nurse,D130,F01,Full-Time,0.9,45.95,2017-03-26,,Active,Rotating,BLS;ACLS;CCRN
+EMP2279,Mason,Wells,Registered Nurse,D130,F01,Full-Time,1.0,45.64,2015-05-30,,Active,Day,BLS;ACLS;CCRN
+EMP2280,Joyce,Bryant,Registered Nurse,D130,F01,Full-Time,1.0,41.01,2022-10-27,,Active,Rotating,BLS;ACLS;CCRN
+EMP2281,Doris,Olson,Registered Nurse,D130,F01,Per Diem,0.0,41.75,2021-04-21,,Active,Day,BLS;ACLS;CCRN
+EMP2282,Angela,Lopez,Registered Nurse,D130,F01,Full-Time,1.0,41.27,2021-07-15,,Active,Rotating,BLS
+EMP2283,Danielle,Howard,Registered Nurse,D130,F01,Agency,0.9,113.29,2025-02-23,,Active,Day,BLS;ACLS;CCRN
+EMP2284,Camila,Wells,Registered Nurse,D130,F01,Agency,0.9,113.64,2025-04-29,,Active,Night,BLS;ACLS;CCRN
+EMP2285,Judy,Richardson,Registered Nurse,D130,F01,Part-Time,0.7,38.07,2025-09-10,,Active,Day,BLS;ACLS;CCRN
+EMP2286,Elijah,Mason,Registered Nurse,D130,F01,Part-Time,0.7,43.91,2018-10-28,,Active,Night,BLS;ACLS;CCRN
+EMP2287,Lori,Price,Registered Nurse,D130,F01,Full-Time,1.0,45.13,2017-02-15,,Active,Day,BLS;ACLS;CCRN
+EMP2288,Gloria,Brooks,Registered Nurse,D130,F01,Full-Time,0.9,41.88,2020-04-29,,Active,Day,BLS;ACLS;CCRN
+EMP2289,Martha,Medina,Registered Nurse,D130,F01,Full-Time,1.0,39.79,2024-02-24,,Active,Night,BLS;ACLS;CCRN
+EMP2290,Denise,Sullivan,Registered Nurse,D130,F01,Full-Time,1.0,40.83,2021-05-14,,Active,Night,BLS;ACLS;CCRN
+EMP2291,Charlotte,Holmes,Registered Nurse,D130,F01,Per Diem,0.0,43.44,2019-03-15,,Active,Day,BLS
+EMP2292,Kathleen,Delgado,Licensed Practical Nurse,D130,F01,Full-Time,1.0,24.87,2024-11-26,,Active,Day,BLS
+EMP2293,Dylan,Elliott,Licensed Practical Nurse,D130,F01,Per Diem,0.0,27.36,2018-12-30,,Active,Night,BLS
+EMP2294,Emily,Gibson,Certified Nursing Assistant,D130,F01,Part-Time,0.5,20.42,2020-01-19,,Active,Day,BLS
+EMP2295,Kelly,Osei,Certified Nursing Assistant,D130,F01,Full-Time,1.0,23.50,2005-05-28,,Active,Rotating,BLS
+EMP2296,Peter,Salazar,Certified Nursing Assistant,D130,F01,Part-Time,0.7,19.21,2023-02-21,,Active,Day,BLS
+EMP2297,Kimberly,Hughes,Certified Nursing Assistant,D130,F01,Full-Time,0.9,21.95,2015-05-11,,Active,Night,BLS
+EMP2298,Emma,Carter,Certified Nursing Assistant,D130,F01,Full-Time,0.9,22.38,2011-04-04,,Active,Rotating,BLS
+EMP2299,Julia,Powell,Certified Nursing Assistant,D130,F01,Full-Time,1.0,20.06,2021-09-29,,Active,Day,BLS
+EMP2300,Christian,Yilmaz,Unit Secretary,D130,F01,Full-Time,1.0,17.41,2024-06-09,,Active,Night,
+EMP2301,Kathryn,Turner,Unit Secretary,D130,F01,Full-Time,0.9,18.64,2020-02-08,,Active,Day,
+EMP2302,Carol,Fox,Unit Secretary,D130,F01,Full-Time,1.0,20.27,2018-09-16,,Active,Night,
+EMP2303,Isabella,Peters,Nurse Manager,D130,F01,Full-Time,1.0,53.88,2021-05-20,,Active,Day,
+EMP2304,Heather,Jackson,Respiratory Therapist,D130,F01,Full-Time,0.9,34.71,2019-06-14,,Active,Day,BLS;ACLS;RRT
+EMP2305,Frances,Delgado,Respiratory Therapist,D130,F01,Part-Time,0.6,32.02,2023-01-23,,Active,Night,BLS;ACLS;RRT
+EMP2306,Virginia,Elliott,Respiratory Therapist,D130,F01,Full-Time,1.0,35.90,2019-11-30,,Active,Day,BLS;ACLS;RRT
+EMP2307,Sandra,Howard,Respiratory Therapist,D130,F01,Full-Time,0.9,31.13,2024-08-01,,Active,Day,BLS;ACLS;RRT
+EMP2308,Daniel,Tucker,Respiratory Therapist,D130,F01,Part-Time,0.7,30.95,2025-04-17,,Active,Rotating,BLS;ACLS;RRT
+EMP2309,Daniel,Moore,Respiratory Therapist,D130,F01,Full-Time,0.9,42.10,2008-10-03,,Active,Rotating,BLS;ACLS;RRT
+EMP2310,Joan,Gardner,Respiratory Therapist,D130,F01,Full-Time,1.0,33.21,2023-06-01,,Leave of Absence,Day,BLS;ACLS;RRT
+EMP2311,Linda,Aguilar,Respiratory Therapist,D130,F01,Full-Time,1.0,31.78,2023-02-16,,Active,Night,BLS;ACLS;RRT
+EMP2312,Margaret,Reed,Registered Nurse,D140,F01,Agency,0.9,98.86,2025-06-19,,Active,Rotating,BLS;ACLS
+EMP2313,Marie,Ruiz,Registered Nurse,D140,F01,Part-Time,0.6,46.19,2015-03-13,,Active,Day,BLS
+EMP2314,Janice,Foster,Registered Nurse,D140,F01,Full-Time,0.9,38.03,2024-11-19,,Active,Day,BLS
+EMP2315,Heather,Alvarado,Registered Nurse,D140,F01,Part-Time,0.7,43.31,2020-05-18,,Active,Night,BLS
+EMP2316,Rebecca,Castillo,Registered Nurse,D140,F01,Full-Time,1.0,43.43,2020-04-20,,Active,Day,BLS
+EMP2317,Olivia,Kennedy,Registered Nurse,D140,F01,Per Diem,0.0,40.22,2024-06-08,,Active,Rotating,BLS
+EMP2318,Grace,Hart,Registered Nurse,D140,F01,Part-Time,0.6,40.04,2024-04-19,,Active,Rotating,BLS;ACLS
+EMP2319,John,Jenkins,Registered Nurse,D140,F01,Full-Time,0.9,54.96,2006-06-29,,Active,Night,BLS;ACLS
+EMP2320,Debra,Wright,Registered Nurse,D140,F01,Part-Time,0.6,49.38,2013-01-20,2024-04-10,Terminated,Day,BLS;ACLS
+EMP2321,Andrea,Romero,Registered Nurse,D140,F01,Full-Time,0.9,45.67,2015-09-09,,Active,Rotating,BLS;ACLS
+EMP2322,Gloria,Lindqvist,Registered Nurse,D140,F01,Full-Time,0.9,38.68,2025-05-18,,Active,Day,BLS;ACLS
+EMP2323,Marilyn,Diaz,Registered Nurse,D140,F01,Full-Time,0.9,37.31,2025-02-02,,Active,Day,BLS;ACLS
+EMP2324,Angela,Henderson,Registered Nurse,D140,F01,Full-Time,0.9,39.43,2022-10-06,,Active,Day,BLS;ACLS
+EMP2325,Sarah,Anderson,Registered Nurse,D140,F01,Per Diem,0.0,42.73,2019-08-15,,Active,Night,BLS;ACLS
+EMP2326,Michael,Price,Registered Nurse,D140,F01,Full-Time,1.0,44.31,2018-08-26,,Active,Night,BLS
+EMP2327,James,Simpson,Registered Nurse,D140,F01,Per Diem,0.0,44.91,2016-08-30,,Active,Night,BLS
+EMP2328,Denise,Murphy,Registered Nurse,D140,F01,Full-Time,1.0,37.94,2025-09-02,,Active,Day,BLS
+EMP2329,Aaliyah,Ruiz,Registered Nurse,D140,F01,Full-Time,0.9,40.43,2024-02-22,2024-06-13,Terminated,Day,BLS;ACLS
+EMP2330,Stephanie,Bryant,Registered Nurse,D140,F01,Part-Time,0.6,37.57,2024-11-25,,Active,Day,BLS
+EMP2331,Ruth,Berry,Registered Nurse,D140,F01,Full-Time,1.0,50.14,2010-04-03,,Active,Night,BLS;ACLS
+EMP2332,Julia,Myers,Registered Nurse,D140,F01,Full-Time,1.0,43.35,2020-08-26,,Active,Day,BLS;ACLS
+EMP2333,Kelly,Stephens,Registered Nurse,D140,F01,Part-Time,0.6,45.48,2016-04-26,,Active,Day,BLS;ACLS
+EMP2334,Kathleen,Nguyen,Registered Nurse,D140,F01,Full-Time,1.0,40.23,2022-11-20,,Active,Night,BLS;ACLS
+EMP2335,Susan,Carroll,Registered Nurse,D140,F01,Full-Time,1.0,41.87,2019-11-02,,Leave of Absence,Day,BLS
+EMP2336,Maria,Edwards,Registered Nurse,D140,F01,Part-Time,0.5,38.79,2024-12-19,,Active,Day,BLS
+EMP2337,Alice,Wagner,Registered Nurse,D140,F01,Full-Time,0.9,36.90,2025-09-27,,Active,Rotating,BLS
+EMP2338,Sophia,Morgan,Registered Nurse,D140,F01,Part-Time,0.6,42.15,2019-06-05,,Active,Day,BLS
+EMP2339,Cheryl,Powell,Registered Nurse,D140,F01,Full-Time,0.9,58.00,1993-04-28,,Active,Day,BLS;ACLS
+EMP2340,Stephanie,James,Licensed Practical Nurse,D140,F01,Full-Time,1.0,29.11,2015-11-11,,Active,Day,BLS
+EMP2341,Nancy,Powell,Licensed Practical Nurse,D140,F01,Full-Time,1.0,25.59,2025-07-31,,Active,Day,BLS
+EMP2342,Anna,Washington,Certified Nursing Assistant,D140,F01,Full-Time,0.9,18.84,2019-11-23,,Active,Day,BLS
+EMP2343,Janet,Armstrong,Certified Nursing Assistant,D140,F01,Part-Time,0.6,18.38,2022-03-08,,Active,Day,BLS
+EMP2344,Ava,Reynolds,Certified Nursing Assistant,D140,F01,Full-Time,1.0,17.68,2025-05-17,2025-06-23,Terminated,Day,BLS
+EMP2345,Aaliyah,Marshall,Certified Nursing Assistant,D140,F01,Full-Time,1.0,21.34,2013-08-14,,Active,Night,BLS
+EMP2346,Julie,Ramos,Certified Nursing Assistant,D140,F01,Full-Time,0.9,17.23,2024-01-03,,Active,Rotating,BLS
+EMP2347,Sophia,Phillips,Certified Nursing Assistant,D140,F01,Full-Time,0.9,18.99,2021-01-17,,Active,Night,BLS
+EMP2348,Lucas,Morris,Certified Nursing Assistant,D140,F01,Part-Time,0.6,21.17,2017-07-04,,Active,Day,BLS
+EMP2349,Isabella,Hansen,Certified Nursing Assistant,D140,F01,Full-Time,1.0,20.65,2019-05-28,,Active,Day,BLS
+EMP2350,Laura,Carpenter,Certified Nursing Assistant,D140,F01,Full-Time,1.0,20.95,2012-12-11,,Active,Day,BLS
+EMP2351,Randy,Lewis,Certified Nursing Assistant,D140,F01,Part-Time,0.5,19.66,2020-09-17,,Active,Day,BLS
+EMP2352,Jeremy,Medina,Unit Secretary,D140,F01,Full-Time,0.9,20.09,2020-08-13,,Active,Day,
+EMP2353,Ivan,McDonald,Unit Secretary,D140,F01,Part-Time,0.6,17.41,2023-09-13,,Active,Day,
+EMP2354,Virginia,Rogers,Unit Secretary,D140,F01,Full-Time,0.9,18.92,2023-02-18,,Active,Night,
+EMP2355,Charles,Phillips,Nurse Manager,D140,F01,Full-Time,1.0,58.50,2015-05-27,,Active,Day,
+EMP2356,Katherine,Rice,Registered Nurse,D150,F01,Full-Time,0.9,49.69,2010-08-30,,Active,Day,BLS;OCN
+EMP2357,Cheryl,Long,Registered Nurse,D150,F01,Full-Time,1.0,46.97,2013-09-25,,Active,Day,BLS;OCN
+EMP2358,Melissa,Adams,Registered Nurse,D150,F01,Full-Time,1.0,39.58,2025-03-09,,Active,Night,BLS;OCN
+EMP2359,Olivia,Jordan,Registered Nurse,D150,F01,Agency,0.9,114.74,2025-04-22,,Active,Night,BLS;OCN
+EMP2360,Marie,Richardson,Registered Nurse,D150,F01,Full-Time,1.0,44.66,2018-03-15,2024-10-22,Terminated,Day,BLS;OCN
+EMP2361,Betty,Mills,Registered Nurse,D150,F01,Full-Time,0.9,38.71,2025-03-28,,Active,Rotating,BLS;OCN
+EMP2362,Laura,Knight,Registered Nurse,D150,F01,Full-Time,0.9,47.55,2014-09-29,,Active,Day,BLS;OCN
+EMP2363,Elizabeth,Hawkins,Registered Nurse,D150,F01,Agency,0.9,92.93,2025-01-29,,Active,Day,BLS;OCN
+EMP2364,Aaliyah,Schmidt,Registered Nurse,D150,F01,Full-Time,0.9,40.37,2022-08-22,,Active,Night,BLS;OCN
+EMP2365,Camila,Contreras,Registered Nurse,D150,F01,Full-Time,0.9,39.78,2025-01-24,,Active,Night,BLS;OCN
+EMP2366,Kathryn,Schmidt,Registered Nurse,D150,F01,Full-Time,0.9,37.58,2024-11-19,,Active,Day,BLS
+EMP2367,Barbara,Santos,Registered Nurse,D150,F01,Full-Time,0.9,37.62,2025-08-11,,Leave of Absence,Day,BLS;OCN
+EMP2368,Mia,Contreras,Registered Nurse,D150,F01,Full-Time,0.9,51.78,2009-12-02,,Active,Night,BLS;OCN
+EMP2369,Janice,Nakamura,Registered Nurse,D150,F01,Full-Time,1.0,39.57,2024-11-04,,Active,Night,BLS;OCN
+EMP2370,Janice,Garcia,Registered Nurse,D150,F01,Full-Time,1.0,39.87,2023-11-12,,Active,Night,BLS;OCN
+EMP2371,Patrick,Berry,Registered Nurse,D150,F01,Full-Time,0.9,38.66,2025-08-06,,Active,Night,BLS
+EMP2372,Marie,Cole,Registered Nurse,D150,F01,Full-Time,0.9,49.63,2013-04-30,,Active,Night,BLS;OCN
+EMP2373,Susan,Freeman,Registered Nurse,D150,F01,Full-Time,0.9,38.32,2025-09-28,,Active,Rotating,BLS;OCN
+EMP2374,Sharon,Stevens,Registered Nurse,D150,F01,Full-Time,0.9,38.36,2025-09-04,,Active,Night,BLS;OCN
+EMP2375,Betty,Sanders,Registered Nurse,D150,F01,Part-Time,0.6,51.53,2010-03-05,,Active,Day,BLS;OCN
+EMP2376,Beverly,Johnston,Registered Nurse,D150,F01,Full-Time,1.0,48.46,2013-03-19,,Active,Day,BLS;OCN
+EMP2377,Amina,Reynolds,Registered Nurse,D150,F01,Per Diem,0.0,44.62,2017-10-27,,Active,Rotating,BLS;OCN
+EMP2378,Michelle,Vasquez,Licensed Practical Nurse,D150,F01,Part-Time,0.7,26.86,2022-09-23,,Active,Rotating,BLS
+EMP2379,Joyce,Mitchell,Licensed Practical Nurse,D150,F01,Full-Time,1.0,29.23,2019-01-03,,Active,Day,BLS
+EMP2380,Stephanie,Reyes,Certified Nursing Assistant,D150,F01,Full-Time,1.0,17.93,2023-08-28,,Active,Night,BLS
+EMP2381,Hannah,Hoffman,Certified Nursing Assistant,D150,F01,Part-Time,0.5,23.50,1990-01-01,,Active,Night,BLS
+EMP2382,Rebecca,Hudson,Certified Nursing Assistant,D150,F01,Full-Time,1.0,19.38,2016-12-30,,Active,Rotating,BLS
+EMP2383,Richard,Kelley,Certified Nursing Assistant,D150,F01,Part-Time,0.7,17.34,2025-09-12,,Active,Day,BLS
+EMP2384,Beverly,Reed,Certified Nursing Assistant,D150,F01,Part-Time,0.7,23.50,2003-05-17,,Active,Night,BLS
+EMP2385,Kathleen,Hughes,Certified Nursing Assistant,D150,F01,Full-Time,1.0,19.18,2018-09-16,,Active,Night,BLS
+EMP2386,Laura,Soto,Certified Nursing Assistant,D150,F01,Part-Time,0.7,17.40,2023-09-28,,Active,Night,BLS
+EMP2387,Samantha,Armstrong,Certified Nursing Assistant,D150,F01,Full-Time,0.9,20.95,2017-09-02,2025-04-05,Terminated,Day,BLS
+EMP2388,Amber,White,Unit Secretary,D150,F01,Full-Time,1.0,22.50,2008-02-22,,Active,Day,
+EMP2389,Michael,Richardson,Unit Secretary,D150,F01,Part-Time,0.7,20.88,2012-01-06,,Active,Day,
+EMP2390,Marilyn,Munoz,Unit Secretary,D150,F01,Full-Time,0.9,17.32,2024-12-26,,Active,Night,
+EMP2391,Christopher,Collins,Nurse Manager,D150,F01,Full-Time,1.0,58.07,2016-12-10,,Active,Day,
+EMP2392,Janet,Brown,Registered Nurse,D160,F01,Part-Time,0.5,41.60,2020-03-28,,Active,Night,BLS;ACLS;NIHSS
+EMP2393,Diane,Daniels,Registered Nurse,D160,F01,Full-Time,1.0,37.59,2025-12-31,,Active,Day,BLS
+EMP2394,Linh,Perkins,Registered Nurse,D160,F01,Full-Time,1.0,43.23,2019-06-10,,Active,Day,BLS;ACLS;NIHSS
+EMP2395,Christian,Gardner,Registered Nurse,D160,F01,Per Diem,0.0,42.50,2019-12-06,,Active,Night,BLS;ACLS;NIHSS
+EMP2396,Lauren,Moreno,Registered Nurse,D160,F01,Full-Time,1.0,40.25,2024-04-22,,Active,Day,BLS;ACLS;NIHSS
+EMP2397,Charlotte,Adams,Registered Nurse,D160,F01,Full-Time,1.0,48.93,2013-12-15,,Active,Night,BLS
+EMP2398,Nicole,Olson,Registered Nurse,D160,F01,Full-Time,1.0,37.11,2025-09-20,,Active,Day,BLS
+EMP2399,Dorothy,Morales,Registered Nurse,D160,F01,Per Diem,0.0,39.61,2024-12-10,,Active,Rotating,BLS;ACLS;NIHSS
+EMP2400,Olivia,Brown,Registered Nurse,D160,F01,Full-Time,1.0,43.01,2020-02-05,,Active,Rotating,BLS;ACLS;NIHSS
+EMP2401,Roy,Gray,Registered Nurse,D160,F01,Full-Time,0.9,46.01,2016-06-26,,Active,Day,BLS;ACLS;NIHSS
+EMP2402,Aaron,Thomas,Registered Nurse,D160,F01,Full-Time,0.9,43.49,2019-10-01,,Active,Day,BLS;ACLS;NIHSS
+EMP2403,Betty,Alvarez,Registered Nurse,D160,F01,Full-Time,0.9,58.00,2001-10-18,,Active,Rotating,BLS;ACLS;NIHSS
+EMP2404,Kayla,Gutierrez,Registered Nurse,D160,F01,Agency,0.9,101.04,2025-09-16,,Active,Rotating,BLS
+EMP2405,Lucia,Alvarado,Registered Nurse,D160,F01,Agency,0.9,97.77,2025-04-06,,Active,Rotating,BLS;ACLS;NIHSS
+EMP2406,Evelyn,Patel,Registered Nurse,D160,F01,Full-Time,0.9,42.78,2020-09-24,,Active,Day,BLS;ACLS;NIHSS
+EMP2407,Aaliyah,Salazar,Registered Nurse,D160,F01,Part-Time,0.6,37.18,2025-07-31,,Active,Day,BLS;ACLS;NIHSS
+EMP2408,Ava,Silva,Registered Nurse,D160,F01,Part-Time,0.7,40.29,2023-03-30,,Active,Rotating,BLS;ACLS;NIHSS
+EMP2409,Julia,Perez,Registered Nurse,D160,F01,Full-Time,1.0,44.27,2019-07-08,,Active,Day,BLS
+EMP2410,Christina,Matthews,Registered Nurse,D160,F01,Per Diem,0.0,42.73,2019-09-25,,Active,Day,BLS;ACLS;NIHSS
+EMP2411,Joyce,Kim,Registered Nurse,D160,F01,Full-Time,0.9,43.41,2019-04-18,,Active,Night,BLS
+EMP2412,Aaliyah,Hawkins,Licensed Practical Nurse,D160,F01,Part-Time,0.7,28.27,2019-11-14,,Active,Day,BLS
+EMP2413,Susan,Diaz,Licensed Practical Nurse,D160,F01,Part-Time,0.7,26.46,2023-05-27,,Active,Day,BLS
+EMP2414,Julie,Alexander,Certified Nursing Assistant,D160,F01,Full-Time,1.0,19.83,2021-10-21,,Active,Day,BLS
+EMP2415,Catherine,Black,Certified Nursing Assistant,D160,F01,Full-Time,1.0,19.01,2018-07-05,,Active,Rotating,BLS
+EMP2416,Janice,Jenkins,Certified Nursing Assistant,D160,F01,Full-Time,1.0,20.30,2019-10-06,,Active,Day,BLS
+EMP2417,Ava,Carpenter,Certified Nursing Assistant,D160,F01,Per Diem,0.0,21.49,2012-05-21,,Active,Night,BLS
+EMP2418,Grace,Guzman,Certified Nursing Assistant,D160,F01,Full-Time,1.0,18.14,2025-10-01,2025-10-29,Terminated,Day,BLS
+EMP2419,Hannah,Lee,Certified Nursing Assistant,D160,F01,Full-Time,0.9,18.62,2025-09-21,,Active,Night,BLS
+EMP2420,Natalie,Scott,Certified Nursing Assistant,D160,F01,Full-Time,0.9,22.04,2010-12-09,,Active,Night,BLS
+EMP2421,Gregory,Lopez,Unit Secretary,D160,F01,Full-Time,0.9,21.48,2012-07-19,,Active,Night,
+EMP2422,Teresa,Washington,Unit Secretary,D160,F01,Full-Time,0.9,19.36,2023-01-14,,Active,Night,
+EMP2423,Brittany,Flores,Unit Secretary,D160,F01,Full-Time,1.0,18.38,2020-02-24,,Active,Day,
+EMP2424,Christina,Romero,Nurse Manager,D160,F01,Full-Time,1.0,62.21,2007-08-14,,Active,Day,
+EMP2425,Kevin,Patel,Registered Nurse,D170,F01,Full-Time,1.0,38.83,2024-12-23,,Active,Night,BLS;NRP
+EMP2426,Doris,Perkins,Registered Nurse,D170,F01,Agency,0.9,102.28,2025-08-01,,Active,Day,BLS;NRP
+EMP2427,Marie,Cook,Registered Nurse,D170,F01,Full-Time,1.0,38.70,2025-10-13,,Active,Day,BLS;NRP
+EMP2428,Barbara,Guzman,Registered Nurse,D170,F01,Part-Time,0.5,58.00,1990-01-01,,Active,Night,BLS;NRP
+EMP2429,Kelly,Turner,Registered Nurse,D170,F01,Full-Time,0.9,47.97,2013-08-28,,Active,Day,BLS;NRP
+EMP2430,Carol,Edwards,Registered Nurse,D170,F01,Part-Time,0.5,51.04,2011-04-03,,Active,Day,BLS;NRP
+EMP2431,Pamela,West,Registered Nurse,D170,F01,Part-Time,0.5,38.74,2025-01-12,,Active,Rotating,BLS;NRP
+EMP2432,Laura,Abdi,Registered Nurse,D170,F01,Full-Time,0.9,43.68,2018-05-18,,Active,Night,BLS;NRP
+EMP2433,Helen,Garza,Registered Nurse,D170,F01,Part-Time,0.5,41.32,2022-07-11,,Active,Day,BLS;NRP
+EMP2434,Harper,Long,Registered Nurse,D170,F01,Per Diem,0.0,39.08,2024-11-24,,Active,Night,BLS;NRP
+EMP2435,Debra,Smith,Registered Nurse,D170,F01,Full-Time,0.9,37.41,2025-07-03,,Active,Night,BLS;NRP
+EMP2436,Shirley,Holmes,Registered Nurse,D170,F01,Agency,0.9,92.01,2025-06-12,,Active,Rotating,BLS
+EMP2437,Grace,Abdi,Registered Nurse,D170,F01,Full-Time,0.9,43.17,2020-01-01,2024-08-14,Terminated,Day,BLS;NRP
+EMP2438,Mason,Garcia,Registered Nurse,D170,F01,Full-Time,0.9,48.40,2014-04-09,,Active,Rotating,BLS;NRP
+EMP2439,Dylan,Woods,Registered Nurse,D170,F01,Full-Time,1.0,38.04,2025-09-28,,Active,Night,BLS;NRP
+EMP2440,Grace,Ford,Registered Nurse,D170,F01,Full-Time,0.9,37.75,2025-07-04,,Active,Rotating,BLS;NRP
+EMP2441,Jessica,Simpson,Registered Nurse,D170,F01,Full-Time,1.0,39.53,2023-12-27,,Active,Rotating,BLS;NRP
+EMP2442,Theresa,Riley,Registered Nurse,D170,F01,Part-Time,0.5,43.42,2018-05-01,,Active,Day,BLS;NRP
+EMP2443,Diana,Delgado,Registered Nurse,D170,F01,Full-Time,0.9,44.01,2019-08-30,,Active,Rotating,BLS;NRP
+EMP2444,Mia,Schmidt,Registered Nurse,D170,F01,Full-Time,1.0,47.42,2015-09-10,,Active,Night,BLS;NRP
+EMP2445,Grace,Nichols,Registered Nurse,D170,F01,Part-Time,0.5,38.84,2024-10-12,,Active,Day,BLS;NRP
+EMP2446,Priya,Freeman,Registered Nurse,D170,F01,Part-Time,0.6,41.84,2021-04-06,,Active,Day,BLS;NRP
+EMP2447,Brenda,Williams,Registered Nurse,D170,F01,Part-Time,0.6,42.59,2019-03-21,,Active,Night,BLS;NRP
+EMP2448,Dorothy,Nichols,Registered Nurse,D170,F01,Part-Time,0.5,49.24,2011-12-27,,Active,Rotating,BLS;NRP
+EMP2449,Judy,Petrov,Registered Nurse,D170,F01,Full-Time,0.9,43.09,2020-05-02,,Active,Rotating,BLS;NRP
+EMP2450,Amber,Palmer,Licensed Practical Nurse,D170,F01,Full-Time,1.0,25.29,2025-02-22,,Active,Night,BLS
+EMP2451,Camila,Murray,Licensed Practical Nurse,D170,F01,Full-Time,1.0,25.82,2025-06-17,,Active,Rotating,BLS
+EMP2452,Dorothy,Barnes,Certified Nursing Assistant,D170,F01,Full-Time,0.9,17.44,2024-01-18,2025-02-09,Terminated,Day,BLS
+EMP2453,Danielle,Reynolds,Certified Nursing Assistant,D170,F01,Full-Time,1.0,20.62,2019-12-12,,Active,Night,BLS
+EMP2454,Nancy,Simmons,Certified Nursing Assistant,D170,F01,Full-Time,1.0,18.24,2024-11-17,,Active,Rotating,BLS
+EMP2455,Natalie,Davis,Certified Nursing Assistant,D170,F01,Full-Time,1.0,23.10,2010-09-25,,Active,Night,BLS
+EMP2456,Sarah,Rogers,Certified Nursing Assistant,D170,F01,Full-Time,1.0,19.37,2021-02-11,,Active,Day,BLS
+EMP2457,Ann,Howard,Certified Nursing Assistant,D170,F01,Part-Time,0.7,20.48,2019-02-07,,Leave of Absence,Night,BLS
+EMP2458,Carolyn,Palmer,Certified Nursing Assistant,D170,F01,Full-Time,1.0,18.92,2018-06-04,,Active,Day,BLS
+EMP2459,Carolyn,Mendoza,Certified Nursing Assistant,D170,F01,Part-Time,0.7,20.28,2017-06-30,,Active,Day,BLS
+EMP2460,Sandra,Yilmaz,Certified Nursing Assistant,D170,F01,Full-Time,0.9,18.32,2023-11-19,,Active,Rotating,BLS
+EMP2461,Ruth,James,Unit Secretary,D170,F01,Full-Time,0.9,19.05,2021-05-03,,Active,Day,
+EMP2462,Ethan,Alexander,Unit Secretary,D170,F01,Full-Time,1.0,18.68,2025-06-16,,Active,Rotating,
+EMP2463,Christopher,Foster,Unit Secretary,D170,F01,Per Diem,0.0,22.50,2002-07-14,,Active,Night,
+EMP2464,Raymond,Owens,Nurse Manager,D170,F01,Full-Time,1.0,58.22,2016-04-18,,Active,Day,
+EMP2465,Natalie,Bryant,Registered Nurse,D180,F01,Full-Time,0.9,43.97,2017-12-03,,Active,Night,BLS;PALS
+EMP2466,Kelly,Flores,Registered Nurse,D180,F01,Part-Time,0.5,53.12,2007-11-29,,Active,Night,BLS;PALS
+EMP2467,Joyce,Taylor,Registered Nurse,D180,F01,Part-Time,0.6,39.01,2023-07-20,,Active,Day,BLS;PALS
+EMP2468,Christine,Adams,Registered Nurse,D180,F01,Full-Time,0.9,49.02,2013-02-18,,Active,Night,BLS;PALS
+EMP2469,Charlotte,Lawrence,Registered Nurse,D180,F01,Part-Time,0.7,37.47,2025-11-16,,Leave of Absence,Day,BLS;PALS
+EMP2470,Wayne,Gray,Registered Nurse,D180,F01,Full-Time,1.0,51.57,2009-09-08,,Active,Rotating,BLS;PALS
+EMP2471,Rachel,Kim,Registered Nurse,D180,F01,Full-Time,0.9,46.19,2015-11-20,,Active,Day,BLS;PALS
+EMP2472,Michelle,Webb,Registered Nurse,D180,F01,Part-Time,0.6,42.74,2018-11-11,,Active,Night,BLS;PALS
+EMP2473,Larry,Nelson,Registered Nurse,D180,F01,Full-Time,0.9,43.21,2018-05-27,,Active,Rotating,BLS;PALS
+EMP2474,Kelly,Brown,Registered Nurse,D180,F01,Full-Time,0.9,44.72,2018-09-30,,Active,Day,BLS;PALS
+EMP2475,Jacqueline,Howard,Registered Nurse,D180,F01,Part-Time,0.7,55.61,2003-07-19,,Active,Day,BLS;PALS
+EMP2476,Debra,Adams,Registered Nurse,D180,F01,Full-Time,0.9,42.67,2019-12-27,,Active,Day,BLS;PALS
+EMP2477,Nancy,Wright,Registered Nurse,D180,F01,Full-Time,1.0,39.70,2024-09-02,,Active,Night,BLS;PALS
+EMP2478,Laura,Flores,Registered Nurse,D180,F01,Full-Time,0.9,44.15,2018-11-22,,Active,Day,BLS;PALS
+EMP2479,Sharon,Vargas,Registered Nurse,D180,F01,Agency,0.9,104.52,2025-07-22,,Active,Rotating,BLS;PALS
+EMP2480,Camila,Fox,Registered Nurse,D180,F01,Full-Time,0.9,42.84,2018-09-23,2025-10-15,Terminated,Night,BLS;PALS
+EMP2481,Frances,Chen,Registered Nurse,D180,F01,Full-Time,0.9,38.46,2025-10-17,,Active,Night,BLS;PALS
+EMP2482,Amy,Myers,Registered Nurse,D180,F01,Full-Time,0.9,52.83,2008-11-26,,Active,Rotating,BLS;PALS
+EMP2483,Diane,Hill,Licensed Practical Nurse,D180,F01,Full-Time,1.0,33.00,2006-11-25,,Active,Night,BLS
+EMP2484,Emma,Pena,Certified Nursing Assistant,D180,F01,Full-Time,0.9,19.24,2024-04-09,,Active,Day,BLS
+EMP2485,Richard,Hansen,Certified Nursing Assistant,D180,F01,Part-Time,0.7,21.78,2015-01-27,2025-04-26,Terminated,Day,BLS
+EMP2486,Judy,Nichols,Certified Nursing Assistant,D180,F01,Full-Time,0.9,19.69,2021-12-05,,Active,Rotating,BLS
+EMP2487,Madison,Nichols,Certified Nursing Assistant,D180,F01,Full-Time,0.9,17.21,2025-07-22,,Active,Day,BLS
+EMP2488,Deborah,Alvarez,Certified Nursing Assistant,D180,F01,Full-Time,0.9,21.31,2016-02-13,2024-03-23,Terminated,Night,BLS
+EMP2489,Ava,Crawford,Certified Nursing Assistant,D180,F01,Part-Time,0.6,21.67,2014-01-30,,Active,Rotating,BLS
+EMP2490,Leila,Gibson,Unit Secretary,D180,F01,Per Diem,0.0,19.69,2021-05-23,,Active,Night,
+EMP2491,Aaron,Snyder,Unit Secretary,D180,F01,Per Diem,0.0,18.84,2016-06-30,,Active,Day,
+EMP2492,Megan,Stewart,Unit Secretary,D180,F01,Full-Time,1.0,17.44,2022-11-10,,Active,Night,
+EMP2493,Alice,Clark,Nurse Manager,D180,F01,Full-Time,1.0,51.38,2025-11-16,,Active,Day,
+EMP2494,Andrew,Nguyen,Registered Nurse,D190,F01,Full-Time,0.9,44.01,2018-02-22,,Active,Night,BLS;CPI
+EMP2495,Megan,Brooks,Registered Nurse,D190,F01,Full-Time,1.0,38.76,2024-12-07,,Active,Day,BLS;CPI
+EMP2496,Dorothy,Gray,Registered Nurse,D190,F01,Full-Time,1.0,43.81,2018-10-11,,Active,Day,BLS;CPI
+EMP2497,Emma,Warren,Registered Nurse,D190,F01,Full-Time,0.9,57.20,2001-10-08,,Active,Rotating,BLS;CPI
+EMP2498,Donna,Petrov,Registered Nurse,D190,F01,Full-Time,1.0,52.96,2008-01-30,,Active,Day,BLS
+EMP2499,Kyle,Hart,Registered Nurse,D190,F01,Part-Time,0.7,46.48,2017-01-23,,Active,Day,BLS;CPI
+EMP2500,Amina,Smith,Registered Nurse,D190,F01,Full-Time,0.9,44.25,2018-09-25,,Active,Day,BLS;CPI
+EMP2501,Victoria,Moore,Registered Nurse,D190,F01,Full-Time,0.9,39.97,2022-11-12,,Active,Night,BLS;CPI
+EMP2502,Joshua,Patterson,Registered Nurse,D190,F01,Part-Time,0.6,38.19,2025-05-20,,Active,Night,BLS;CPI
+EMP2503,Nathan,Hansen,Registered Nurse,D190,F01,Per Diem,0.0,49.50,2013-02-26,,Active,Day,BLS;CPI
+EMP2504,Laura,Price,Registered Nurse,D190,F01,Full-Time,1.0,39.33,2025-08-04,,Active,Day,BLS;CPI
+EMP2505,Maria,Tran,Registered Nurse,D190,F01,Full-Time,0.9,51.30,2009-06-11,,Active,Night,BLS;CPI
+EMP2506,Rosa,Lewis,Registered Nurse,D190,F01,Per Diem,0.0,37.64,2025-09-25,,Active,Rotating,BLS;CPI
+EMP2507,Dorothy,Rodriguez,Registered Nurse,D190,F01,Full-Time,1.0,42.17,2020-03-14,,Active,Night,BLS;CPI
+EMP2508,Helen,Ellis,Registered Nurse,D190,F01,Per Diem,0.0,53.07,2008-04-20,,Active,Night,BLS;CPI
+EMP2509,Gloria,Davis,Registered Nurse,D190,F01,Full-Time,0.9,38.52,2024-11-04,,Active,Night,BLS;CPI
+EMP2510,Emma,West,Registered Nurse,D190,F01,Full-Time,0.9,44.38,2019-04-06,,Active,Rotating,BLS;CPI
+EMP2511,Anna,Abdi,Registered Nurse,D190,F01,Full-Time,1.0,41.42,2021-05-29,,Active,Night,BLS;CPI
+EMP2512,Pamela,Stone,Registered Nurse,D190,F01,Full-Time,1.0,39.88,2023-09-13,,Active,Day,BLS;CPI
+EMP2513,Luis,Gray,Registered Nurse,D190,F01,Full-Time,0.9,55.34,2004-04-24,,Active,Night,BLS;CPI
+EMP2514,Lisa,Price,Registered Nurse,D190,F01,Per Diem,0.0,40.59,2021-12-25,,Active,Day,BLS
+EMP2515,Shirley,Black,Registered Nurse,D190,F01,Full-Time,0.9,37.40,2025-05-17,,Active,Night,BLS;CPI
+EMP2516,Mei,Perez,Licensed Practical Nurse,D190,F01,Full-Time,0.9,33.00,1990-01-01,,Active,Day,BLS
+EMP2517,Rosa,Phillips,Licensed Practical Nurse,D190,F01,Full-Time,0.9,31.82,2009-12-11,,Active,Rotating,BLS
+EMP2518,Jesse,Butler,Certified Nursing Assistant,D190,F01,Part-Time,0.6,18.53,2022-08-10,,Active,Night,BLS
+EMP2519,Samantha,Griffin,Certified Nursing Assistant,D190,F01,Part-Time,0.7,20.86,2017-03-27,,Active,Rotating,BLS
+EMP2520,Gary,Edwards,Certified Nursing Assistant,D190,F01,Full-Time,0.9,23.50,1998-11-28,,Active,Night,BLS
+EMP2521,Sophia,Foster,Certified Nursing Assistant,D190,F01,Full-Time,1.0,21.28,2018-03-12,,Active,Day,BLS
+EMP2522,Ava,Bradley,Certified Nursing Assistant,D190,F01,Full-Time,1.0,20.38,2013-08-28,,Active,Day,BLS
+EMP2523,Karen,Adams,Certified Nursing Assistant,D190,F01,Full-Time,0.9,18.19,2020-07-17,,Active,Day,BLS
+EMP2524,Leila,Shaw,Certified Nursing Assistant,D190,F01,Per Diem,0.0,23.50,2003-02-26,,Active,Night,BLS
+EMP2525,Matthew,Bailey,Certified Nursing Assistant,D190,F01,Full-Time,0.9,19.52,2023-03-25,,Active,Day,BLS
+EMP2526,Leila,Hunt,Unit Secretary,D190,F01,Per Diem,0.0,17.63,2024-12-06,,Active,Rotating,
+EMP2527,Andrea,Moore,Unit Secretary,D190,F01,Full-Time,0.9,21.05,2015-09-03,,Active,Rotating,
+EMP2528,Nathan,Vazquez,Unit Secretary,D190,F01,Full-Time,1.0,17.54,2021-03-24,,Active,Day,
+EMP2529,Timothy,Moore,Nurse Manager,D190,F01,Full-Time,1.0,62.09,2011-04-13,,Active,Day,
+EMP2530,Jacqueline,Riley,Registered Nurse,D195,F01,Per Diem,0.0,43.46,2018-07-02,,Active,Day,BLS
+EMP2531,Camila,Alvarado,Registered Nurse,D195,F01,Part-Time,0.7,39.08,2024-09-19,,Active,Day,BLS;ACLS
+EMP2532,Judy,Gordon,Registered Nurse,D195,F01,Per Diem,0.0,37.04,2025-11-30,,Active,Rotating,BLS;ACLS
+EMP2533,Doris,Fox,Registered Nurse,D195,F01,Full-Time,0.9,39.97,2024-01-18,,Active,Rotating,BLS
+EMP2534,Susan,Henry,Registered Nurse,D195,F01,Full-Time,1.0,48.08,2012-10-20,,Active,Day,BLS
+EMP2535,Julia,Torres,Registered Nurse,D195,F01,Full-Time,1.0,49.79,2012-02-24,2025-04-10,Terminated,Day,BLS
+EMP2536,Kimberly,Wright,Registered Nurse,D195,F01,Full-Time,1.0,45.88,2016-02-26,,Active,Night,BLS
+EMP2537,Mary,Nguyen,Registered Nurse,D195,F01,Full-Time,0.9,39.34,2025-06-25,,Active,Night,BLS;ACLS
+EMP2538,Minh,Washington,Registered Nurse,D195,F01,Full-Time,1.0,43.08,2019-06-28,,Active,Rotating,BLS
+EMP2539,Lauren,Sandoval,Registered Nurse,D195,F01,Full-Time,0.9,43.55,2017-12-30,,Active,Night,BLS
+EMP2540,Linda,Gomez,Registered Nurse,D195,F01,Full-Time,1.0,36.95,2025-07-25,,Active,Day,BLS;ACLS
+EMP2541,Jennifer,Torres,Registered Nurse,D195,F01,Part-Time,0.6,44.33,2017-02-09,,Active,Rotating,BLS
+EMP2542,Isabella,Knight,Registered Nurse,D195,F01,Full-Time,0.9,38.09,2025-04-04,,Active,Rotating,BLS;ACLS
+EMP2543,Barbara,Tucker,Registered Nurse,D195,F01,Full-Time,0.9,39.05,2025-10-27,,Active,Day,BLS;ACLS
+EMP2544,Kathryn,Adams,Registered Nurse,D195,F01,Per Diem,0.0,39.45,2022-09-13,,Active,Day,BLS
+EMP2545,Olivia,King,Licensed Practical Nurse,D195,F01,Full-Time,0.9,25.88,2024-09-15,,Active,Night,BLS
+EMP2546,Joyce,Tran,Certified Nursing Assistant,D195,F01,Full-Time,0.9,23.50,1990-01-01,,Active,Rotating,BLS
+EMP2547,James,Hughes,Certified Nursing Assistant,D195,F01,Full-Time,1.0,18.93,2022-02-02,,Active,Day,BLS
+EMP2548,Samantha,Brown,Certified Nursing Assistant,D195,F01,Full-Time,0.9,17.78,2025-11-29,,Active,Rotating,BLS
+EMP2549,Isabella,Willis,Certified Nursing Assistant,D195,F01,Full-Time,0.9,20.36,2019-06-03,,Active,Day,BLS
+EMP2550,Aaliyah,Yilmaz,Certified Nursing Assistant,D195,F01,Full-Time,0.9,21.32,2015-06-18,,Active,Day,BLS
+EMP2551,Amina,Parker,Unit Secretary,D195,F01,Full-Time,0.9,17.81,2023-03-05,,Active,Night,
+EMP2552,Camila,Aguilar,Unit Secretary,D195,F01,Full-Time,0.9,18.25,2020-05-21,,Active,Rotating,
+EMP2553,Anthony,Murphy,Unit Secretary,D195,F01,Full-Time,1.0,19.83,2014-09-05,2024-11-24,Terminated,Night,
+EMP2554,Diego,Black,Nurse Manager,D195,F01,Full-Time,1.0,53.62,2021-10-03,,Active,Day,
