@@ -228,8 +228,7 @@ def build() -> Lesson:
              hint="SUMIFS puts the sum_range FIRST", title="Billed dollars denied for missing authorization",
              explanation=f"SUMIFS starts with the column to add, then lists range/criteria pairs. The status criterion matters: "
                          f"{auth_any} claims carry the reason Authorization Required, but only {len(auth)} of them are still "
-                         f"plain Denied. Of the other {auth_any - len(auth)}, {auth_other_txt}, so they don't belong in a "
-                         "Denied total."),
+                         f"plain Denied. {auth_other_txt}, so they don't belong in a Denied total."),
         Task("What was the average length of stay (LOSDays) of Inpatient encounters with PrimaryDxCode I50.9 (heart failure)? "
              "Round to 1 decimal place with ROUND.",
              answer=hf_alos, fmt="0.0", tol=0.0001,
@@ -442,7 +441,8 @@ def build() -> Lesson:
                          "one payer, which is the number that gets a contract meeting's attention."),
         Task("Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer "
              "has none). How many more days, on average, does the payer from B3 take to pay an inpatient claim than "
-             "Medicare does? Round to 1 decimal place.",
+             "Medicare does? Subtract the full-precision averages (point at the cells instead of retyping the 1-decimal "
+             "values that column E displays), then round the difference to 1 decimal place.",
              answer=dtp_gap, fmt="0.0", tol=0.0001, title="How much slower the worst payer pays",
              solution=f"=ROUND({avg_dtp_helper(worst)}-{avg_dtp_helper('Medicare')},1)",
              live=f"=ROUND({avg_dtp_nohelper(worst)}-{avg_dtp_nohelper('Medicare')},1)",
@@ -561,6 +561,17 @@ def build() -> Lesson:
         for col in "BCDE":
             ws.column_dimensions[col].width = 14
         ws.freeze_panes = f"B{SC_FIRST}"
+
+        # ---------------------------------------------------------- Markdown clean-up inside Excel cells
+        # The library writes the bonus scenario (Bonus sheet) and each solution (key sheets, column D) verbatim, so the
+        # README's **bold** and `code` markers would show up literally in Excel. Strip them in the workbook only.
+        for sheet, col in ((lesson.bonus_sheet, "A"), (lesson.bonus_key_sheet, "D"), (lesson.key_sheet, "D")):
+            if sheet not in wb.sheetnames:
+                continue
+            for cell in wb[sheet][col]:
+                v = cell.value
+                if isinstance(v, str) and not v.startswith("=") and ("**" in v or "`" in v):
+                    cell.value = v.replace("**", "").replace("`", "")
 
         if selftest:
             # Simulate the learner's scorecard columns B, C, and E (task B2's own fill writes column D).
