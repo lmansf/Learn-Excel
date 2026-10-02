@@ -895,7 +895,7 @@ Each month the COO presents one page to the board's Quality & Operations Committ
 4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.
 5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one landscape page when printed.
 
-Then use your finished Board dashboard to answer B1–B4 on the Bonus sheet. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
+Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
 
 Work on the **Bonus** sheet of the workbook.
 
