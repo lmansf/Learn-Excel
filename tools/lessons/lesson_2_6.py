@@ -288,11 +288,13 @@ def build() -> Lesson:
 
     L.practice_intro = (
         "The Encounters sheet stores IDs only. Every answer comes from looking an ID up in another sheet. "
-        "Write each answer as a formula. Lock lookup ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy.")
+        "Write each answer as a formula. Your answers sit on this Practice sheet, so a reference to a data cell needs its "
+        "sheet name, such as Encounters!B9. Click the cell on the data sheet and Excel writes the sheet name for you. "
+        "Lock lookup ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy.")
 
     L.tasks = [
         Task(f"Encounter {t1['EncounterID']} is on row {erow(t1['EncounterID'])} of the Encounters sheet. Use VLOOKUP with its "
-             f"PatientID (cell B{erow(t1['EncounterID'])}) to return the patient's last name from the Patients sheet.",
+             f"PatientID (cell {ecell('PatientID', t1['EncounterID'])}) to return the patient's last name from the Patients sheet.",
              answer=a1, hint="VLOOKUP(lookup_value, table_array, col_index_num, FALSE). Count columns from PatientID (column 1) to LastName",
              solution=f"=VLOOKUP({ecell('PatientID', t1['EncounterID'])},{pat_tbl},4,FALSE)",
              explanation="VLOOKUP searches the first column of the table (PatientID) for the ID, then returns the value from the 4th "
@@ -547,8 +549,10 @@ def build() -> Lesson:
                  f"1. Every XLOOKUP gets an if_not_found of \"{NOT_FOUND}\".\n"
                  f"2. Chained lookups pass \"{NOT_FOUND}\" along. The inner XLOOKUP returns it, and the outer one can't find a "
                  f"DxCode called \"{NOT_FOUND}\", so it returns its own \"{NOT_FOUND}\".\n"
-                 f"3. Rows that calculate (the name join and DATEDIF) test the helper cell first with "
-                 f"`IF(B6=\"{NOT_FOUND}\",\"{NOT_FOUND}\",…)`, because DATEDIF of a text value would return #VALUE!.\n\n"
+                 f"3. Rows that join or calculate (the two name rows and the age row) test their helper cell first with "
+                 f"`IF(B6=\"{NOT_FOUND}\",\"{NOT_FOUND}\",…)`. Without that test, DATEDIF of the text \"{NOT_FOUND}\" "
+                 f"returns #VALUE!. A name join would show #N/A, or \"{NOT_FOUND} {NOT_FOUND}\" if each of its lookups "
+                 f"had its own if_not_found.\n\n"
                  "Your finished card should match this:\n\n" + card_table + "\n\n"
                  "Every formula on the card (type them in column B, then copy them to column C):\n\n"
                  + "\n".join(f"- Row {card_row[k]} · {k}: `{f}`" for k, f in card_rows))),

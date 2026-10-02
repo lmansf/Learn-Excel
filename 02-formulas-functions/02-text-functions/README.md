@@ -25,8 +25,8 @@ and **Providers** lists every physician and advanced practice provider.
 
 ### 1. Text, numbers, and LEN
 
-Every cell holds either a **number** (dates and times are numbers too) or **text**, which programmers call a *string*. Excel
-treats them differently. You can add numbers but not text, and two values that look identical won't match if one is text and
+Apart from TRUE/FALSE values and error values, every value in a cell is either a **number** (dates and times are numbers
+too) or **text**, which programmers call a *string*. Excel treats them differently. You can add numbers but not text, and two values that look identical won't match if one is text and
 the other is a number.
 
 | Clue | Number | Text |
@@ -82,8 +82,9 @@ Positions count from 1. In `(555) 875-0698`, the opening parenthesis is position
 | `=MID(Patients!D2,7,3)` | `875` | The three digits after the area code |
 | `=MID("ABBOTT, Edward",9,100)` | `Edward` | Asking for more characters than remain just returns the rest |
 
-An **ICD-10 code** is a diagnosis code. Its first three characters are the **category**: a letter and two digits, such as
-`J44` for chronic obstructive pulmonary disease (COPD). Everything after the dot adds detail. `J44.1` is COPD *with acute
+An **ICD-10 code** is a diagnosis code. Its first three characters are the **category**, such as `J44` for chronic
+obstructive pulmonary disease (COPD). A category is a letter followed by two more characters, which are almost always digits
+(a few, such as `Z3A`, end in a letter). Everything after the dot adds detail. `J44.1` is COPD *with acute
 exacerbation*, and in `S93.401A` (an ankle sprain) the final `A` means *initial encounter*. Codes have different lengths, but
 the category is always the first three characters. That's why `=LEFT(E2,3)` safely rolls every code up to its category, so a
 quality report can count `E11.65` and `E11.9` together as type 2 diabetes (`E11`).
@@ -173,7 +174,7 @@ from a multi-line text box in an EHR.
 | 14 | `ANDREWS,` + non-breaking space + `BRIAN` | unchanged! | 14 → 14 |
 
 Row 14 is the trap. A **non-breaking space** looks exactly like a space, but it is a different character: code 160 instead of
-32. Web pages and patient portals use it to keep words together, so it arrives whenever you copy text out of a browser.
+32. Web pages and patient portals use it to keep words together, so it often comes along when you copy text out of a browser.
 **TRIM and CLEAN both ignore it.** To prove it's there, check the character after the comma: `=UNICODE(MID(C14,9,1))` returns
 160, while an ordinary space returns 32.
 
@@ -192,7 +193,8 @@ non-printing characters, then trim.
 
 > 📋 **CHAR or UNICHAR?** Many websites show this fix with `CHAR(160)`. CHAR uses the operating system's character set, so
 > `CHAR(160)` is a non-breaking space in Excel for Windows but can be a different character in Excel for Mac. **UNICHAR(160)**
-> is the same character on every platform (Excel 2013 and later), so this lesson uses UNICHAR.
+> is the same character on every platform (Excel 2013 and later for Windows, Excel 2016 and later for Mac), so this lesson
+> uses UNICHAR.
 
 > 💡 **Tip:** To remove non-breaking spaces without a formula, open Find & Replace (Ctrl + H; Mac: ⌃ + H). In **Find what**, hold
 > Alt and type 0160 on the numeric keypad (Mac: press Option + Space). Type one ordinary space in **Replace with**, then click
@@ -350,7 +352,7 @@ In a format code, each `0` is a required digit, so `"00000000"` pads with zeros 
 | The cell shows | `00897724` | `00897724` |
 | The cell stores | the number 897724 | the text `00897724` |
 | `="MRN "&cell` gives | `MRN 897724` | `MRN 00897724` |
-| Math works? | Yes | No, it's text |
+| SUM and AVERAGE | Include it | Skip it, because it's text |
 
 > ⚠️ TEXT results are text, so they sort alphabetically: `Dec-2025` sorts before `Nov-2025` and `Oct-2025`. Keep the real date
 > in its own column for sorting and math, and use TEXT only for labels.
@@ -461,7 +463,8 @@ expect, and look specifically for Mc, Mac, O', and hyphenated names. Formulas ar
 > nest them into one formula, or keep the helper columns, which are easier for the next person to audit.
 
 > 💡 **Tip:** A cleaned column still depends on the original. Before you delete the messy column, copy the cleaned one and use
-> **Paste Special → Values** (Ctrl + Alt + V, then V; Mac: ⌃ + ⌘ + V) to replace the formulas with their results.
+> **Paste Special → Values** (Ctrl + Alt + V, then V and Enter; Mac: ⌃ + ⌘ + V, then choose **Values**) to replace the
+> formulas with their results.
 
 ### 11. Working efficiently with text formulas
 
@@ -507,7 +510,7 @@ Tasks use the Patients, Encounters, and Providers sheets. When a task names one 
 | 6 | Monthly quality reports label encounters by month. Return the admit month of encounter ENC120217 (row 128 of the Encounters sheet) as text in the form Mon-YYYY, for example Jan-2026. | TEXT with a date format code |
 | 7 | Build the ID-badge label for provider PRV1054 (row 55 of the Providers sheet) in the form Dr. First Last, Credential. For example, provider PRV1001's label is Dr. Roy Ferguson, MD. | Join pieces with &; spaces and punctuation go inside quotes |
 | 8 | On the Patients sheet, fill the yellow HasDM column with TRUE when the patient's ChronicConditions list includes DM (diabetes) and FALSE otherwise. Blank lists should give FALSE. The gray cell counts the TRUEs. | SEARCH returns a position or #VALUE!; ISNUMBER turns that into TRUE/FALSE |
-| 9 | The patient portal username is the part of the email address before the @. Return the username for patient PT10123 (row 124). | TEXTBEFORE (Microsoft 365), or LEFT + FIND |
+| 9 | The patient portal username is the part of the email address before the @. Return the username for patient PT10123 (row 124). | TEXTBEFORE (Microsoft 365 or Excel 2024), or LEFT + FIND |
 | 10 | How many chronic conditions does patient PT10101 (row 102) have? Split the semicolon-separated ChronicConditions list with TEXTSPLIT and count the pieces. | COUNTA(TEXTSPLIT(…)) returns one number instead of a spill |
 | 11 | On the Patients sheet, fill the yellow ContactLine column with the phone and email joined by " \| " (space, vertical bar, space), for example (555) 875-0698 \| edward.abbott94@example.com. When there's no email, show just the phone, with no dangling separator. The gray cell counts lines that contain a \|. | TEXTJOIN(delimiter, ignore_empty, …) |
 | 12 | On the Patients sheet, fill the yellow FirstName column with each patient's first name: everything after the comma in PatientName, with no extra spaces. Watch out: some names have doubled, leading, or trailing spaces, and 28 were pasted from the patient portal with non-breaking spaces (UNICHAR(160)). Case doesn't matter here. The gray cell adds up the lengths of all your first names, so any leftover space changes the total. | TRIM can't remove a non-breaking space; SUBSTITUTE it with a normal space first |
@@ -599,7 +602,7 @@ TEXTSPLIT spills one condition per cell to the right. Wrapping it in COUNTA coun
 - **Answer:** 229
 - **Solution:** `=TEXTJOIN(" | ",TRUE,D2,E2)`
 
-TEXTJOIN puts the delimiter between items. With ignore_empty set to TRUE, it skips the blank email, so those rows show only the phone. With FALSE, or with D2&" | "&E2, every row gets a separator and the blank rows end in a dangling " | ".
+TEXTJOIN puts the delimiter between items. With ignore_empty set to TRUE, it skips the blank email, so those rows show only the phone. With FALSE, or with D2&" | "&E2, every row gets a separator and the blank rows end in a dangling " | ". Without TEXTJOIN (Excel 2016), add the separator only when there is an email: =D2&IF(E2="",""," | "&E2).
 
 **12. FirstName column (checksum: total characters)**
 
@@ -630,7 +633,7 @@ Bluestone is opening a diabetes education clinic in Cedar Ridge. Marketing wants
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** On the Registrations sheet, fill the yellow City column with just the city name in Proper Case, with no comma, state, or ZIP (for example Lakeview Heights). The gray cell counts rows whose City is exactly Lakeview Heights (case-sensitive). That town appears in every messy style, so it's a good test. *(Hint: The city is everything before the second-to-last space. TEXTBEFORE accepts a negative instance_num)*
+- **B1.** On the Registrations sheet, fill the yellow City column with just the city name in Proper Case, with no comma, state, or ZIP (for example Lakeview Heights). The gray cell counts rows whose City is exactly Lakeview Heights (case-sensitive). That town appears in every messy style, so it's a good test. *(Hint: The city is everything before the second-to-last space. TEXTBEFORE accepts a negative instance_num.)*
 - **B2.** Fill the yellow ZIP5 column with the 5-digit ZIP code as text. ZIP+4 codes like 45720-1280 must become 45720. The gray cell counts rows in ZIP 45501 (downtown Bluestone). *(Hint: The ZIP is the last word; keep only its first 5 characters)*
 - **B3.** Write one formula that turns record R1002's CityStateZip (row 3, "CEDAR RIDGE, OH 45720") into the mailing-label line City, ST 12345: city in Proper Case, a comma and a space, the 2-letter state in capitals, a space, and the 5-digit ZIP. This check is case-sensitive. *(Hint: Build city, state, and ZIP separately, then join them with &. Which piece needs PROPER?)*
 - **B4.** Back on the Patients sheet, fill the yellow ConditionCount column with the number of chronic conditions each patient has: 0 when ChronicConditions is blank, 1 for HTN, 2 for HTN;DM, and so on. The gray cell counts 'complex' patients with 3 or more conditions. *(Hint: Items = semicolons + 1. How many semicolons? Compare LEN before and after removing them)*

@@ -1,7 +1,7 @@
 # Lesson 1.1 · The Excel Interface & Navigation
 
 > **Level:** Beginner · **Time:** about 30 minutes · **Workbook:** [`1.1-excel-interface-navigation.xlsx`](1.1-excel-interface-navigation.xlsx)
-> **Data:** 500 registered patients from the Bluestone Health System patient index (every 8th record), plus a small payer list that starts out hidden.
+> **Data:** 500 registered patients from the Bluestone Health System patient index (every 8th record), plus a small payer list that starts out hidden. Column definitions are in the [data dictionary](../../data/README.md#patientscsv).
 
 In your first week in any hospital job, someone will send you a spreadsheet with a quick question. *How many patients on this
 list have no primary care provider? Who is the oldest? How many prefer Spanish, so we can schedule interpreters?* The list
@@ -24,29 +24,37 @@ Excel 2016 and 2019 differ only where a version note says so. Shortcuts are give
 
 ### 1. A tour of the Excel window
 
-Open the workbook and click the **Patients** tab at the bottom of the window. Then click in the white box just above
-column A (the Name Box), type `N2:N501`, and press **Enter** to select every patient's height. You'll see something like this:
+Start by getting the workbook onto your computer:
+
+1. Click the workbook link at the top of this page. GitHub opens a preview page rather than the file itself.
+2. Click the download button (**Download raw file**) at the top right of the preview, then open the file in Excel.
+3. If a yellow **Protected View** bar appears, click **Enable Editing**. Excel opens downloaded files read-only until you do,
+   so you could look around but you couldn't type your answers.
+
+Now click the **Patients** tab at the bottom of the window. Then click in the white box just above column A (the Name Box),
+type `N2:N501`, and press **Enter** to select every patient's height. You'll see something like this:
 
 ```
-+-----------------------------------------------------------------------------+
-| [Save] [Undo] [Redo]     1.1-excel-interface-navigation.xlsx     [Search]   |  <- title bar + Quick Access Toolbar
-+-----------------------------------------------------------------------------+
-| File  Home  Insert  Page Layout  Formulas  Data  Review  View  Help         |  <- ribbon tabs
-| [Clipboard]  [Font]  [Alignment]  [Number]  [Styles]  [Cells]  [Editing]    |  <- ribbon groups and commands
-+-----------+------+----------------------------------------------------------+
-| N2      v |  fx  | 66.9                                                     |  <- Name Box | formula bar
-+---+-------+------+--+------------+------------+------------+----            |
-|   |  A              |  B         |  C         |  D         |  <- column headers
-+---+-----------------+------------+------------+------------+----            |
-| 1 |  PatientID      |  MRN       |  LastName  |  FirstName |                |
-| 2 |  PT10008        |  04700089  |  Clark     |  Arthur    |  <- the grid   |
-| 3 |  PT10016        |  07426502  |  Kennedy   |  Danielle  |                |
-  ^ row headers
-+-----------------------------------------------------------------------------+
-| <  >   Start Here | Practice | Patients | Bonus |  (+)                      |  <- sheet tabs
-+-----------------------------------------------------------------------------+
-| Ready     Average: 63.21    Count: 500    Sum: 31605      [views]  -o-  100% |  <- status bar + zoom
-+-----------------------------------------------------------------------------+
++----------------------------------------------------------------------------+
+| [Save] [Undo] [Redo]    1.1-excel-interface-navigation.xlsx    [Search]    |  <- Quick Access Toolbar, title bar
++----------------------------------------------------------------------------+
+| File  Home  Insert  Page Layout  Formulas  Data  Review  View  Help        |  <- ribbon tabs
+| [Clipboard] [Font] [Alignment] [Number] [Styles] [Cells] [Editing]         |  <- groups on the Home tab
++-----------+------+---------------------------------------------------------+
+| N2      v |  fx  | 66.9                                                    |  <- Name Box, formula bar
++---+-------------+------------+------------+------------+-------------------+
+|   |  A          |  B         |  C         |  D         |  ...              |  <- column headers
++---+-------------+------------+------------+------------+-------------------+
+| 1 |  PatientID  |  MRN       |  LastName  |  FirstName |  ...              |
+| 2 |  PT10008    |  04700089  |  Clark     |  Arthur    |  ...              |  <- the grid of cells
+| 3 |  PT10016    |  07426502  |  Kennedy   |  Danielle  |  ...              |
++---+-------------+------------+------------+------------+-------------------+
+  ^ row headers (the empty box above row 1 is the Select All button)
++----------------------------------------------------------------------------+
+| <  >   Start Here | Practice | Patients | Bonus |  (+)                     |  <- sheet tabs
++----------------------------------------------------------------------------+
+| Ready    Average: 63.21   Count: 500   Sum: 31605      [views]  -o-  100%  |  <- status bar, zoom slider
++----------------------------------------------------------------------------+
 ```
 
 | Part | Where it is | What it does |
@@ -77,7 +85,7 @@ column A (the Name Box), type `N2:N501`, and press **Enter** to select every pat
 
 ### 2. Workbooks, worksheets, cells, and ranges
 
-These five words come up in every lesson, so it's worth getting them exactly right.
+These five terms come up in every lesson.
 
 - A **workbook** is an Excel file, such as `1.1-excel-interface-navigation.xlsx`.
 - A **worksheet** (or just **sheet**) is one grid inside the workbook, shown as one tab. This workbook has Start Here,
@@ -112,6 +120,26 @@ AA to AZ, BA to BZ, and so on, up to **XFD**. That's more than 17 billion cells,
 The Patients data is formatted as an **Excel Table** named `tblPatients`, which is why it has banded rows and filter
 arrows in the header row. Tables change how a few selection shortcuts behave (section 3). You'll learn Tables properly in
 Lesson 3.1.
+
+**The Patients sheet at a glance.** The practice tasks refer to columns by letter, so keep this map handy. Row 1 holds the
+headers and rows 2 to 501 hold one patient each.
+
+| Column | Header | What it holds |
+|:-:|---|---|
+| A | PatientID | The patient's ID in this dataset, such as PT10008. Every row has one. |
+| B | MRN | The **medical record number (MRN)**, the 8-digit number on the patient's chart. It's stored as text so its leading zeros stay. |
+| C, D | LastName, FirstName | The patient's name |
+| E | Sex | F or M |
+| F | DOB | Date of birth |
+| G, H | City, ZIP | Where the patient lives |
+| I | Phone | Phone number. This column starts out hidden (section 9). |
+| J | Email | Email address, blank when none is on file |
+| K | PreferredLanguage | The language the patient prefers for their care, such as English or Spanish |
+| L | PrimaryPayerID | A code for the patient's main **payer**, the insurer or program that pays for their care. The hidden Payers sheet lists the payer names (section 10). |
+| M | PCPProviderID | A code for the patient's **primary care provider (PCP)**, blank when no PCP is on file |
+| N, O | HeightIn, WeightLb | Height in inches and weight in pounds |
+| P | ChronicConditions | Long-term conditions as codes separated by semicolons, such as `HTN;DM` (hypertension and diabetes). Blank when none are recorded. |
+| Q | RegistrationDate | The date the patient was first registered |
 
 ### 3. Selecting cells and ranges
 
@@ -158,6 +186,9 @@ Scrolling through 500 rows with the mouse wheel is slow and error-prone. These s
 | Any address you type | **F5** or **Ctrl + G** (Go To) | **Control + G** |
 | Any text or number you type | **Ctrl + F** (Find) | **Control + F** |
 
+> 📋 **Mac:** Wherever this lesson says **Ctrl + arrow** or **Ctrl + Shift + arrow**, press **⌘** instead of Ctrl. Other
+> shortcuts, such as Ctrl + Home and Ctrl + F, use the **Control** key on a Mac, as the table shows.
+
 **How Ctrl + arrow decides where to stop.** Excel looks at the cell you're on and the next cell in the direction of the
 arrow, then follows three rules:
 
@@ -166,8 +197,8 @@ arrow, then follows three rules:
 3. If there is no filled cell left in that direction, it goes to the **edge of the worksheet** (row 1,048,576 or column XFD).
 
 Rule 1 is what makes Ctrl + ↓ so useful. In column A, every patient has a PatientID, so pressing Ctrl + ↓ from A1 lands on
-the last patient in row 501. Gaps are the trap, because both rules stop at them. Some patients have no email address, so
-the Email column (J) has gaps. From J1, Ctrl + ↓ lands on J3, because J2 is blank and J3 is the next filled cell (rule 2).
+the last patient in row 501. Gaps are the trap, because Ctrl + arrow stops at every one. Some patients have no email
+address, so the Email column (J) has gaps. From J1, Ctrl + ↓ lands on J3, because J2 is blank and J3 is the next filled cell (rule 2).
 Press it again and you stop at J5, then J8. Each gap interrupts the jump. In a column whose first gap is further down,
 rule 1 stops you on the last filled cell above the gap, and that cell is easy to mistake for the bottom of the list.
 
@@ -231,9 +262,9 @@ the **Customize Status Bar** menu. Your choices stick for every workbook you ope
 **Maximum: 76.9** (inches). A 19-inch patient looks like a typo until you check the DOB column: the list includes babies, and
 they pull the average height down. Always read the extremes before you trust an average.
 
-**Worked example: Count vs Numerical Count.** Now select the MRNs, `B2:B501`. Count shows **500**, but Average and Sum
-disappear, and Numerical Count doesn't count a single MRN. The MRNs look like numbers, but they're stored as text on purpose
-so their leading zeros survive. (The small green triangles in the corner of each MRN cell are Excel pointing this out.
+**Worked example: Count vs Numerical Count.** Turn on Numerical Count in the status bar, then select the MRNs, `B2:B501`.
+Count shows **500**, but Average and Sum disappear, and Numerical Count doesn't count a single MRN. The MRNs look like
+numbers, but they're stored as text on purpose so their leading zeros survive. (The small green triangles in the corner of each MRN cell are Excel pointing this out.
 Lesson 1.2 explains them.) Add the heights to the selection by typing `B2:B501,N2:N501` in the Name Box: Count jumps to
 **1000**, while Numerical Count shows **500**, because only the heights are numbers.
 
@@ -313,9 +344,9 @@ The rule behind the table: **Freeze Panes freezes every row above the selected c
 line marks the frozen edge. To undo it, choose **View → Freeze Panes → Unfreeze Panes** (on Windows, **Alt, W, F, F** toggles
 it).
 
-> ⚠️ Press **Ctrl + Home** before you freeze. Freeze Panes freezes whatever is on screen above and left of the selected cell.
-> If you've scrolled down to row 200 and freeze at row 210, rows 200 to 209 stay frozen and rows 1 to 199 can't be reached
-> until you unfreeze.
+> ⚠️ Press **Ctrl + Home** (Mac: **Control + Home**) before you freeze. Freeze Panes freezes whatever is on screen above and
+> left of the selected cell. If you've scrolled down to row 200 and freeze at row 210, rows 200 to 209 stay frozen and rows
+> 1 to 199 can't be reached until you unfreeze.
 
 > 📋 Once panes are frozen, **Ctrl + Home** goes to the first cell below and right of the frozen area (B2 if you froze at B2),
 > not to A1.
@@ -333,6 +364,7 @@ both at once.
   dialog and type any value from 10% to 400%.
 - **View → Zoom to Selection** fits the selected cells to the window, and **View → 100%** resets.
 - Windows: **Ctrl + mouse wheel** zooms, and so do **Ctrl + Alt + =** and **Ctrl + Alt + -** (minus) in Microsoft 365.
+  On a Mac, use the slider or **View → Zoom**.
 
 Zoom is saved separately for each worksheet, so the Patients sheet can sit at 85% while the Practice sheet stays at 100%.
 
@@ -354,8 +386,8 @@ You can also use the ribbon: **Home → Format → Hide & Unhide**.
 > ⚠️ On many Windows PCs, **Ctrl + Shift + 0** does nothing, because a Windows keyboard-language setting claims that key
 > combination. Use right-click → **Unhide** instead.
 
-> 💡 **Tip:** To unhide *everything* on a sheet, click the Select All button (or press Ctrl + A until the whole sheet is
-> selected), then right-click any column letter → **Unhide**, and right-click any row number → **Unhide**.
+> 💡 **Tip:** To unhide *everything* on a sheet, click the Select All button (or press Ctrl + A, Mac: ⌘ + A, until the whole
+> sheet is selected), then right-click any column letter → **Unhide**, and right-click any row number → **Unhide**.
 
 > 💡 **Tip:** A hidden column A is awkward because there's no column to its left to select. Type `A1` in the Name Box, press
 > Enter, then choose **Home → Format → Hide & Unhide → Unhide Columns**.
@@ -383,7 +415,7 @@ Unhide Sheet**, and on a Mac the menu bar also has **Format → Sheet → Unhide
 
 > 📋 If **Unhide…** is grayed out but you're sure something is hidden, either the workbook's structure is protected
 > (**Review → Protect Workbook**) or the sheet is "very hidden," a state that can only be set and undone in the VBA editor.
-> You'll meet very hidden sheets in Level 5.
+> You'll meet very hidden sheets in Lesson 5.3.
 
 A workbook must always have at least one visible sheet, so Excel won't let you hide the last one.
 
@@ -391,9 +423,10 @@ A workbook must always have at least one visible sheet, so Excel won't let you h
 
 Here's how the pieces fit together on the Patients sheet, without a single formula.
 
-1. Press **Ctrl + Home** to start at A1, then choose **View → Freeze Panes → Freeze Top Row** so the headers stay visible.
-2. **How many patients?** Press **Ctrl + ↓** in column A. The Name Box shows A501. Row 1 is the header, so the list holds
-   500 patients.
+1. Press **Ctrl + Home** (Mac: **Control + Home**) to start at A1, then choose **View → Freeze Panes → Freeze Top Row** so
+   the headers stay visible.
+2. **How many patients?** Press **Ctrl + ↓** (Mac: **⌘ + ↓**) in column A. The Name Box shows A501. Row 1 is the header,
+   so the list holds 500 patients.
 3. **How tall are they?** Type `N2:N501` in the Name Box and press Enter. The status bar shows an average height of 63.21
    inches, and Minimum and Maximum show the range: 19 to 76.9 inches.
 4. **Do we need Spanish interpreters?** Click A1 so only one cell is selected, then press **Ctrl + F** (Mac: **Control + F**),
@@ -407,8 +440,8 @@ That last step matters as much as the shortcuts. **Always ask whether a number i
 ## 🧪 Hands-on practice
 
 Download [`1.1-excel-interface-navigation.xlsx`](1.1-excel-interface-navigation.xlsx) and open the **Practice** sheet. Each
-answer is something you read off the screen, so type the value itself (a name, a number, or an address) into the yellow
-cell. The **Check** column turns green when you're right.
+answer is something you read off the screen, so type the value itself (a name, a number, a date, or an address) into the
+yellow cell and press **Enter**. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
 Every task uses the Patients sheet (500 patients, rows 2–501) unless it says otherwise. No formulas needed: navigate, look, and type what you find. Mac users: for Ctrl+arrow shortcuts such as Ctrl+↓ and Ctrl+Shift+↓, press ⌘ instead of Ctrl.
@@ -417,13 +450,13 @@ Every task uses the Patients sheet (500 patients, rows 2–501) unless it says o
 |:-:|------|------|
 | 1 | On the Patients sheet, click in the Name Box (the box at the left end of the formula bar), type C347, and press Enter. What last name is in that cell? | The Name Box jumps to any address you type |
 | 2 | What is the address of the bottom-right cell of the patient data? From A1, press Ctrl+↓ to find the last row, go back with Ctrl+↑, then press Ctrl+→ to find the last column. Type the address as column letter + row number (like B12). | Column letter from Ctrl+→, row number from Ctrl+↓. Ctrl+End confirms |
-| 3 | Click cell A600, which is in an empty row below the data, and press Ctrl+→. Excel races across the empty row to the very last column of the worksheet. What is the address of the cell you land on? | A worksheet has 16,384 columns |
+| 3 | Use the Name Box to go to cell A600, which is in an empty row below the data, then press Ctrl+→. Excel races across the empty row to the very last column of the worksheet. What is the address of the cell you land on? | A worksheet has 16,384 columns |
 | 4 | Click M1 (the PCPProviderID header) and press Ctrl+↓ once. On which row number does Excel stop? | Ctrl+arrow stops at the edge of a block of filled cells |
 | 5 | Select the Email data cells J2:J501: type J2:J501 in the Name Box and press Enter. How many patients have an email address on file? Read Count on the status bar. | Count = cells that aren't empty |
 | 6 | Select the WeightLb values O2:O501 with Go To: press F5 or Ctrl+G (Mac: Control+G), type O2:O501, and press Enter. What is the average weight in pounds? Round to 1 decimal place. | Average is on the status bar by default |
-| 7 | Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient? | The oldest patient has the earliest date, so look at Minimum |
+| 7 | Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient? Type it as month/day/year, the way the status bar shows it. (If your computer uses day/month dates, type the month as a word instead, such as 15 Mar 1950.) | The oldest patient has the earliest date, so look at Minimum |
 | 8 | How many patients live in Millbrook? On the Patients sheet, click a single cell such as A1 so Find searches the whole sheet. Then press Ctrl+F (Mac: Control+F), type Millbrook, click Find All, and read the count at the bottom of the dialog. | Find All shows '… cell(s) found' |
-| 9 | Column I is hidden (the column letters jump from H to J). Unhide it, then click cell A1 and use Ctrl+F to find patient PT12376. What is that patient's phone number? | Select the columns on both sides of the gap, right-click → Unhide |
+| 9 | Column I is hidden (the column letters jump from H to J). Unhide it, then click cell A1 and use Ctrl+F (Mac: Control+F) to find patient PT12376. What is that patient's phone number? | Select the columns on both sides of the gap, right-click → Unhide |
 | 10 | Patient PT13312 has a PrimaryPayerID in column L. The payer names are on the Payers sheet, which is hidden. Unhide it (right-click any sheet tab → Unhide…) and type the name of this patient's payer. | Right-click a sheet tab → Unhide… |
 | 11 | How many worksheets does this workbook contain in total, hidden ones included? Count the tabs you can see, then right-click a tab → Unhide… to see what's still hidden. Look, but don't unhide the answer keys yet! | Visible tabs + the names listed in the Unhide dialog |
 | 12 | You want row 1 (the headers) and columns A:B (PatientID and MRN) to stay on screen while you scroll. Which cell must you select before choosing View → Freeze Panes → Freeze Panes? Type its address. | Excel freezes everything above and to the left of the selected cell |
@@ -469,7 +502,7 @@ Ctrl+arrow jumps to the edge of the block of filled cells. Column A and row 1 ha
 
 1. Type A600 in the Name Box and press Enter.
 2. Press Ctrl+→. The Name Box shows XFD600.
-3. Press Ctrl+← (or Ctrl+Home) to come back.
+3. Press Ctrl+← to come back to column A.
 
 
 When the row is empty, Ctrl+→ has no data to stop at, so it goes to the edge of the sheet: column XFD, the 16,384th column. Ctrl+↓ in an empty column goes to row 1,048,576. Every modern worksheet has exactly 1,048,576 rows × 16,384 columns.
@@ -585,14 +618,14 @@ Freeze Panes freezes the rows above the active cell and the columns to its left.
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The population-health team wants to use this patient list for a flu-shot outreach campaign. Before it goes out, the data steward asks you to check four facts. Set up first on the Patients sheet: if you froze panes earlier, choose View → Freeze Panes → Unfreeze Panes. Then press Ctrl+Home, click B2, and choose View → Freeze Panes → Freeze Panes so the headers and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look everything up on the Patients sheet and type your answers on the Bonus sheet, and you won't need a single formula.
+The population-health team is starting a blood-pressure outreach program and will build its mailing list from this patient index. Before the letters go out, the data steward asks you to check four facts. Set up the Patients sheet first: if you froze panes earlier, choose View → Freeze Panes → Unfreeze Panes. Then press Ctrl+Home (Mac: Control+Home), click B2, and choose View → Freeze Panes → Freeze Panes so the headers and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look everything up on the Patients sheet and type your answers on the Bonus sheet, without a single formula.
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Use Go To (F5 or Ctrl+G, Mac: Control+G) to select M2:M501. A blank PCPProviderID means the patient has no primary care provider on file. How many of the 500 patients have no PCP? *(Hint: The status bar counts filled cells, but you want the empty ones)*
-- **B2.** Click a single cell such as A1, so Find searches the whole sheet rather than the column you just selected. Press Ctrl+F (Mac: Control+F), click Options >> and make sure Match entire cell contents is OFF, then Find All for HTN (hypertension). How many patients have HTN anywhere in their ChronicConditions list? *(Hint: Partial matches count: 'HTN;DM' contains HTN)*
-- **B3.** Now turn ON Match entire cell contents and Find All for HTN again. How many patients have hypertension as their ONLY recorded chronic condition? *(Hint: Match entire cell contents finds cells that are exactly HTN)*
-- **B4.** Which patient is the heaviest? Select O2:O501, read Maximum on the status bar, then use Find to locate that weight and read the PatientID in the frozen column A. Type the PatientID. *(Hint: Status bar Maximum, then Ctrl+F for that number)*
+- **B1.** Each outreach letter is signed by the patient's primary care provider (PCP), and a blank PCPProviderID means no PCP is on file. Use Go To (F5 or Ctrl+G, Mac: Control+G) to select M2:M501. How many of the 500 patients have no PCP? *(Hint: The status bar counts filled cells, but you want the empty ones)*
+- **B2.** The program targets every patient with hypertension, coded HTN. Click a single cell such as A1, so Find searches the whole sheet rather than the column you just selected. Press Ctrl+F (Mac: Control+F), click Options >> and make sure Match entire cell contents is OFF, then Find All for HTN. How many patients have HTN anywhere in their ChronicConditions list? *(Hint: Partial matches count: 'HTN;DM' contains HTN)*
+- **B3.** Patients whose only condition is hypertension will get a shorter letter. Turn ON Match entire cell contents and Find All for HTN again. How many patients have hypertension as their ONLY recorded chronic condition? *(Hint: Match entire cell contents finds cells that are exactly HTN)*
+- **B4.** Finally, the steward wants to confirm that the largest weight on file is real and not a typo. Which patient is the heaviest? Select O2:O501, read Maximum on the status bar, then use Find to locate that weight and read the PatientID in the frozen column A. Type the PatientID. *(Hint: Status bar Maximum, then Ctrl+F for that number)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -609,7 +642,7 @@ Work on the **Bonus** sheet of the workbook.
 3. 500 − 469 = 31.
 
 
-Count only counts non-empty cells, so it tells you how many patients do have a PCP (469). The range M2:M501 covers rows 2 to 501, which is 500 cells, so 500 − 469 leaves 31 blanks. (If you select by dragging instead, the Name Box shows the size of the selection while you drag, such as 500R x 1C.)
+Count only counts non-empty cells, so it tells you how many patients do have a PCP (469). The range M2:M501 covers rows 2 to 501, which is 500 cells, so 500 − 469 leaves 31 blanks. Any of those patients who have hypertension need a PCP assigned before a letter can go out. (If you select by dragging instead, the Name Box shows the size of the selection while you drag, such as 500R x 1C.)
 
 **B2. Find All: HTN anywhere in the list**
 

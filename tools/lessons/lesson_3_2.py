@@ -392,7 +392,7 @@ def build() -> Lesson:
              "with C2 as the active cell and add a Custom validation rule that is TRUE only for a valid MRN. "
              "How many MRN cells are circled?",
              answer=bad_mrn, title="Custom MRN rule (circled entries)",
-             hint="AND(LEN(C2)=8, ISNUMBER(--C2)), written for the active cell C2",
+             hint="Combine a LEN test with an ISNUMBER(--C2) test inside AND, written for the active cell C2",
              solution=(f"1. Type **{ic('MRN')}** in the Name Box and press **Enter**. The range is selected and **C2** is the active cell.\n"
                        "2. **Data → Data Validation → Settings**: **Allow** = **Custom**, **Formula** = "
                        "`=AND(LEN(C2)=8,ISNUMBER(--C2))`. Click **OK**.\n"
@@ -525,22 +525,25 @@ def build() -> Lesson:
         Task(f"Supplies: add two formula rules to A2:M{sup.last_row}. Rule 1 (red fill): the item has expired, meaning ExpirationDate is not "
              "blank and is on or before ReportDate. Rule 2 (amber fill): ExpirationDate is not blank and is on or before "
              "ReportDate + ExpiringWindowDays. ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists "
-             "sheet. Keep the red rule above the amber rule in Manage Rules. How many rows are amber?",
+             "sheet. Excel puts each new rule at the top of the list, so open Manage Rules and move the red rule above the "
+             "amber rule. How many rows are amber?",
              answer=amber, title="Expired vs expiring supplies: two rules and rule order",
-             hint="A blank cell counts as 0, which is \"on or before\" any date",
+             hint="A blank cell counts as 0, which is \"on or before\" any date. The rule higher in Manage Rules wins the fill",
              solution=(f"1. On **Supplies**, select **A2:M{sup.last_row}** with A2 active.\n"
                        "2. **New Rule → Use a formula**: `=AND($L2<>\"\",$L2<=ReportDate)` with a red fill → **OK**.\n"
                        "3. With the same range selected, add a second rule: `=AND($L2<>\"\",$L2<=ReportDate+ExpiringWindowDays)` "
                        "with an amber (light orange) fill → **OK**.\n"
-                       "4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**, and make "
-                       "sure the red rule is on top (use the ▲ ▼ buttons).\n\n"
+                       "4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**. The amber "
+                       "rule is on top because Excel adds each new rule at the top of the list. Select the red rule and click "
+                       "**▲** (Move Up) so it sits above the amber rule, then click **OK**.\n\n"
                        f"Equivalent formula: `=COUNTIFS({sr('ExpirationDate')},\">\"&ReportDate,{sr('ExpirationDate')},"
                        f"\"<=\"&ReportDate+ExpiringWindowDays)`"),
              live=(f"=COUNTIFS({sr('ExpirationDate')},\">\"&ReportDate,{sr('ExpirationDate')},"
                    f"\"<=\"&ReportDate+ExpiringWindowDays)"),
              explanation=f"Rule 2 is TRUE for {expiring_all} rows, because every expired item also expires before ReportDate + 90. "
                          f"The red rule sits above it and both rules set a fill, so red wins on the {expired} expired rows and "
-                         f"{amber} rows stay amber. With amber on top you'd see {expiring_all} amber rows and no red. The $L2<>\"\" "
+                         f"{amber} rows stay amber. If you skip the move, the newer amber rule stays on top and you'd see "
+                         f"{expiring_all} amber rows and no red. The $L2<>\"\" "
                          f"guard matters too: an empty cell counts as 0 (the date 1/0/1900), which is \"on or before ReportDate,\" "
                          f"so without the guard all {blanks} non-perishable items would turn red."),
     ]
@@ -597,14 +600,16 @@ def build() -> Lesson:
              explanation=f"Census rose overnight on {up} units, held steady on {flat}, and fell on {down}. Number thresholds keep "
                          "the arrows honest on any day. The default Percent thresholds depend on the day's smallest and largest "
                          "change, so a unit that gained one patient could show a sideways arrow on a busier day."),
-        Task(f"Add two formula rules to the whole board (A{H_FIRST}:G{H_LAST}), in this order: (1) red fill when the 11/25 census "
-             "is above staffed beds (overflow), then (2) amber fill when occupancy is at least 90%. How many rows end up amber?",
+        Task(f"Add two formula rules to the whole board (A{H_FIRST}:G{H_LAST}): a red fill when the 11/25 census is above "
+             "staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the overflow rule "
+             "above the amber rule. How many rows end up amber?",
              answer=amber_b, title="Overflow (red) above near-capacity (amber) row rules",
              hint="Both rules are TRUE for an overflow unit, and the rule on top wins the fill",
              solution=(f"1. Select **A{H_FIRST}:G{H_LAST}** with A{H_FIRST} active.\n"
                        f"2. **New Rule → Use a formula**: `=$E{H_FIRST}>$C{H_FIRST}`, red fill.\n"
                        f"3. **New Rule → Use a formula**: `=$G{H_FIRST}>=0.9`, amber fill.\n"
-                       "4. **Manage Rules**: keep the overflow rule on top.\n\n"
+                       "4. **Manage Rules** (This Worksheet): Excel added the amber rule at the top because it's newer. Select the "
+                       "overflow rule and click **▲** so it's on top.\n\n"
                        f"Equivalent formula: `=SUMPRODUCT(({hb('G')}>=0.9)*({hb('E')}<={hb('C')}))`"),
              live=f"=SUMPRODUCT(({hb('G')}>=0.9)*({hb('E')}<={hb('C')}))",
              explanation=f"There are {overflow} overflow units, and both rules are TRUE for them. The overflow rule is on top, so "
@@ -623,9 +628,12 @@ def build() -> Lesson:
                        f"2. Select **B5** → **Data Validation → List**, Source:\n\n"
                        f"   `{unit_src}`\n\n"
                        "   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board is sorted "
-                       "by facility, so OFFSET returns exactly that facility's block of unit names.\n"
+                       "by facility, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, "
+                       "Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 "
+                       "first.\n"
                        "3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. Read the card.\n\n"
-                       "If you prefer INDIRECT, name each hospital's unit list (for example with Create from Selection) and use "
+                       "If you prefer INDIRECT, copy each hospital's units into its own column under the hospital's name (like "
+                       "the Lists sheet in task 6), name the columns with Create from Selection, and use "
                        "`=INDIRECT(SUBSTITUTE($B$4,\" \",\"_\"))`. The result is the same."),
              summary='=IF(Huddle!$B$8="","",Huddle!$B$8)',
              fill={"range": "Huddle!B4:B5", "values": [pick_fac, pick_unit]},

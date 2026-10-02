@@ -142,6 +142,17 @@ def build() -> Lesson:
     auth = [c for c in claim_rows if c["ClaimStatus"] == "Denied" and c["DenialReason"] == "Authorization Required"]
     auth_billed = sum(c["BilledAmount"] for c in auth)
     auth_any = sum(1 for c in claim_rows if c["DenialReason"] == "Authorization Required")
+    # What happened to the Authorization Required claims that are no longer plain Denied (for the explanation).
+    auth_other = Counter(c["ClaimStatus"] for c in claim_rows
+                         if c["DenialReason"] == "Authorization Required" and c["ClaimStatus"] != "Denied")
+    _status_words = {"Appealed": "under appeal", "Partially Paid": "partially paid", "Paid": "paid", "Pending": "pending"}
+    assert sum(auth_other.values()) == auth_any - len(auth) > 0
+    if len(auth_other) == 1:
+        (_s, _n), = auth_other.items()
+        auth_other_txt = f"The other {_n} are all {_status_words[_s]} (ClaimStatus = {_s})"
+    else:
+        auth_other_txt = f"Of the other {auth_any - len(auth)}, " + " and ".join(
+            f"{n} {'is' if n == 1 else 'are'} {_status_words[s]}" for s, n in sorted(auth_other.items(), key=lambda kv: -kv[1]))
     hf = [r["LOSDays"] for r in enc_rows if r["EncounterType"] == "Inpatient" and r["PrimaryDxCode"] == "I50.9"]
     hf_all = [r["LOSDays"] for r in enc_rows if r["PrimaryDxCode"] == "I50.9" and r["LOSDays"] is not None]
     hf_alos = xround(mean(hf), 1)
@@ -217,7 +228,8 @@ def build() -> Lesson:
              hint="SUMIFS puts the sum_range FIRST", title="Billed dollars denied for missing authorization",
              explanation=f"SUMIFS starts with the column to add, then lists range/criteria pairs. The status criterion matters: "
                          f"{auth_any} claims carry the reason Authorization Required, but only {len(auth)} of them are still "
-                         "fully Denied. The others were partially paid or are under appeal."),
+                         f"plain Denied. Of the other {auth_any - len(auth)}, {auth_other_txt}, so they don't belong in a "
+                         "Denied total."),
         Task("What was the average length of stay (LOSDays) of Inpatient encounters with PrimaryDxCode I50.9 (heart failure)? "
              "Round to 1 decimal place with ROUND.",
              answer=hf_alos, fmt="0.0", tol=0.0001,

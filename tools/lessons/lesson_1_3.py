@@ -271,8 +271,8 @@ def build() -> Lesson:
         "Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, and tasks 8–11 the Stays sheet. Work in order, "
         "because some tasks build on earlier ones. Most tasks ask you to apply a format and then type exactly what the cell "
         "displays, including any dollar sign, commas, parentheses, minus sign, or % sign. Those yellow cells are formatted as Text, "
-        "so Excel keeps your entry exactly as you type it. Tasks 3, 9, and 12 ask for a plain number instead. Answers assume US "
-        "regional settings.")
+        "so Excel keeps your entry exactly as you type it. Type the answer rather than pasting a copied cell, because pasting brings "
+        "the cell's number and format along. Tasks 3, 9, and 12 ask for a plain number instead. Answers assume US regional settings.")
 
     def bcell(col: str, row: int) -> str:
         return f"Budget!{col}{row}"

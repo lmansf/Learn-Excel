@@ -131,30 +131,44 @@ A few details help:
 
 ### 5. The rate-in-one-cell pattern
 
-Healthcare models are full of assumptions: an overtime multiplier, a benefits rate, an inflation rate, an HPPD target. Put each one
-in its **own labeled cell** and point every formula at it with an absolute reference. This is the **rate-in-one-cell pattern**.
+Healthcare models are full of **assumptions**: an overtime multiplier, a benefits rate, an inflation rate, or a staffing target
+such as **HPPD** (nursing hours per patient day). Put each assumption in its **own labeled cell** and point every formula at it
+with an absolute reference. This is the **rate-in-one-cell pattern**.
 
-The **4 West OT** sheet uses it. Cell **B3** holds the overtime multiplier, 1.5 (time-and-a-half). Each employee's overtime pay is
-OTHours × HourlyRate × multiplier:
+Here's an example. Finance estimates each department's benefits cost as 28% of its salaries. The salaries are in column C, rows
+5–20. Type the label *Benefits rate* in A2 and the rate, 28%, in B2. Then type one formula in D5 and copy it down:
 
 ```
-H6:  =G6*D6*$B$3        ← G6 and D6 move with the row, but $B$3 stays put
-H7:  =G7*D7*$B$3
-H8:  =G8*D8*$B$3
+D5:  =C5*$B$2        ← C5 moves with the row, but $B$2 stays put
+D6:  =C6*$B$2
+D7:  =C7*$B$2
 ```
 
-Compare that with typing the number into every formula, as in `=G6*D6*1.5`. Both give the same answer today. But when the pay rule
-changes, the first version needs one edit and the second needs 67. Numbers buried inside formulas are called **hard-coded** values,
-and they're one of the most common causes of stale, wrong spreadsheets. They're also invisible: nobody reviewing the sheet can see
-which rate it assumes.
+Compare that with typing the rate into every formula, as in `=C5*28%`. Both give the same answer today. But when the rate
+changes, the first version needs one edit and the second needs 16, one for each department. Numbers typed inside formulas are
+called **hard-coded** values, and they're one of the most common causes of stale, wrong spreadsheets. They're also invisible,
+because nobody reviewing the sheet can see which rate it assumes.
+
+The pattern also makes **what-if** questions fast. Change the assumption cell, read the new results, then change it back. To
+compare before and after, first copy the result you care about and paste it into a spare cell with **Paste Special → Values**
+(Lesson 1.2), so the old number stays put while the formulas recalculate. (Lesson 3.6 automates what-if analysis with Goal Seek
+and Data Tables.)
+
+The **4 West OT** sheet is set up for this pattern. Cell **B3** holds the overtime multiplier, 1.5 (time-and-a-half), and
+practice tasks 5–7 have you point formulas at it.
+
+> 📋 **Rates that grow a number.** To raise a value by a percentage, multiply it by 1 plus the rate. A 3.5% price increase
+> turns 100,000 into `=100000*(1+3.5%)`, which is 103,500. To go the other way and find the percent change from an old value to
+> a new one, divide and subtract 1: `=103500/100000-1` gives 3.5%.
 
 > 💡 **Tip:** Make assumption cells look different from calculations. Finance teams often use **blue font** for inputs and black for
 > formulas, which is the convention in this workbook (see cell B3 on the 4 West OT sheet, and row 3 and column B of Plan 2026).
 > Put a label next to every input.
 
-> 📋 **Preview: naming a cell.** Click cell **B3** on the 4 West OT sheet, click the **Name Box** (left of the formula bar), type `OT_Multiplier`, and
-> press **Enter**. Now `=G6*D6*OT_Multiplier` works anywhere in the workbook and behaves like an absolute reference. Names can't
-> contain spaces or look like a cell address (`OT1` is a cell, so it can't be a name). Lesson 3.1 covers named ranges in depth.
+> 📋 **Preview: naming a cell.** Click cell **B3** on the 4 West OT sheet, click the **Name Box** (left of the formula bar), type
+> `OT_Multiplier`, and press **Enter**. Any formula in the workbook can now use `OT_Multiplier` instead of `'4 West OT'!$B$3`, and
+> the name behaves like an absolute reference. Names can't contain spaces or look like a cell address (`OT1` is a cell, so it
+> can't be a name). Lesson 3.1 covers named ranges in depth.
 
 ### 6. Mixed references: one formula for a whole grid
 
@@ -242,9 +256,17 @@ You rarely need to type any of this. Build the reference by clicking:
 
 1. Type `=` in the cell where you want the result.
 2. Click the other sheet's tab, then click the cell. Excel writes the sheet name, the quotes, and the `!` for you.
-3. Press **Enter**. Excel takes you back to the sheet you started on.
+3. If you need more cells from that sheet, type an operator such as `/` and click the next cell.
+4. Press **Enter**. Excel takes you back to the sheet you started on.
 
-> ⚠️ Don't click back on your starting sheet's tab before pressing Enter. Excel would treat that click as part of the formula.
+> ⚠️ Press **Enter** while the other sheet is still showing. Clicking your own sheet's tab doesn't finish the formula. Excel is
+> still building it, so the next cell you click goes into the formula instead of ending it.
+
+A reference without a sheet name always means the formula's own sheet. So when a formula mixes a cell on another sheet with
+cells on its own sheet, click the other sheet's cell and **type** the addresses on your own sheet. For example, on the Expenses
+sheet, `=Oct!J5/J5` divides the ED's October total (on Oct) by its 2025 total (on Expenses). If you click back on your own tab to
+pick a cell instead, Excel writes the sheet name in front of it, as in `=Oct!J5/Expenses!J5`. That works the same and copies the
+same way. It's just longer to read.
 
 Cross-sheet references follow the same copying rules as any other reference. `=Expenses!C5` copied one column right becomes
 `=Expenses!D5`, and `=Expenses!$J$21` doesn't move at all. If you rename a sheet, Excel updates every formula that points at it. If
@@ -363,7 +385,7 @@ Tasks 1, 4, and 8 ask you to predict a formula or reference. Type your answer as
 | 9 | On the Staffing Grid sheet, fill the yellow grid B6:H12 with ONE formula: nursing hours needed per day = census (column A) × HPPD target (row 5). Type it in B6, copy it across to H6, then down to row 12. The gray cell adds up the whole grid. | Lock the column of the census and the row of the HPPD |
 | 10 | Using one 3-D reference, what did Oncology (row 11 on the Oct, Nov, and Dec sheets) spend on Pharmaceuticals (column F) in Q4 2025? | Type =SUM(, click the Oct tab, Shift+click the Dec tab, then click the cell |
 | 11 | Fill the yellow grid on the Q4 Summary sheet (C5:I20) with ONE 3-D formula that adds the same cell on the Oct, Nov, and Dec sheets. Type it in C5, copy it across to I5, then down to row 20. The gray cell adds up your grid: what was Bluestone Memorial's Q4 operating expense? | 3-D references copy like ordinary relative references |
-| 12 | A colleague drags the Nov tab to the right of the Dec tab. What would =SUM(Oct:Dec!J21) return then? (J21 is each month's hospital total.) Predict it with a formula. If you test it by moving the tab, drag Nov back between Oct and Dec afterwards. | A 3-D range is defined by tab positions, not by month names |
+| 12 | A colleague drags the Nov tab to the right of the Dec tab. What would =SUM(Oct:Dec!J21) return then? (J21 is each month's hospital total.) Answer with a formula that uses ordinary sheet references, not a 3-D reference, so it stays correct with the tabs in their usual order. If you test the move, drag Nov back between Oct and Dec afterwards. | A 3-D range is defined by tab positions, not by month names |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -475,11 +497,11 @@ Finance needs a first-draft 2026 operating expense plan for Bluestone Memorial. 
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Fill the yellow grid on the Plan 2026 sheet (C5:I20) with ONE formula typed in C5 and copied across and down. The gray cell adds up your grid: what is the 2026 plan total? (Don't round.) *(Hint: The 2025 actual moves both ways, the inflation row is locked, and the growth column is locked)*
+- **B1.** Fill the yellow grid on the Plan 2026 sheet (C5:I20) with ONE formula typed in C5 and copied across and down. The gray cell adds up your grid: what is the 2026 plan total? (Don't round inside the formula.) *(Hint: The 2025 actual moves both ways, the inflation row is locked, and the growth column is locked)*
 - **B2.** What is the 2026 plan for Laboratory · Medical Supplies (Plan 2026, row 18, column E)? Reference the cell in your grid. *(Hint: Check it by hand: 2025 amount × (1 + inflation) × (1 + growth))*
 - **B3.** By what percentage would Bluestone Memorial's total operating expense grow from 2025 to 2026 under this plan? Enter it as a percentage. *(Hint: New ÷ old − 1)*
 - **B4.** Which department's total expense is planned to grow by the largest percentage? Type the department name exactly as it appears in column A. *(Hint: Add a helper column that divides each department's 2026 total by its 2025 total)*
-- **B5.** Pharmaceutical prices are the shakiest assumption. If pharmaceutical inflation were 9.0% instead of 7.5%, how many dollars higher would the 2026 plan total be? Change the one input cell, compare the totals, then put it back. Round to the nearest dollar. *(Hint: Because of the $ signs, one edit flows to all 16 Pharmaceuticals cells)*
+- **B5.** Pharmaceutical prices are the shakiest assumption. If pharmaceutical inflation were 9.0% instead of 7.5%, how many dollars higher would the 2026 plan total be? Change the one input cell, compare the totals, and type the difference here as a number, rounded to the nearest dollar. Then put the input back. *(Hint: Because of the $ signs, one edit flows to all 16 Pharmaceuticals cells)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -524,13 +546,13 @@ Oncology grows 9.7%, ahead of Observation Unit at 9.5%, even though Observation 
 - **Answer:** 176,282
 - **Solution:**
 
-1. Note the plan total in 'Plan 2026'!J21 (or the gray cell in B1).
+1. Keep a copy of the current plan total: copy 'Plan 2026'!J21 and paste it as a value (**Paste Special → Values**) into a spare cell such as 'Plan 2026'!L21.
 2. Change 'Plan 2026'!F3 from 7.5% to 9.0%.
-3. Subtract the old total from the new one and round to the nearest dollar.
-4. Set F3 back to 7.5%.
+3. Subtract the old total from the new one (`=J21-L21` on Plan 2026), round to the nearest dollar, and type that number into this task's yellow cell.
+4. Set F3 back to 7.5% so B1 and B3 show ✔ again.
 
 
-Only the Pharmaceuticals column reads that input, so only those 16 cells change. Each one rises by its 2025 amount × (1 + growth) × 1.5 percentage points. Testing the shakiest assumption like this is called a sensitivity check, and it only takes seconds because the assumption lives in one cell.
+Only the Pharmaceuticals column reads that input, so only those 16 cells change. Each one rises by its 2025 amount × (1 + growth) × 0.015, which is the 1.5-point rise in the rate. Testing the shakiest assumption like this is called a sensitivity check, and it only takes seconds because the assumption lives in one cell.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

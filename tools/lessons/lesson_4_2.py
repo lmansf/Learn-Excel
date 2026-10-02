@@ -32,7 +32,7 @@ def build() -> Lesson:
     )
     L.start_notes = [
         "Tasks that use LAMBDA, MAP, BYROW, SCAN, or REDUCE need Microsoft 365 or Excel 2024. In older versions they show #NAME?, "
-        "so read those solutions in the lesson README instead.",
+        "so read those solutions in the lesson README instead. LET, XLOOKUP, and FILTER need Excel 2021 or later.",
         "Answer cells must hold ONE value. Wrap array results in SUM, MAX, or INDEX, and use the Sandbox sheet to watch arrays spill.",
         "The Stays sheet has 5,586 rows, and some of these formulas compare every row with every other row. "
         "Excel may pause for a second or two while it recalculates.",
@@ -223,11 +223,13 @@ def build() -> Lesson:
              hint="FILTER the LOS values to 2025 first, then pick one count out of FREQUENCY's result with INDEX.",
              explanation="FREQUENCY counts values ≤ 1, then >1 to 2, >2 to 3, >3 to 5, >5 to 7, >7 to 14, and finally everything "
                          "above the last bin. That extra overflow count is why 6 bins return 7 numbers. INDEX(…, 7) returns just the "
-                         "overflow count, so the answer cell holds one value. `FREQUENCY(IF(YEAR(dis)=2025, INT(dis)-INT(adm)), bins)` "
-                         "also works, because FREQUENCY ignores the FALSE values that IF returns for other years."),
-        Task("On the Stays sheet, fill the yellow Readmit30 column: 1 if the same patient had a later inpatient admission whose admit "
-             "DATE is 0–30 days after this stay's discharge DATE, otherwise 0. The gray cell totals your column. How many stays "
-             "were followed by a 30-day readmission?",
+                         "overflow count, so the answer cell holds one value. The solution skips the 1-day minimum because a 0-night "
+                         "stay lands in the ≤ 1 bin either way, so applying it gives the same counts. "
+                         "`FREQUENCY(IF(YEAR(dis)=2025, INT(dis)-INT(adm)), bins)` also works, because FREQUENCY ignores the FALSE "
+                         "values that IF returns for other years."),
+        Task("On the Stays sheet, fill the yellow Readmit30 column: 1 if the same patient has another stay whose AdmitDateTime is "
+             "after this stay's DischargeDateTime and whose admit DATE is 0–30 days after this stay's discharge DATE, otherwise 0. "
+             "The gray cell totals your column. How many stays were followed by a 30-day readmission?",
              answer=t5, title="Readmit30 flag column (stays followed by a readmission)",
              solution=readmit_struct,
              summary=f'=IF(COUNT({rcol})=0,"",SUM({rcol}))',
@@ -285,7 +287,8 @@ def build() -> Lesson:
              hint="MAP can take several same-size arrays and passes one value from each to your LAMBDA. Wrap the result in SUM.",
              explanation="MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, "
                          "AND(...) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version "
-                         "`SUMPRODUCT((fac=\"F01\")*(YEAR(dis)=2025)*(INT(dis)-INT(adm)<2))` gives the same count. MAP is "
+                         "`=SUMPRODUCT((tblStays[FacilityID]=\"F01\")*(YEAR(tblStays[DischargeDateTime])=2025)"
+                         "*(INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])<2))` gives the same count. MAP is "
                          "worth it when the per-row logic reads better with AND, OR, or MAX."),
         Task("On the Labs sheet, count the results outside their reference range (ResultValue below RefLow or above RefHigh). "
              "Use BYROW over the three adjacent columns ResultValue:RefHigh with a LAMBDA that uses OR.",
@@ -323,13 +326,15 @@ def build() -> Lesson:
                          "diagnosis), so adding is safe. `SUM(COUNTIFS(…, {codes}, …))` gives the same answer. REDUCE earns its keep "
                          "when each step needs more logic than one function call."),
         Task("The Audit sheet has a colleague's formula that should count Ashby Falls (F02) stays discharged in 2025 to Home Health, "
-             "but it returns 0. Step through it with Evaluate Formula, fix the bug, and enter the correct count.",
+             "but it returns 0. Step through it with Evaluate Formula (Windows; on a Mac, test its pieces on the Sandbox sheet), "
+             "fix the bug, and enter the correct count.",
              answer=t13, title="Audit: fix the colleague's formula",
              solution=audit_fixed,
              hint="Watch what YEAR returns and what it is compared with.",
              explanation="YEAR returns the number 2025, but the formula compares it with the text \"2025\". In Excel a number never "
                          "equals text, so that array is all FALSE and every product is 0. Evaluate Formula shows the YEAR step as "
-                         "numbers and the comparison as all FALSE. COUNTIFS would have accepted \"2025\" because it converts criteria "
+                         "numbers and the comparison as all FALSE (on a Mac, `=YEAR(tblStays[DischargeDateTime])=\"2025\"` on the "
+                         "Sandbox sheet spills a column of FALSE). COUNTIFS would have accepted \"2025\" because it converts criteria "
                          "strings, and that habit is how this bug usually gets in."),
     ]
 
@@ -360,8 +365,8 @@ def build() -> Lesson:
     hrrp_arr = "{" + ",".join(f'"{c}"' for c in HRRP) + "}"
     L.bonus_title = "Bonus: CMS-style readmission rates in one formula"
     L.bonus_scenario = (
-        "Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built the way CMS builds them. "
-        "Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of "
+        "Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built with CMS-style rules "
+        "(simplified: CMS also risk-adjusts its rates and ignores planned readmissions). Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of "
         "follow-up in the data. Exclude stays that ended in death (Expired), a transfer (Transfer to Another Hospital), or a "
         "discharge against medical advice (Left AMA). A readmission is any later inpatient admission of the same patient, at any "
         "Bluestone hospital, with an admit date 0–30 days after the index discharge date (the Task 5 rule). "
@@ -435,12 +440,12 @@ def build() -> Lesson:
         ws["B7"]._style.quotePrefix = 1
         ws.row_dimensions[7].height = 32
         steps = [
-            "1. Select B6, then choose Formulas → Evaluate Formula (Formula Auditing group).",
+            "1. Select B6, then choose Formulas → Evaluate Formula (Formula Auditing group). Evaluate Formula is in Excel for Windows only.",
             "2. Click Evaluate repeatedly. Watch the underlined part of the formula turn into its result.",
             "3. Stop when an array turns all FALSE. Which comparison did that?",
             "4. Fix the formula in B6 and check that the result is believable.",
             "5. Enter the corrected count in the matching task on the Practice sheet.",
-            "No Evaluate Formula (older Mac versions)? Type one piece, such as =YEAR(tblStays[DischargeDateTime]), into a cell on "
+            "On a Mac (no Evaluate Formula)? Type one piece, such as =YEAR(tblStays[DischargeDateTime]), into a cell on "
             "the Sandbox sheet and let it spill. Then try the comparison from the formula on its own.",
         ]
         ws["A9"] = "How to audit"
@@ -453,6 +458,7 @@ def build() -> Lesson:
         for r in (3, 4):
             ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True, vertical="top")
         ws.row_dimensions[4].height = 32
+        ws.row_dimensions[9].height = 32
         ws.row_dimensions[9 + len(steps) - 1].height = 32
 
         sb = wb.create_sheet("Sandbox")

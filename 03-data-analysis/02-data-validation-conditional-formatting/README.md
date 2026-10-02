@@ -191,7 +191,8 @@ The classic method uses one named range per parent value and the **INDIRECT** fu
 
 > ⚠️ **Changing the parent doesn't clear the child.** If someone switches row 10 from Bluestone Outpatient Pavilion to
 > Bluestone Memorial Hospital, "Pediatric Clinic" stays in the Department cell even though it's no longer valid. Circle
-> Invalid Data (next section) finds these mismatches. (In Level 5 you'll write a macro that clears the child automatically.)
+> Invalid Data (next section) finds these mismatches. (Lesson 5.5 teaches Worksheet_Change event macros, which can clear the
+> child automatically.)
 
 > 💡 **Tip:** Keep parent values to plain words: letters and spaces, starting with a letter. SUBSTITUTE only swaps spaces,
 > but Create from Selection also changes anything else a name can't contain (a leading digit, `&`, `-`), so the name and the
@@ -208,8 +209,10 @@ child list with OFFSET. OFFSET(start, rows, columns, height, width) returns a ra
 MATCH finds the first row for the chosen facility, and COUNTIF counts how many rows it has. You'll use this version in the
 bonus, where the unit list comes straight from the huddle board.
 
-> 📋 **Microsoft 365:** for a single selector cell you can also put `=FILTER(Lists!K2:K31, Lists!J2:J31=B4)` in a helper cell
-> and point the Source at its spill range, such as `=$X$2#`. Lesson 4.1 covers FILTER and spill references.
+> 📋 **Microsoft 365:** for a single selector cell, such as a facility chosen in B4, you can also put
+> `=FILTER(Lists!$K$2:$K$31, Lists!$J$2:$J$31=$B$4)` in a helper cell (say X2) and set the child's Source to its spill
+> range, `=$X$2#`. This only works for one parent cell, not for a whole column of rows. Lesson 4.1 covers FILTER and spill
+> references.
 
 ### 7. Finding and fixing invalid data
 
@@ -222,9 +225,9 @@ Because validation only checks new typing, you need a way to audit what's alread
 
 Excel draws at most 255 circles at a time, so fix the first batch and run it again on large sheets.
 
-> 📋 **Circle Invalid Data is a feature of Excel for Windows.** Excel for the web doesn't have it. If your Mac version doesn't
-> show it either, apply a temporary conditional formatting rule with the same test (Section 13), or type the equivalent formula
-> from the answer key. Each one counts the same invalid cells.
+> 📋 **Circle Invalid Data is a desktop feature.** Excel for the web doesn't have it. If you can't find it in your version
+> (on a Mac, look under the arrow next to **Data Validation**), apply a temporary conditional formatting rule with the same
+> test (Section 13), or type the equivalent formula from the answer key. Each one counts the same invalid cells.
 
 Other validation housekeeping:
 
@@ -399,7 +402,7 @@ More row rules on the lesson data:
 | Highlight rows where… | Applies to | Formula |
 |---|---|---|
 | The unit is over capacity | Huddle!A12:G29 | `=$E12>$C12` |
-| A STAT result missed 60 minutes and was abnormal | Labs!A2:L322 | `=AND($L2>=60, $K2<>"N")` |
+| A STAT result missed a 60-minute target and was abnormal | Labs!A2:L322 | `=AND($L2>60, $K2<>"N")` |
 | A supply has expired | Supplies!A2:M258 | `=AND($L2<>"", $L2<=ReportDate)` |
 
 > ⚠️ **A blank cell counts as 0**, and 0 is the date 1/0/1900. So `=$L2<=ReportDate` is TRUE for every supply with no
@@ -433,10 +436,13 @@ When two rules are TRUE for the same cell:
 - If they set **different** properties (one bolds the font, the other fills the cell), the cell gets both.
 - If they set the **same** property (two fills), the rule higher in the list wins.
 
+> ⚠️ **Excel adds each new rule at the top of the list.** If you create the most urgent rule first and a milder rule second,
+> the milder rule ends up on top and wins. Open the Rules Manager after you add related rules and move the most urgent one up.
+
 Worked example (task 13): on the Supplies sheet, Rule 1 fills expired items red and Rule 2 fills items that expire within
-90 days of ReportDate amber. Every expired item also expires before ReportDate + 90, so 17 rows meet Rule 2. With the red
-rule on top, the 10 expired rows show red and only 7 show amber. Swap the order and all 17 turn amber, which hides the
-expired stock.
+90 days of ReportDate amber. Every expired item also expires before ReportDate + 90, so Rule 2 is TRUE on every expired row
+as well. With the red rule on top, expired rows show red and only the items that are still good (but expiring soon) show
+amber. If the amber rule is on top, every one of those rows turns amber and the expired stock disappears into the crowd.
 
 You need **Stop If True** only when a lower rule sets a *different* property that you want to suppress, such as an icon set
 or a bold font that shouldn't appear on rows that are already red. The checkbox is unavailable for data bars, color scales,
@@ -469,7 +475,7 @@ The Format Painter copies conditional formatting along with ordinary formatting.
 |---|---|
 | Data bars, color scales, icon sets, Top/Bottom rules, unlimited rules per range | Excel 2007 and later |
 | Rule and list formulas that refer to other sheets, negative data bars, solid bars, **No Cell Icon** | Excel 2010 and later |
-| Circle Invalid Data | Excel for Windows (not Excel for the web) |
+| Circle Invalid Data | Excel for Windows. On a Mac, check the arrow next to **Data Validation**. Not in Excel for the web |
 | Quick Analysis (Ctrl + Q) | Excel for Windows |
 | Drop-down lists that filter as you type | Current Microsoft 365 |
 | FILTER and spill references for list sources | Microsoft 365 and Excel 2021 or later |
@@ -489,7 +495,7 @@ Part A (tasks 1–6) uses the IntakeLog and Lists sheets. Add each validation ru
 | 2 | IntakeLog, VisitDate (B2:B51): the log covers December 2025 only. Allow a Date between 12/01/2025 and 12/31/2025 (type =DATE(2025,12,1) and =DATE(2025,12,31) in the boxes so it works in any regional setting). How many VisitDate cells are circled? | Allow: Date, Data: between |
 | 3 | IntakeLog, CopayAmt (G2:G51): allow a Decimal between 0 and 100. On the Input Message tab, add the title Copay and the message "Enter the amount collected, $0 to $100." Leave the Error Alert style as Stop. How many CopayAmt cells are circled? | Allow: Decimal. Between includes both limits |
 | 4 | IntakeLog, ZIP (E2:E51): allow Text length equal to 5. How many ZIP cells are circled? | Allow: Text length, Data: equal to |
-| 5 | IntakeLog, MRN (C2:C51): an MRN must be exactly 8 characters, and all of them digits. Select the column with C2 as the active cell and add a Custom validation rule that is TRUE only for a valid MRN. How many MRN cells are circled? | AND(LEN(C2)=8, ISNUMBER(--C2)), written for the active cell C2 |
+| 5 | IntakeLog, MRN (C2:C51): an MRN must be exactly 8 characters, and all of them digits. Select the column with C2 as the active cell and add a Custom validation rule that is TRUE only for a valid MRN. How many MRN cells are circled? | Combine a LEN test with an ISNUMBER(--C2) test inside AND, written for the active cell C2 |
 | 6 | Dependent drop-down: on the Lists sheet, name each department column after its facility (Formulas → Create from Selection → Top row, one column at a time: E1:E16, F1:F5, G1:G6, H1:H7). Give IntakeLog Facility (H2:H51) a List validation from Lists!$C$2:$C$5. Then give Department (I2:I51) a List validation whose Source is =INDIRECT(SUBSTITUTE($H2," ","_")). How many Department cells are circled? | Names can't contain spaces, so Create from Selection uses underscores |
 | 7 | Labs sheet: the lab interface re-sent some results, so a few LabResultIDs appear more than once. Select A2:A322 and apply Highlight Cells Rules → Duplicate Values. How many cells are highlighted? | Home → Conditional Formatting → Highlight Cells Rules |
 | 8 | Labs, TATMin (L2:L322): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → Top 10 Items. What is the smallest TAT that your rule highlights? | Ties with the 10th value are highlighted too. LARGE gives the k-th largest |
@@ -497,7 +503,7 @@ Part A (tasks 1–6) uses the IntakeLog and Lists sheets. Add each validation ru
 | 10 | Census sheet (Medical-Surgical 5 East, Nov–Dec 2025): apply the Red - Yellow - Green Color Scale to Occupancy (F2:F62) so the fullest days are red. In Manage Rules → Edit Rule you'll see the midpoint is the 50th percentile. Which occupancy gets the pure yellow midpoint color? Enter it as a percentage to 1 decimal place. | The 50th percentile has a more common name |
 | 11 | Labs, TATMin: apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green below 45). How many cells show a yellow light? | Each icon's test is ">=". The default Type is Percent, not Number |
 | 12 | Labs: highlight the entire row of every critical result (AbnormalFlag HH or LL). Select A2:L322 with A2 active, choose New Rule → "Use a formula to determine which cells to format," and set a red fill. How many rows are highlighted? | Lock the column with $, not the row |
-| 13 | Supplies: add two formula rules to A2:M258. Rule 1 (red fill): the item has expired, meaning ExpirationDate is not blank and is on or before ReportDate. Rule 2 (amber fill): ExpirationDate is not blank and is on or before ReportDate + ExpiringWindowDays. ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Keep the red rule above the amber rule in Manage Rules. How many rows are amber? | A blank cell counts as 0, which is "on or before" any date |
+| 13 | Supplies: add two formula rules to A2:M258. Rule 1 (red fill): the item has expired, meaning ExpirationDate is not blank and is on or before ReportDate. Rule 2 (amber fill): ExpirationDate is not blank and is on or before ReportDate + ExpiringWindowDays. ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Excel puts each new rule at the top of the list, so open Manage Rules and move the red rule above the amber rule. How many rows are amber? | A blank cell counts as 0, which is "on or before" any date. The rule higher in Manage Rules wins the fill |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -691,12 +697,12 @@ You write the rule for the active cell's row (row 2), and Excel shifts it for ev
 1. On **Supplies**, select **A2:M258** with A2 active.
 2. **New Rule → Use a formula**: `=AND($L2<>"",$L2<=ReportDate)` with a red fill → **OK**.
 3. With the same range selected, add a second rule: `=AND($L2<>"",$L2<=ReportDate+ExpiringWindowDays)` with an amber (light orange) fill → **OK**.
-4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**, and make sure the red rule is on top (use the ▲ ▼ buttons).
+4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**. The amber rule is on top because Excel adds each new rule at the top of the list. Select the red rule and click **▲** (Move Up) so it sits above the amber rule, then click **OK**.
 
 Equivalent formula: `=COUNTIFS(Supplies!L2:L258,">"&ReportDate,Supplies!L2:L258,"<="&ReportDate+ExpiringWindowDays)`
 
 
-Rule 2 is TRUE for 17 rows, because every expired item also expires before ReportDate + 90. The red rule sits above it and both rules set a fill, so red wins on the 10 expired rows and 7 rows stay amber. With amber on top you'd see 17 amber rows and no red. The $L2<>"" guard matters too: an empty cell counts as 0 (the date 1/0/1900), which is "on or before ReportDate," so without the guard all 121 non-perishable items would turn red.
+Rule 2 is TRUE for 17 rows, because every expired item also expires before ReportDate + 90. The red rule sits above it and both rules set a fill, so red wins on the 10 expired rows and 7 rows stay amber. If you skip the move, the newer amber rule stays on top and you'd see 17 amber rows and no red. The $L2<>"" guard matters too: an empty cell counts as 0 (the date 1/0/1900), which is "on or before ReportDate," so without the guard all 121 non-perishable items would turn red.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -710,7 +716,7 @@ Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Apply a 3-color scale to Occupancy (G12:G29): Minimum = Lowest Value (green), Midpoint = Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded on the red side of yellow (occupancy above 85%)? *(Hint: New Rule → Format all cells based on their values → 3-Color Scale)*
 - **B2.** Apply Icon Sets → 3 Arrows (Colored) to Change (F12:F29). Edit the rule so both Types are Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How many units show an up arrow? *(Hint: Type = Number, not the default Percent)*
-- **B3.** Add two formula rules to the whole board (A12:G29), in this order: (1) red fill when the 11/25 census is above staffed beds (overflow), then (2) amber fill when occupancy is at least 90%. How many rows end up amber? *(Hint: Both rules are TRUE for an overflow unit, and the rule on top wins the fill)*
+- **B3.** Add two formula rules to the whole board (A12:G29): a red fill when the 11/25 census is above staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the overflow rule above the amber rule. How many rows end up amber? *(Hint: Both rules are TRUE for an overflow unit, and the rule on top wins the fill)*
 - **B4.** Build the unit selector. Give B4 a List validation from the Hospitals list (I12:I14). Give B5 a dependent List built from the board's own Facility and Unit columns, with no named ranges. Then choose Cedar Ridge Medical Center → Intensive Care Unit. The gray cell shows the card's Nov 1–25 occupancy. What is it? *(Hint: OFFSET(start, rows down, 0, height, 1) with MATCH for the first row and COUNTIF for the height)*
 <!-- END GENERATED: bonus -->
 
@@ -755,7 +761,7 @@ Census rose overnight on 7 units, held steady on 10, and fell on 1. Number thres
 1. Select **A12:G29** with A12 active.
 2. **New Rule → Use a formula**: `=$E12>$C12`, red fill.
 3. **New Rule → Use a formula**: `=$G12>=0.9`, amber fill.
-4. **Manage Rules**: keep the overflow rule on top.
+4. **Manage Rules** (This Worksheet): Excel added the amber rule at the top because it's newer. Select the overflow rule and click **▲** so it's on top.
 
 Equivalent formula: `=SUMPRODUCT((Huddle!G12:G29>=0.9)*(Huddle!E12:E29<=Huddle!C12:C29))`
 
@@ -772,10 +778,10 @@ There are 2 overflow units, and both rules are TRUE for them. The overflow rule 
 
    `=OFFSET($B$11,MATCH($B$4,$A$12:$A$29,0),0,COUNTIF($A$12:$A$29,$B$4),1)`
 
-   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board is sorted by facility, so OFFSET returns exactly that facility's block of unit names.
+   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board is sorted by facility, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 first.
 3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. Read the card.
 
-If you prefer INDIRECT, name each hospital's unit list (for example with Create from Selection) and use `=INDIRECT(SUBSTITUTE($B$4," ","_"))`. The result is the same.
+If you prefer INDIRECT, copy each hospital's units into its own column under the hospital's name (like the Lists sheet in task 6), name the columns with Create from Selection, and use `=INDIRECT(SUBSTITUTE($B$4," ","_"))`. The result is the same.
 
 
 Three hospitals each have an Intensive Care Unit, so the unit name alone is ambiguous. The dependent list forces a facility first and then offers only that facility's units, and the card's SUMIFS uses both cells. The OFFSET version needs no named ranges, so it keeps working when you add a unit to the board (as long as the board stays sorted by facility).

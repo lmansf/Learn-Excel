@@ -21,6 +21,8 @@ MONTH_START = date(2025, 12, 1)
 DAYS_IN_MONTH = 31
 SHIFT_CODES = {"Day 12h": "D", "Night 12h": "N"}
 NIGHT_NEW = "N12"
+# Not "Float RN": AutoComplete would offer that header while the learner types FLOAT, and Ctrl+Enter would accept it.
+FLOAT_HDR = "Weekend float"
 
 
 def _frac(minutes: int) -> float:
@@ -234,8 +236,11 @@ def build() -> Lesson:
     lunch_r1 = G_FIRST + slot_mins.index(12 * 60)
     lunch_r2 = G_FIRST + slot_mins.index(12 * 60 + 45)
     pm_r1 = G_FIRST + slot_mins.index(13 * 60)
+    n_lunch_rows = lunch_r2 - lunch_r1 + 1          # 12:00, 12:15, 12:30, 12:45
+    n_pm_rows = G_LAST - pm_r1 + 1                  # 13:00 … 16:45
     weds = [dd for dd in clinic_days if dd.weekday() == 2]
     fris = [dd for dd in clinic_days if dd.weekday() == 4]
+    assert len(weds) == len(fris) == 2, "prompts say 'both Wednesday/Friday afternoons'"
     lunch_ok = f"COUNTIF('Clinic Grid'!B{lunch_r1}:{G_LASTCOL}{lunch_r2},\"Lunch\")"
     admin_ok = "+".join(f"COUNTIF('Clinic Grid'!{gcol[w]}{pm_r1}:{gcol[w]}{G_LAST},\"Admin\")" for w in weds)
     tele_ok = "+".join(f"COUNTIF('Clinic Grid'!{gcol[f]}{pm_r1}:{gcol[f]}{G_LAST},\"Telehealth\")" for f in fris)
@@ -243,7 +248,7 @@ def build() -> Lesson:
     doc = f"{provider['FirstName']} {provider['LastName']}, {provider['Credential']}"   # not "Dr. ..., MD" (redundant)
 
     # ================================================================== tasks
-    L.practice_intro = ("Most tasks are done on the other sheets (Entries, Schedule, Q15 Log, Beds, Admissions, Supplies, Order, "
+    L.practice_intro = ("Most tasks are done on the other sheets (Entries, Schedule, Beds, Q15 Log, Admissions, Supplies, Order, "
                         "Roster). Type in the yellow cells here. A gray cell is a pre-filled formula that reads your work "
                         "on another sheet, and its Check turns green when that work is right. Do the tasks in order, because the Schedule tasks build on "
                         "each other.")
@@ -269,7 +274,7 @@ def build() -> Lesson:
                          "the left with a green triangle. TRUE is a logical value (centered), and the name and allergy are text. "
                          "Everything else, including the date of birth, the arrival time, the copay, and the long member ID, is a number."),
         Task(f"Entries!B{entry_row['ED arrival']} shows the ED arrival as a date and time. What number does Excel actually store in that "
-             f"cell? Switch the cell to General format to see it, and enter it rounded to 2 decimal places.",
+             f"cell? Switch the cell to General format to see it, then type that number in the yellow cell, rounded to 2 decimal places.",
              answer=round(arrival_serial, 2), fmt="0.00", tol=0.0051, title="Stored value of a date and time",
              solution=f"Select **Entries!B{entry_row['ED arrival']}** and press **Ctrl + Shift + ~** (Mac: **⌃ + Shift + ~**), or choose "
                       "**Home → Number Format → General**. Read the number, then press **Ctrl + Z** (Mac: **⌘ + Z**) to put the date "
@@ -317,7 +322,7 @@ def build() -> Lesson:
              hint="Drag the fill handle. A single date counts up one day at a time",
              explanation="AutoFill recognizes a date and adds one day per cell. If every cell shows 12/01/2025 instead, you held "
                          "Ctrl while dragging (which copies) or chose Copy Cells from the Auto Fill Options button."),
-        Task(f"B{SCH_FIRST} holds \"Mon\". Fill the weekday names down to B{SCH_LAST} by double-clicking the fill handle "
+        Task(f"On the Schedule sheet, B{SCH_FIRST} holds \"Mon\". Fill the weekday names down to B{SCH_LAST} by double-clicking the fill handle "
              f"instead of dragging. The gray cell shows the day name in B{SCH_LAST}.",
              answer=days[-1].strftime("%a"), accept=[days[-1].strftime("%A")], title="AutoFill weekday names (double-click)",
              solution=f"Select **B{SCH_FIRST}** and **double-click** its fill handle. Excel fills down as far as the dates in the "
@@ -350,12 +355,12 @@ def build() -> Lesson:
              summary=f"=IF(COUNT('Q15 Log'!A{Q_FIRST + 1}:A{Q_LAST + 20})=0,\"\",MAX('Q15 Log'!A{Q_FIRST}:A{Q_LAST + 20}))",
              fill={"range": f"'Q15 Log'!A{Q_FIRST + 1}:A{Q_LAST}", "values": [_frac(m) for m in q_times[1:]]},
              live=False, hint="Step value 0:15, with the Stop value a few minutes past the last time",
-             explanation=f"Times are fractions of a day, so 15 minutes is 0:15 (0.0104…). The Series dialog adds that step until it "
+             explanation=f"Times are fractions of a day, so 15 minutes is 0:15 (0.0104…). The Fill Series dialog adds that step until it "
                          "reaches the Stop value. A stop of 18:50 rather than 18:45 protects you from tiny rounding errors that can drop "
                          f"the last time. With two starting cells, AutoFill copies the gap between them. Either way you get "
                          f"{len(q_times)} check times. A single time dragged on its own steps by a whole **hour**, not 15 minutes."),
         # ---------------------------------------------------------------- 4 · selection tricks
-        Task(f"4 West gets one float-pool RN on every Saturday and Sunday. In the Float RN column ({FLOAT_COL}) of the Schedule "
+        Task(f"4 West gets one float-pool RN on every Saturday and Sunday. In the {FLOAT_HDR} column ({FLOAT_COL}) of the Schedule "
              f"sheet, put FLOAT in every weekend row and nowhere else, using a single entry: Ctrl+click (Mac: ⌘+click) the weekend "
              f"cells, type FLOAT, and press Ctrl+Enter (Mac: ⌘+Return). The gray cell counts correctly placed FLOATs minus any "
              f"entries on weekdays.",
@@ -387,7 +392,7 @@ def build() -> Lesson:
              summary=(f'=IF(COUNTA({a_wb})=0,"",SUMPRODUCT(--({a_wb}=MID({a_name},FIND(",",{a_name})+2,50)'
                       f'&" "&LEFT({a_name},1)&".")))'),
              fill={"range": a_wb, "values": wb_labels},
-             live=False, hint="Type an example that can only mean one thing, then press Ctrl + E",
+             live=False, hint="Type an example that can only mean one thing, then press Ctrl + E (Mac: Data → Flash Fill)",
              explanation=("Flash Fill studies your examples, finds the pattern (\"the text after the comma, a space, the first letter, "
                           "a period\"), and applies it to every row. "
                           + (f"The first row needs help. In `{adm[0]['PatientName']}` both names start with "
@@ -462,7 +467,9 @@ def build() -> Lesson:
         f"of Monday 01/05/2026 through Friday 01/16/2026. The clinic books 15-minute slots from 08:00 to 16:45 on weekdays only. "
         "Lunch (12:00–12:45) is blocked every day, Wednesday afternoons (13:00 onward) are admin time, and Friday afternoons "
         "become video visits. Build the whole grid on the Clinic Grid sheet with AutoFill, Fill Series, Ctrl+Enter, and Find & "
-        f"Replace, without typing cell by cell. B{G_HDR} (01/05/2026) and A{G_FIRST} (08:00) are filled in for you.")
+        f"Replace, without typing cell by cell. B{G_HDR} (01/05/2026) and A{G_FIRST} (08:00) are filled in for you. "
+        "The first four parts are checked by gray cells that read the Clinic Grid, so don't type over them. The last part has a "
+        "yellow cell for your answer.")
     L.bonus = [
         Task(f"Fill the date header C{G_HDR}:{G_LASTCOL}{G_HDR} with the next nine weekdays, skipping Saturdays and Sundays. "
              f"The gray cell shows the date in {G_LASTCOL}{G_HDR}.",
@@ -488,7 +495,7 @@ def build() -> Lesson:
                          f"{len(slot_mins)} × {len(clinic_days)} = {len(slot_mins) * len(clinic_days)} cells."),
         Task(f"Fill the whole grid B{G_FIRST}:{G_LASTCOL}{G_LAST} with Open in one entry. Then type Lunch over the 12:00–12:45 rows "
              "for every day, and Admin over both Wednesday afternoons (13:00–16:45). Use one Ctrl+Enter for each step. "
-             "How many slots are blocked (Lunch plus Admin)? The gray cell counts blocks in the right places, minus any in the wrong place.",
+             "The gray cell counts Lunch and Admin slots in the right places, minus any in the wrong place.",
              answer=n_lunch + n_admin, title="Block lunch and admin time with Ctrl+Enter",
              solution=f"1. Select **B{G_FIRST}:{G_LASTCOL}{G_LAST}**, type `Open`, and press **Ctrl + Enter** (Mac: **⌘ + Return**).\n"
                       f"2. Select **B{lunch_r1}:{G_LASTCOL}{lunch_r2}** (12:00–12:45), type `Lunch`, and press **Ctrl + Enter**.\n"
@@ -498,11 +505,12 @@ def build() -> Lesson:
              summary=(f'=IF(COUNTA({body})=0,"",2*({lunch_ok}+{admin_ok})-COUNTIF({body},"Lunch")-COUNTIF({body},"Admin"))'),
              fill={"range": body, "values": flat_final},
              live=False, hint="Holding Ctrl (Mac: ⌘) while you drag adds a second block to the selection",
-             explanation=f"Lunch is 4 slots × {len(clinic_days)} days = {n_lunch}, and Admin is 16 afternoon slots × {len(weds)} "
+             explanation=f"Lunch is {n_lunch_rows} slots × {len(clinic_days)} days = {n_lunch}, and Admin is {n_pm_rows} afternoon slots × {len(weds)} "
                          f"Wednesdays = {n_admin}, so {n_lunch + n_admin} slots are blocked. Typing over a selection with Ctrl + Enter "
                          "replaces whatever was there, which is why you can paint Open everywhere first and then overwrite the exceptions."),
         Task("Select both Friday-afternoon blocks (13:00–16:45), then use Find & Replace to change Open to Telehealth inside that "
-             "selection only. How many replacements does Excel report? The gray cell counts Telehealth slots in the right places.",
+             "selection only. Excel reports how many replacements it made. The gray cell counts Telehealth slots in the right places, "
+             "minus any in the wrong place, so the two numbers should agree.",
              answer=n_tele, title="Find & Replace inside a selection",
              solution=f"1. Select **{gcol[fris[0]]}{pm_r1}:{gcol[fris[0]]}{G_LAST}**, then Ctrl+drag (Mac: ⌘+drag) "
                       f"**{gcol[fris[1]]}{pm_r1}:{gcol[fris[1]]}{G_LAST}**.\n"
@@ -513,21 +521,27 @@ def build() -> Lesson:
              summary=f'=IF(COUNTA({body})=0,"",2*({tele_ok})-COUNTIF({body},"Telehealth"))',
              fill={"range": body, "values": flat_final},
              live=False, hint="With several cells selected, Replace All stays inside the selection",
-             explanation=f"Two Fridays × 16 afternoon slots = {n_tele}. If you had only one cell selected, Excel would have replaced "
+             explanation=f"Two Fridays × {n_pm_rows} afternoon slots = {n_tele}. If you had only one cell selected, Excel would have replaced "
                          "every Open on the sheet, so the whole template would have turned into Telehealth."),
-        Task("After all the steps above, how many slots are still Open for in-person booking? The gray cell counts them.",
+        Task("How many slots are still Open for in-person booking? Work it out from the size of the grid and the slots you "
+             "blocked or converted, then confirm it on the Clinic Grid with Find All. Type the number in the yellow cell.",
              answer=n_open, title="Open slots remaining",
-             solution="No new steps: the gray cell counts the cells that still say Open.",
-             summary=f'=IF(COUNTA({body})=0,"",COUNTIF({body},"Open"))',
-             fill={"range": body, "values": flat_final},
+             solution=(f"Work it out: {len(slot_mins)} rows × {len(clinic_days)} days = {len(slot_mins) * len(clinic_days)} slots, minus "
+                       f"{n_lunch} Lunch, {n_admin} Admin, and {n_tele} Telehealth = **{n_open}**. To confirm, click one cell on the "
+                       "Clinic Grid, press **Ctrl + F** (Mac: **⌃ + F**), type `Open`, tick **Match entire cell contents**, and click "
+                       f"**Find All**. The dialog reports *\"{n_open} cell(s) found\"*."),
+             # Pristine grid is blank, so a live COUNTIF would be 0: the answer is typed, not read from the grid.
              live=False, hint="Total slots minus everything you blocked or converted",
-             explanation=f"{len(slot_mins) * len(clinic_days)} slots − {n_lunch} Lunch − {n_admin} Admin − {n_tele} Telehealth = "
-                         f"{n_open}. If your count is higher, part of a block is missing. If it's lower, something extra was overwritten."),
+             explanation=f"Lunch takes {n_lunch_rows} slots on each of {len(clinic_days)} days ({n_lunch}). Admin and Telehealth each take "
+                         f"the {n_pm_rows} afternoon slots on {len(weds)} days ({n_admin} and {n_tele}). That leaves {len(slot_mins) * len(clinic_days)} − "
+                         f"{n_lunch} − {n_admin} − {n_tele} = {n_open} Open slots. If Find All reports more, part of a block is missing. "
+                         "If it reports fewer, something extra was overwritten. Working the number out first and then counting is a "
+                         "quick way to catch a fill that went wrong."),
     ]
 
     L.start_notes = [
-        "Work sheets: Entries (tasks 1–2), Schedule (tasks 5–6, 9, 13), Beds (7), Q15 Log (8), Admissions (10), Supplies and "
-        "Order (11), Roster (12), and Clinic Grid (bonus).",
+        "Where to work: Entries (tasks 1–2), the Practice sheet itself (3–4), Schedule (5–6, 9, 13), Beds (7), Q15 Log (8), "
+        "Admissions (10), Supplies and Order (11), Roster (12), and Clinic Grid (bonus).",
     ]
     L.sheet_order = ["Start Here", "Practice", "Entries", "Schedule", "Beds", "Q15 Log", "Admissions", "Supplies", "Order",
                      "Roster", "Bonus", "Clinic Grid", "Answer Key", "Bonus Key"]
@@ -588,7 +602,7 @@ def build() -> Lesson:
         ws.sheet_properties.tabColor = "2E75B6"
         titled(ws, "4 West (Medical-Surgical) · Rotating RN schedule · December 2025",
                "Codes: D = Day 12h (07:00–19:30) · N = Night 12h (19:00–07:30) · blank = off. Yellow cells are yours to fill.")
-        header(ws, SCH_HDR, ["Date", "Day"] + nurses + ["Float RN"], wrap=True)
+        header(ws, SCH_HDR, ["Date", "Day"] + nurses + [FLOAT_HDR], wrap=True)
         ws.row_dimensions[SCH_HDR].height = 32
         ws.cell(row=SCH_FIRST, column=1, value=days[0]).number_format = "mm/dd/yyyy"
         ws.cell(row=SCH_FIRST, column=2, value=days[0].strftime("%a"))
@@ -668,6 +682,9 @@ def build() -> Lesson:
                f"Paste the transposed Schedule here, with its top-left corner in the yellow cell A{ROSTER_ANCHOR}.")
         yellow(ws, f"A{ROSTER_ANCHOR}:A{ROSTER_ANCHOR}")
         ws.column_dimensions["A"].width = 18
+        # A normal paste keeps the destination's column widths, so size the date columns now (formatting is Lesson 1.3).
+        for k in range(DAYS_IN_MONTH):
+            ws.column_dimensions[get_column_letter(2 + k)].width = 11
 
         # ---------------------------------------------------------- Clinic Grid (bonus)
         ws = wb.create_sheet("Clinic Grid")

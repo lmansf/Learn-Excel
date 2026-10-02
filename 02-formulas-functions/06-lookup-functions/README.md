@@ -101,9 +101,10 @@ Here's what Excel does:
 The V stands for *vertical*, because VLOOKUP searches down a column.
 
 > ⚠️ **Always type FALSE for IDs.** If you leave range_lookup out, VLOOKUP does an approximate match.
-> `=VLOOKUP("PT12170",Patients!$A$2:$K$186,4)` returns **Miller**, even though no patient PT12170 exists. Excel quietly falls back
-> to the nearest smaller ID, PT12169 (Christine Miller), and returns her last name. With FALSE, the same formula returns #N/A, which
-> is the honest answer.
+> `=VLOOKUP("PT12170",Patients!$A$2:$K$186,4)` returns **Miller**, even though PT12170 isn't on the Patients sheet. PT12170 is a
+> Bluestone patient who sees a different primary care doctor, so she isn't on Dr. Nguyen's panel. Excel quietly falls back to the
+> nearest smaller ID, PT12169 (Christine Miller), and returns her last name, so a report would show the wrong patient. With FALSE,
+> the same formula returns #N/A, which is the honest answer.
 
 **What VLOOKUP can't do well:**
 
@@ -117,13 +118,16 @@ The V stands for *vertical*, because VLOOKUP searches down a column.
   has only 11 columns.
 - **It returns the first match only.** If an ID appears twice, you get the first row and never hear about the second.
 
-> 💡 **Tip:** Lock the table with dollar signs so it stays put when you copy the formula down. While you're typing or editing the
-> range, press **F4** (Mac: **⌘ + T**) to add the `$` signs. Lesson 1.5 explains absolute references.
+> 💡 **Tip:** The lookup table usually sits on another sheet, and you don't have to type its sheet name. While you're typing the
+> formula, click the **Patients** tab and drag over the table. Excel writes `Patients!A2:K186` for you. Press **F4** (Mac:
+> **⌘ + T**) right away to lock it as `Patients!$A$2:$K$186`, so the table stays put when you copy the formula down. If a sheet
+> name contains a space, Excel wraps it in single quotes, as in `'Patient List'!$A$2:$K$186`. Lesson 1.5 explains absolute and
+> cross-sheet references.
 
 > 📋 **HLOOKUP** is VLOOKUP turned on its side. It searches the **top row** of a table and returns a value from a row further
 > down. On the Budget sheet, `=HLOOKUP("Medical Supplies",Budget!$D$1:$J$32,2,FALSE)` finds the Medical Supplies header and returns
-> the 2nd row of the range. That's the Medical Supplies budget for D100, Bluestone Memorial's Emergency Department: 1,391,039. You'll rarely need HLOOKUP, because XLOOKUP and
-> INDEX/MATCH search rows and columns equally well.
+> the 2nd row of the range. That's the Medical Supplies budget for D100, Bluestone Memorial's Emergency Department: 1,391,039.
+> You'll rarely need HLOOKUP, because XLOOKUP and INDEX/MATCH search rows and columns equally well.
 
 ### 3. XLOOKUP: the modern lookup
 
@@ -217,13 +221,14 @@ position 137 is sheet row 138.
 
 > ⚠️ MATCH's default is **1**, an approximate match. Always type the `0` for IDs, just like VLOOKUP's FALSE.
 
-**Put them together.** MATCH finds the row, and INDEX returns the value from that row of another column:
+**Put them together.** MATCH finds the position, and INDEX returns the value at that position of another column:
 
 ```
 =INDEX(Providers!$C$2:$C$148,MATCH("PRV1137",Providers!$A$2:$A$148,0))      → Nguyen
 ```
 
-Read it from the inside out. MATCH answers "which row is PRV1137 on?" (137), and INDEX answers "what's in row 137 of LastName?"
+Read it from the inside out. MATCH answers "where is PRV1137 in the ProviderID list?" (position 137), and INDEX answers "what's at
+position 137 of the LastName list?"
 Because the search column and the return column are separate, INDEX/MATCH can look left. This finds the PatientID for an MRN,
 which VLOOKUP can't do:
 
@@ -249,7 +254,7 @@ FALSE when it isn't, because MATCH returns a number when it finds the value and 
 | Survives inserted columns | No (typed column number) | Yes | Yes |
 | Built-in "not found" message | No, wrap it in IFNA | No, wrap it in IFNA | Yes, if_not_found |
 | Last match (search from the bottom) | No | Not simply | Yes, search_mode -1 |
-| Return several columns at once | No | Whole row with column_num 0 | Yes |
+| Return several columns at once | Not simply | Whole row with column_num 0 | Yes |
 | Works in | Every version | Every version | Microsoft 365, Excel 2021+ |
 
 Use XLOOKUP when everyone who opens the file has a current version. Use INDEX/MATCH when the file has to work in older Excel.
@@ -568,11 +573,11 @@ the yellow cell. The **Check** column turns green when you're right. Tasks 5, 7,
 and their gray cells summarize your work.
 
 <!-- BEGIN GENERATED: practice -->
-The Encounters sheet stores IDs only. Every answer comes from looking an ID up in another sheet. Write each answer as a formula. Lock lookup ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy.
+The Encounters sheet stores IDs only. Every answer comes from looking an ID up in another sheet. Write each answer as a formula. Your answers sit on this Practice sheet, so a reference to a data cell needs its sheet name, such as Encounters!B9. Click the cell on the data sheet and Excel writes the sheet name for you. Lock lookup ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy.
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Encounter ENC110900 is on row 9 of the Encounters sheet. Use VLOOKUP with its PatientID (cell B9) to return the patient's last name from the Patients sheet. | VLOOKUP(lookup_value, table_array, col_index_num, FALSE). Count columns from PatientID (column 1) to LastName |
+| 1 | Encounter ENC110900 is on row 9 of the Encounters sheet. Use VLOOKUP with its PatientID (cell Encounters!B9) to return the patient's last name from the Patients sheet. | VLOOKUP(lookup_value, table_array, col_index_num, FALSE). Count columns from PatientID (column 1) to LastName |
 | 2 | Encounter ENC111256 (Encounters row 20) was billed to payer PY02. Use VLOOKUP on the Payers sheet to return the payer's PayerType. | Count the columns of the Payers table to find PayerType's column number |
 | 3 | Encounter ENC113996 (Encounters row 150) has primary diagnosis code E11.65. Use XLOOKUP to return its description from the Diagnoses sheet. | XLOOKUP(lookup_value, lookup_array, return_array) |
 | 4 | Who attended encounter ENC112339 (Encounters row 73)? Use INDEX and MATCH with its AttendingProviderID to return the provider's Specialty from the Providers sheet. | INDEX(Specialty column, MATCH(id, ProviderID column, 0)) |
@@ -765,7 +770,7 @@ ENC119O88 contains the letter O where the real ID ENC119088 has a zero. To Excel
 
 1. Every XLOOKUP gets an if_not_found of "Not found".
 2. Chained lookups pass "Not found" along. The inner XLOOKUP returns it, and the outer one can't find a DxCode called "Not found", so it returns its own "Not found".
-3. Rows that calculate (the name join and DATEDIF) test the helper cell first with `IF(B6="Not found","Not found",…)`, because DATEDIF of a text value would return #VALUE!.
+3. Rows that join or calculate (the two name rows and the age row) test their helper cell first with `IF(B6="Not found","Not found",…)`. Without that test, DATEDIF of the text "Not found" returns #VALUE!. A name join would show #N/A, or "Not found Not found" if each of its lookups had its own if_not_found.
 
 Your finished card should match this:
 

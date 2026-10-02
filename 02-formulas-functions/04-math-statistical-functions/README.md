@@ -85,8 +85,8 @@ When the next digit is exactly 5, ROUND moves away from zero, so `=ROUND(2.5,0)`
 
 ### 2. Rounding to a multiple: MROUND, CEILING.MATH, and FLOOR.MATH
 
-Sometimes the answer has to be a multiple of something: 15-minute blocks, 500 mg vials, 10-year age bands. The multiple is called
-the **significance**.
+Sometimes the answer has to be a multiple of something: 15-minute blocks, 500 mg vials, 10-year age bands. MROUND calls that
+number the *multiple*, and CEILING.MATH and FLOOR.MATH call it the **significance**.
 
 ```
 =MROUND(number, multiple)                       nearest multiple
@@ -326,7 +326,7 @@ level at all. A few things to know:
 - `MODE.SNGL` returns #N/A when no value repeats. `=MODE.SNGL(J2:J574)` on charges returns #N/A, because no two stays were charged
   exactly the same amount to the cent. The mode is only meaningful for values that repeat.
 - When two values tie for most frequent, MODE.SNGL returns whichever appears first in the range.
-- `MODE.MULT` returns every tied mode. In Microsoft 365 it spills them into several cells (Lesson 4.1).
+- `MODE.MULT` returns every tied mode. In Microsoft 365 and Excel 2021 or later it spills them into several cells (Lesson 4.1).
 - The older `MODE` function works exactly like MODE.SNGL.
 
 **TRIMMEAN details.**
@@ -503,7 +503,7 @@ beyond everything else.
    is 6 − 3 = 3 days, so the upper fence is 6 + 1.5 × 3 = **10.5 days**. With the fence in a cell, say N13,
    `=COUNTIF(I2:I574,">"&N13)` counts **27** stays longer than that. The lower fence is 3 − 4.5 = -1.5 days, which no stay can be
    below.
-2. **The mean ± 3 standard deviations rule.** The upper limit is 4.72 + 3 × 3.21 = **14.34 days**, and only **7** stays exceed it.
+2. **The mean ± 3 standard deviations rule.** The upper limit is 4.716 + 3 × 3.209 = **14.34 days**, and only **7** stays exceed it.
 
 `">"&N13` joins the operator to the cell's value to build the criterion text ">10.5". You previewed COUNTIF in Lesson 1.4, and
 Lesson 2.5 covers it fully.
@@ -541,23 +541,23 @@ Download [`2.4-math-statistical-functions.xlsx`](2.4-math-statistical-functions.
 answer in the yellow cell, as a formula wherever possible. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Tasks use three data sheets. Stays holds 573 inpatient stays (rows 2–574), ED holds 785 visits (rows 2–786), and Meds holds 388 medication orders (rows 2–389). Reference whole columns of data, like Stays!J2:J574. When a task asks you to round, round with a function so the stored value matches, not just the display.
+Tasks use three data sheets. Stays holds 573 inpatient stays (rows 2–574), ED holds 785 visits (rows 2–786), and Meds holds 388 medication orders (rows 2–389). Reference a column's data rows, like Stays!J2:J574, rather than a whole column like J:J, because the header text in row 1 breaks the row-by-row math in SUMPRODUCT. When a task asks you to round, round with a function so the stored value matches, not just the display.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | What is the most common ESI triage level among the ED visits? | MODE.SNGL |
-| 2 | How much higher is the mean (average) TotalCharges per stay than the median TotalCharges? Enter the difference in dollars. | AVERAGE(…) − MEDIAN(…) |
+| 2 | How much higher is the mean (average) TotalCharges per stay than the median TotalCharges? Enter the difference in dollars, to the cent. | AVERAGE(…) − MEDIAN(…) |
 | 3 | What is the sample standard deviation of TotalCharges, rounded to the nearest $100 with ROUND? | STDEV.S, then ROUND with a negative num_digits |
-| 4 | ED leaders review the three longest ED stays each period for boarding delays. What is the 3rd-longest EDLOSMin on the ED sheet? | LARGE(array, k) |
+| 4 | ED leaders review the three longest ED stays each period for boarding delays. They report each stay in whole hours and count any started hour as a full hour. Find the 3rd-longest EDLOSMin on the ED sheet, convert it to hours, and round it up to a whole number of hours with ROUNDUP. | LARGE(array, k) finds the stay. Divide by 60, then ROUNDUP(…, 0) |
 | 5 | The charge-capture team audits the cheapest stays, because an unusually low charge often means some charges were never posted. What is the 3rd-lowest TotalCharges? | SMALL is LARGE's mirror image |
 | 6 | Encounter ENC119052 (Stays row 70) stayed 10 days. Rank its LOSDays among all 573 stays with RANK.EQ, where the longest stay is rank 1. | RANK.EQ(number, ref). Leaving out order ranks the largest value as 1 |
 | 7 | Ninety percent of the patients who saw a provider waited at most how many minutes? Calculate the 90th percentile of DoorToProviderMin. (The 16 blank cells are patients who left without being seen.) | PERCENTILE.INC(array, 0.9) |
 | 8 | What is the interquartile range (IQR = Q3 − Q1) of EDLOSMin, in minutes? Use QUARTILE.INC. | QUARTILE.INC(array, 3) − QUARTILE.INC(array, 1) |
-| 9 | What was the total acquisition cost of the medications dispensed for the 5 East stays? Multiply each order's DosesDispensed by its UnitCost and add up all the orders, in one formula. | SUMPRODUCT(array1, array2) |
-| 10 | Fill the yellow AgeBand column on the Stays sheet with each patient's 10-year age band using FLOOR.MATH, so age 78 becomes 70 and age 80 becomes 80. Start in K2. The gray cell counts the stays in the 80–89 band. | FLOOR.MATH(number, significance) rounds down to a multiple |
+| 9 | What was the total acquisition cost of the medications dispensed for the 5 East stays? Multiply each order's DosesDispensed by its UnitCost and add up all the orders, in one formula. Enter the total in dollars, to the cent. | SUMPRODUCT(array1, array2) |
+| 10 | Fill the yellow AgeBand column on the Stays sheet with each stay's 10-year age band using FLOOR.MATH, so age 78 becomes 70 and age 80 becomes 80. Start in K2. The gray cell counts the stays in the 80–89 band. | FLOOR.MATH(number, significance) rounds down to a multiple |
 | 11 | The ED status board rounds each visit's length of stay to the nearest 15 minutes and shows it as hours and minutes, like "6 h 45 min". What does it show for visit ED211176 (ED row 2, EDLOSMin = 624)? Build the text with one formula that refers to the EDLOSMin cell. | MROUND to 15 first. Then INT(minutes/60) gives hours and MOD(minutes,60) gives the minutes left over. Join with & |
 | 12 | Case managers call a stay "on target" when its LOSDays is within 1 day of its ExpectedLOS in either direction (a difference of 1.0 day or less, longer or shorter). How many of the 573 stays were on target? Use one formula. | ABS makes −0.9 and +0.9 the same distance. Count TRUE results with SUMPRODUCT(--(…)) from Lesson 2.1 |
-| 13 | Order RX824601 (Meds row 255) is vancomycin 1,250 mg every 12 hours, with 24 doses dispensed. Assume the IV room mixes every dose from 500 mg single-dose vials and throws away whatever is left in an opened vial. How many vials did this order use? | Work out vials per dose first: round 1,250 mg UP to a whole number of 500 mg vials |
+| 13 | Order RX824601 (Meds row 255) is vancomycin 1,250 mg every 12 hours, with 24 doses dispensed. Assume the IV room mixes every dose from 500 mg single-dose vials and throws away whatever is left in an opened vial. How many vials did this order use? | Work out vials per dose first: round 1,250 mg UP to a whole number of 500 mg vials with CEILING.MATH (or ROUNDUP) |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -590,12 +590,12 @@ The mean is $32,041.72 but the median is $23,965.69, so half of all stays were c
 
 STDEV.S returns $24,056.39. A num_digits of -2 rounds to the hundreds place, giving $24,100. STDEV.S treats the stays as a sample of an ongoing process, which is the usual choice. STDEV.P gives $24,035.39, which rounds to $24,000, so the check tells the two apart.
 
-**4. ED leaders review the three longest ED stays each period for boarding delays. What is…**
+**4. ED leaders review the three longest ED stays each period for boarding delays. They…**
 
-- **Answer:** 1,169
-- **Solution:** `=LARGE(ED!H2:H786,3)`
+- **Answer:** 20
+- **Solution:** `=ROUNDUP(LARGE(ED!H2:H786,3)/60,0)`
 
-LARGE returns the k-th largest value, so `LARGE(range,1)` is the same as MAX. The three longest stays were 1,304, 1,281, and 1,169 minutes. The 3rd is about 19.5 hours. Change k to 2 or 1 to list the others.
+LARGE returns the k-th largest value, so `LARGE(range,1)` is the same as MAX. The three longest stays were 1,304, 1,281, and 1,169 minutes. The 3rd is 1,169 ÷ 60 = 19.48 hours, and ROUNDUP turns the started hour into a full one, giving 20. `ROUND` and `ROUNDDOWN` both give 19 here, which would under-report the stay because the rule counts every started hour. `=CEILING.MATH(LARGE(…,3)/60)` gives the same 20. Change k to 2 or 1 to list the other two stays.
 
 **5. The charge-capture team audits the cheapest stays, because an unusually low charge…**
 
@@ -670,11 +670,11 @@ The CFO's draft board report says the average inpatient charge in Q4 was $32,042
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Calculate the upper outlier fence with the IQR rule: Q3 + 1.5 × (Q3 − Q1), using QUARTILE.INC. Enter it in dollars. *(Hint: Find Q1 and Q3 with QUARTILE.INC, then combine them)*
+- **B1.** Calculate the upper outlier fence with the IQR rule: Q3 + 1.5 × (Q3 − Q1), using QUARTILE.INC. Enter it in dollars, to the cent. *(Hint: Find Q1 and Q3 with QUARTILE.INC, then combine them)*
 - **B2.** How many stays have TotalCharges above the fence from B1? *(Hint: COUNTIF(range, ">"&cell) joins the operator to your B1 cell)*
-- **B3.** What share of all Q4 TotalCharges came from the stays above the fence? Enter it as a percentage. *(Hint: (range>D6) is 1 or 0 for each stay. Multiply it by the charges inside SUMPRODUCT, then divide by the total)*
+- **B3.** What share of all Q4 TotalCharges came from the stays above the fence? Enter it as a percentage with one decimal place. *(Hint: (range>D6) is TRUE or FALSE for each stay. Multiply it by the charges inside SUMPRODUCT, then divide by the total)*
 - **B4.** A second common rule flags any value more than 3 standard deviations above the mean. How many stays have TotalCharges above AVERAGE + 3 × STDEV.S? *(Hint: Build the threshold inside the criterion: ">"&(AVERAGE(…)+3*STDEV.S(…)))*
-- **B5.** Calculate a 10% trimmed mean of TotalCharges with TRIMMEAN, which drops about 5% of stays from each end before averaging. Enter it in dollars. *(Hint: TRIMMEAN(array, percent). The percent is the TOTAL share to drop)*
+- **B5.** Calculate a 10% trimmed mean of TotalCharges with TRIMMEAN, which drops about 5% of stays from each end before averaging. Enter it in dollars, to the cent. *(Hint: TRIMMEAN(array, percent). The percent is the TOTAL share to drop)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -705,7 +705,7 @@ Q1 is $16,511.45 and Q3 is $38,058.49, so the IQR is $21,547.04 and the fence is
 - **Answer:** 25.7%
 - **Solution:** `=SUMPRODUCT((Stays!J2:J574>D6)*Stays!J2:J574)/SUM(Stays!J2:J574)`
 
-`(Stays!J2:J574>D6)` is 1 for an outlier and 0 otherwise, so multiplying by the charges keeps only the outlier charges and SUMPRODUCT adds them. Just 8.7% of stays produced 25.7% of all charges. That concentration is exactly why the mean sits so far above the median. (`=SUMIF(Stays!J2:J574,">"&D6)/SUM(Stays!J2:J574)` from Lesson 2.5 gives the same answer.)
+`(Stays!J2:J574>D6)` is TRUE for an outlier and FALSE otherwise. Multiplying by the charges turns TRUE into 1 and FALSE into 0, so only the outlier charges survive, and SUMPRODUCT adds them. Just 8.7% of stays produced 25.7% of all charges. That concentration is exactly why the mean sits so far above the median. (`=SUMIF(Stays!J2:J574,">"&D6)/SUM(Stays!J2:J574)` from Lesson 2.5 gives the same answer.)
 
 **B4. A second common rule flags any value more than 3 standard deviations above the mean.…**
 

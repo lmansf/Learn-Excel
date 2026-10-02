@@ -29,6 +29,8 @@ from xlcourse.lesson import INPUT_BORDER, INPUT_FILL, NAVY
 from xlcourse.xlfn import to_file_formula
 
 CODE = "4.1"
+MONTH_NAMES = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+               "November", "December"]
 SEED = 41
 SAMPLE_SIZE = 2000
 WS = "Workspace"
@@ -81,9 +83,14 @@ def provider_rows() -> list[dict]:
 
 
 def department_rows() -> list[dict]:
+    """Departments with StaffedBeds = 0 (not blank) where a department has no beds.
+
+    The guide sorts tblDepartments by StaffedBeds largest first. Excel's SORT/SORTBY don't rank an empty cell as 0,
+    so blanks could land above the real numbers in a descending sort; a real 0 keeps every example deterministic.
+    """
     fac = {f["FacilityID"]: f["FacilityName"] for f in data.load("facilities")}
     return [{"DeptID": d["DeptID"], "Department": d["DeptName"], "Facility": fac[d["FacilityID"]],
-             "ServiceLine": d["ServiceLine"], "UnitType": d["UnitType"], "StaffedBeds": d["StaffedBeds"]}
+             "ServiceLine": d["ServiceLine"], "UnitType": d["UnitType"], "StaffedBeds": d["StaffedBeds"] or 0}
             for d in sorted(data.load("departments"), key=lambda d: d["DeptID"])]
 
 
@@ -143,7 +150,8 @@ def build() -> Lesson:
         ],
         data_note="2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with "
                   "facility, department, attending, diagnosis category, and payer names already joined in. Also includes "
-                  "the provider roster (147) and the department list (31).",
+                  "the provider roster (147) and the department list (31, with StaffedBeds 0 for departments that have "
+                  "no inpatient beds).",
     )
 
     enc = encounter_rows()
@@ -177,7 +185,9 @@ def build() -> Lesson:
     units = list(dict.fromkeys((r["Facility"], r["Department"]) for r in enc))
     patient_counts = Counter(r["PatientID"] for r in enc)
     once = sum(1 for c in patient_counts.values() if c == 1)
-    big_inpatient_units = [d for d in depts if d["UnitType"] == "Inpatient" and (d["StaffedBeds"] or 0) >= 20]
+    big_inpatient_units = [d for d in depts if d["UnitType"] == "Inpatient" and d["StaffedBeds"] >= 20]
+    big_icus = [d for d in depts if d["UnitType"] == "Critical Care" and d["StaffedBeds"] >= 20]
+    assert len(big_icus) == 1, "task 5's explanation names exactly one 20+ bed critical-care unit"
     ed = where(EncounterType="Emergency")
     ed_attendings = set(r["Attending"] for r in ed)
     flu = [r for r in ed if r["AdmitDate"].month <= 2 and r["DxCategory"] in ("Respiratory", "Infectious")]
@@ -199,6 +209,10 @@ def build() -> Lesson:
                       key=lambda r: -r["LOSDays"])
     los_vals = [r["LOSDays"] for r in worklist]
     assert los_vals.count(max(los_vals)) == 1 and los_vals.count(min(los_vals)) == 1, "worklist ends must be unique"
+    los_ties = [v for v, c in Counter(los_vals).items() if c > 1]
+    assert len(los_ties) == 1 and los_vals.count(los_ties[0]) == 2, "task 13's explanation describes exactly one 2-way tie"
+    busiest_month, busiest_n = month_counts.most_common(1)[0]
+    assert list(month_counts.values()).count(busiest_n) == 1
 
     unit_n = Counter((r["Facility"], r["Department"]) for r in enc)
     unit_sum = defaultdict(float)
@@ -210,6 +224,11 @@ def build() -> Lesson:
     mem_ed = ("Bluestone Memorial Hospital", "Emergency Department")
     mem_ed_avg = unit_sum[mem_ed] / unit_n[mem_ed]
     board_share = sum(unit_sum[(f, d)] for f, d, _, _ in board) / sum(r["TotalCharges"] for r in enc)
+    unit_type = {(d["Facility"], d["Department"]): d["UnitType"] for d in depts}
+    off_board = [u for u in units if unit_n[u] < LEADERBOARD_MIN]
+    assert sum(unit_type[u] in ("Inpatient", "Critical Care") for u in off_board) > len(off_board) / 2, \
+        "B4's explanation says most off-board units are ICUs and inpatient floors"
+    assert all(unit_type[(f, d)] == "Inpatient" for f, d, _, _ in board[:5]), "B2's explanation: inpatient units lead"
 
     # spill sizes (rows, cols) — used to resolve X# references in the self-test copy
     sizes = {"B6": (len(payers), 1), "D6": (len(service_lines), 1), "F6": (12, 1), "G6": (12, 1),
@@ -238,7 +257,7 @@ def build() -> Lesson:
         "     dept,  CHOOSECOLS(units, 2),\n"
         "     n,     COUNTIFS(tblEncounters[Facility], fac, tblEncounters[Department], dept),\n"
         "     avg,   AVERAGEIFS(tblEncounters[TotalCharges], tblEncounters[Facility], fac, tblEncounters[Department], dept),\n"
-        f"     VSTACK({HEADER_BOARD.replace(',', ', ')},\n"
+        f"     VSTACK({HEADER_BOARD},\n"
         f"            SORT(FILTER(HSTACK(units, n, avg), n >= {LEADERBOARD_MIN}), 4, -1)))"
     )
 
@@ -282,8 +301,10 @@ def build() -> Lesson:
                "cell summarizes your list.",
         answer=lines_answer, title="Sorted service lines and a #SPILL! fix (Workspace!D6)",
         solution=f_lines, hint="SORT(UNIQUE(…)). Then click the warning icon next to the error",
-        summary=(f'=IF(ISBLANK({WS}!D6),"",COUNTA({ws_rng("D6")})&" service lines · first: "&{WS}!D6'
-                 f'&" · last: "&INDEX({ws_rng("D6")},COUNTA({ws_rng("D6")})))'),
+        # IFERROR: while D6 shows #SPILL!, say where to look instead of echoing the error into the Practice sheet.
+        summary=(f'=IF(ISBLANK({WS}!D6),"",IFERROR(COUNTA({ws_rng("D6")})&" service lines · first: "&{WS}!D6'
+                 f'&" · last: "&INDEX({ws_rng("D6")},COUNTA({ws_rng("D6")})),'
+                 f'"Workspace!D6 shows an error. Fix it there."))'),
         live=(f'=ROWS(UNIQUE({TE}[ServiceLine]))&" service lines · first: "&INDEX(SORT(UNIQUE({TE}[ServiceLine])),1)'
               f'&" · last: "&INDEX(SORT(UNIQUE({TE}[ServiceLine]),,-1),1)'),
         explanation=f"A leftover note ('{OBSTRUCTION[1]}') sits in {OBSTRUCTION[0]}, inside the range the list needs. Excel "
@@ -314,14 +335,15 @@ def build() -> Lesson:
                     "came back at least twice.",
     )
     t5 = Task(
-        "Switch to the Departments sheet (tblDepartments). Using FILTER, how many departments have UnitType \"Inpatient\" and 20 or more "
-        "StaffedBeds?",
+        "This one uses tblDepartments (on the Departments sheet), but the formula still goes in the yellow cell here. "
+        "Using FILTER, how many departments have UnitType \"Inpatient\" and 20 or more StaffedBeds?",
         answer=len(big_inpatient_units), title="Inpatient units with 20+ staffed beds",
         solution='=ROWS(FILTER(tblDepartments[Department],(tblDepartments[UnitType]="Inpatient")*(tblDepartments[StaffedBeds]>=20)))',
         hint="Multiply the two conditions with *, then count the rows FILTER returns",
         explanation="Each condition returns TRUE or FALSE for all 31 rows. Multiplying them turns TRUE/FALSE into 1/0, so "
-                    "only rows where both are 1 pass the filter (AND logic). The ICUs don't count because their UnitType is "
-                    "'Critical Care'. COUNTIFS gives the same number here. FILTER is worth learning because the same "
+                    f"only rows where both are 1 pass the filter (AND logic). {big_icus[0]['Facility']}'s "
+                    f"{big_icus[0]['Department']} has {big_icus[0]['StaffedBeds']} beds but doesn't count, because its "
+                    "UnitType is 'Critical Care'. COUNTIFS gives the same number here. FILTER is worth learning because the same "
                     "include argument can also return the rows themselves.",
     )
     t6 = Task(
@@ -409,8 +431,8 @@ def build() -> Lesson:
         explanation=f"SEQUENCE(12) spills 1 to 12, and DATE turns each number into that month's first day. In G6, F6# means "
                     f"'the whole spill that starts in F6', so COUNTIFS receives 12 start dates and returns 12 counts. The "
                     f"upper bound DATE(YEAR(F6#),MONTH(F6#)+1,1) is the next month's first day (month 13 rolls into January "
-                    f"2026). If you change F6 to 24 months, G6 grows with it automatically. December is the busiest month "
-                    f"({month_counts[12]} encounters).",
+                    f"2026). If you change F6 to 24 months, G6 grows with it automatically. {MONTH_NAMES[busiest_month]} is the "
+                    f"busiest month ({busiest_n} encounters).",
     )
     worklist_answer = (f"{len(worklist)} stays · longest: {worklist[0]['EncounterID']} ({worklist[0]['LOSDays']} d) · "
                        f"shortest: {worklist[-1]['EncounterID']} ({worklist[-1]['LOSDays']} d)")
@@ -433,7 +455,7 @@ def build() -> Lesson:
                     f"CHOOSECOLS keeps columns {col_no('EncounterID')}, {col_no('Department')}, {col_no('LOSDays')}, and "
                     f"{col_no('TotalCharges')} in the order you list them. SORT(…, 3, -1) sorts by the third of those "
                     "columns (LOSDays), largest first. VSTACK puts the header row, an array constant in braces, on top. "
-                    "Two stays tie at 14 days. To break ties by charges, use SORT(…, {3,4}, {-1,-1}).",
+                    f"Two stays tie at {los_ties[0]} days. To break ties by charges, use SORT(…, {{3,4}}, {{-1,-1}}).",
     )
     L.tasks = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13]
 
@@ -442,7 +464,8 @@ def build() -> Lesson:
     L.bonus_scenario = (
         "The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least "
         f"{LEADERBOARD_MIN} encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), "
-        "sorted by AvgCharge from highest to lowest, under a header row. Build it in Workspace!N6 as ONE formula. LET "
+        "where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those "
+        "encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. LET "
         "(previewed in the guide) makes it much easier to read. Then answer the questions below with formulas that refer "
         "to your leaderboard through N6#."
     )

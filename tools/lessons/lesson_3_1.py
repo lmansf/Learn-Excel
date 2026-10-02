@@ -141,10 +141,23 @@ def build() -> Lesson:
     discount_base = sum(v for v in by_vendor.values() if v >= DISCOUNT_MIN)
     discount = discount_base * DISCOUNT_PCT
     vendors_discounted = sum(1 for v in by_vendor.values() if v >= DISCOUNT_MIN)
+    top_lines = [r for r in inv if r["Vendor"] == top_vendor and r["NeedsReorder"]]
+    top_implant_lines = sum(1 for r in top_lines if r["Category"] == SHARE_CATEGORY)
+    top_over_2k = sum(1 for r in top_lines if r["UnitCost"] > 2000)
+    nums = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+    if top_implant_lines == len(top_lines):
+        top_lines_note = (f"All {nums.get(len(top_lines), len(top_lines))} reorder lines for {top_vendor} are "
+                          f"{SHARE_CATEGORY.lower()}")
+    else:
+        top_lines_note = (f"{nums.get(top_implant_lines, top_implant_lines).capitalize()} of the "
+                          f"{len(top_lines)} reorder lines for {top_vendor} are {SHARE_CATEGORY.lower()}")
+    top_lines_note += (f", and {nums.get(top_over_2k, top_over_2k)} of them cost more than $2,000 per unit, so a "
+                       f"handful of lines makes the largest order.")
 
     L.practice_intro = (
-        f"Every task uses the Inventory sheet: supply stock in {n_rooms} storerooms across {words.get(n_facs, n_facs)} "
-        f"Bluestone hospitals, counted on {REPORT_DATE:%m/%d/%Y}. Do the tasks in order, because later tasks use the Table, columns, Total Row, and names you "
+        f"The tasks use the Inventory sheet: supply stock in {n_rooms} storerooms across {words.get(n_facs, n_facs)} "
+        f"Bluestone hospitals, in the snapshot taken on {REPORT_DATE:%m/%d/%Y}. Task 9 also uses the Settings sheet. "
+        f"Do the tasks in order, because later tasks use the Table, columns, Total Row, and names you "
         "create in earlier ones. After task 1, write formulas with structured references such as "
         "tblInventory[QtyOnHand] instead of cell ranges.")
     L.start_notes = [
@@ -153,9 +166,9 @@ def build() -> Lesson:
     ]
 
     L.tasks = [
-        Task("On the Inventory sheet, click any cell in the data and convert the range to an Excel Table "
-             "(Ctrl + T; Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the Table Design "
-             "tab. The gray cell finds a Table with that exact name and counts its data rows. It stays blank until "
+        Task("On the Inventory sheet, click any cell in the data and convert the range to an Excel Table with "
+             "Ctrl + T (Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the Table Design "
+             "tab (Mac: Table tab). The gray cell finds a Table with that exact name and counts its data rows. It stays blank until "
              "the Table exists.",
              answer=n, title="Convert the range to a Table named tblInventory (data rows)",
              summary=f'=IFERROR(ROWS(INDIRECT("{TBL}")),"")',
@@ -192,7 +205,7 @@ def build() -> Lesson:
              summary=f'=IF(COUNT({ev_rng})=0,"",SUM({ev_rng}))',
              fill={"range": f"Inventory!R{first}:R{last}", "formula": "=[@QtyOnHand]*[@UnitCost]"},
              live=f"=SUMPRODUCT({qty},{cost})", table=TBL,
-             hint="Click the QtyOnHand cell in the same row while typing; Excel writes [@QtyOnHand]",
+             hint="Click the QtyOnHand cell in the same row while you type, and Excel writes [@QtyOnHand]",
              explanation=f"When you enter a formula in an empty Table column, Excel copies it to every row of that column. "
                          f"That's a *calculated column*. `[@QtyOnHand]` means \"QtyOnHand in this row,\" so the formula "
                          f"reads the same on all {n} rows and says what it multiplies. The A1 version, "
@@ -302,8 +315,8 @@ def build() -> Lesson:
                          f"The live formula in the key guards against blanks with `<>\"\"`, but SUMIFS doesn't need "
                          f"that guard, because an empty cell never matches \"<\"&ReportDate."),
         Task(f"Policy says every stock row must be cycle-counted at least every {CYCLE_COUNT_DAYS} days. Create a named "
-             f"constant CycleCountDays that refers to ={CYCLE_COUNT_DAYS} (Formulas → Define Name; it doesn't live in "
-             f"any cell). How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays?",
+             f"constant CycleCountDays that refers to ={CYCLE_COUNT_DAYS} with Formulas → Define Name. It doesn't live in "
+             f"any cell. How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays?",
              answer=overdue,
              solution=f'=COUNTIF({TBL}[LastCountDate],"<"&ReportDate-CycleCountDays)',
              live=f'=COUNTIF({a1("LastCountDate")},"<"&{report_cell}-{CYCLE_COUNT_DAYS})',
@@ -350,8 +363,7 @@ def build() -> Lesson:
                          f"from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. "
                          f"INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. "
                          f"`=XLOOKUP(MAX({VTBL}[ReorderCost]),{VTBL}[ReorderCost],{VTBL}[Vendor])` works too in Excel "
-                         f"2021 or Microsoft 365. Orthopedic implants cost thousands of dollars each, so even a few "
-                         f"reorder lines make the largest order."),
+                         f"2021 or Microsoft 365. {top_lines_note}"),
         Task("What's the value of that vendor's purchase order?",
              answer=round(top_amount, 2), fmt="#,##0.00", solution=f"=MAX({VTBL}[ReorderCost])",
              live=f'=SUMPRODUCT(({a1("Vendor")}="{top_vendor}")*({qty}<={rp})*{a1("ReorderQty")}*{cost})',
@@ -360,7 +372,7 @@ def build() -> Lesson:
                          f"practice, a buyer would confirm implant orders with the OR schedule before sending them."),
         Task(f"The group purchasing contract gives a {DISCOUNT_PCT:.0%} discount on any single vendor order of "
              f"${DISCOUNT_MIN:,} or more. Define two named constants, DiscountMin (={DISCOUNT_MIN}) and DiscountPct "
-             f"(={DISCOUNT_PCT}), then calculate the total discount on this week's orders.",
+             f"(={DISCOUNT_PCT}), then calculate the total discount on this week's orders, to the cent.",
              answer=round(discount, 2), fmt="#,##0.00",
              solution=f'=SUMIFS({VTBL}[ReorderCost],{VTBL}[ReorderCost],">="&DiscountMin)*DiscountPct',
              live=False,
@@ -381,8 +393,9 @@ def build() -> Lesson:
         ws[f"B{st.first_row + 1}"].number_format = "0"
         note_row = st.last_row + 2
         ws.cell(row=note_row, column=1,
-                value="Task 9 names B2 and B3 from the labels in column A. Later tasks and the bonus add named "
-                      "constants (CycleCountDays, DiscountMin, DiscountPct) in Name Manager; they don't live in cells.")
+                value="Task 9 names B2 and B3 from the labels in column A. Task 12 and the bonus add named "
+                      "constants (CycleCountDays, DiscountMin, DiscountPct) with Formulas → Define Name. Named "
+                      "constants don't live in cells.")
         ws.cell(row=note_row, column=1).font = Font(italic=True, color="595959")
         vws = wb["Vendors"]
         vnote = vd.last_row + 2

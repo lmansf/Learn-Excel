@@ -184,12 +184,12 @@ def build() -> Lesson:
                          f"the true last row ({last}: {n} patients plus the header row) and the true last column ({last_col}). "
                          f"Ctrl+End goes straight to the last used cell, {br_addr}. The hidden column {hidden_letter} doesn't change "
                          "the answer, because hiding a column doesn't remove it."),
-        Task(f"Click cell A{empty_row}, which is in an empty row below the data, and press Ctrl+→. "
+        Task(f"Use the Name Box to go to cell A{empty_row}, which is in an empty row below the data, then press Ctrl+→. "
              "Excel races across the empty row to the very last column of the worksheet. "
              "What is the address of the cell you land on?",
              answer=xfd_addr, accept=[f"$XFD${empty_row}"], title="The last column of a worksheet",
              solution=f"1. Type A{empty_row} in the Name Box and press Enter.\n2. Press Ctrl+→. The Name Box shows {xfd_addr}.\n"
-                      "3. Press Ctrl+← (or Ctrl+Home) to come back.",
+                      "3. Press Ctrl+← to come back to column A.",
              live=f"=ADDRESS({empty_row},COLUMNS(Patients!1:1),4)",
              hint="A worksheet has 16,384 columns",
              explanation="When the row is empty, Ctrl+→ has no data to stop at, so it goes to the edge of the sheet: column XFD, the "
@@ -228,7 +228,9 @@ def build() -> Lesson:
                          f"patient weighs {min(weights)} lb, which is a baby and not a typo. Always glance at Minimum and Maximum "
                          "before trusting an average."),
         Task("Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first "
-             "DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient?",
+             "DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient? "
+             "Type it as month/day/year, the way the status bar shows it. (If your computer uses day/month dates, type the "
+             "month as a word instead, such as 15 Mar 1950.)",
              answer=oldest_dob, fmt="mm/dd/yyyy", title="Status bar Minimum (oldest patient's DOB)",
              solution="1. Right-click the status bar and tick Minimum (and Maximum while you're there).\n"
                       f"2. Click cell F2 and press Ctrl+Shift+↓ to select {rng('DOB')}.\n3. Read Minimum on the status bar.",
@@ -252,7 +254,8 @@ def build() -> Lesson:
                          "cell first matters too. When several cells are selected, Find searches only inside the selection, so with "
                          "the DOB column still selected from the previous task, Find All would report nothing."),
         Task(f"Column {hidden_letter} is hidden (the column letters jump from {col('ZIP')} to {col('Email')}). Unhide it, then "
-             f"click cell A1 and use Ctrl+F to find patient {ph_pt['PatientID']}. What is that patient's phone number?",
+             f"click cell A1 and use Ctrl+F (Mac: Control+F) to find patient {ph_pt['PatientID']}. "
+             "What is that patient's phone number?",
              answer=phone, accept=[digits, f"{digits[:3]}-{digits[3:6]}-{digits[6:]}", f"({digits[:3]}){digits[3:6]}-{digits[6:]}",
                                    f"{digits[:3]} {digits[3:6]} {digits[6:]}"],
              title=f"Unhide column {hidden_letter} (phone number)",
@@ -305,15 +308,16 @@ def build() -> Lesson:
 
     # ------------------------------------------------------------------ bonus
     L.bonus_title = "Bonus: Data-quality scavenger hunt"
-    L.bonus_scenario = ("The population-health team wants to use this patient list for a flu-shot outreach campaign. Before it goes "
-                        "out, the data steward asks you to check four facts. Set up first on the Patients sheet: if you froze panes "
-                        "earlier, choose View → Freeze Panes → Unfreeze Panes. Then press Ctrl+Home, click B2, and choose View → "
-                        "Freeze Panes → Freeze Panes so the headers and the PatientID column stay in view. Also turn on Minimum and Maximum in "
-                        "the status bar. You'll look everything up on the Patients sheet and type your answers on the Bonus sheet, "
-                        "and you won't need a single formula.")
+    L.bonus_scenario = ("The population-health team is starting a blood-pressure outreach program and will build its mailing list "
+                        "from this patient index. Before the letters go out, the data steward asks you to check four facts. Set up "
+                        "the Patients sheet first: if you froze panes earlier, choose View → Freeze Panes → Unfreeze Panes. Then "
+                        "press Ctrl+Home (Mac: Control+Home), click B2, and choose View → Freeze Panes → Freeze Panes so the headers "
+                        "and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look "
+                        "everything up on the Patients sheet and type your answers on the Bonus sheet, without a single formula.")
     L.bonus = [
-        Task(f"Use Go To (F5 or Ctrl+G, Mac: Control+G) to select {rng('PCPProviderID')}. A blank PCPProviderID means the patient "
-             f"has no primary care provider on file. How many of the {n} patients have no PCP?",
+        Task(f"Each outreach letter is signed by the patient's primary care provider (PCP), and a blank PCPProviderID means no "
+             f"PCP is on file. Use Go To (F5 or Ctrl+G, Mac: Control+G) to select {rng('PCPProviderID')}. How many of the {n} "
+             "patients have no PCP?",
              answer=no_pcp, title="Patients with no PCP on file",
              solution=f"1. Press F5, type {rng('PCPProviderID')}, press Enter.\n"
                       f"2. The status bar shows Count: {n - no_pcp}.\n3. {n} − {n - no_pcp} = {no_pcp}.",
@@ -321,11 +325,13 @@ def build() -> Lesson:
              hint="The status bar counts filled cells, but you want the empty ones",
              explanation=f"Count only counts non-empty cells, so it tells you how many patients do have a PCP ({n - no_pcp}). "
                          f"The range {rng('PCPProviderID')} covers rows {first} to {last}, which is {n} cells, so {n} − {n - no_pcp} "
-                         f"leaves {no_pcp} blanks. (If you select by dragging instead, the Name Box shows the size of the selection "
-                         f"while you drag, such as {n}R x 1C.)"),
-        Task("Click a single cell such as A1, so Find searches the whole sheet rather than the column you just selected. "
-             "Press Ctrl+F (Mac: Control+F), click Options >> and make sure Match entire cell contents is OFF, then Find All for "
-             "HTN (hypertension). How many patients have HTN anywhere in their ChronicConditions list?",
+                         f"leaves {no_pcp} blanks. Any of those patients who have hypertension need a PCP assigned before a letter can go out. "
+                         f"(If you select by dragging instead, the Name Box shows the size of the selection while you drag, such "
+                         f"as {n}R x 1C.)"),
+        Task("The program targets every patient with hypertension, coded HTN. Click a single cell such as A1, so Find searches "
+             "the whole sheet rather than the column you just selected. Press Ctrl+F (Mac: Control+F), click Options >> and make "
+             "sure Match entire cell contents is OFF, then Find All for HTN. How many patients have HTN anywhere in their "
+             "ChronicConditions list?",
              answer=htn_any, title="Find All: HTN anywhere in the list",
              solution="1. Click A1, then Ctrl+F → Options >> → untick Match entire cell contents.\n2. Type HTN and click Find All.\n"
                       "3. Read the count at the bottom of the dialog.",
@@ -333,8 +339,8 @@ def build() -> Lesson:
              hint="Partial matches count: 'HTN;DM' contains HTN",
              explanation="By default Find matches text anywhere inside a cell, so it finds HTN on its own and also inside lists like "
                          "HTN;DM and HTN;HF. No other column contains the letters HTN, so every hit is a patient with hypertension."),
-        Task("Now turn ON Match entire cell contents and Find All for HTN again. How many patients have hypertension as "
-             "their ONLY recorded chronic condition?",
+        Task("Patients whose only condition is hypertension will get a shorter letter. Turn ON Match entire cell contents and "
+             "Find All for HTN again. How many patients have hypertension as their ONLY recorded chronic condition?",
              answer=htn_only, title="Find All: HTN as the only condition",
              solution="1. In the Find dialog, tick Match entire cell contents.\n2. Find All for HTN.\n3. Read the count.",
              live=f'=COUNTIF(Patients!A1:{last_col}{last},"HTN")',
@@ -343,8 +349,9 @@ def build() -> Lesson:
                          f"between the two answers ({htn_any} − {htn_only} = {htn_any - htn_only}) is the number of hypertensive "
                          "patients with at least one other condition. When you finish this challenge, turn the option off again, "
                          "because Find keeps your settings until you close Excel."),
-        Task(f"Which patient is the heaviest? Select {rng('WeightLb')}, read Maximum on the status bar, then use Find to "
-             "locate that weight and read the PatientID in the frozen column A. Type the PatientID.",
+        Task(f"Finally, the steward wants to confirm that the largest weight on file is real and not a typo. Which patient is "
+             f"the heaviest? Select {rng('WeightLb')}, read Maximum on the status bar, then use Find to locate that weight and "
+             "read the PatientID in the frozen column A. Type the PatientID.",
              answer=heavy["PatientID"], title="The heaviest patient",
              solution=f"1. Select {rng('WeightLb')} (Name Box or Go To) and read Maximum: {max_w}.\n"
                       f"2. With the weights still selected, press Ctrl+F → Find what: {max_w} → Find Next. (Match entire cell "

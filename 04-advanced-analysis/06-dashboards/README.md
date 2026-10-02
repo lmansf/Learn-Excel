@@ -3,7 +3,12 @@
 > **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx)
 > **Data:** Monthly KPIs for Bluestone Health's three hospitals, Jan 2024 – Dec 2025 (72 hospital-months), every ED visit's door-to-provider time, and a KPI dictionary with targets and owners.
 
-TODO: one-paragraph hook that explains why this skill matters in a hospital setting.
+Every month, Bluestone Health's leaders ask the same questions. Are ED patients waiting too long? Will there be a bed for
+the next admission? Are payers denying more claims? An analyst can answer each one with a fresh report, or build a
+**dashboard** once and let the leaders answer the questions themselves: pick a hospital and a month, and every number,
+status color, and chart on the page changes together. This lesson shows you how to plan a dashboard around the people who'll
+read it, build the formulas behind KPI cards, wire dropdowns, slicers, and charts so that one click updates everything, and
+then polish the result so it's fast, protected, and readable at a glance.
 
 ## What you'll learn
 
@@ -14,12 +19,623 @@ TODO: one-paragraph hook that explains why this skill matters in a hospital sett
 
 ## 📖 Guide
 
-TODO: the teaching content.
+The workbook is laid out the way a real dashboard workbook should be, so you can study it while you read:
+
+| Sheet | Role |
+|---|---|
+| **Dashboard** | The practice canvas: two yellow selectors (a facility and a month), a finished example card, and room for your chart and combo box |
+| **Calc** | The model layer: helper cells that turn the selectors into dates and criteria, plus the 12-month block your chart will read |
+| **KPI_Monthly** | Table `tblKPI`: one row per hospital per month, January 2024 – December 2025 |
+| **EDWaits** | Table `tblEDWaits`: every ED visit that was seen by a provider, with its door-to-provider minutes |
+| **Targets** | Table `tblTargets`: the KPI dictionary, with each KPI's question, definition, direction, target, and owner |
+| **Lists** | The dropdown sources: four facility choices (including *All facilities*) and 24 months |
+| **Board** | A blank canvas for the bonus |
+| **Dashboard Key** *(hidden)* | A finished reference dashboard. Unhide it after the bonus, or whenever you want to see a technique in action |
+
+### 1. What a dashboard is for
+
+A **dashboard** is a single screen that shows a specific audience the few numbers it needs to decide what to do next. That
+definition rules out a lot of things people call dashboards:
+
+| | Dashboard | Report | Analysis |
+|---|---|---|---|
+| Question it answers | "Are we OK, and where should I look?" | "What exactly happened?" | "Why did it happen?" |
+| Size | One screen or one printed page | Many rows, many pages | Whatever the question needs |
+| Refreshed | Every period, same layout | Every period | Once |
+| Reader's time | Seconds | Minutes | An hour |
+
+An **interactive dashboard** adds **selectors**: input cells or controls, such as a facility dropdown, that every number on
+the page reads. Instead of 36 copies of the same page (3 hospitals × 12 months), you build one page that can become any of
+them.
+
+The test of a good dashboard is the **5-second rule**: within five seconds a reader should know whether things are on track
+and where to look first. Try it on your own work. Show the page to a colleague for five seconds, hide it, and ask what they
+saw. If they describe the colors instead of the message, the design needs work.
+
+### 2. Plan before you build: audience, questions, and KPIs
+
+Most weak dashboards start in Excel. Good ones start with a conversation about who will read the page and what they need
+to decide.
+
+**Start with the audience.** The same data supports very different dashboards:
+
+| Audience | What they decide | Grain | Cadence | Typical KPIs |
+|---|---|---|---|---|
+| Board quality committee | Where to ask for an improvement plan | System and hospital, by month | Monthly | Readmission rate, HCAHPS top-box %, denial rate |
+| Chief Nursing Officer | Staffing and bed flow | Hospital and unit, by day or week | Daily or weekly | Occupancy %, ALOS, ED boarding |
+| ED nurse manager | Shift staffing and triage changes | One ED, by hour or shift | Daily | Door-to-provider time, LWBS %, arrivals by hour |
+
+**Then write the questions in plain words**, and pick the one number that answers each one. That number is a **KPI**
+(key performance indicator). For Bluestone's monthly operations dashboard:
+
+| Question | KPI |
+|---|---|
+| Are ED patients leaving before a provider sees them? | LWBS % (left without being seen) |
+| How long do ED patients wait to see a provider? | Median door-to-provider minutes |
+| Are inpatients staying longer than they need to? | ALOS (average length of stay) |
+| Are discharged patients coming back within 30 days? | 30-day readmission rate |
+| Will we have a bed for the next admission? | Occupancy % |
+| Would patients rate their stay 9 or 10 out of 10? | HCAHPS top-box % |
+| Are payers refusing our claims? | Denial rate |
+
+**A KPI is only useful if it's fully defined.** Before you build a card, you should be able to fill in every column of a
+**KPI dictionary**, which is what the Targets sheet is:
+
+| Column in `tblTargets` | Why it matters |
+|---|---|
+| **KPI** | One name, used everywhere. Formulas look the target up by this text, so spell it identically |
+| **Question** | Keeps the KPI tied to a decision. A KPI that answers nobody's question doesn't belong on the page |
+| **Definition** | Numerator, denominator, which rows count, and which date decides the month. "Readmission rate" means nothing until you say which stays count |
+| **Direction** | *Lower is better* or *Higher is better*. Status colors and arrows depend on it |
+| **Target** | The line between on target and off target. On target means at or below a lower-is-better target, or at or above a higher-is-better one |
+| **Owner** | The person who acts when the KPI goes red. No owner, no action |
+
+A few more planning rules:
+
+- **Keep it short.** Five to nine KPIs fit on one page. If everything is on the dashboard, nothing stands out.
+- **Separate volume from performance.** ED visits and discharges give context, but more isn't better or worse, so they get
+  no target and no red or green.
+- **Mix leading and lagging KPIs.** Door-to-provider time responds within days, so it's *leading*. Readmissions show up a
+  month later, so they're *lagging*. Leaders need both.
+- **Sketch the layout on paper first.** Draw boxes for the selectors, cards, and charts. Moving a box on paper is much
+  cheaper than moving a chart in Excel.
+
+### 3. Three layers: data, model, and dashboard
+
+Dashboard workbooks that last are built in three layers, each on its own sheet:
+
+```
+ DATA                         MODEL (Calc)                       DASHBOARD
+ tblKPI, tblEDWaits,   ──►    selected month, last year's  ──►   selectors, KPI cards,
+ tblTargets, Lists            month, criteria, chart blocks      charts, labels
+```
+
+| Layer | What lives there | Rules |
+|---|---|---|
+| **Data** | Tables, one fact per row | No formulas that depend on the dashboard. New months are appended at the bottom |
+| **Model** | Helper cells and calculations that more than one card needs, plus the blocks that charts plot | Each calculation exists once. Hide the sheet when you're done |
+| **Dashboard** | Selectors, cards, charts, and text | Cells hold short formulas that point at the model or the data. No typed-in numbers |
+
+This separation pays off every month. When new data arrives, you append rows to `tblKPI`, and the dashboard updates itself
+because it only reads the tables and the selectors. Open the **Calc** sheet. Its gray cells already turn the selectors into
+the pieces that formulas need:
+
+| Calc cell | Formula | Shows (default selection) |
+|---|---|---|
+| C6 | `=SelMonth` | Nov 2025 |
+| C7 | `=EDATE(SelMonth,-1)` | Oct 2025 (the previous month) |
+| C8 | `=EDATE(SelMonth,-12)` | Nov 2024 (the same month last year) |
+| C9 | `=IF(SelFacility="All facilities","*",SelFacility)` | Cedar Ridge Medical Center |
+
+### 4. Additive and non-additive measures
+
+Open **KPI_Monthly**. Each row is one hospital in one month, and the columns come in two kinds.
+
+An **additive measure** can be summed across rows and still mean something: 473 ED visits plus 79 plus 79 is 631 ED visits
+for the system. A **non-additive measure**, such as a rate, an average, or a median, can't. Adding three LWBS rates gives a
+meaningless number.
+
+| Columns in `tblKPI` | Meaning | Additive? |
+|---|---|---|
+| Month, Facility | The keys. Month is a real date (the first of the month) formatted as *mmm yyyy* | — |
+| EDVisits, LWBS | ED arrivals, and arrivals who left without being seen | Yes |
+| LWBSRate | LWBS ÷ EDVisits | No |
+| MedianDTP | Median minutes from arrival to first provider contact | No, and it can't be rebuilt from this table |
+| IPDischarges, LOSDays | Inpatient discharges and their total length of stay in days | Yes |
+| ALOS | LOSDays ÷ IPDischarges | No |
+| IndexStays, Readmits | Discharges that count for readmission, and those readmitted within 30 days | Yes |
+| ReadmitRate | Readmits ÷ IndexStays | No |
+| PatientDays, BedDays | Midnight census and staffed beds, summed over the days of the month | Yes |
+| Occupancy | PatientDays ÷ BedDays | No |
+| Surveys, TopBox | Surveys returned, and those rating the stay 9 or 10 | Yes |
+| TopBoxRate | TopBox ÷ Surveys | No |
+| ClaimsAdjudicated, ClaimsDenied | Claims with a payer decision, and those denied or appealed | Yes |
+| DenialRate | ClaimsDenied ÷ ClaimsAdjudicated | No |
+
+Here's why the difference matters. In January 2025 the three hospitals reported these LWBS numbers:
+
+| Hospital | LWBS | ED visits | LWBS % |
+|---|--:|--:|--:|
+| Bluestone Memorial Hospital | 6 | 473 | 1.27% |
+| Ashby Falls Community Hospital | 2 | 79 | 2.53% |
+| Cedar Ridge Medical Center | 3 | 79 | 3.80% |
+| **System (total ÷ total)** | **11** | **631** | **1.74%** |
+| Average of the three rates | | | 2.53% |
+
+The average of the rates is off by almost a full point, because it gives two small hospitals the same weight as one that
+sees six times as many patients. **Rates roll up as total numerator ÷ total denominator.** That's why `tblKPI` stores the
+components next to every rate. A dashboard that has to show *All facilities* or a whole quarter rebuilds each rate from them.
+
+**Medians are worse: you can't rebuild them at all.** In January 2025 the three hospitals' median door-to-provider times
+were 41.0, 46.0, and 43.5 minutes. Their average is 43.5, but the true median of all 620 patients seen that month is 42.0.
+A median depends on every individual value, so a roll-up median has to come from the detail rows in `tblEDWaits`
+(section 6 shows how).
+
+> ⚠️ **Watch for immature data.** Some numbers aren't final when the month closes. In `tblKPI`, December 2025's readmission
+> columns are blank because the 30-day window is still open, its survey columns are blank because most surveys haven't come
+> back, and its claims columns are blank because most claims are still pending. A blank makes a rate divide by zero, so cards
+> should show *n/a* (with `IFERROR`) rather than 0%, which would look like a perfect month.
+
+### 5. Selectors: dropdowns, names, and combo boxes
+
+A **selector** is the cell or control that every formula on the dashboard reads. Excel offers several kinds:
+
+| Selector | How you add it | What formulas can read | Strengths | Watch out for |
+|---|---|---|---|---|
+| Data-validation dropdown | **Data → Data Validation → List** | The cell's value (text or a date) | Simple, and works in every version of Excel, including the web | Someone can paste over it, so protect the sheet (section 11) |
+| Form Controls combo box | **Developer → Insert → Combo Box** | Its *cell link*: the chosen item's position number | Floats above the grid, so it can't be typed over | Returns a number, not text. Doesn't run in Excel for the web |
+| Slicer on a PivotTable | **PivotTable Analyze → Insert Slicer** | Nothing directly. It filters pivots | Buttons show what's selected, and one slicer can filter many pivots | Pivots need refreshing. Formulas such as SUMIFS don't see the selection |
+| Timeline | **PivotTable Analyze → Insert Timeline** | Nothing directly. It filters pivots by date | Click or drag across months, quarters, or years | Works only with PivotTables and date fields |
+| Slicer on a Table | **Table Design → Insert Slicer** | Nothing directly. It hides rows | Fast filtering for people browsing the table | SUMIFS still counts the hidden rows. Only SUBTOTAL and AGGREGATE skip them |
+
+For formula-driven cards, use dropdowns or combo boxes. Use slicers and timelines with PivotTables (section 9).
+
+**Build a dropdown selector:**
+
+1. Put the choices in a list on a helper sheet. On **Lists**, A2:A5 holds *All facilities* and the three hospital names, and
+   C2:C25 holds 24 month-start dates formatted as *mmm yyyy*.
+2. Select the selector cell (Dashboard!C4) and choose **Data → Data Validation** (Windows: Alt, A, V, V).
+3. Under **Allow**, choose **List**. In **Source**, type `=Lists!$A$2:$A$5`. Leave **In-cell dropdown** ticked.
+4. On the **Error Alert** tab, keep the *Stop* style so nobody can type a facility that doesn't exist. Click **OK**.
+
+Select the cell and press **Alt + ↓** (Mac: **Option + ↓**) to open the list from the keyboard.
+
+> 💡 **Tip:** Store months as real dates, not text like "Nov 2025". A date list formatted as *mmm yyyy* shows friendly labels
+> in the dropdown but puts a real date in the cell, so `EDATE` and `SUMIFS` can work with it.
+
+> ⚠️ A data-validation **Source** can't be a Table reference such as `=tblKPI[Facility]`. Point it at a plain range, at a
+> defined name that refers to the column, or (in Microsoft 365) at a spill: put `=SORT(UNIQUE(tblKPI[Facility]))` in a cell
+> such as Lists!G2 and use `=Lists!$G$2#` as the Source.
+
+**Name the selector cells.** Click Dashboard!C4, click the **Name Box** (left of the formula bar), type `SelFacility`, and
+press **Enter**. The workbook already names C4 `SelFacility` and C5 `SelMonth`. Names make formulas read like sentences
+(`tblKPI[Month],SelMonth` instead of `tblKPI[Month],Dashboard!$C$5`), and they keep working if you move the selector. See
+every name with **Formulas → Name Manager** (Windows: Ctrl + F3).
+
+**Add a Form Controls combo box.** Form Controls live on the **Developer** tab, which is hidden by default:
+
+- **Windows:** **File → Options → Customize Ribbon**, tick **Developer** in the right-hand list, then **OK**.
+- **Mac:** **Excel → Preferences** (or **Settings**) **→ Ribbon & Toolbar**, tick **Developer** under Main Tabs, then **Save**.
+
+Then:
+
+1. Choose **Developer → Insert → Combo Box (Form Control)** (Mac: **Developer → Combo Box**) and drag a rectangle on the
+   sheet.
+2. Right-click the combo box → **Format Control** → **Control** tab.
+3. Set the **Input range** to the list (`Lists!$A$2:$A$5`), the **Cell link** to the cell that receives the choice, and
+   **Drop down lines** to the number of items to show at once. Click **OK**.
+4. Click any cell to deselect the control, then use it.
+
+The cell link receives the **position** of the chosen item: 1 for the first item, 2 for the second, and so on. Turn the
+position back into text with `INDEX`, as Calc!C13 does:
+
+```
+=INDEX(Lists!$A$2:$A$5, Calc!C12)
+```
+
+> 📋 Form Controls are a desktop feature. Excel for the web says it doesn't support interacting with them, so use
+> data-validation dropdowns if your dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the
+> Insert menu), because they're Windows-only and often blocked by security settings.
+
+### 6. Selector-driven formulas
+
+Every card formula follows the same idea: filter the data by the selectors, then aggregate. These patterns cover almost
+everything a dashboard needs:
+
+| Need | Pattern |
+|---|---|
+| One additive value | `=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)` |
+| A rate, rebuilt from components | `=SUMIFS(numerator…)/SUMIFS(denominator…)` with the same criteria |
+| A non-additive value for one row | `=XLOOKUP(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),tblKPI[MedianDTP])` |
+| The same month last year | Replace `SelMonth` with `EDATE(SelMonth,-12)` |
+| The previous month | `EDATE(SelMonth,-1)` |
+| A window of months | Two criteria on Month: `">="&EDATE(SelMonth,-2)` and `"<="&SelMonth` |
+| Year to date | `">="&DATE(YEAR(SelMonth),1,1)` and `"<="&SelMonth` |
+| "All facilities" | `IF(SelFacility="All facilities","*",SelFacility)` as the Facility criterion |
+| A median across hospitals or months | `=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin], conditions))` |
+| Missing or immature data | Wrap the formula in `IFERROR(…,"n/a")` |
+
+**SUMIFS is the workhorse.** With both selectors as criteria it returns exactly one hospital-month, because `tblKPI` has
+one row for each. With a criterion dropped, or with a date window, it adds up several rows correctly. It never returns
+`#N/A`, and it recalculates the moment a selector changes. Here are worked examples with SelFacility set to Bluestone
+Memorial Hospital and SelMonth set to Jan 2025:
+
+| Card value | Formula | Result |
+|---|---|--:|
+| ED visits | `=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)` | 473 |
+| ED visits, same month last year | `…,tblKPI[Month],EDATE(SelMonth,-12))` | 405 |
+| Change vs last year | this year ÷ last year − 1 | +16.8% |
+| Rolling 3 months (Nov 2024 – Jan 2025) | `…,tblKPI[Month],">="&EDATE(SelMonth,-2),tblKPI[Month],"<="&SelMonth)` | 1,321 |
+| Year to date, with SelMonth set to Mar 2025 | `…,tblKPI[Month],">="&DATE(YEAR(SelMonth),1,1),tblKPI[Month],"<="&SelMonth)` | 1,266 |
+
+**Why EDATE?** `EDATE(date, months)` moves a date by whole months and keeps the day of the month, so the first of November
+becomes the first of another month and matches the Month column exactly. Subtracting 365 days lands on the wrong day
+whenever a February 29 is in between. Joining an operator to a date, as in `">="&EDATE(SelMonth,-2)`, turns the date into
+criteria text that SUMIFS understands.
+
+**Looking up a non-additive value.** For one hospital-month you can read MedianDTP directly. `XLOOKUP(1, (A=x)*(B=y), C)`
+finds the row where both conditions are TRUE, because TRUE × TRUE = 1 (Lesson 4.2). Don't SUMIFS a rate or median column.
+It happens to work for one row, but it silently adds the values together as soon as the selection covers several rows.
+
+**The "All facilities" trick.** No row in `tblKPI` says *All facilities*, so `SUMIFS(…,tblKPI[Facility],SelFacility,…)`
+returns 0 when it's selected. SUMIFS criteria accept wildcards, and `"*"` matches any text, so swapping the selector for
+`IF(SelFacility="All facilities","*",SelFacility)` makes the same formula add up all three hospitals. Calc!C9 holds exactly
+that helper, so formulas that point at it handle both cases.
+
+**Medians from the detail.** `FILTER` returns the matching detail rows and `MEDIAN` reduces them to one number, so the
+formula fits in a single cell without spilling:
+
+```
+=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],
+               (tblEDWaits[ArrivalDateTime]>=SelMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(SelMonth,1))))
+```
+
+The date test is a **half-open window**: on or after the first day of the month, and before the first day of the next
+month. ArrivalDateTime includes a time, so a test of `<=` the last day of the month would miss every arrival after midnight
+on that day. To limit the median to one hospital as well, multiply in a third condition: `*(tblEDWaits[Facility]=SelFacility)`.
+
+> 📋 **Older versions.** FILTER, XLOOKUP, and LET need Microsoft 365 or Excel 2021 or later. In Excel 2010–2019, use
+> `=AGGREGATE(17,6,values/(conditions),2)` for a conditional median (function 17 is QUARTILE.INC, quartile 2 is the median,
+> and option 6 skips the `#DIV/0!` errors that the division creates for rows that don't match), and INDEX/MATCH for lookups.
+
+**Name the pieces with LET.** Card formulas get long because the same SUMIFS appears more than once. `LET` names each piece
+once and then uses the names:
+
+```
+=LET(cur,  SUMIFS(tblKPI[PatientDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)
+          /SUMIFS(tblKPI[BedDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth),
+     prev, …the same with EDATE(SelMonth,-1)…,
+     IF(cur>prev, "up", "down"))
+```
+
+> 💡 **Tip:** Break a long formula over several lines in the formula bar with **Alt + Enter** (Mac: **⌃ + Option +
+> Return**). Excel ignores the line breaks when it calculates.
+
+### 7. KPI cards: value, context, status, and trend
+
+A **KPI card** is a small block of cells that shows one KPI. A number alone tells the reader nothing ("Is 1.27% good?"), so
+every card adds context:
+
+```
+┌───────────────────────────────┐
+│ LWBS %                        │  title: what the number is
+│            1.27%              │  the value, large
+│ Target          ≤ 2.0%        │  the target from tblTargets
+│ Status          ✔ On target   │  status in text AND color
+│ vs last year    ▼ 1.7 pts     │  direction of change
+└───────────────────────────────┘
+   Bluestone Memorial Hospital, January 2025
+```
+
+**Variance** compares the value with the target. For rates there are two kinds, and a dashboard should say which one it
+shows:
+
+| Measure | Formula | Bluestone, Jan 2025 | Read it as |
+|---|---|---|---|
+| Variance in **percentage points** | value − target | 1.27% − 2.00% = −0.73 pts | 0.73 points better than target |
+| Relative variance | value ÷ target − 1 | −36.6% | 36.6% below target |
+| Change vs last year (a count) | this year ÷ last year − 1 | 473 vs 405 visits = +16.8% | 16.8% more visits |
+
+A **percentage point** is the difference between two percentages. LWBS falling from 2.96% to 1.27% is a drop of 1.7
+points, which is a 57% relative improvement. Mixing the two up is one of the most common dashboard errors.
+
+**Status depends on direction.** A higher value is good for HCAHPS top-box % and bad for every other KPI in `tblTargets`.
+Read the direction from the KPI dictionary instead of writing a different formula for each card:
+
+```
+=IF(IF(direction="Lower is better", value<=target, value>=target), "On target", "Off target")
+```
+
+For a **scorecard** (a line such as "6 of 7 KPIs on target"), return a number instead of text. `--IF(…)` turns TRUE and
+FALSE into 1 and 0, so `=SUM(statuses)` counts the KPIs on target and `=COUNT(statuses)` counts those with data. A status of
+`""` for missing data is skipped by both.
+
+**Trend arrows.** `UNICHAR(number)` returns any Unicode character, so a formula can return an arrow:
+
+| Code | Character | Typical use |
+|--:|:-:|---|
+| `UNICHAR(9650)` | ▲ | went up |
+| `UNICHAR(9660)` | ▼ | went down |
+| `UNICHAR(9644)` | ▬ | no change |
+| `UNICHAR(10004)` | ✔ | on target |
+| `UNICHAR(10008)` | ✘ | off target |
+
+```
+=IF(cur>prev, UNICHAR(9650), IF(cur<prev, UNICHAR(9660), UNICHAR(9644)))
+```
+
+There's a second way that keeps the cell numeric: a **custom number format** with the arrows inside it. Select the cell,
+press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Number → Custom**, and type a format with up to three sections, separated by
+semicolons, for positive, negative, and zero values. The example card on the Dashboard sheet uses the first row of this
+table:
+
+| Format code | Shows | Use it for |
+|---|---|---|
+| `"▲ "0.0%;"▼ "0.0%;"▬ "0.0%` | ▲ 3.4% (for 0.034) | Neutral changes, such as volumes |
+| `[Color10]"▲ "0.0%;[Red]"▼ "0.0%;"▬ "0.0%` | ▲ 3.4% in green | Changes where up is good |
+| `+0.0%;-0.0%;0.0%` | +3.4% | Variances, so the sign always shows |
+| `#,##0.0,"K"` | 1.2K (for 1,234) | Large counts. Each trailing comma divides by 1,000 |
+| `0.0" min"` | 31.0 min (for 31) | Units inside the number |
+
+The negative section shows the value without a minus sign, so −0.034 appears as ▼ 3.4%. `[Color10]` is a darker, more
+readable green than `[Green]`.
+
+**Color the status with conditional formatting**, not by hand. Select the status cell, choose **Home → Conditional
+Formatting → New Rule → Use a formula to determine which cells to format**, and enter a rule such as `=LEFT($F$10,1)="✔"`
+with a green fill. Add a second rule for ✘ with a red fill. To color a value cell by direction instead, use the
+direction-aware test as the rule: `=IF($R11="Lower is better",$O11<=$Q11,$O11>=$Q11)`.
+
+> ⚠️ **Color has to mean the same thing everywhere.** Red means "off target, act". Don't color volumes (more ED visits isn't
+> bad), and don't color an arrow red just because it points down, because a falling LWBS % is good news.
+
+> 💡 **Tip:** Icon sets (**Home → Conditional Formatting → Icon Sets**) put arrows or traffic lights next to numbers. Use
+> **Edit Rule** to set the thresholds as numbers, tick **Reverse Icon Order** for lower-is-better KPIs, and tick **Show Icon
+> Only** if the number is shown elsewhere.
+
+**Build labels with TEXT.** `="Target "&IF(dir="Lower is better","≤ ","≥ ")&TEXT(target,"0.0%")` produces *Target ≤ 2.0%*.
+`TEXT` formats a number inside a text string, which a number format can't do.
+
+### 8. Charts that follow the selectors
+
+A chart plots ranges, not formulas, so a **dynamic chart** is an ordinary chart whose ranges contain formulas that read the
+selectors. When a selector changes, the formulas recalculate and the chart redraws.
+
+**Build the chart block on the model sheet:**
+
+1. Choose a block of rows for the window, such as 12 rows for "the last 12 months".
+2. In the month column, return the oldest month in the first row, then step forward one month per row. A counter does this
+   with one formula copied down: `ROWS(B$17:B17)` returns 1 in the first row, 2 in the next, and so on, because only the
+   second reference moves as you copy (Lesson 1.5). So `=EDATE(SelMonth,ROWS(B$17:B17)-12)` runs from 11 months back to
+   SelMonth itself.
+3. In the value column, use the selector-driven SUMIFS with that row's month as the Month criterion.
+
+In Microsoft 365, `=EDATE(SelMonth,SEQUENCE(12,1,-11))` spills all 12 months from one cell (Lesson 4.1). A chart built from a
+spill keeps a fixed range, so if a spill can change size, chart it through a defined name that refers to the spill, such as
+`=Calc!$B$17#`.
+
+**Insert and place the chart:**
+
+1. Select the block including its header row and choose **Insert → Charts → Line**. (On Windows, **Alt + F1** inserts a
+   default chart right away.)
+2. Leave the top-left header cell blank. With an empty corner, Excel treats the first column as the axis labels. If Excel
+   still plots the months as a second line, right-click the chart → **Select Data** and fix the axis labels there.
+3. Cut the chart (**Ctrl + X**, Mac: **⌘ + X**) and paste it on the dashboard. A moved chart still points at the model sheet.
+
+**Make the title dynamic.** Build the title text in a cell, for example
+`="ED visits, 12 months to "&TEXT(SelMonth,"mmm yyyy")&" · "&SelFacility`. Then click the chart title, type `=` in the
+formula bar, click that cell, and press **Enter**. Now the title follows the selectors too.
+
+**Handle gaps.** If the window reaches back before the data starts, SUMIFS returns 0 and the line plunges to zero. Return
+`NA()` instead: `=IF(COUNTIFS(tblKPI[Facility],SelFacility,tblKPI[Month],B17)=0,NA(),SUMIFS(…))`. Excel doesn't plot `#N/A`
+points, so the line simply starts later.
+
+**Add a target line.** Add a column to the block that repeats the target in every row (for example `=$Q$11`) and include it
+in the chart as a second series. Format it as a thin dashed line, and readers see the misses without reading a number.
+
+**Choose the right chart for each question:**
+
+| The question | Chart |
+|---|---|
+| How is it trending? | Line (or columns for counts) |
+| How do hospitals or units compare? | Bar, sorted, with the axis starting at zero |
+| Is it above the target? | Line or bar with a target line |
+| What share is each part? | A sorted bar. Avoid pies with more than two or three slices |
+| A single number | A KPI card, not a chart |
+
+**Leave out chartjunk:** 3-D effects, gradients, heavy gridlines, a legend for a single series, and axis labels with more
+decimals than the data deserves. Every mark on the chart should help answer the question.
+
+**Sparklines** are tiny charts inside one cell, ideal next to a KPI card. Select the destination cell, choose **Insert →
+Sparklines → Line**, set the **Data Range** to the 12 values, and click **OK**. Use **Sparkline → Show → High Point** or
+**Markers** to emphasize the points that matter.
+
+### 9. Slicers and timelines across several PivotTables
+
+PivotTables (Lesson 3.4) are a fast way to put summaries on a dashboard, and slicers make them interactive. This table helps
+you choose between formulas and pivots:
+
+| | Formula cards (SUMIFS, XLOOKUP) | PivotTables with slicers |
+|---|---|---|
+| Layout | Exactly where you put each number | The pivot decides, and it grows or shrinks as filters change |
+| Updates | Immediately when data or selectors change | Only after a refresh |
+| Building | Slower, one formula per number | Fast, drag and drop |
+| Rates and medians | Any definition you can write | Calculated fields sum first, then divide. No medians |
+| Drill-down | No | Double-click any value |
+
+**Connect one slicer to several pivots.** A slicer starts out filtering only the pivot you inserted it from.
+
+1. Build each pivot from the same source, `tblKPI`. Pivots built from the same Table share a **pivot cache** (Excel's stored
+   copy of the source data), and only pivots that share a cache can share a slicer.
+2. Click a pivot → **PivotTable Analyze → Insert Slicer** → tick the field (such as **Facility**) → **OK**.
+3. Select the slicer and choose **Slicer → Report Connections**. Tick every pivot the slicer should filter → **OK**.
+4. A **timeline** works the same way: **PivotTable Analyze → Insert Timeline**, then **Timeline → Report Connections**. Use
+   the time-level menu at the timeline's top right to switch between YEARS, QUARTERS, MONTHS, and DAYS.
+
+You can also connect from the pivot's side: click in a pivot → **PivotTable Analyze → Filter Connections**.
+
+> ⚠️ If a pivot is missing from the Report Connections list, it was built on a different cache, for example one pivot added
+> to the Data Model and one not. Rebuild it from the same Table, the same way as the others.
+
+**Rates in a pivot.** A calculated field (**PivotTable Analyze → Fields, Items & Sets → Calculated Field**) such as
+`=LWBS/EDVisits` sums each field over the visible rows first, then divides. Lesson 3.4 warned that this breaks some
+calculations, but for a rate built from additive components it's exactly the total ÷ total rule from section 4.
+
+**Make pivots dashboard-friendly:**
+
+- Put the pivots on a helper sheet and show only slicers, PivotCharts, or formula cards on the dashboard. A slicer can sit on
+  a different sheet from the pivots it filters.
+- Right-click a slicer → **Slicer Settings** → tick **Hide items with no data**. Use **Slicer → Columns** to lay the buttons
+  out in a row.
+- In **PivotTable Options → Layout & Format**, untick **Autofit column widths on update**, so filtering doesn't resize your
+  carefully set columns.
+- Feed a formula card from a pivot with `GETPIVOTDATA` (Lesson 3.4) when you need the pivot's number in a fixed place.
+- Pivots don't recalculate on their own. Use **Data → Refresh All** (Windows: **Ctrl + Alt + F5**) after the data changes,
+  or tick **Refresh data when opening the file** in **PivotTable Options → Data**.
+
+### 10. Layout and visual design
+
+People read a dashboard the way they read a page: top-left first, then across, then down. Put the most important thing
+(often the scorecard, or the KPI that's furthest off target) at the top left, and the detail at the bottom.
+
+- **Use the grid.** Give columns consistent widths and make every card the same size. On Windows, hold **Alt** while you drag
+  or resize a chart to snap it to the cell edges. Select several shapes or charts and use **Align** on the **Shape Format**
+  or **Chart Format** tab to line them up.
+- **Use white space** instead of borders to separate groups. Narrow spacer columns between cards do this well.
+- **Use color with meaning.** Keep the page neutral (grays plus one brand color) and save red and green for status. If
+  everything is colorful, the red cell no longer stands out.
+- **Never rely on color alone.** About 1 in 12 men has some color-vision deficiency, most often red-green. Pair color with a
+  symbol or a word (✔ On target, ✘ Off target), and check the page in grayscale.
+- **Format numbers for reading.** Use the fewest decimals that still separate the values (1.4%, not 1.36986%), put units in
+  labels or formats, and use the same format for the same KPI everywhere.
+- **Write titles that say what the reader is looking at.** *ED visits, 12 months to Nov 2025 · Cedar Ridge Medical Center*
+  beats *Chart 1*.
+
+### 11. Polish: hide, protect, print, and share
+
+**Make it look like a page, not a spreadsheet.**
+
+- On the dashboard sheet, untick **View → Gridlines** and **View → Headings** (both platforms).
+- Hide the model and data sheets (right-click a tab → **Hide**) once the dashboard works. To stop readers unhiding them, use
+  **Review → Protect Workbook** and tick **Structure**.
+- A **linked picture** is a live image of a range that you can place anywhere, which is handy for showing a block from the
+  model sheet inside the dashboard layout. Copy the range, then choose **Home → Paste ▾ → Linked Picture** (both platforms).
+  On Windows, the **Camera** command does the same thing. Add it through **File → Options → Quick Access Toolbar →
+  Commands Not in the Ribbon**.
+
+**Protect the sheet so only the selectors can change.** Every cell starts out *locked*, but locking does nothing until the
+sheet is protected.
+
+1. Select the selector cells, press **Ctrl + 1** (Mac: **⌘ + 1**), and on the **Protection** tab untick **Locked** → **OK**.
+2. For each slicer, right-click → **Size and Properties** → **Properties** → untick **Locked**.
+3. Choose **Review → Protect Sheet**. Keep *Select locked cells* and *Select unlocked cells* ticked, tick **Use PivotTable &
+   PivotChart** if the sheet has slicers, and add a password only if you'll store it somewhere safe.
+
+> ⚠️ A combo box can write to its cell link only if that cell is unlocked or on an unprotected sheet. Keep cell links on the
+> model sheet.
+
+**Print it on one page.**
+
+1. Select the dashboard area and choose **Page Layout → Print Area → Set Print Area**.
+2. Choose **Page Layout → Orientation → Landscape**.
+3. In **Page Layout → Scale to Fit**, set Width to **1 page** and Height to **1 page**.
+4. Check the result with **File → Print** (**Ctrl + P**, Mac: **⌘ + P**).
+
+**Make it accessible.**
+
+- Right-click each chart → **Edit Alt Text** and describe the message ("LWBS % stayed below the 2% target in 10 of the last
+  12 months"), not the chart type.
+- Run **Review → Check Accessibility** and fix what it reports.
+- Keep text contrast high (dark text on light fills) and avoid text smaller than 9 points.
+- Give charts and shapes meaningful names in the **Selection Pane** (Windows: **Home → Find & Select → Selection Pane**), so
+  screen-reader users hear "LWBS trend chart" instead of "Chart 3".
+
+### 12. Performance
+
+A dashboard should respond instantly when someone changes a selector. Most slow dashboards have the same cause: volatile
+functions.
+
+A **volatile function** recalculates after every change anywhere in the workbook, even when its inputs didn't change, and so
+does every formula that depends on it.
+
+| Volatile | Non-volatile alternative |
+|---|---|
+| `OFFSET` | `INDEX`, or SUMIFS with a date window |
+| `INDIRECT` | `INDEX` or `XLOOKUP`, or `CHOOSE` for a few fixed choices |
+| `TODAY`, `NOW` | A *report date* cell that you update once per refresh |
+| `RAND`, `RANDBETWEEN`, `RANDARRAY` | Generate the numbers once, then paste them as values |
+| `CELL`, `INFO` | Avoid them on dashboards |
+
+A common older pattern sums the last three rows of a chart block with OFFSET. Here are three ways to write a rolling
+3-month total over the Calc block, from worst to best:
+
+| Formula | Volatile? |
+|---|---|
+| `=SUM(OFFSET(Calc!C28,-2,0,3,1))` | Yes |
+| `=SUM(INDEX(Calc!C17:C28,10):INDEX(Calc!C17:C28,12))` | No. INDEX can return a cell reference, so INDEX:INDEX builds a range |
+| `=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],">="&EDATE(SelMonth,-2),tblKPI[Month],"<="&SelMonth)` | No, and it reads the data directly |
+
+For Bluestone Memorial Hospital at Jan 2025, all three return 1,321 (413 + 435 + 473). The SUMIFS version is the most robust
+because it doesn't depend on where the block is or how the data is sorted.
+
+More ways to keep a dashboard fast:
+
+- **Calculate once, reference many times.** Put shared pieces (the selected month, last year's month, the facility
+  criterion) in model cells, and point the cards at them.
+- **Point formulas at Tables, not whole columns.** `FILTER(A:A, …)` processes a million rows. `tblEDWaits[…]` processes only
+  the rows that exist, and it grows with the data.
+- **Use FILTER sparingly over big detail tables.** One MEDIAN(FILTER(…)) over 12,000 rows is instant, but hundreds of them add
+  up. Precompute what you can in the data layer, the way `tblKPI` does.
+- **Check the calculation mode.** **Formulas → Calculation Options** should be **Automatic**. If someone set it to Manual, the
+  dashboard stops updating until they press **F9** (Mac: **⌘ + =**).
+
+### 13. Worked example: the Inpatient discharges card, start to finish
+
+Open the **Dashboard** sheet. The card under the selectors is finished, so you can click each cell and read its formula. It
+was built in four steps:
+
+1. **Title.** B7:C7 is merged and filled navy: *INPATIENT DISCHARGES · example card*.
+2. **Value.** B8:C8 is merged, set in large bold type, and holds
+   `=SUMIFS(tblKPI[IPDischarges],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)`. For Cedar Ridge Medical Center in
+   Nov 2025 it shows **30**.
+3. **Context.** C9 holds the same SUMIFS with `EDATE(SelMonth,-12)` as the month: **29** discharges in Nov 2024.
+4. **Trend.** C10 holds `=IFERROR(B8/C9-1,"n/a")` with the custom format `"▲ "0.0%;"▼ "0.0%;"▬ "0.0%`, so it shows
+   **▲ 3.4%** while the cell still holds a number (0.0345).
+
+The card has no target and no color, because discharges are a volume: more isn't better or worse. Now change the Facility
+selector to Bluestone Memorial Hospital and the Month to Jan 2025. All three numbers change, and the arrow may flip, without
+anyone touching a formula. That's the whole idea of an interactive dashboard.
+
+### 14. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Open a dropdown list | Alt + ↓ | Option + ↓ |
+| Format Cells (custom formats, Locked) | Ctrl + 1 | ⌘ + 1 |
+| Name Manager | Ctrl + F3 | **Formulas → Name Manager** |
+| Insert a default chart next to the data | Alt + F1 | **Insert → Charts** |
+| Line break inside a formula | Alt + Enter | ⌃ + Option + Return |
+| Refresh all PivotTables | Ctrl + Alt + F5 | **Data → Refresh All** |
+| Recalculate the workbook | F9 | ⌘ + = |
+| Select several slicer buttons | Ctrl + click | ⌘ + click |
+| Snap a chart to the cell grid | Hold Alt while dragging | Use **Align** on the Format tab |
+| Print preview | Ctrl + P | ⌘ + P |
+
+| Feature | Availability |
+|---|---|
+| SUMIFS, EDATE, data-validation lists, conditional formatting | Every current version, including Excel for the web |
+| UNICHAR | Excel 2013 and later |
+| XLOOKUP, LET, FILTER, SEQUENCE | Microsoft 365 and Excel 2021 or later |
+| Slicers for PivotTables | Excel 2010 and later (Windows), current Mac versions, Excel for the web |
+| Timelines | Excel 2013 and later (Windows), Excel 2016 and later (Mac) |
+| Form Controls | Excel for Windows and Mac. They don't run in Excel for the web |
+| Sparklines | Excel 2010 and later (Windows), Excel 2011 and later (Mac) |
+| Linked Picture | Windows and Mac. The Camera command is Windows only |
 
 ## 🧪 Hands-on practice
 
-Download [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx) and open the **Practice** sheet. Type each answer in the yellow cell — the **Check**
-column turns green when you're right.
+Download [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx) and open the **Practice** sheet. Tasks 1–9 are formulas you type in the
+yellow cells. Tasks 10–13 have you build a combo box, a chart block, and connected PivotTables. The **Check** column turns
+green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
 The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). They start at Cedar Ridge Medical Center and Nov 2025. Write every formula with SelFacility and SelMonth, never typed-in names or dates, and keep that selection while you check your answers. (Change it afterwards and watch your formulas follow.) Tasks 1–9 go in the yellow cells below. Tasks 10–13 have you build on other sheets.
@@ -43,8 +659,9 @@ The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4)
 
 ## ✅ Answer key
 
-The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…**). The same answers are below,
-collapsed so you don't see them by accident.
+The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…**). Its *Live result* column runs each
+sample formula against the data, and the PivotTable tasks show a SUMIFS "formula twin" that proves the number. The same
+answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -180,7 +797,7 @@ A combo box writes the position of the chosen item, not its text: Ashby Falls Co
 5. Change the selectors on the Dashboard and watch the line redraw.
 
 
-The chart's series points at formula cells, and those cells point at the selectors, so one dropdown redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). Charts can't point at a spill directly, though, so you'd chart the spill range through a defined name. If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
+The chart's series points at formula cells, and those cells point at the selectors, so one dropdown redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). A chart built from a spill keeps a fixed range, so if a spill can change size, chart it through a defined name that refers to it (for example =Calc!$B$17#). If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
 
 **12. PivotTable 1 with a slicer and a timeline**
 
@@ -218,18 +835,23 @@ Report Connections is what lets one slicer filter several pivots. If you skipped
 
 ## 🏆 Bonus challenge
 
+This is the dashboard you'd actually hand to a board. Sketch the layout on paper first, build the model cells before the
+cards, and compare your finished page with the hidden **Dashboard Key** sheet.
+
 <!-- BEGIN GENERATED: bonus -->
 Each month the COO presents one page to the board's Quality & Operations Committee. It must answer three questions at a glance: Are we on target? Where are we missing? Which way are things heading? Build it on the Board sheet to this spec:
+
 1. Facility and Month dropdowns fed by the Lists sheet, named BoardFacility and BoardMonth. Facility must allow All facilities.
 2. One card for each of the seven KPIs in tblTargets, showing the value, the target, a status colored by conditional formatting, and an arrow versus the same month last year. Every card must work for All facilities, so rebuild rates from their components and compute the median door-to-provider from tblEDWaits.
-3. A scorecard line such as '3 of 7 KPIs on target'.
+3. A scorecard line that counts the KPIs on target, such as '6 of 7 KPIs on target'.
 4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.
 5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one landscape page when printed.
+
 The hidden Dashboard Key sheet is a finished reference build. Compare your numbers with it when you're done.
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Set your Board dashboard to All facilities and Oct 2025. What is the system-wide 30-day readmission rate? Enter it as a percentage. *(Hint: Swap "All facilities" for the wildcard "*" in the Facility criterion)*
+- **B1.** Set your Board dashboard to All facilities and Oct 2025. What is the system-wide 30-day readmission rate? Enter it as a percentage. *(Hint: Swap "All facilities" for the asterisk wildcard in the Facility criterion)*
 - **B2.** With All facilities and Oct 2025 still selected, how many of the seven KPIs are on target? *(Hint: Give each card a status cell that returns 1 or 0, then SUM them. Remember which KPIs are higher-is-better)*
 - **B3.** Keep Oct 2025 and switch the Facility dropdown to each hospital in turn. Which hospital has the fewest KPIs on target? *(Hint: Your scorecard line answers this. Change only the Facility dropdown)*
 - **B4.** Back on All facilities and Oct 2025, your 12-month LWBS % trend runs Nov 2024–Oct 2025. In which month was the system-wide LWBS % highest? Enter the first day of that month as a date. *(Hint: INDEX(months, MATCH(MAX(rates), rates, 0)) on your trend block, or just read the chart's peak)*
@@ -252,7 +874,7 @@ Work on the **Bonus** sheet of the workbook.
 ```
 
 
-40 readmissions ÷ 211 index stays = 18.96%. No row in tblKPI says "All facilities", so SUMIFS with that text returns 0. The wildcard * matches any text, so the same SUMIFS adds all three hospitals. Every additive component works this way, and every rate is then rebuilt as total ÷ total.
+40 readmissions ÷ 211 index stays = 18.96%. No row in tblKPI says "All facilities", so SUMIFS with that text returns 0. The wildcard `*` matches any text, so the same SUMIFS adds all three hospitals. Every additive component works this way, and every rate is then rebuilt as total ÷ total.
 
 **B2. Scorecard, All facilities, Oct 2025**
 
@@ -322,7 +944,16 @@ December 2024 peaks at 2.90%, against a target of 2%. Every other month in the w
 
 ## Key takeaways
 
-- TODO
+- Plan from the audience and their questions to a short list of KPIs, each with a definition, a direction, a target, and an
+  owner. The KPI dictionary is part of the dashboard.
+- Build in three layers (data, model, dashboard), so new data flows through without anyone editing the page.
+- Store additive components. Rebuild every rate as total ÷ total, and compute roll-up medians from the detail rows.
+- Drive every number from named selector cells with SUMIFS, EDATE, and XLOOKUP. The `"*"` wildcard turns the same formula
+  into an "All facilities" formula.
+- A KPI card needs context: a target, a direction-aware status shown in both text and color, and a trend.
+- Charts follow the selectors when they plot formula blocks. Slicers filter several PivotTables through Report Connections.
+- Polish for the reader (gridlines off, protection, one printed page, alt text) and avoid volatile functions such as OFFSET
+  and INDIRECT.
 
 <!-- BEGIN GENERATED: nav -->
 ---

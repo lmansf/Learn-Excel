@@ -542,7 +542,7 @@ def build() -> Lesson:
         "2. One card for each of the seven KPIs in tblTargets, showing the value, the target, a status colored by "
         "conditional formatting, and an arrow versus the same month last year. Every card must work for All "
         "facilities, so rebuild rates from their components and compute the median door-to-provider from tblEDWaits.\n"
-        "3. A scorecard line such as '3 of 7 KPIs on target'.\n"
+        "3. A scorecard line that counts the KPIs on target, such as '6 of 7 KPIs on target'.\n"
         "4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.\n"
         "5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one "
         "landscape page when printed.\n\n"
@@ -651,6 +651,8 @@ def build() -> Lesson:
     def _custom(wb, lesson, selftest):
         _lists(wb)
         _targets_formats(wb)
+        _landscape(wb["Targets"])
+        _landscape(wb["KPI_Monthly"])
         _dashboard(wb, lesson)
         _calc(wb, lesson, LINK_CELL, TREND_HDR, TREND_FIRST, TREND_LAST, selftest, trend_month_cells)
         _board(wb)

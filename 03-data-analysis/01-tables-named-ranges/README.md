@@ -4,8 +4,8 @@
 > **Data:** Supply inventory snapshot for 15 storerooms across three Bluestone hospitals (257 stock rows, as of 12/31/2025), a Settings sheet with the report date and expiry window, and Purchasing's vendor list.
 
 Bluestone's supply chain team gets a fresh inventory snapshot every week. Today it has 257 stock rows, and next Monday it will
-have a few more or a few less. A formula like `=SUM(Inventory!J2:J258)` stops at row 258 no matter what, so it quietly
-misses new rows, and nobody notices until a unit runs out of saline flushes. **Excel Tables** fix this because they grow with
+have a few more or a few less. A formula like `=SUM(Inventory!J2:J258)` still stops at row 258 when next week's rows are
+pasted below it, so it quietly misses them, and nobody notices until a unit runs out of saline flushes. **Excel Tables** fix this because they grow with
 the data, and their formulas read like the question you're asking: `=SUM(tblInventory[QtyOnHand])`. **Named ranges** do the
 same for the settings a report depends on, such as the report date and the 90-day expiry window. In this lesson you turn a raw
 inventory export into a Table, use it to find stockouts, expired stock, and overdue counts, and then build a reorder report
@@ -62,8 +62,9 @@ Excel can only guess the right range when the data is a clean list:
 > ⚠️ If **My table has headers** is unticked, Excel inserts a new header row (Column1, Column2…) and treats your real headers
 > as data. Press **Ctrl + Z** (Mac: **⌘ + Z**) and convert again.
 
-> 💡 **Tip:** If you scroll down until the header row is out of view, Excel replaces the column letters (A, B, C…) with the
-> Table's column names as long as the active cell is inside the Table. You always know which column you're in.
+> 💡 **Tip:** On a sheet without frozen panes, scroll down until the header row is out of view, and Excel replaces the
+> column letters (A, B, C…) with the Table's column names as long as the active cell is inside the Table. You always know
+> which column you're in. The Inventory sheet freezes its header row instead, so there the headers simply stay on screen.
 
 ### 3. Name the Table
 
@@ -78,8 +79,8 @@ Many analysts start Table names with **tbl**. The prefix tells you at a glance t
 cell, and when you type `=tbl`, AutoComplete lists every Table in the workbook. The Name Box, left of the formula bar, lists
 Tables too, so you can jump to one by picking its name.
 
-Table names follow the same rules as every other name in Excel (section 10): no spaces, start with a letter or an underscore,
-and don't look like a cell address.
+Table names follow the same rules as every other name in Excel (section 10): no spaces, start with a letter, an underscore,
+or a backslash, and don't look like a cell address.
 
 > ⚠️ `tbl1` is not a valid name, because TBL1 is a real cell address: Excel has 16,384 columns, and TBL is one of them. Use a
 > descriptive name like `tblInventory` instead.
@@ -140,10 +141,11 @@ name works from any sheet in the workbook.
 
 #### Column names with spaces or symbols
 
-This course uses headers without spaces, such as QtyOnHand. If a header contains a space or a special character, the
-this-row form needs an extra pair of brackets, as in `[@[Qty On Hand]]`. A few characters, such as `[`, `]`, `#`, and `'`,
-also need an apostrophe in front of them. Excel adds the brackets and apostrophes for you when you click, but short headers
-without spaces or symbols keep every formula easier to read.
+This course uses headers without spaces, such as QtyOnHand. If a header contains a space, the this-row form needs an extra
+pair of brackets, as in `[@[Qty On Hand]]`, while the whole-column form stays `tblInventory[Qty On Hand]`. A header with a
+symbol such as `$` or `%` needs the extra brackets in every form, as in `tblInventory[[Cost $]]`. A few characters, such as
+`[`, `]`, `#`, `'`, and `@`, also need an apostrophe in front of them. Excel adds the brackets and apostrophes for you when
+you click, but short headers without spaces or symbols keep every formula easier to read.
 
 > ⚠️ **Dragging sideways changes the column.** If you drag `=SUM(tblInventory[QtyOnHand])` one cell to the right with the
 > fill handle, it becomes `=SUM(tblInventory[ParLevel])`, because Excel treats the column name like a relative reference.
@@ -204,7 +206,8 @@ For the gloves in row 2, that's 0.43%.
 - **Resize:** use **Table Design → Resize Table**, or drag the small handle at the Table's bottom-right corner.
 
 Every structured reference follows the new size. `=SUM(tblInventory[QtyOnHand])` includes new rows without any editing, and
-so do PivotTables, charts, and drop-down lists built on the Table.
+so do charts and drop-down lists built on the Table. A PivotTable built on the Table picks up the new rows the next time you
+refresh it, without any change to its source (Lesson 3.4).
 
 > 💡 **Try it:** After task 1, and before you turn on the Total Row, type `=SUM(tblInventory[QtyOnHand])` in an empty cell on
 > the Practice sheet. On the Inventory sheet, type `TEST` in A259 and `100` in J259, and watch the sum grow by 100. Then press
@@ -487,13 +490,13 @@ in order, because task 1 builds the Table that every later task uses. Type each 
 work you do on the Inventory and Settings sheets. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses the Inventory sheet: supply stock in 15 storerooms across three Bluestone hospitals, counted on 12/31/2025. Do the tasks in order, because later tasks use the Table, columns, Total Row, and names you create in earlier ones. After task 1, write formulas with structured references such as tblInventory[QtyOnHand] instead of cell ranges.
+The tasks use the Inventory sheet: supply stock in 15 storerooms across three Bluestone hospitals, in the snapshot taken on 12/31/2025. Task 9 also uses the Settings sheet. Do the tasks in order, because later tasks use the Table, columns, Total Row, and names you create in earlier ones. After task 1, write formulas with structured references such as tblInventory[QtyOnHand] instead of cell ranges.
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | On the Inventory sheet, click any cell in the data and convert the range to an Excel Table (Ctrl + T; Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the Table Design tab. The gray cell finds a Table with that exact name and counts its data rows. It stays blank until the Table exists. | Make sure 'My table has headers' is ticked |
+| 1 | On the Inventory sheet, click any cell in the data and convert the range to an Excel Table with Ctrl + T (Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the Table Design tab (Mac: Table tab). The gray cell finds a Table with that exact name and counts its data rows. It stays blank until the Table exists. | Make sure 'My table has headers' is ticked |
 | 2 | How many stock rows are completely out of stock (QtyOnHand = 0)? Use a structured reference to the QtyOnHand column instead of a cell range. | COUNTIF. Type tblInventory[ and pick the column from the list |
-| 3 | Fill the yellow ExtendedValue column (column R) with a calculated column: each row's QtyOnHand × UnitCost. Type the formula once in R2 and press Enter, and the Table fills every row. The gray cell totals the column: what's the value of all stock on hand across the system? | Click the QtyOnHand cell in the same row while typing; Excel writes [@QtyOnHand] |
+| 3 | Fill the yellow ExtendedValue column (column R) with a calculated column: each row's QtyOnHand × UnitCost. Type the formula once in R2 and press Enter, and the Table fills every row. The gray cell totals the column: what's the value of all stock on hand across the system? | Click the QtyOnHand cell in the same row while you type, and Excel writes [@QtyOnHand] |
 | 4 | What share of the system's total inventory value (ExtendedValue) is Orthopedic Implants stock? Divide the category's value by the total of all rows and enter it as a percentage, to 1 decimal place. | SUMIFS(…)/SUM(…), both with structured references |
 | 5 | Fill the yellow NeedsReorder column (column S) with a calculated column that returns TRUE when QtyOnHand is at or below ReorderPoint, and FALSE otherwise. The gray cell counts the TRUE rows: how many stock rows need reordering? | A comparison already returns TRUE or FALSE, so you don't need IF |
 | 6 | Turn on the Table's Total Row and set the LeadTimeDays total to Average. Then, in the yellow cell, type = and click that Total Row cell, so Excel writes a [#Totals] reference. What's the average vendor lead time in days, to 2 decimal places? | Table Design → Total Row (Windows: Ctrl + Shift + T), then use the dropdown in the Total Row cell |
@@ -502,7 +505,7 @@ Every task uses the Inventory sheet: supply stock in 15 storerooms across three 
 | 9 | On the Settings sheet, select A2:B3 and use Formulas → Create from Selection (tick only Left column) to name cell B2 ReportDate and cell B3 ExpiringWindowDays. The gray cell looks up both names and adds them: what date does it show? | The labels in column A become the names of the cells beside them |
 | 10 | How many stock rows expire inside the expiry window? Count rows whose ExpirationDate is later than ReportDate and no later than ReportDate + ExpiringWindowDays. Use the two names in a COUNTIFS (rows with no ExpirationDate don't count). | Join an operator to a name the way you join it to a cell: ">"&ReportDate |
 | 11 | Expired stock must be pulled from the shelves and written off. What's the total ExtendedValue of rows whose ExpirationDate is before ReportDate? | SUMIFS with a "<"&ReportDate criterion |
-| 12 | Policy says every stock row must be cycle-counted at least every 30 days. Create a named constant CycleCountDays that refers to =30 (Formulas → Define Name; it doesn't live in any cell). How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays? | Rearrange: overdue means LastCountDate < ReportDate − CycleCountDays |
+| 12 | Policy says every stock row must be cycle-counted at least every 30 days. Create a named constant CycleCountDays that refers to =30 with Formulas → Define Name. It doesn't live in any cell. How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays? | Rearrange: overdue means LastCountDate < ReportDate − CycleCountDays |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -641,7 +644,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B1.** Add a new column to tblInventory by typing OrderCost in cell T1, just right of the NeedsReorder header. The Table expands to include it. Make it a calculated column that returns ReorderQty × UnitCost for rows where NeedsReorder is TRUE, and 0 for every other row. The gray cell totals the column: what's the total cost of this week's orders? *(Hint: IF can test a TRUE/FALSE column directly: IF([@NeedsReorder], …, 0))*
 - **B2.** On the Vendors sheet, convert the vendor list to a Table named tblVendors. Fill its yellow ReorderCost column with a calculated column that adds up tblInventory[OrderCost] for that row's vendor. Which vendor gets the largest purchase order? (Type the vendor's name, or return it with a formula.) *(Hint: In tblVendors, SUMIFS can add up another Table's column, with [@Vendor] as the criterion)*
 - **B3.** What's the value of that vendor's purchase order? *(Hint: The largest value in tblVendors[ReorderCost])*
-- **B4.** The group purchasing contract gives a 2% discount on any single vendor order of $20,000 or more. Define two named constants, DiscountMin (=20000) and DiscountPct (=0.02), then calculate the total discount on this week's orders. *(Hint: SUMIFS can use the same column as the sum range and the criteria range)*
+- **B4.** The group purchasing contract gives a 2% discount on any single vendor order of $20,000 or more. Define two named constants, DiscountMin (=20000) and DiscountPct (=0.02), then calculate the total discount on this week's orders, to the cent. *(Hint: SUMIFS can use the same column as the sum range and the criteria range)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -660,7 +663,7 @@ Typing in the first empty column next to a Table adds a column to it (Excel's *A
 - **Answer:** Summit Orthopedic Systems
 - **Solution:** `=INDEX(tblVendors[Vendor],MATCH(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],0))`
 
-The calculated column in tblVendors is `=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. `=XLOOKUP(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],tblVendors[Vendor])` works too in Excel 2021 or Microsoft 365. Orthopedic implants cost thousands of dollars each, so even a few reorder lines make the largest order.
+The calculated column in tblVendors is `=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. `=XLOOKUP(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],tblVendors[Vendor])` works too in Excel 2021 or Microsoft 365. All four reorder lines for Summit Orthopedic Systems are orthopedic implants, and three of them cost more than $2,000 per unit, so a handful of lines makes the largest order.
 
 **B3. What's the value of that vendor's purchase order?**
 
@@ -686,8 +689,8 @@ Orders from 3 vendors reach $20,000. Together they total $121,583.18, and 2% of 
 - Structured references like `tblInventory[QtyOnHand]` and `[@QtyOnHand]` are always the right size, grow with the data,
   and read like the question you're asking.
 - A formula entered in an empty Table column becomes a calculated column: one formula, every row, no copying.
-- The Total Row and slicers work through SUBTOTAL, so they summarize only the visible rows. `SUM(tblInventory[…])` always
-  includes every row.
+- Slicers filter the Table, and the Total Row uses SUBTOTAL, so it summarizes only the rows the slicers leave visible.
+  `SUM(tblInventory[…])` always includes every row.
 - Name your inputs (ReportDate) and your policy values (CycleCountDays) so formulas explain themselves and every assumption
   lives in one place.
 - Check Name Manager for `#REF!` names after deleting cells, and prefer Tables to OFFSET or INDEX dynamic ranges for lists that

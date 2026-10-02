@@ -306,8 +306,11 @@ Below the sort commands, every filter list offers a submenu of conditions. Excel
 | **Number Filters** | Equals, Does Not Equal, Greater Than, Greater Than Or Equal To, Less Than, Less Than Or Equal To, Between, Top 10…, Above Average, Below Average, Custom Filter… |
 | **Date Filters** | Equals, Before, After, Between, Tomorrow, Today, Yesterday, Next/This/Last Week, Month, Quarter, Year, Year to Date, All Dates in the Period ▸ (Quarter 1–4, January–December), Custom Filter… |
 
-Every condition opens the **Custom AutoFilter** dialog, which holds up to two conditions on the same column joined by **And** or
-**Or**. You can type the wildcards `*` (any number of characters) and `?` (exactly one character) into text conditions.
+A condition that needs a value from you, such as Begins With, Greater Than, Between, or Before, opens the **Custom AutoFilter**
+dialog. It holds up to two conditions on the same column joined by **And** or **Or**, and you can type the wildcards `*` (any number
+of characters) and `?` (exactly one character) into text conditions. **Top 10…** opens its own small dialog (section 8). Above
+Average, Below Average, the relative date filters (Today, Last Month, and so on), and All Dates in the Period apply as soon as you
+click them.
 
 Some examples on the lesson data:
 
@@ -340,10 +343,11 @@ December** does the same thing for December of every year in the column, which h
   Top / Bottom   1–500    Items / Percent
 ```
 
-**Top 10 Items** on DoorToProviderMin keeps the ten rows with the longest waits. **Bottom 5 Items** keeps the five shortest.
-**Top 10 Percent** keeps the longest tenth of the waits. Top 10 keeps every row whose value is at least the cut-off value, so if two
-rows tie at the cut-off you'll see both, and a "Top 10" can show 11 or more rows. Top 10 only filters. It doesn't sort, so the
-visible rows stay in their current order. Sort the column afterward if you want them ranked.
+**Top 10 Items** on DoorToProviderMin keeps the ten rows with the longest waits. **Bottom** keeps the shortest waits instead, and
+**Percent** keeps a share of the rows, so **Top 10 Percent** keeps the longest tenth of the waits. The filter keeps every row whose
+value reaches the cut-off value, so rows that tie at the cut-off all stay visible. Try **Bottom 5 Items** on DoorToProviderMin: the
+fifth-shortest wait is 2 minutes, and eight visits waited exactly 2 minutes, so you see 9 rows instead of 5. Top 10 only filters. It
+doesn't sort, so the visible rows stay in their current order. Sort the column afterward if you want them ranked.
 
 **Above Average** and **Below Average** compare each value with the column's mean. Above Average on DoorToProviderMin shows the 359
 visits that waited longer than the 48.0-minute average.
@@ -585,7 +589,9 @@ empty criteria range and you'll find that 588 different patients made the 937 vi
 
 > 💡 **Tip: formula criteria.** A criteria cell can hold a formula that returns TRUE or FALSE for the first data row. Leave the
 > header above it blank (or use a label that isn't a column name), refer to row 2 with a relative reference, and lock everything
-> else with `$`. For example, `=L2>AVERAGE($L$2:$L$938)` copies the 359 visits that waited longer than average.
+> else with `$`. For example, on the Workspace sheet, `=EDVisits!L2>AVERAGE(EDVisits!$L$2:$L$938)` copies the 359 visits that
+> waited longer than average. The cell itself shows only row 2's TRUE or FALSE, which is normal. Because the criteria range is on
+> a different sheet from the data, every reference needs the sheet name. A plain `L2` would point at the Workspace sheet's own L2.
 
 > 📋 After you run an Advanced Filter, Excel creates the names **Criteria** and **Extract** (Formulas → Name Manager). That's normal.
 > Excel uses them to remember your last ranges.
@@ -635,7 +641,7 @@ on, and how quickly were they seen?*
 5. Sort the visible rows by DoorToProviderMin, Largest to Smallest, to see who waited longest.
 6. **Sanity check.** The average wait for *all* visits is 48.0 minutes, with a median of 39. Evening ambulance patients were seen
    faster, which is plausible: ambulance patients tend to be sicker, so triage moves them up the queue. If your average had come out
-   at 48.0, the SUBTOTAL would be looking at hidden rows too, so you'd recheck the function number.
+   at 48.0, your formula would be counting the hidden rows too (plain AVERAGE instead of SUBTOTAL, for example), so you'd recheck it.
 
 The median (22) is lower than the average (28.7) because a handful of long waits pull the average up. That's why emergency
 department wait times are usually reported as medians.
@@ -646,7 +652,7 @@ Download [`1.6-sorting-filtering.xlsx`](1.6-sorting-filtering.xlsx) and open the
 filter EDVisits and type what you see. Tasks 11 and 12 ask for formulas. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses the EDVisits sheet: 937 visits in rows 2–938, columns A–M. For tasks 1–10, sort or filter, then type what you see: an ID, a row number, or a count. Before each filter task, clear the filters left over from the task before (Data → Clear). Tasks 11 and 12 use SUBTOTAL and AGGREGATE while an ESI 3 filter stays on, so do them last. Mac: Ctrl+Shift+L is ⌘+Shift+F.
+Every task uses the EDVisits sheet: 937 visits in rows 2–938, columns A–M. For tasks 1–10, sort or filter, then type what you see: an ID, a row number, a count, or a value. Before each filter task, clear the filters left over from the task before (Data → Clear). Tasks 11 and 12 use SUBTOTAL and AGGREGATE while an ESI 3 filter stays on, so do them last. Mac: Ctrl+Shift+L is ⌘+Shift+F.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -659,7 +665,7 @@ Every task uses the EDVisits sheet: 937 visits in rows 2–938, columns A–M. F
 | 7 | Clear the filters. Show only visits that arrived in November 2025 on a Saturday or Sunday. How many are there? | Date tree for the month, then ArrivalDay for the weekend |
 | 8 | Clear the filters. Rows shaded orange are visits that triage flagged as a positive sepsis screen. Filter to the orange rows, then also keep only those with DoorToProviderMin greater than 30. How many flagged visits waited more than 30 minutes to see a provider? | Filter by Color, then Number Filters → Greater Than |
 | 9 | Clear the filters. Use Advanced Filter to find visits that were ESI level 1 OR waited more than 120 minutes for a provider. Build the criteria range on the Workspace sheet and copy the results there (start Data → Advanced from the Workspace sheet). How many visits does it copy? | Conditions on different rows of the criteria range mean OR |
-| 10 | Use Advanced Filter with Unique records only to copy a list of the different ChiefComplaint values to the Workspace sheet. How many different chief complaints are there? Don't count the header. | List range: the ChiefComplaint column only. No criteria range |
+| 10 | Use Advanced Filter with Unique records only to copy a list of the different ChiefComplaint values to the Workspace sheet. How many different chief complaints are there? Don't count the header. | List range: the ChiefComplaint column only. Empty the Criteria range box |
 | 11 | Filter EDVisits to ESILevel 3 only (clear everything else). In the yellow cell, write a formula that averages DoorToProviderMin for the visible rows only, rounded to 1 decimal place with ROUND. Leave the filter on for task 12. | SUBTOTAL's AVERAGE is function_num 1 (or 101) |
 | 12 | Keep the ESI 3 filter on. ShockIndex (HeartRate ÷ SystolicBP) shows #DIV/0! where no blood pressure was recorded, so =SUBTOTAL(104,EDVisits!K2:K938) returns #DIV/0!. Write an AGGREGATE formula that returns the highest ShockIndex among the visible rows while ignoring the errors. (2 decimal places is close enough.) | MAX is function 4. Pick the option that ignores hidden rows AND error values |
 <!-- END GENERATED: practice -->
@@ -668,8 +674,9 @@ Every task uses the EDVisits sheet: 937 visits in rows 2–938, columns A–M. F
 
 The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…** → *Answer Key*). Its *Live result* column
 recomputes each answer with an independent formula, so you can confirm the numbers without redoing the sort or filter. (The
-color task has no live formula, because no formula can see a fill color.) The same
-answers are below, collapsed so you don't see them by accident.
+color task has no live formula, because no formula can see a fill color.) The live formulas for task 2 and bonus B3 use SORTBY and
+FILTER, so they need Microsoft 365 or Excel 2021 and show `#NAME?` in older versions. The answers in column C work everywhere. The
+same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -793,7 +800,7 @@ Color is the only marker for the sepsis flag, so Filter by Color is the only way
    | 1 | |
    | | >120 |
 
-3. Still on Workspace, choose **Data → Advanced**. Select **Copy to another location**. List range: `EDVisits!$A$1:$M$938`. Criteria range: `Workspace!$A$4:$B$6`. Copy to: `Workspace!$D$4`. **OK**.
+3. Still on Workspace, click an empty cell (for example D4), then choose **Data → Advanced**. Select **Copy to another location**. List range: `EDVisits!$A$1:$M$938`. Criteria range: `Workspace!$A$4:$B$6`. Copy to: `Workspace!$D$4`. **OK**.
 4. The copy has a header row plus **65** visit rows.
 
 
@@ -806,7 +813,7 @@ Each criteria row is one way to qualify. Row 5 catches the 23 ESI 1 visits and r
 
 1. Click an empty cell on **Workspace** (for example **S4**) and choose **Data → Advanced**.
 2. Select **Copy to another location**. List range: `EDVisits!$H$1:$H$938` (just that one column, header included).
-3. Leave Criteria range empty. Copy to: `Workspace!$S$4`. Tick **Unique records only**. **OK**.
+3. Make the **Criteria range** box empty: Excel may fill in `Workspace!$A$4:$B$6` from task 9, so delete it. Copy to: `Workspace!$S$4`. Tick **Unique records only**. **OK**.
 4. The list has a header plus **28** complaints (select them and read Count on the status bar).
 
 
@@ -851,19 +858,19 @@ Work on the **Bonus** sheet of the workbook.
 - **Answer:** 60
 - **Solution:**
 
-1. **Data → Clear** on EDVisits. Insert a sheet (**Shift+F11**) and rename it **Review**.
-2. On **Workspace**, build this criteria range in an empty spot (for example A20:C22), with headers copied from EDVisits:
+1. **Data → Clear** on EDVisits. Insert a sheet with the **+** button next to the sheet tabs (or **Shift+F11**) and rename it **Review**.
+2. On **Workspace**, build this criteria range in an empty spot with a blank column on each side (for example U4:W6, to the right of your task 10 list), with headers copied from EDVisits:
 
    | ESILevel | ArrivalMode | ArrivalHour |
    |---|---|---|
    | 1 | | |
    | 2 | Ambulance | >=18 |
 
-3. Click **Review!A1**, then **Data → Advanced** → **Copy to another location**. List range `EDVisits!$A$1:$M$938`, Criteria range `Workspace!$A$20:$C$22`, Copy to `Review!$A$1`. **OK**.
+3. Click **Review!A1**, then **Data → Advanced** → **Copy to another location**. List range `EDVisits!$A$1:$M$938`, Criteria range `Workspace!$U$4:$W$6`, Copy to `Review!$A$1`. **OK**.
 4. Review shows a header plus **60** rows (rows 2–61).
 
 
-Row 21 of the criteria range (ESILevel = 1) catches all 23 ESI 1 visits. Row 22 is an AND: ESI 2 *and* Ambulance *and* ArrivalHour ≥ 18, which adds 37 more. The two rows together are OR. Excel only copies filtered data to the active sheet, so you must start Data → Advanced from the Review sheet, or Excel shows an error.
+Row 5 of the criteria range (ESILevel = 1) catches all 23 ESI 1 visits. Row 6 is an AND: ESI 2 *and* Ambulance *and* ArrivalHour ≥ 18, which adds 37 more. The two rows together are OR. Excel only copies filtered data to the active sheet, so you must start Data → Advanced from the Review sheet, or Excel shows an error.
 
 **B2. Average wait in the review list**
 
@@ -890,7 +897,7 @@ The review list holds 42 Admitted, 10 Observation and 8 Discharged visits, so th
 - **Answer:** 19
 - **Solution:**
 
-1. On Review, press **Ctrl+Shift+L** and filter **ESILevel** to **2**.
+1. On Review, press **Ctrl+Shift+L** (Mac: **⌘+Shift+F**) and filter **ESILevel** to **2**.
 2. Type `=AGGREGATE(12,5,Review!L2:L61)` in a cell the filter can't hide: row 1, two columns past the data (for example O1), or another sheet.
 3. It returns **19**.
 

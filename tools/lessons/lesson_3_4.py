@@ -58,7 +58,9 @@ DICTIONARY = [
     ("EncounterID", "Unique ID of the encounter. One row = one encounter, so Count of EncounterID counts encounters.", "ENC112345"),
     ("PatientID", "The patient. One patient can have several encounters, so counting PatientID still counts encounters, "
                   "not people.", "PT10493"),
-    ("EncounterType", "Inpatient, Observation, Emergency (ED treat-and-release), or Outpatient (clinic visit).", "Inpatient"),
+    ("EncounterType", "Inpatient, Observation, Emergency (an ED visit that didn't become an inpatient or observation stay: "
+                      "discharged home, left without being seen, left against advice, or transferred out), or Outpatient "
+                      "(clinic visit).", "Inpatient"),
     ("AdmitDate", "Date the encounter began. For patients admitted through the ED, the date of the admit decision. "
                   "Every row is in 2025.", "01/03/2025"),
     ("DischargeDate", "Date the encounter ended.", "01/07/2025"),
@@ -336,9 +338,9 @@ def build() -> Lesson:
              f"{T2_SERVICE_LINE} inpatient stay?",
              answer=t3, hint="Double-click a value cell (Show Details)",
              solution=f"1. Double-click the *Sum of TotalCharges* cell for {T2_SERVICE_LINE}. Excel inserts a new sheet with a "
-                      f"Table of the {len(t2_rows)} matching rows.\n2. Click any TotalCharges cell in that Table and choose "
-                      "**Data → Sort Largest to Smallest** (or use the column's filter button).\n3. Read the EncounterID in "
-                      "the first row.",
+                      f"Table of the {len(t2_rows)} matching rows.\n2. Right-click any TotalCharges value in that Table and "
+                      "choose **Sort → Sort Largest to Smallest** (or use the TotalCharges filter button).\n3. Read the "
+                      "EncounterID in the first row.",
              live=f3,
              explanation=f"Drilling down answers \"which records make up this number?\" The detail sheet holds "
                          f"{len(t2_rows)} rows, exactly the stays in the total, and the top one is a "
@@ -455,7 +457,8 @@ def build() -> Lesson:
              "EncounterType = Inpatient in Filters, FacilityName in Rows, and ChargesPerDay in Values. What is ChargesPerDay "
              f"for {T12_FACILITY}? Round to 2 decimal places.",
              answer=t12, fmt="#,##0.00", hint="PivotTable Analyze → Fields, Items, & Sets → Calculated Field",
-             solution="1. Click inside a pivot built from tblEncounters (or build a new one).\n2. **PivotTable Analyze → "
+             solution="1. Click inside a pivot built from tblEncounters that no slicer or timeline is filtering (or build a "
+                      "new one). A leftover slicer selection from task 11 would change the result.\n2. **PivotTable Analyze → "
                       "Fields, Items, & Sets → Calculated Field…**\n3. Name: `ChargesPerDay`. Formula: `=TotalCharges/LOSDays` "
                       "(double-click the fields in the list to insert them). Click **Add**, then **OK**.\n4. Set the "
                       "**EncounterType** filter to **Inpatient**, put **FacilityName** in **Rows**, and keep only "
@@ -471,7 +474,7 @@ def build() -> Lesson:
              "Then click this task's yellow cell, type =, switch to the pivot sheet, click the "
              f"{T13_FACILITY} × {T13_TYPE} cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? "
              "Leave the formula in the cell.",
-             answer=t13, fmt="#,##0.00", hint="If you get =Sheet!C6 instead, turn Generate GetPivotData back on",
+             answer=t13, fmt="#,##0.00", hint="If you get a plain reference such as =Sheet7!D8 instead, turn Generate GetPivotData back on",
              solution="1. Build the pivot on a new sheet (Excel names it something like *Sheet7*).\n2. Click the yellow answer "
                       "cell on the Practice sheet and type `=`.\n"
                       f"3. Switch to the pivot sheet, click the {T13_FACILITY} × {T13_TYPE} cell, and press **Enter**. "
@@ -518,7 +521,7 @@ def build() -> Lesson:
                       "4. Open the filter button on the **PayerType** header (in Compact Form, the Row Labels button, then "
                       "choose **PayerType** under *Select field*) → **Value Filters → Greater Than Or Equal To…** → "
                       f"*Index stays* · `{B_MIN_STAYS}` → **OK**.\n5. Count the remaining PayerType rows (select the Readmit "
-                      "rate cells and read **Count** on the status bar).",
+                      "rate cells above the Grand Total and read **Count** on the status bar).",
              live=fb1,
              explanation="A value filter on the inner row field is applied within each service line, so it keeps or hides "
                          f"each service line × payer type cell separately. {len(stats)} combinations exist in the data, and "
@@ -528,10 +531,12 @@ def build() -> Lesson:
         Task("Among the remaining combinations, which has the highest readmission rate? Type it as ServiceLine, PayerType "
              "(for example: Medicine, Commercial).",
              answer=b2, accept=combo_variants, hint="Sort the Readmit rate column, or scan it with a color scale",
-             solution="1. Right-click a *Readmit rate* value → **Sort → Sort Largest to Smallest**. In a two-level pivot this "
-                      "sorts the payer types *within* each service line, so also sort the service lines by the same field "
-                      "(or scan the column; there are only a couple of dozen rows).\n2. Optional: **Home → Conditional "
-                      "Formatting → Color Scales** on the Readmit rate cells makes the highest rate stand out.",
+             solution="1. Right-click a *Readmit rate* value on a payer-type row → **Sort → Sort Largest to Smallest**. In a "
+                      "two-level pivot this sorts the payer types *within* each service line, so the highest rate in each "
+                      "service line moves to the top of its group.\n2. Compare those top rows, one per service line, and "
+                      "pick the highest. (Sorting the service lines as well orders them by their overall rate, which doesn't "
+                      "guarantee that the best single combination ends up first.)\n3. Optional: **Home → Conditional Formatting → Color Scales** on "
+                      "the Readmit rate cells makes the highest rate stand out.",
              live=False,
              explanation=f"{b2_sl} stays paid by {b2_pt} plans had {b2_ra} readmissions in {b2_n} index stays. "
                          f"{WORDS[len(rivals)].capitalize()} groups too small to qualify sit right behind it at {rival_rate:.1%}: {rival_txt}. "

@@ -189,9 +189,14 @@ def build() -> Lesson:
     sd_100 = int(round(ch_sd, -2))
     assert sd_100 != int(round(ch_sdp, -2)), "STDEV.P should round differently, so the task catches it"
 
-    # 4 · 3rd-longest ED stay
+    # 4 · 3rd-longest ED stay, reported in whole hours with ROUNDUP (any started hour counts)
     edlos_desc = sorted(edlos, reverse=True)
     third_longest = edlos_desc[2]
+    third_longest_hrs = third_longest / 60
+    third_longest_h_up = math.ceil(third_longest_hrs)
+    assert not third_longest_hrs.is_integer()
+    third_longest_h_round = math.floor(third_longest_hrs + 0.5)
+    assert third_longest_h_round != third_longest_h_up, "ROUND should give a different answer, so the check catches it"
 
     # 5 · 3rd-lowest charge
     third_lowest = sorted(charges)[2]
@@ -285,8 +290,9 @@ def build() -> Lesson:
     J = sr("TotalCharges")
     L.practice_intro = (f"Tasks use three data sheets. Stays holds {len(stays)} inpatient stays (rows {sf}–{sl}), ED holds "
                         f"{len(ed)} visits (rows {ef}–{el}), and Meds holds {len(meds)} medication orders (rows {mf}–{ml}). "
-                        f"Reference whole columns of data, like {J}. When a task asks you to round, round with a function so "
-                        "the stored value matches, not just the display.")
+                        f"Reference a column's data rows, like {J}, rather than a whole column like J:J, because the header "
+                        "text in row 1 breaks the row-by-row math in SUMPRODUCT. When a task asks you to round, round with a "
+                        "function so the stored value matches, not just the display.")
 
     L.tasks = [
         Task("What is the most common ESI triage level among the ED visits?",
@@ -298,7 +304,7 @@ def build() -> Lesson:
                          "level. For codes and categories, the mode is the honest \"typical\" value. The older `MODE` function gives "
                          "the same result."),
         Task("How much higher is the mean (average) TotalCharges per stay than the median TotalCharges? Enter the "
-             "difference in dollars.",
+             "difference in dollars, to the cent.",
              answer=round(ch_mean - ch_median, 2), fmt="#,##0.00",
              solution=f"=AVERAGE({J})-MEDIAN({J})",
              hint="AVERAGE(…) − MEDIAN(…)",
@@ -315,14 +321,19 @@ def build() -> Lesson:
                          f"${sd_100:,}. STDEV.S treats the stays as a sample of an ongoing process, which is the usual choice. "
                          f"STDEV.P gives ${ch_sdp:,.2f}, which rounds to ${int(round(ch_sdp, -2)):,}, so the check tells the two "
                          "apart."),
-        Task("ED leaders review the three longest ED stays each period for boarding delays. What is the 3rd-longest "
-             "EDLOSMin on the ED sheet?",
-             answer=third_longest,
-             solution=f"=LARGE({er('EDLOSMin')},3)",
-             hint="LARGE(array, k)",
+        Task("ED leaders review the three longest ED stays each period for boarding delays. They report each stay in whole "
+             "hours and count any started hour as a full hour. Find the 3rd-longest EDLOSMin on the ED sheet, convert it to "
+             "hours, and round it up to a whole number of hours with ROUNDUP.",
+             answer=third_longest_h_up,
+             solution=f"=ROUNDUP(LARGE({er('EDLOSMin')},3)/60,0)",
+             hint="LARGE(array, k) finds the stay. Divide by 60, then ROUNDUP(…, 0)",
              explanation=f"LARGE returns the k-th largest value, so `LARGE(range,1)` is the same as MAX. The three longest stays "
-                         f"were {edlos_desc[0]:,}, {edlos_desc[1]:,}, and {edlos_desc[2]:,} minutes. The 3rd is about "
-                         f"{third_longest / 60:.1f} hours. Change k to 2 or 1 to list the others."),
+                         f"were {edlos_desc[0]:,}, {edlos_desc[1]:,}, and {edlos_desc[2]:,} minutes. The 3rd is "
+                         f"{third_longest:,} ÷ 60 = {third_longest_hrs:.2f} hours, and ROUNDUP turns the started hour into a "
+                         f"full one, giving {third_longest_h_up}. `ROUND` and `ROUNDDOWN` both give {third_longest_h_round} "
+                         "here, which would under-report the stay because the rule counts every started hour. "
+                         f"`=CEILING.MATH(LARGE(…,3)/60)` gives the same {third_longest_h_up}. Change k to 2 or 1 to list "
+                         "the other two stays."),
         Task("The charge-capture team audits the cheapest stays, because an unusually low charge often means some charges "
              "were never posted. What is the 3rd-lowest TotalCharges?",
              answer=third_lowest, fmt="#,##0.00",
@@ -361,7 +372,8 @@ def build() -> Lesson:
                             "Q1 and Q3 here." if (edlos_q1x, edlos_q3x) == (edlos_q1, edlos_q3) else
                             f"QUARTILE.EXC interpolates slightly differently and gives Q1 = {edlos_q1x:g} and Q3 = {edlos_q3x:g}.")),
         Task("What was the total acquisition cost of the medications dispensed for the 5 East stays? Multiply each order's "
-             "DosesDispensed by its UnitCost and add up all the orders, in one formula.",
+             "DosesDispensed by its UnitCost and add up all the orders, in one formula. Enter the total in dollars, to the "
+             "cent.",
              answer=round(med_cost, 2), fmt="#,##0.00",
              solution=f"=SUMPRODUCT({mr('DosesDispensed')},{mr('UnitCost')})",
              hint="SUMPRODUCT(array1, array2)",
@@ -370,7 +382,7 @@ def build() -> Lesson:
                          f"`=SUM(H…)*SUM(I…)`, is wrong (it gives ${wrong_sumsum:,.2f}) because it pairs every order's doses with "
                          f"every other order's price. Divide by `SUM({mr('DosesDispensed')})` to get the average cost per dose, "
                          f"${med_cost / med_doses:,.2f}."),
-        Task(f"Fill the yellow AgeBand column on the Stays sheet with each patient's 10-year age band using FLOOR.MATH, so "
+        Task(f"Fill the yellow AgeBand column on the Stays sheet with each stay's 10-year age band using FLOOR.MATH, so "
              f"age 78 becomes 70 and age 80 becomes 80. Start in {sty.cell('AgeBand', 0, sheet=False)}. The gray cell counts "
              f"the stays in the {band}–{band + 9} band.",
              answer=band_n, title=f"AgeBand column with FLOOR.MATH (stays aged {band}–{band + 9})",
@@ -413,7 +425,8 @@ def build() -> Lesson:
              "throws away whatever is left in an opened vial. How many vials did this order use?",
              answer=v_vials,
              solution=f"=CEILING.MATH({VANC_DOSE_MG},{VANC_VIAL_MG})/{VANC_VIAL_MG}*Meds!{med.col('DosesDispensed')}{v_row}",
-             hint="Work out vials per dose first: round 1,250 mg UP to a whole number of 500 mg vials",
+             hint="Work out vials per dose first: round 1,250 mg UP to a whole number of 500 mg vials with CEILING.MATH "
+                  "(or ROUNDUP)",
              explanation=f"`CEILING.MATH({VANC_DOSE_MG},{VANC_VIAL_MG})` rounds up to {ceiling_math(VANC_DOSE_MG, VANC_VIAL_MG):,} mg, "
                          f"which is {vials_per_dose} vials per dose. Two vials would hold only 1,000 mg, so ROUNDDOWN would "
                          f"under-dose. {vials_per_dose} vials × {v_doses} doses = {v_vials} vials. Rounding the order's total "
@@ -435,7 +448,7 @@ def build() -> Lesson:
         f"Stays sheet ({J}). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it.")
     L.bonus = [
         Task("Calculate the upper outlier fence with the IQR rule: Q3 + 1.5 × (Q3 − Q1), using QUARTILE.INC. Enter it in "
-             "dollars.",
+             "dollars, to the cent.",
              answer=round(fence, 2), fmt="#,##0.00",
              solution=f"={fence_f}",
              hint="Find Q1 and Q3 with QUARTILE.INC, then combine them",
@@ -450,14 +463,16 @@ def build() -> Lesson:
              hint="COUNTIF(range, \">\"&cell) joins the operator to your B1 cell",
              explanation=f"`\">\"&D6` builds the criterion text \">{fence:.2f}\", so COUNTIF counts charges above your fence. "
                          f"That's {high_n} stays, or {high_n / len(stays):.1%} of all stays."),
-        Task("What share of all Q4 TotalCharges came from the stays above the fence? Enter it as a percentage.",
+        Task("What share of all Q4 TotalCharges came from the stays above the fence? Enter it as a percentage with one "
+             "decimal place.",
              answer=high_share, fmt="0.0%",
              solution=f"=SUMPRODUCT(({J}>D6)*{J})/SUM({J})",
              live=f"=SUMPRODUCT(({J}>({fence_f}))*{J})/SUM({J})",
-             hint="(range>D6) is 1 or 0 for each stay. Multiply it by the charges inside SUMPRODUCT, then divide by the total",
-             explanation=f"`({J}>D6)` is 1 for an outlier and 0 otherwise, so multiplying by the charges keeps only the outlier "
-                         f"charges and SUMPRODUCT adds them. Just {high_n / len(stays):.1%} of stays produced {high_share:.1%} of "
-                         "all charges. That concentration is exactly why the mean sits so far above the median. "
+             hint="(range>D6) is TRUE or FALSE for each stay. Multiply it by the charges inside SUMPRODUCT, then divide by "
+                  "the total",
+             explanation=f"`({J}>D6)` is TRUE for an outlier and FALSE otherwise. Multiplying by the charges turns TRUE into 1 "
+                         "and FALSE into 0, so only the outlier charges survive, and SUMPRODUCT adds them. "
+                         f"Just {high_n / len(stays):.1%} of stays produced {high_share:.1%} of all charges. That concentration is exactly why the mean sits so far above the median. "
                          f"(`=SUMIF({J},\">\"&D6)/SUM({J})` from Lesson 2.5 gives the same answer.)"),
         Task("A second common rule flags any value more than 3 standard deviations above the mean. How many stays have "
              "TotalCharges above AVERAGE + 3 × STDEV.S?",
@@ -470,7 +485,7 @@ def build() -> Lesson:
                          "assumes roughly symmetric data. Quartiles barely move when a few extreme values change, so the IQR rule "
                          "is the better screen for skewed data like charges and length of stay."),
         Task(f"Calculate a {TRIM_PCT:.0%} trimmed mean of TotalCharges with TRIMMEAN, which drops about 5% of stays from each "
-             "end before averaging. Enter it in dollars.",
+             "end before averaging. Enter it in dollars, to the cent.",
              answer=round(tmean, 2), fmt="#,##0.00",
              solution=f"=TRIMMEAN({J},{TRIM_PCT})",
              hint="TRIMMEAN(array, percent). The percent is the TOTAL share to drop",

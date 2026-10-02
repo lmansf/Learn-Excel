@@ -3,7 +3,7 @@
 > **Level:** Advanced · **Time:** about 65 minutes · **Workbook:** [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx)
 > **Data:** All 5,586 inpatient stays at Bluestone's three hospitals, Jan 2024–Dec 2025 (with the Readmit30 flag removed so you can rebuild it), the diagnosis lookup with benchmark LOS, 1,018 lab results from Ashby Falls stays discharged Jul–Dec 2025, and the Bluestone Memorial ICU's daily census for 2024–2025.
 
-The quality director wants 30-day readmission rates by hospital, calculated the way CMS calculates them, and she wants them
+The quality director wants 30-day readmission rates by hospital, calculated with CMS-style exclusions, and she wants them
 to update every month without anyone rebuilding a PivotTable. That question can't be answered with SUMIFS alone. Each stay has to be
 compared with every *other* stay of the same patient, some stays have to be excluded, and the result has to be divided
 hospital by hospital. In this lesson you'll learn the formula tools that make questions like this a single, readable,
@@ -30,7 +30,7 @@ functions, the LAMBDA helpers (MAP, BYROW, SCAN, REDUCE), and the auditing tools
 | **Audit** | none | A colleague's broken formula for Task 13 |
 | **Sandbox** | none | An empty sheet for watching array formulas spill |
 
-Every formula in this lesson uses **structured references** (Lesson 3.1). `tblStays[FacilityID]` means the whole FacilityID
+Almost every formula in this lesson uses **structured references** (Lesson 3.1). `tblStays[FacilityID]` means the whole FacilityID
 column of the Stays table, which is the same cells as `Stays!$C$2:$C$5587`. Structured references are easier to read in long
 formulas, and they grow automatically when rows are added.
 
@@ -524,8 +524,9 @@ A long formula that returns a believable number can still be wrong. These tools 
 3. Keep clicking. When a part refers to another formula cell, **Step In** shows that cell's formula and **Step Out** returns.
 4. When an array turns all FALSE, or a number looks wrong, you've found the step to fix. **Restart** begins again.
 
-> 📋 Evaluate Formula is on every Windows version. On a Mac it's in Microsoft 365 and Excel 2024. Older Mac versions don't have it,
-> so copy pieces of the formula into Sandbox cells and let them spill instead.
+> 📋 Evaluate Formula is in every Windows version of Excel, but Excel for Mac doesn't have it. On a Mac, copy pieces of the
+> formula into Sandbox cells and let them spill, or select a piece in the formula bar and press **Fn + F9** (then **Esc**).
+> In Microsoft 365, selecting a piece of a formula while you edit it also shows its value in a small tooltip.
 
 | Tool | Where | What it tells you |
 |---|---|---|
@@ -533,7 +534,7 @@ A long formula that returns a believable number can still be wrong. These tools 
 | **F9** (Mac: **Fn + F9**) on a selected part | Formula bar | The value of just that part, if the result is short enough to display. Press **Esc** afterwards |
 | **Trace Precedents / Trace Dependents** | Formulas → Formula Auditing | Arrows to the cells a formula uses, or to the formulas that use this cell. **Remove Arrows** clears them |
 | **Ctrl + [** (Mac: **⌃ + [**) | Keyboard | Selects the cells the formula refers to, even on another sheet |
-| **Watch Window** | Formulas → Watch Window | Keeps chosen cells' values in view while you work elsewhere (Mac: Microsoft 365) |
+| **Watch Window** | Formulas → Watch Window | Keeps chosen cells' values in view while you work elsewhere (on a Mac: Microsoft 365, or Excel 2021 and later) |
 | **Show Formulas**, **Ctrl + `** (Mac: **⌃ + `**) | Keyboard | Shows formulas instead of results in every cell |
 
 **Debugging a LET.** Temporarily replace the last argument with one of the names. If the average looks wrong, change
@@ -569,7 +570,7 @@ A checklist for any long formula:
 
 Download [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx) and open the **Practice** sheet. Type
 each formula in the yellow cell, and the **Check** column turns green when you're right. Tasks 8–12 and bonus B3 need Microsoft 365
-or Excel 2024.
+or Excel 2024. Tasks 3, 4, 6, 7, and the bonus use XLOOKUP, FILTER, or LET, which need Excel 2021 or later.
 
 <!-- BEGIN GENERATED: practice -->
 Every task works on the Excel Tables in this workbook. Table references such as tblStays[FacilityID] are the easiest to read, and A1 ranges such as Stays!$C$2:$C$5587 work too. LOS days = discharge date − admit date (midnights), with a minimum of 1 day. Each answer cell must return ONE value, so try array formulas on the Sandbox sheet first.
@@ -580,7 +581,7 @@ Every task works on the Excel Tables in this workbook. Table references such as 
 | 2 | Case management reviews every 2025 discharge that had LOS days of 7 or more OR went to a Skilled Nursing Facility. What were the total charges (TotalCharges) of the stays on that review list? Count each stay once, and enter dollars and cents. | Adding two conditions gives OR logic, but a stay that meets both scores 2. Wrap the OR in (…>0). |
 | 3 | The Labs sheet is sorted from oldest to newest CollectedDateTime. What was patient PT11882's most recent creatinine (TestCode CREAT) result? | XLOOKUP can look for 1 in an array of 1s and 0s that you build from two conditions. Its 6th argument chooses the search direction. |
 | 4 | Use FREQUENCY with the bins {1,2,3,5,7,14} on the LOS days of every stay discharged in 2025. FREQUENCY returns 7 counts. Enter the 7th: the number of 2025 discharges with LOS days greater than 14. | FILTER the LOS values to 2025 first, then pick one count out of FREQUENCY's result with INDEX. |
-| 5 | On the Stays sheet, fill the yellow Readmit30 column: 1 if the same patient had a later inpatient admission whose admit DATE is 0–30 days after this stay's discharge DATE, otherwise 0. The gray cell totals your column. How many stays were followed by a 30-day readmission? | COUNTIFS over the whole table, using this row's PatientID and DischargeDateTime as criteria. Compare dates with INT(). |
+| 5 | On the Stays sheet, fill the yellow Readmit30 column: 1 if the same patient has another stay whose AdmitDateTime is after this stay's DischargeDateTime and whose admit DATE is 0–30 days after this stay's discharge DATE, otherwise 0. The gray cell totals your column. How many stays were followed by a 30-day readmission? | COUNTIFS over the whole table, using this row's PatientID and DischargeDateTime as criteria. Compare dates with INT(). |
 | 6 | Write ONE LET formula that names the admit and discharge columns, computes LOS days (minimum 1), and returns the average LOS days for sepsis stays (PrimaryDxCode A41.9) at Bluestone Memorial (F01) discharged in 2025. Round to 2 decimal places with ROUND. | Name each step (nights, then los, then a 1/0 keep array). A conditional average is SUM(los*keep)/SUM(keep). |
 | 7 | The LOS index (observed ÷ expected) compares actual LOS days with the benchmark ExpectedLOS of each stay's diagnosis (Diagnoses sheet). Calculate it for Cedar Ridge (F03) stays discharged in 2025: total LOS days ÷ total ExpectedLOS. Keep full precision (the check accepts 2 decimal places). | Inside LET, XLOOKUP the whole PrimaryDxCode column. You get one ExpectedLOS for every stay. |
 | 8 | Create a named function LOSDAYS(admit, discharge) in the Name Manager that returns LOS days (discharge date − admit date, minimum 1). Then call it on whole columns. What is the total of LOS days for Ashby Falls (F02) stays discharged in 2025? | Formulas → Name Manager → New. Test the LAMBDA in a cell first, for example =LAMBDA(…)(Stays!E2,Stays!F2). |
@@ -588,7 +589,7 @@ Every task works on the Excel Tables in this workbook. Table references such as 
 | 10 | On the Labs sheet, count the results outside their reference range (ResultValue below RefLow or above RefHigh). Use BYROW over the three adjacent columns ResultValue:RefHigh with a LAMBDA that uses OR. | Inside BYROW, the LAMBDA gets one row of 3 cells: INDEX(r,1) is the value, INDEX(r,2) the low, INDEX(r,3) the high. |
 | 11 | The Census sheet holds the Bluestone Memorial ICU's daily census for 2024–2025. A day is 'strained' when MidnightCensus ÷ StaffedBeds is 90% or more. Using SCAN, find the longest run of consecutive strained days. | Keep a running count that adds 1 on a strained day and resets to 0 otherwise. Then take the MAX. |
 | 12 | The four HRRP conditions in the data are AMI (I21.4), heart failure (I50.9), pneumonia (J18.9), and COPD (J44.1). Using REDUCE to loop over the array {"I21.4","I50.9","J18.9","J44.1"}, count Bluestone Memorial (F01) stays discharged in 2025 with any of these primary diagnoses. | REDUCE(0, codes, LAMBDA(total, dxcode, total + …)) starts at 0 and adds one COUNTIFS per code. |
-| 13 | The Audit sheet has a colleague's formula that should count Ashby Falls (F02) stays discharged in 2025 to Home Health, but it returns 0. Step through it with Evaluate Formula, fix the bug, and enter the correct count. | Watch what YEAR returns and what it is compared with. |
+| 13 | The Audit sheet has a colleague's formula that should count Ashby Falls (F02) stays discharged in 2025 to Home Health, but it returns 0. Step through it with Evaluate Formula (Windows; on a Mac, test its pieces on the Sandbox sheet), fix the bug, and enter the correct count. | Watch what YEAR returns and what it is compared with. |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -642,7 +643,7 @@ Multiplying the two conditions builds an array that is 1 only on this patient's 
 ```
 
 
-FREQUENCY counts values ≤ 1, then >1 to 2, >2 to 3, >3 to 5, >5 to 7, >7 to 14, and finally everything above the last bin. That extra overflow count is why 6 bins return 7 numbers. INDEX(…, 7) returns just the overflow count, so the answer cell holds one value. `FREQUENCY(IF(YEAR(dis)=2025, INT(dis)-INT(adm)), bins)` also works, because FREQUENCY ignores the FALSE values that IF returns for other years.
+FREQUENCY counts values ≤ 1, then >1 to 2, >2 to 3, >3 to 5, >5 to 7, >7 to 14, and finally everything above the last bin. That extra overflow count is why 6 bins return 7 numbers. INDEX(…, 7) returns just the overflow count, so the answer cell holds one value. The solution skips the 1-day minimum because a 0-night stay lands in the ≤ 1 bin either way, so applying it gives the same counts. `FREQUENCY(IF(YEAR(dis)=2025, INT(dis)-INT(adm)), bins)` also works, because FREQUENCY ignores the FALSE values that IF returns for other years.
 
 **5. Readmit30 flag column (stays followed by a readmission)**
 
@@ -718,7 +719,7 @@ Define LOSDAYS as `=LAMBDA(admit, discharge, LET(nights, INT(discharge)-INT(admi
 ```
 
 
-MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, AND(...) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version `SUMPRODUCT((fac="F01")*(YEAR(dis)=2025)*(INT(dis)-INT(adm)<2))` gives the same count. MAP is worth it when the per-row logic reads better with AND, OR, or MAX.
+MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, AND(...) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version `=SUMPRODUCT((tblStays[FacilityID]="F01")*(YEAR(tblStays[DischargeDateTime])=2025)*(INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])<2))` gives the same count. MAP is worth it when the per-row logic reads better with AND, OR, or MAX.
 
 **10. Lab results outside the reference range (BYROW)**
 
@@ -770,7 +771,7 @@ REDUCE starts the accumulator `total` at 0, then calls the LAMBDA once per code,
 ```
 
 
-YEAR returns the number 2025, but the formula compares it with the text "2025". In Excel a number never equals text, so that array is all FALSE and every product is 0. Evaluate Formula shows the YEAR step as numbers and the comparison as all FALSE. COUNTIFS would have accepted "2025" because it converts criteria strings, and that habit is how this bug usually gets in.
+YEAR returns the number 2025, but the formula compares it with the text "2025". In Excel a number never equals text, so that array is all FALSE and every product is 0. Evaluate Formula shows the YEAR step as numbers and the comparison as all FALSE (on a Mac, `=YEAR(tblStays[DischargeDateTime])="2025"` on the Sandbox sheet spills a column of FALSE). COUNTIFS would have accepted "2025" because it converts criteria strings, and that habit is how this bug usually gets in.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -778,7 +779,7 @@ YEAR returns the number 2025, but the formula compares it with the text "2025". 
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built the way CMS builds them. Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of follow-up in the data. Exclude stays that ended in death (Expired), a transfer (Transfer to Another Hospital), or a discharge against medical advice (Left AMA). A readmission is any later inpatient admission of the same patient, at any Bluestone hospital, with an admit date 0–30 days after the index discharge date (the Task 5 rule). Rate = index stays followed by a readmission ÷ index stays. Build each answer as one LET formula over tblStays.
+Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built with CMS-style rules (simplified: CMS also risk-adjusts its rates and ignores planned readmissions). Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of follow-up in the data. Exclude stays that ended in death (Expired), a transfer (Transfer to Another Hospital), or a discharge against medical advice (Left AMA). A readmission is any later inpatient admission of the same patient, at any Bluestone hospital, with an admit date 0–30 days after the index discharge date (the Task 5 rule). Rate = index stays followed by a readmission ÷ index stays. Build each answer as one LET formula over tblStays.
 
 Work on the **Bonus** sheet of the workbook.
 

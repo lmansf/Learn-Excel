@@ -330,7 +330,7 @@ def build() -> Lesson:
         Task(f"The patient portal username is the part of the email address before the @. Return the username for patient "
              f"{t_mail['PatientID']} (row {prow(t_mail['PatientID'])}).",
              answer=username, solution=f'=TEXTBEFORE({pcell("Email", t_mail["PatientID"])},"@")',
-             hint="TEXTBEFORE (Microsoft 365), or LEFT + FIND",
+             hint="TEXTBEFORE (Microsoft 365 or Excel 2024), or LEFT + FIND",
              explanation="TEXTBEFORE returns everything before the first @. The classic version, which works in every "
                          f"Excel, is =LEFT({pcell('Email', t_mail['PatientID'])},FIND(\"@\",{pcell('Email', t_mail['PatientID'])})-1)."),
         Task(f"How many chronic conditions does patient {t_cc['PatientID']} (row {prow(t_cc['PatientID'])}) have? Split the "
@@ -353,7 +353,8 @@ def build() -> Lesson:
              hint="TEXTJOIN(delimiter, ignore_empty, …)",
              explanation="TEXTJOIN puts the delimiter between items. With ignore_empty set to TRUE, it skips the blank email, "
                          "so those rows show only the phone. With FALSE, or with D2&\" | \"&E2, every row gets a separator "
-                         "and the blank rows end in a dangling \" | \"."),
+                         "and the blank rows end in a dangling \" | \". Without TEXTJOIN (Excel 2016), add the separator only "
+                         "when there is an email: =D2&IF(E2=\"\",\"\",\" | \"&E2)."),
         Task(f"On the Patients sheet, fill the yellow FirstName column with each patient's first name: everything after "
              f"the comma in PatientName, with no extra spaces. Watch out: some names have doubled, leading, or trailing "
              f"spaces, and {nbsp_rows} were pasted from the patient portal with non-breaking spaces (UNICHAR(160)). Case "
@@ -446,7 +447,7 @@ def build() -> Lesson:
              fill={"range": f"Registrations!{reg.col('City')}{rf}:{reg.col('City')}{rl}",
                    "formula": f'=PROPER(TRIM(SUBSTITUTE(TEXTBEFORE({D}{rf}," ",-2),",","")))'},
              live=f'=COUNTIF({rrng("CityStateZip")},"Lakeview Heights*")',
-             hint="The city is everything before the second-to-last space. TEXTBEFORE accepts a negative instance_num",
+             hint="The city is everything before the second-to-last space. TEXTBEFORE accepts a negative instance_num.",
              explanation="The commas are unreliable, but the spaces are not: the last two spaces always separate the city, the "
                          f"state, and the ZIP. TEXTBEFORE({D2},\" \",-2) counts spaces from the end, so it returns everything before "
                          "the second-to-last space (\"Cedar Ridge,\" or \"CEDAR RIDGE\"). SUBSTITUTE removes a comma if there is one, "
@@ -512,12 +513,17 @@ def build() -> Lesson:
 
     modern = [str(i) for i, t in enumerate(L.tasks, 1)
               if any(f in t.solution for f in ("TEXTBEFORE", "TEXTAFTER", "TEXTSPLIT"))]
+    joiners = [str(i) for i, t in enumerate(L.tasks, 1) if "TEXTJOIN" in t.solution]
+    assert len(joiners) == 1, joiners
     cols = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    bcols = [f"B{i}" for i, t in enumerate(L.bonus, 1) if t.summary]
     L.start_notes = [
         f"Tasks {' and '.join(modern)} and bonus parts B1–B3 use TEXTBEFORE, TEXTAFTER, or TEXTSPLIT, which need Microsoft 365, "
         "Excel for the web, or Excel 2024. In older versions those functions show #NAME?, so use the classic LEFT, MID, and "
-        "FIND methods from the guide instead.",
-        f"Tasks {', '.join(cols[:-1])}, and {cols[-1]} ask you to fill a yellow column on a data sheet. The data sheets are "
-        "Excel Tables, so a formula typed in the first row usually fills the whole column automatically.",
+        f"FIND methods from the guide instead. Task {joiners[0]} uses TEXTJOIN, which needs Excel 2019 or later. In Excel 2016, "
+        "join the pieces with & and an IF instead.",
+        f"Tasks {', '.join(cols[:-1])}, and {cols[-1]} and bonus parts {', '.join(bcols[:-1])}, and {bcols[-1]} ask you to fill "
+        "a yellow column on a data sheet. The data sheets are Excel Tables, so a formula typed in the first row usually fills "
+        "the whole column automatically.",
     ]
     return L

@@ -220,7 +220,7 @@ def build() -> Lesson:
 
     L.practice_intro = (
         f"Every task uses the EDVisits sheet: {n} visits in rows {first}–{last}, columns A–{col(COLUMNS[-1])}. "
-        "For tasks 1–10, sort or filter, then type what you see: an ID, a row number, or a count. "
+        "For tasks 1–10, sort or filter, then type what you see: an ID, a row number, a count, or a value. "
         "Before each filter task, clear the filters left over from the task before (Data → Clear). "
         "Tasks 11 and 12 use SUBTOTAL and AGGREGATE while an ESI 3 filter stays on, so do them last. "
         "Mac: Ctrl+Shift+L is ⌘+Shift+F."
@@ -338,7 +338,8 @@ def build() -> Lesson:
              solution="1. **Data → Clear** on EDVisits.\n"
                       "2. On **Workspace**, type the criteria range in A4:B6:\n\n"
                       "   | A | B |\n   |---|---|\n   | ESILevel | DoorToProviderMin |\n   | 1 | |\n   | | >120 |\n\n"
-                      f"3. Still on Workspace, choose **Data → Advanced**. Select **Copy to another location**. List range: "
+                      f"3. Still on Workspace, click an empty cell (for example D4), then choose **Data → Advanced**. Select "
+                      f"**Copy to another location**. List range: "
                       f"`EDVisits!$A$1:${col(COLUMNS[-1])}${last}`. Criteria range: `Workspace!$A$4:$B$6`. Copy to: `Workspace!$D$4`. **OK**.\n"
                       f"4. The copy has a header row plus **{t9}** visit rows.",
              live=f"=SUMPRODUCT(--((({R('ESILevel')}=1)+({R(W)}>120))>0))",
@@ -356,10 +357,11 @@ def build() -> Lesson:
              solution="1. Click an empty cell on **Workspace** (for example **S4**) and choose **Data → Advanced**.\n"
                       "2. Select **Copy to another location**. List range: "
                       f"`EDVisits!${col('ChiefComplaint')}$1:${col('ChiefComplaint')}${last}` (just that one column, header included).\n"
-                      "3. Leave Criteria range empty. Copy to: `Workspace!$S$4`. Tick **Unique records only**. **OK**.\n"
+                      "3. Make the **Criteria range** box empty: Excel may fill in `Workspace!$A$4:$B$6` from task 9, so delete it. "
+                      "Copy to: `Workspace!$S$4`. Tick **Unique records only**. **OK**.\n"
                       f"4. The list has a header plus **{t10}** complaints (select them and read Count on the status bar).",
              live=f"=SUMPRODUCT(1/COUNTIF({R('ChiefComplaint')},{R('ChiefComplaint')}))",
-             hint="List range: the ChiefComplaint column only. No criteria range",
+             hint="List range: the ChiefComplaint column only. Empty the Criteria range box",
              explanation="With an empty criteria range every row qualifies, and **Unique records only** keeps the first copy of each "
                          "distinct value. Because the list range is a single column, the duplicates are judged on that column alone. "
                          "With the whole table as the list range, a row would only count as a duplicate if every column matched."),
@@ -404,16 +406,17 @@ def build() -> Lesson:
     L.bonus = [
         Task("How many visits does your Advanced Filter copy to the Review sheet? Don't count the header row.",
              answer=b1, title="Visits in the review list",
-             solution="1. **Data → Clear** on EDVisits. Insert a sheet (**Shift+F11**) and rename it **Review**.\n"
-                      "2. On **Workspace**, build this criteria range in an empty spot (for example A20:C22), with headers "
-                      "copied from EDVisits:\n\n"
+             solution="1. **Data → Clear** on EDVisits. Insert a sheet with the **+** button next to the sheet tabs (or **Shift+F11**) "
+                      "and rename it **Review**.\n"
+                      "2. On **Workspace**, build this criteria range in an empty spot with a blank column on each side (for example "
+                      "U4:W6, to the right of your task 10 list), with headers copied from EDVisits:\n\n"
                       "   | ESILevel | ArrivalMode | ArrivalHour |\n   |---|---|---|\n   | 1 | | |\n   | 2 | Ambulance | >=18 |\n\n"
                       "3. Click **Review!A1**, then **Data → Advanced** → **Copy to another location**. List range "
-                      f"`EDVisits!$A$1:${col(COLUMNS[-1])}${last}`, Criteria range `Workspace!$A$20:$C$22`, Copy to `Review!$A$1`. **OK**.\n"
+                      f"`EDVisits!$A$1:${col(COLUMNS[-1])}${last}`, Criteria range `Workspace!$U$4:$W$6`, Copy to `Review!$A$1`. **OK**.\n"
                       f"4. Review shows a header plus **{b1}** rows (rows 2–{first + b1 - 1}).",
              live=f"=SUMPRODUCT({mask})",
              hint="Two criteria rows: ESI 1 alone, and ESI 2 + Ambulance + >=18 together",
-             explanation=f"Row 21 of the criteria range (ESILevel = 1) catches all {esi1_n} ESI 1 visits. Row 22 is an AND: ESI 2 *and* "
+             explanation=f"Row 5 of the criteria range (ESILevel = 1) catches all {esi1_n} ESI 1 visits. Row 6 is an AND: ESI 2 *and* "
                          f"Ambulance *and* ArrivalHour ≥ 18, which adds {b1 - esi1_n} more. The two rows together are OR. Excel only copies "
                          "filtered data to the active sheet, so you must start Data → Advanced from the Review sheet, or Excel shows an error."),
         Task("What is the average DoorToProviderMin of the review visits, rounded to 1 decimal place?",
@@ -447,7 +450,7 @@ def build() -> Lesson:
              "ESILevel 2 only, then use AGGREGATE to find the median DoorToProviderMin of the visible rows.",
              answer=b4, fmt=None if float(b4).is_integer() else "0.0",
              title="Median wait for the ESI 2 evening ambulance patients",
-             solution=f"1. On Review, press **Ctrl+Shift+L** and filter **ESILevel** to **2**.\n"
+             solution=f"1. On Review, press **Ctrl+Shift+L** (Mac: **⌘+Shift+F**) and filter **ESILevel** to **2**.\n"
                       f"2. Type `=AGGREGATE(12,5,Review!{col(W)}2:{col(W)}{first + b1 - 1})` in a cell the filter can't hide: "
                       "row 1, two columns past the data (for example O1), or another sheet.\n"
                       f"3. It returns **{b4:g}**.",
@@ -481,7 +484,7 @@ def build() -> Lesson:
                      "a criteria range and other cells. To copy results to this sheet, start Data → Advanced while this sheet is active.")
         wsp["A2"].font = Font(italic=True, color="595959")
         wsp["A2"].alignment = Alignment(wrap_text=False)
-        for c in "ABCDEFGHIJKLMNOPQRSTU":
+        for c in "ABCDEFGHIJKLMNOPQRSTUVW":
             wsp.column_dimensions[c].width = 14
 
         if selftest:

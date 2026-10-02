@@ -1,7 +1,7 @@
 # Lesson 1.2 · Data Entry, AutoFill & Editing
 
 > **Level:** Beginner · **Time:** about 40 minutes · **Workbook:** [`1.2-data-entry-autofill.xlsx`](1.2-data-entry-autofill.xlsx)
-> **Data:** A December 2025 rotating-RN schedule for Medical-Surgical 4 West, a registration record, a Q15 observation form, 4 West's bed list, supply room, and December admissions, plus a January 2026 clinic template for the bonus.
+> **Data:** A December 2025 rotating-RN schedule for Medical-Surgical 4 West, a registration record, a Q15 observation form, 4 West's bed list, supply room, and December admissions, plus a January 2026 clinic template for the bonus. The schedule, admissions, and supplies come from [`shifts.csv`](../../data/README.md#shiftscsv), [`encounters.csv`](../../data/README.md#encounterscsv), and [`supply_inventory.csv`](../../data/README.md#supply_inventorycsv) in the data dictionary.
 
 Every number a hospital reports started as something a person typed or pasted. A registrar types an MRN, a charge nurse
 builds next month's schedule, and a buyer pastes restock quantities into a requisition. When an MRN loses its leading zeros, the
@@ -46,7 +46,8 @@ Two more places tell you the truth:
 > ⚠️ **Numbers stored as text.** Numbers pasted from other systems (a bedside scale, a lab interface, a web page) often arrive as
 > text. Excel marks them with a small green triangle in the cell's top-left corner and lines them up on the left. They look
 > fine, but they're skipped by SUM, sort in the wrong order, and won't match real numbers. To fix them, select the cells, click
-> the ⚠️ icon that appears, and choose **Convert to Number**. Section 8 shows a second fix with Paste Special.
+> the **error button** that appears beside them (a yellow diamond with an exclamation mark), and choose **Convert to Number**.
+> Section 8 shows a second fix with Paste Special.
 
 ### 2. Dates and times are numbers
 
@@ -93,7 +94,7 @@ insurance member IDs, and lot numbers. You never do math on them, and their lead
 The rule of thumb: **if you would never add it up, store it as text.**
 
 Excel flags a text entry that looks like a number with the green triangle described in section 1. For an MRN that's expected,
-so choose **Ignore Error** from the ⚠️ icon instead of converting it.
+so choose **Ignore Error** from the error button instead of converting it.
 
 > ⚠️ **Format first, then type.** Changing a cell to Text *after* you typed `00412345` doesn't bring the zeros back, because they
 > were already gone. Re-type the entry after formatting.
@@ -130,16 +131,17 @@ The entry goes into *every* selected cell. The cells don't have to touch: hold *
 add cells to the selection. Whatever you type appears in the last cell you clicked (the **active cell**), and Ctrl + Enter copies
 it to the rest. On the Schedule sheet, that lets you mark every weekend row in one move.
 
-**Ctrl + D** (fill down) copies the top cell of the selection into every cell below it. With a single cell selected, it copies the
-cell directly above. **Ctrl + R** does the same to the right.
+**Ctrl + D** (Mac: **⌘ + D**), called **fill down**, copies the top cell of the selection into every cell below it. With a single
+cell selected, it copies the cell directly above. **Ctrl + R** (Mac: **⌘ + R**) does the same to the right.
 
 **Alt + Enter** (Mac: **⌃ + ⌥ + Return**) adds a line break *inside* a cell, which is handy for two-line notes such as an allergy
 and an isolation status. Excel turns on **Wrap Text** for you so both lines show.
 
 > 💡 **Tip:** **AutoComplete** suggests a finish for text you type, based on entries already in the same column. Type `Pen` in a
 > column that already contains `Penicillin` and Excel offers the rest. Press Enter to accept, or keep typing to ignore it. It's
-> fast, but it can also slip in the wrong word, so watch the cell. You can turn it off under **File → Options → Advanced →
-> Enable AutoComplete for cell values** (Mac: **Excel → Preferences → AutoComplete**).
+> fast, but it can also slip in the wrong word, because Enter, Tab, and Ctrl + Enter all accept the suggestion. Watch the cell
+> before you confirm, and press **Backspace** (Mac: **delete**) to remove a suggestion you don't want. You can turn it off
+> under **File → Options → Advanced → Enable AutoComplete for cell values** (Mac: **Excel → Settings → AutoComplete**).
 
 ### 5. AutoFill and the fill handle
 
@@ -176,7 +178,7 @@ series. On Windows you can also drag with the *right* mouse button to choose fro
 
 > 💡 **Custom lists.** Weekday and month names fill automatically because they're built-in **custom lists**. You can add your
 > own, such as `Day, Evening, Night` or your hospital's unit names, under **File → Options → Advanced → General → Edit Custom
-> Lists…** (Mac: **Excel → Preferences → Custom Lists**). After that, typing `Day` and dragging gives Evening, Night, Day …
+> Lists…** (Mac: **Excel → Settings → Custom Lists**). After that, typing `Day` and dragging gives Evening, Night, Day …
 
 > 📋 AutoFill also copies formatting. If you fill from a white cell into yellow input cells, the yellow disappears. Choose **Fill
 > Without Formatting** from the Auto Fill Options button if you want to keep the destination's look.
@@ -184,8 +186,8 @@ series. On Windows you can also drag with the *right* mouse button to choose fro
 ### 6. The Fill Series dialog: exact steps and stop values
 
 Dragging is quick, but sometimes you need precision: "every 15 minutes until 18:45" or "every weekday until the end of the month."
-Select the starting cell (or the whole range to fill), then choose **Home → Fill → Series…** (Windows keys: **Alt, H, F, I, S**).
-On a Mac, choose **Home → Fill → Series…**.
+Select the starting cell (or the whole range to fill), then choose **Home → Fill → Series…**. The path is the same on a Mac, and on
+Windows the KeyTips are **Alt, H, F, I, S**.
 
 | Setting | What it does |
 |---|---|
@@ -222,7 +224,11 @@ Result:      08:00, 08:30, 09:00, 09:30, 10:00
 
 > ⚠️ **Set time stop values a few minutes late.** Times are fractions with long decimal tails, so after many steps the running
 > total can differ from the exact time by a tiny amount. If the last value lands a hair past the stop, Excel leaves it out. A stop
-> of 10:05 instead of 10:00 avoids that. If your version doesn't accept `0:30` in the Step value box, type the decimal instead: 30 ÷ 1,440 = 0.0208333333.
+> of 10:05 instead of 10:00 avoids that.
+
+> 📋 If your version rejects a time such as `0:30` in the Step value box, type the step as a fraction of a day instead:
+> 30 ÷ 1,440 = 0.0208333333 for 30 minutes, or 15 ÷ 1,440 = 0.0104166667 for 15 minutes. Or skip the dialog and use the
+> two-cell AutoFill pattern from section 5.
 
 ### 7. Flash Fill
 
@@ -232,12 +238,13 @@ It's ideal for pulling apart or recombining text, such as first names out of "La
 1. Type the result you want for the first row in the column next to your data, and press **Enter**.
 2. Press **Ctrl + E**, or choose **Data → Flash Fill** (this menu works on both Windows and Mac). Often Excel shows a gray preview
    as you start the second row, and pressing Enter accepts it.
-3. **Check the results.** Flash Fill is guessing from your examples. If some rows come out wrong, press **Ctrl + Z**, type a
-   second or third example that shows the pattern more clearly, and press Ctrl + E again. Fix any odd row by hand.
+3. **Check the results.** Flash Fill is guessing from your examples. If some rows come out wrong, press **Ctrl + Z**
+   (Mac: **⌘ + Z**), type a second or third example that shows the pattern more clearly, and run Flash Fill again. Fix any odd
+   row by hand.
 
 > 💡 **Tip:** Pick a first example that can only mean one thing. For `Richardson, Rebecca`, the label `Rebecca R.` could use the
 > initial of either name, because both start with R. Type a second example from a row where the initials differ, such as
-> `Russell Y.` for `Yilmaz, Russell`, before you press Ctrl + E.
+> `Russell Y.` for `Yilmaz, Russell`, before you run Flash Fill.
 
 | Source | Your example | Flash Fill gives the rest |
 |---|---|---|
@@ -302,8 +309,9 @@ the practice tasks use the original prices. The same trick converts numbers stor
 
 ### 9. Find & Replace
 
-**Find** (Ctrl + F, Mac: ⌘ + F) locates entries, and **Replace** (Ctrl + H, Mac: ⌃ + H, or **Edit → Find → Replace**) changes
-them. If the settings below aren't showing, click **Options >>**:
+Lesson 1.1 used **Find** (Ctrl + F, Mac: ⌃ + F) and Find All to count matches. **Replace** (Ctrl + H, Mac: ⌃ + H, or
+**Edit → Find → Replace**) opens the same dialog on its Replace tab and changes the matches. If the settings below aren't
+showing, click **Options >>**:
 
 | Option | What it does |
 |---|---|
@@ -314,7 +322,8 @@ them. If the settings below aren't showing, click **Options >>**:
 | **Match entire cell contents** (Mac: **Find entire cells only**) | The *whole* cell must equal what you typed, not just contain it |
 
 **What gets searched depends on your selection.** With a single cell selected, Excel searches the whole sheet. With a range selected,
-Excel searches only that range, even several separate blocks selected with Ctrl. That's a precise way to limit a replacement.
+Excel searches only that range, even several separate blocks selected with Ctrl (Mac: ⌘). That's a precise way to limit a
+replacement.
 
 **Replace All** finishes with a message such as *"All done. We made 14 replacements."* That number is your check. **Find All** lists
 every match with its cell address and shows a count at the bottom such as *"14 cell(s) found"*. On Windows, click a result and
@@ -329,11 +338,11 @@ press **Ctrl + A** to select every found cell on the sheet.
 > | `Jennifer Patterson` | `JeN12N12ifer PattersoN12` | `Jennifer Patterson` |
 > | `Mon` | `MoN12` | `Mon` |
 >
-> If that happens, press **Ctrl + Z** right away. Undo reverses the whole Replace All in one step.
+> If that happens, press **Ctrl + Z** (Mac: **⌘ + Z**) right away. Undo reverses the whole Replace All in one step.
 
-> 💡 **Tip:** Wildcards work in Find what. `*` matches any characters and `?` matches exactly one, so `Non-Rebreather*` finds both
-> mask sizes. To search for a real asterisk or question mark, put a tilde in front: `~*`. On Windows, press **Ctrl + J** in the
-> Find what box to search for the line breaks that Alt + Enter creates.
+> 💡 **Tip:** The wildcards from Lesson 1.1 work in Replace too. `*` matches any characters and `?` matches exactly one, so
+> `Non-Rebreather*` finds both mask sizes. To search for a real asterisk or question mark, put a tilde in front: `~*`. On
+> Windows, press **Ctrl + J** in the Find what box to search for the line breaks that Alt + Enter creates.
 
 ### 10. Undo, insert, and delete
 
@@ -346,7 +355,7 @@ place. To remove rows or columns themselves:
 
 | Task | Windows | Mac |
 |---|---|---|
-| Select the entire row / column | Shift + Space / Ctrl + Space | Shift + Space / click the column letter |
+| Select the entire row / column | Shift + Space / Ctrl + Space | Shift + Space / ⌃ + Space (or click the column letter) |
 | Insert rows or columns | Select whole rows or columns, then Ctrl + Shift + + | Control-click the row numbers or column letters → **Insert** |
 | Delete rows or columns | Select whole rows or columns, then Ctrl + - | Control-click the row numbers or column letters → **Delete** |
 
@@ -369,17 +378,17 @@ below happens the moment you press Enter.
 | `1/2` (a half-tab dose) | January 2 | 0.5 | `0 1/2` (zero, space, fraction) or `0.5` |
 | `MARCH1`, `SEPT2` (gene names) | 1-Mar, 2-Sep | gene symbols | `'MARCH1`. In 2020 the official names became MARCHF1 and SEPTIN2, partly because of Excel |
 | `1E5` (a lot number) | 100000, shown as `1.00E+05` | a lot code | `'1E5` |
-| `4410287366519087` (16-digit member ID) | 4410287366519080 | the exact ID | `'4410287366519087`. Excel keeps only 15 significant digits, so the last digit is lost for good |
+| `4410287366519087` (16-digit member ID) | 4410287366519080, shown as `4.41029E+15` | the exact ID | `'4410287366519087`. Excel keeps only 15 significant digits, so the last digit is lost for good |
 | `123456789012` (12 digits) | the full number, but it's shown as `1.23457E+11` | the full number on screen | Apply the Number format (Lesson 1.3), or store it as text if it's an ID |
 | `8/28/26` (a date of birth in 1926) | 08/28/2026 | 1926 | type all four digits of the year |
 
 > 📋 **Version note:** Microsoft 365 (2023 and later) lets you switch some of these conversions off under **File → Options → Data →
 > Automatic Data Conversion**: removing leading zeros, truncating long numbers, converting digits around an "E", and turning
-> letter-number combinations like MARCH1 into dates. On a Mac, look under **Excel → Preferences → Edit**. The settings apply to
+> letter-number combinations like MARCH1 into dates. On a Mac, look under **Excel → Settings → Edit**. The settings apply to
 > your copy of Excel only, so a colleague opening the same file can still hit the traps. The apostrophe works everywhere.
 
-> 💡 **Tip:** Opening a CSV file by double-clicking it applies the same conversions to every column. Lessons 3.3 and 4.3 show
-> how to import a file and set each column's type before Excel touches it.
+> 💡 **Tip:** Opening a CSV file by double-clicking it applies the same conversions to every column. Lesson 4.3 shows how to
+> import a CSV with Power Query and set each column's type (Text for MRNs, for example) before anything is converted.
 
 ### 12. Worked example: a Q4h vital-signs log in under a minute
 
@@ -406,20 +415,20 @@ Download [`1.2-data-entry-autofill.xlsx`](1.2-data-entry-autofill.xlsx) and open
 another sheet to do the work, and a gray cell on the Practice sheet reads it. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Most tasks are done on the other sheets (Entries, Schedule, Q15 Log, Beds, Admissions, Supplies, Order, Roster). Type in the yellow cells here. A gray cell is a pre-filled formula that reads your work on another sheet, and its Check turns green when that work is right. Do the tasks in order, because the Schedule tasks build on each other.
+Most tasks are done on the other sheets (Entries, Schedule, Beds, Q15 Log, Admissions, Supplies, Order, Roster). Type in the yellow cells here. A gray cell is a pre-filled formula that reads your work on another sheet, and its Check turns green when that work is right. Do the tasks in order, because the Schedule tasks build on each other.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | On the Entries sheet, select the Entry column (B4:B15). How many of those 12 entries did Excel store as numbers? Dates and times count as numbers. Read the status bar (right-click it to turn on Numerical Count) or use the alignment clue. | By default, numbers line up on the right of a cell and text on the left |
-| 2 | Entries!B7 shows the ED arrival as a date and time. What number does Excel actually store in that cell? Switch the cell to General format to see it, and enter it rounded to 2 decimal places. | The whole part counts days and the decimal part is the time of day |
+| 2 | Entries!B7 shows the ED arrival as a date and time. What number does Excel actually store in that cell? Switch the cell to General format to see it, then type that number in the yellow cell, rounded to 2 decimal places. | The whole part counts days and the decimal part is the time of day |
 | 3 | The MRN on the Entries sheet lost its leading zeros. In the yellow cell, enter the patient's real 8-digit MRN, 00393694, so that Excel keeps it as text with both zeros. | Start the entry with an apostrophe |
 | 4 | Type this two-line handoff note into the yellow cell, with "Allergy: Penicillin" on the first line and "Isolation: Contact" on the second line of the same cell. | Enter on its own leaves the cell, so you need a different key combination |
 | 5 | On the Schedule sheet, A5 holds 12/01/2025. Use the fill handle to fill the yellow cells A6:A35 with the rest of December, one day per row. The gray cell shows your last date. | Drag the fill handle. A single date counts up one day at a time |
-| 6 | B5 holds "Mon". Fill the weekday names down to B35 by double-clicking the fill handle instead of dragging. The gray cell shows the day name in B35. | Finish task 5 first: double-click fills as far as the neighboring column goes |
+| 6 | On the Schedule sheet, B5 holds "Mon". Fill the weekday names down to B35 by double-clicking the fill handle instead of dragging. The gray cell shows the day name in B35. | Finish task 5 first: double-click fills as far as the neighboring column goes |
 | 7 | On the Beds sheet, A4 holds the first bed label, 4W-01. Fill the yellow cells below it so the list runs through all 36 of 4 West's staffed beds. The gray cell shows the label in the last row (A39). | AutoFill increases the number at the end of a text entry |
 | 8 | On the Q15 Log sheet, A4 holds 07:00. Fill the yellow cells below it with a check time every 15 minutes, ending at 18:45. Use Home → Fill → Series, or the two-cell AutoFill pattern. The gray cell shows the latest time in column A. | Step value 0:15, with the Stop value a few minutes past the last time |
-| 9 | 4 West gets one float-pool RN on every Saturday and Sunday. In the Float RN column (O) of the Schedule sheet, put FLOAT in every weekend row and nowhere else, using a single entry: Ctrl+click (Mac: ⌘+click) the weekend cells, type FLOAT, and press Ctrl+Enter (Mac: ⌘+Return). The gray cell counts correctly placed FLOATs minus any entries on weekdays. | Finish tasks 5–6 first so you can see which rows are weekends |
-| 10 | On the Admissions sheet, use Flash Fill to fill the yellow WhiteboardName column with each patient's first name and last initial, such as "Russell Y." for "Yilmaz, Russell". The gray cell counts how many of the 24 labels are exactly right. | Type an example that can only mean one thing, then press Ctrl + E |
+| 9 | 4 West gets one float-pool RN on every Saturday and Sunday. In the Weekend float column (O) of the Schedule sheet, put FLOAT in every weekend row and nowhere else, using a single entry: Ctrl+click (Mac: ⌘+click) the weekend cells, type FLOAT, and press Ctrl+Enter (Mac: ⌘+Return). The gray cell counts correctly placed FLOATs minus any entries on weekdays. | Finish tasks 5–6 first so you can see which rows are weekends |
+| 10 | On the Admissions sheet, use Flash Fill to fill the yellow WhiteboardName column with each patient's first name and last initial, such as "Russell Y." for "Yilmaz, Russell". The gray cell counts how many of the 24 labels are exactly right. | Type an example that can only mean one thing, then press Ctrl + E (Mac: Data → Flash Fill) |
 | 11 | The buyer needs 4 West's suggested restock quantities on the Order sheet as plain numbers. Copy Supplies!H4:H17 (SuggestedOrder) and paste only the values into the yellow cells Order!D4:D17. The gray cell totals your Order Qty column. | A normal paste brings the formulas, and their references move |
 | 12 | Most people read schedules with staff down the side and dates across the top. Copy Schedule!A4:N35 and use Paste Special → Transpose with the top-left corner in Roster!A3. The gray cell checks that Jean Herrera landed in column A, then counts that nurse's December shifts. | It's a checkbox in the Paste Special dialog |
 | 13 | The new scheduling system uses N12 instead of N for a 12-hour night shift. On the Schedule sheet, use Find & Replace to change every N code to N12 without touching any names or day labels. The gray cell counts N12 codes in the grid (C5:N35) and warns you if a name or day label changed too. | Look under Options >> before you click Replace All |
@@ -499,7 +508,7 @@ When an entry is text that ends in a number, AutoFill increases that number and 
 **Option B (AutoFill):** type **7:15** in A5, select A4:A5, and drag the fill handle down to **A51** (18:45).
 
 
-Times are fractions of a day, so 15 minutes is 0:15 (0.0104…). The Series dialog adds that step until it reaches the Stop value. A stop of 18:50 rather than 18:45 protects you from tiny rounding errors that can drop the last time. With two starting cells, AutoFill copies the gap between them. Either way you get 48 check times. A single time dragged on its own steps by a whole **hour**, not 15 minutes.
+Times are fractions of a day, so 15 minutes is 0:15 (0.0104…). The Fill Series dialog adds that step until it reaches the Stop value. A stop of 18:50 rather than 18:45 protects you from tiny rounding errors that can drop the last time. With two starting cells, AutoFill copies the gap between them. Either way you get 48 check times. A single time dragged on its own steps by a whole **hour**, not 15 minutes.
 
 **9. Ctrl+Enter into a non-adjacent selection**
 
@@ -569,15 +578,15 @@ Without **Match entire cell contents**, Excel replaces the letter n *anywhere* i
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-Julie Osei, MD, at the Primary Care Clinic in the Bluestone Outpatient Pavilion, needs an appointment template for the two weeks of Monday 01/05/2026 through Friday 01/16/2026. The clinic books 15-minute slots from 08:00 to 16:45 on weekdays only. Lunch (12:00–12:45) is blocked every day, Wednesday afternoons (13:00 onward) are admin time, and Friday afternoons become video visits. Build the whole grid on the Clinic Grid sheet with AutoFill, Fill Series, Ctrl+Enter, and Find & Replace, without typing cell by cell. B3 (01/05/2026) and A4 (08:00) are filled in for you.
+Julie Osei, MD, at the Primary Care Clinic in the Bluestone Outpatient Pavilion, needs an appointment template for the two weeks of Monday 01/05/2026 through Friday 01/16/2026. The clinic books 15-minute slots from 08:00 to 16:45 on weekdays only. Lunch (12:00–12:45) is blocked every day, Wednesday afternoons (13:00 onward) are admin time, and Friday afternoons become video visits. Build the whole grid on the Clinic Grid sheet with AutoFill, Fill Series, Ctrl+Enter, and Find & Replace, without typing cell by cell. B3 (01/05/2026) and A4 (08:00) are filled in for you. The first four parts are checked by gray cells that read the Clinic Grid, so don't type over them. The last part has a yellow cell for your answer.
 
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Fill the date header C3:K3 with the next nine weekdays, skipping Saturdays and Sundays. The gray cell shows the date in K3. *(Hint: Date unit: Weekday (or Fill Weekdays))*
 - **B2.** Fill the time column A5:A39 with 15-minute slots after 08:00, ending at 16:45. The gray cell shows the latest time in column A. *(Hint: Same technique as the Q15 Log, with a different stop)*
-- **B3.** Fill the whole grid B4:K39 with Open in one entry. Then type Lunch over the 12:00–12:45 rows for every day, and Admin over both Wednesday afternoons (13:00–16:45). Use one Ctrl+Enter for each step. How many slots are blocked (Lunch plus Admin)? The gray cell counts blocks in the right places, minus any in the wrong place. *(Hint: Holding Ctrl (Mac: ⌘) while you drag adds a second block to the selection)*
-- **B4.** Select both Friday-afternoon blocks (13:00–16:45), then use Find & Replace to change Open to Telehealth inside that selection only. How many replacements does Excel report? The gray cell counts Telehealth slots in the right places. *(Hint: With several cells selected, Replace All stays inside the selection)*
-- **B5.** After all the steps above, how many slots are still Open for in-person booking? The gray cell counts them. *(Hint: Total slots minus everything you blocked or converted)*
+- **B3.** Fill the whole grid B4:K39 with Open in one entry. Then type Lunch over the 12:00–12:45 rows for every day, and Admin over both Wednesday afternoons (13:00–16:45). Use one Ctrl+Enter for each step. The gray cell counts Lunch and Admin slots in the right places, minus any in the wrong place. *(Hint: Holding Ctrl (Mac: ⌘) while you drag adds a second block to the selection)*
+- **B4.** Select both Friday-afternoon blocks (13:00–16:45), then use Find & Replace to change Open to Telehealth inside that selection only. Excel reports how many replacements it made. The gray cell counts Telehealth slots in the right places, minus any in the wrong place, so the two numbers should agree. *(Hint: With several cells selected, Replace All stays inside the selection)*
+- **B5.** How many slots are still Open for in-person booking? Work it out from the size of the grid and the slots you blocked or converted, then confirm it on the Clinic Grid with Find All. Type the number in the yellow cell. *(Hint: Total slots minus everything you blocked or converted)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -625,9 +634,9 @@ Two Fridays × 16 afternoon slots = 32. If you had only one cell selected, Excel
 **B5. Open slots remaining**
 
 - **Answer:** 256
-- **Solution:** No new steps: the gray cell counts the cells that still say Open.
+- **Solution:** Work it out: 36 rows × 10 days = 360 slots, minus 40 Lunch, 32 Admin, and 32 Telehealth = **256**. To confirm, click one cell on the Clinic Grid, press **Ctrl + F** (Mac: **⌃ + F**), type `Open`, tick **Match entire cell contents**, and click **Find All**. The dialog reports *"256 cell(s) found"*.
 
-360 slots − 40 Lunch − 32 Admin − 32 Telehealth = 256. If your count is higher, part of a block is missing. If it's lower, something extra was overwritten.
+Lunch takes 4 slots on each of 10 days (40). Admin and Telehealth each take the 16 afternoon slots on 2 days (32 and 32). That leaves 360 − 40 − 32 − 32 = 256 Open slots. If Find All reports more, part of a block is missing. If it reports fewer, something extra was overwritten. Working the number out first and then counting is a quick way to catch a fill that went wrong.
 
 </details>
 <!-- END GENERATED: bonus-answers -->
@@ -638,11 +647,11 @@ Two Fridays × 16 afternoon slots = 32. If you had only one cell selected, Excel
   a time is a fraction of a day. The alignment clue and the formula bar show you which type you have.
 - Store identifiers such as MRNs, ZIP codes, and member IDs as **text** (apostrophe or Text format *before* typing), so leading
   zeros and long digit strings survive.
-- **Ctrl + Enter** fills every selected cell at once, even cells that aren't next to each other. **Ctrl + D** copies down and
-  **Alt + Enter** adds a line break inside a cell.
+- **Ctrl + Enter** (Mac: ⌘ + Return) fills every selected cell at once, even cells that aren't next to each other. **Ctrl + D**
+  (Mac: ⌘ + D) copies down, and **Alt + Enter** (Mac: ⌃ + ⌥ + Return) adds a line break inside a cell.
 - AutoFill continues dates, times, weekday names, and text-with-numbers, and copies everything else. Two starting cells set the
   step. **Fill Series** gives exact steps, weekday-only dates, and stop values.
-- **Flash Fill** (Ctrl + E) learns a text pattern from your example. Check its results, because they are values that won't update.
+- **Flash Fill** (Ctrl + E, or **Data → Flash Fill**) learns a text pattern from your examples. Check its results, because they are values that won't update.
 - **Paste Special → Values** freezes results, **Transpose** swaps rows and columns, and **Multiply** changes many numbers at once.
 - In **Find & Replace**, tick **Match entire cell contents** for short codes, and select a range first when only part of the sheet
   should change.

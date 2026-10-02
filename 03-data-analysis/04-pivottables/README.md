@@ -312,7 +312,7 @@ grouping yourself:
 | **Months** and **Years** | 2024 › Jan … Dec, then 2025 › Jan … Dec | A monthly trend across years. Months alone would add January 2024 and January 2025 together |
 | **Quarters** (and **Years**) | Qtr1 … Qtr4 | Quarterly reporting |
 | **Days** with **Number of days** = 7 | 7-day blocks that start on the Starting at date | Weekly volumes (set Starting at to a Monday) |
-| **Hours** | 0 … 23 | Date-time data, such as ED arrivals by hour of day |
+| **Hours** | 12 AM … 11 PM | Date-time data, such as ED arrivals by hour of day |
 
 All of this lesson's data is from 2025, so Months alone is safe here.
 
@@ -446,7 +446,7 @@ pivots built from tblEncounters do.
 > timeline, or a Filters selection before you suspect the data.
 
 > 📋 **Version note:** Slicers for PivotTables need Excel 2010 or later on Windows. Timelines need Excel 2013 or later on
-> Windows, or Excel 2016 or later on a Mac. Current Mac versions support both.
+> Windows, or Excel 2019 or later on a Mac. Microsoft 365 supports both on Windows and Mac.
 
 ### 10. Calculated fields
 
@@ -536,7 +536,7 @@ The **Design** tab controls how the pivot looks. Start with the report layout:
 | **Outline Form** | Each Rows field in its own column, with subtotals at the top of each group | Long reports read from top to bottom |
 | **Tabular Form** | Each Rows field in its own column, with subtotals at the bottom, like a flat table | Reading combinations side by side, or copying results elsewhere |
 
-Here is FacilityName above EncounterType in Compact Form:
+Here are the first rows of a pivot with FacilityName above EncounterType in Compact Form:
 
 ```
 Row Labels                         Count of EncounterID
@@ -544,18 +544,24 @@ Row Labels                         Count of EncounterID
      Emergency                                      510
      Inpatient                                      369
      Observation                                     77
-⊟ Bluestone Outpatient Pavilion                   3,919
-     Outpatient                                   3,919
+⊟ Bluestone Memorial Hospital                     5,188
+     Emergency                                    2,687
+     Inpatient                                    2,082
+     Observation                                    419
+…
 ```
 
-And the same pivot in Tabular Form with **Repeat All Item Labels** and no subtotals:
+And the first rows of the same pivot in Tabular Form with **Repeat All Item Labels** and no subtotals:
 
 ```
 FacilityName                     EncounterType   Count of EncounterID
 Ashby Falls Community Hospital   Emergency                        510
 Ashby Falls Community Hospital   Inpatient                        369
 Ashby Falls Community Hospital   Observation                       77
-Bluestone Outpatient Pavilion    Outpatient                     3,919
+Bluestone Memorial Hospital      Emergency                      2,687
+Bluestone Memorial Hospital      Inpatient                      2,082
+Bluestone Memorial Hospital      Observation                      419
+…
 ```
 
 | Option | Where | What it does |
@@ -630,7 +636,7 @@ connected slicers filter the chart and the pivot together. Lesson 3.5 covers cho
 | PivotTables, Value Field Settings, grouping, calculated fields, GETPIVOTDATA | Every desktop version of Excel for Windows and Mac |
 | Rank, % of Parent, and % Running Total In under Show Values As, and Repeat All Item Labels | Excel 2010 and later |
 | Slicers for PivotTables | Excel 2010 and later (Windows), current Mac versions |
-| Timelines | Excel 2013 and later (Windows), Excel 2016 and later (Mac) |
+| Timelines | Excel 2013 and later (Windows), Excel 2019 and later (Mac) |
 | Automatic date grouping | Excel 2016 and later |
 | Distinct Count and the Data Model | Excel for Windows (Lesson 4.4) |
 | Excel for the web | Creates and edits PivotTables and slicers. Some options in this lesson are missing or limited |
@@ -658,7 +664,7 @@ Every task uses tblEncounters on the Encounters sheet: all 11,145 encounters tha
 | 10 | Group numbers into bands: EncounterType = Inpatient in Filters, AgeAtAdmit in Rows, and EncounterID in Values. Group AgeAtAdmit starting at 0, ending at 99, by 10. How many inpatient stays were for patients aged 70–79? | Right-click an age → Group… (Starting at, Ending at, By) |
 | 11 | Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID in Values. Insert a slicer for PayerType and a timeline for AdmitDate. In the slicer, select both Government and Medicare Advantage. In the timeline, switch to QUARTERS and select Q4 2025. How many Emergency encounters does Cedar Ridge Medical Center show? | PivotTable Analyze → Insert Slicer and Insert Timeline. Ctrl+click (Mac: ⌘+click) picks a second button |
 | 12 | Add a calculated field named ChargesPerDay with the formula =TotalCharges/LOSDays. Use a pivot with EncounterType = Inpatient in Filters, FacilityName in Rows, and ChargesPerDay in Values. What is ChargesPerDay for Ashby Falls Community Hospital? Round to 2 decimal places. | PivotTable Analyze → Fields, Items, & Sets → Calculated Field |
-| 13 | On a new sheet, build a pivot with FacilityName in Rows, EncounterType in Columns, and TotalCharges in Values. Then click this task's yellow cell, type =, switch to the pivot sheet, click the Cedar Ridge Medical Center × Observation cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? Leave the formula in the cell. | If you get =Sheet!C6 instead, turn Generate GetPivotData back on |
+| 13 | On a new sheet, build a pivot with FacilityName in Rows, EncounterType in Columns, and TotalCharges in Values. Then click this task's yellow cell, type =, switch to the pivot sheet, click the Cedar Ridge Medical Center × Observation cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? Leave the formula in the cell. | If you get a plain reference such as =Sheet7!D8 instead, turn Generate GetPivotData back on |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -703,7 +709,7 @@ TotalCharges contains only numbers, so Excel sums it by default. The Filters are
 - **Solution:**
 
 1. Double-click the *Sum of TotalCharges* cell for Cardiovascular. Excel inserts a new sheet with a Table of the 354 matching rows.
-2. Click any TotalCharges cell in that Table and choose **Data → Sort Largest to Smallest** (or use the column's filter button).
+2. Right-click any TotalCharges value in that Table and choose **Sort → Sort Largest to Smallest** (or use the TotalCharges filter button).
 3. Read the EncounterID in the first row.
 
 
@@ -813,7 +819,7 @@ Buttons selected in one slicer combine with OR (Government or Medicare Advantage
 - **Answer:** 7,243.21
 - **Solution:**
 
-1. Click inside a pivot built from tblEncounters (or build a new one).
+1. Click inside a pivot built from tblEncounters that no slicer or timeline is filtering (or build a new one). A leftover slicer selection from task 11 would change the result.
 2. **PivotTable Analyze → Fields, Items, & Sets → Calculated Field…**
 3. Name: `ChargesPerDay`. Formula: `=TotalCharges/LOSDays` (double-click the fields in the list to insert them). Click **Add**, then **OK**.
 4. Set the **EncounterType** filter to **Inpatient**, put **FacilityName** in **Rows**, and keep only *Sum of ChargesPerDay* in **Values**.
@@ -868,7 +874,7 @@ Work on the **Bonus** sheet of the workbook.
 2. Drag **ReadmitFlag** to **Values** twice. In **Value Field Settings**, set the first to **Count** with Custom Name `Index stays`, and the second to **Average** with Custom Name `Readmit rate` and a percentage number format.
 3. **Design → Report Layout → Show in Tabular Form** and **Design → Subtotals → Do Not Show Subtotals** make each combination one row.
 4. Open the filter button on the **PayerType** header (in Compact Form, the Row Labels button, then choose **PayerType** under *Select field*) → **Value Filters → Greater Than Or Equal To…** → *Index stays* · `30` → **OK**.
-5. Count the remaining PayerType rows (select the Readmit rate cells and read **Count** on the status bar).
+5. Count the remaining PayerType rows (select the Readmit rate cells above the Grand Total and read **Count** on the status bar).
 
 
 A value filter on the inner row field is applied within each service line, so it keeps or hides each service line × payer type cell separately. 31 combinations exist in the data, and 9 of them have fewer than 30 index stays. Custom names keep the two ReadmitFlag fields apart and make the filter dialog readable. The key's cross-check uses Microsoft 365 functions you'll meet in Lessons 4.1 and 4.2: `=LET(s,UNIQUE(tblEncounters[ServiceLine]),p,TRANSPOSE(UNIQUE(tblEncounters[PayerType])),n,COUNTIFS(tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],s,tblEncounters[PayerType],p),SUM(--(n>=30)))`
@@ -878,8 +884,9 @@ A value filter on the inner row field is applied within each service line, so it
 - **Answer:** Cardiovascular, Medicare Advantage
 - **Solution:**
 
-1. Right-click a *Readmit rate* value → **Sort → Sort Largest to Smallest**. In a two-level pivot this sorts the payer types *within* each service line, so also sort the service lines by the same field (or scan the column; there are only a couple of dozen rows).
-2. Optional: **Home → Conditional Formatting → Color Scales** on the Readmit rate cells makes the highest rate stand out.
+1. Right-click a *Readmit rate* value on a payer-type row → **Sort → Sort Largest to Smallest**. In a two-level pivot this sorts the payer types *within* each service line, so the highest rate in each service line moves to the top of its group.
+2. Compare those top rows, one per service line, and pick the highest. (Sorting the service lines as well orders them by their overall rate, which doesn't guarantee that the best single combination ends up first.)
+3. Optional: **Home → Conditional Formatting → Color Scales** on the Readmit rate cells makes the highest rate stand out.
 
 
 Cardiovascular stays paid by Medicare Advantage plans had 22 readmissions in 86 index stays. Three groups too small to qualify sit right behind it at 25.0%: Cardiovascular / Self-Pay (4 of 16), Critical Care / Self-Pay (2 of 8), and Neuroscience / Self-Pay (1 of 4). With one more readmission, any of them would top the list, which is why the committee sets a minimum volume before it ranks rates.

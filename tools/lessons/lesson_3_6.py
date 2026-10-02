@@ -221,6 +221,7 @@ def build() -> Lesson:
     first_profit = min(v for v in DT1_VISITS if dt1[v]["oi"] > 0)
     oi_210_160 = dt2[(210, 160)]
     n_profitable = sum(1 for v in dt2.values() if v > 0)
+    dt2_first = {x: min(v for v in DT2_VISITS if dt2[(v, x)] > 0) for x in DT2_RATES}
     assert min(abs(v) for v in dt2.values()) > 100 and min(abs(d["oi"]) for d in dt1.values()) > 100
 
     # ---------------------------------------------------------------- Scenario answers
@@ -288,6 +289,7 @@ def build() -> Lesson:
     cons_plus = staffing_constraints(VISITS_PER_DAY, None)
     cons_plus[1] = (cons_plus[1][0], cons_plus[1][1] + 1)
     shadow_licensed = lp_min(cons_plus)[0] - lp_cost
+    assert shadow_licensed < shadow_total  # the task 13 explanation says "only"
     current_cost = sum(c * x for c, x in zip(cost_vec, (RN_FTE, LPN_FTE, CNA_FTE)))
 
     growth_cons = staffing_constraints(GROWTH_VPD, CNA_CAP)
@@ -422,8 +424,8 @@ def build() -> Lesson:
         live=False, hint="Show Formulas, or Trace Dependents on each input",
         explanation=f"Today both versions return the same number, so nothing looks wrong. The trouble starts when someone changes "
                     f"the fee input in B{R['fee']}: the model ignores it. Another way to catch this is **Formulas → Trace "
-                    f"Dependents** on B{R['fee']}. Excel finds no dependents and beeps (or says so in a message), because no "
-                    "formula reads that input.")
+                    f"Dependents** on B{R['fee']}. Excel draws no arrows and tells you no formula refers to the active cell, "
+                    "because no formula reads that input.")
     t_be = Task(
         "Use Goal Seek to find the break-even volume: set Operating income to 0 by changing Visits per day (Model!B8). "
         f"How many visits per day does the clinic need? Round to 1 decimal place, then click Cancel to restore {VISITS_PER_DAY}.",
@@ -495,9 +497,11 @@ def build() -> Lesson:
         "income above 0)? Use a formula.",
         answer=n_profitable, title="Two-variable Data Table: profitable combinations",
         solution=f'=COUNTIF(Model!G{DT2_FIRST}:K{DT2_LAST},">0")', live=False, hint="COUNTIF with \">0\"",
-        explanation="Ordinary formulas can read a Data Table's results, so you can summarize or chart them, or add "
+        explanation="Ordinary formulas can read a Data Table's results, so you can count them, chart them, or add "
                     "conditional formatting. The profitable combinations sit in the bottom-right of the table, where volume and "
-                    "rate are both high. That pattern tells the CFO that a better contract and more visits each lower the "
+                    f"rate are both high. Reading down each column shows the trade-off the CFO cares about: at "
+                    f"${DT2_RATES[0]} per commercial visit the clinic first makes money at {dt2_first[DT2_RATES[0]]} visits a "
+                    f"day, but at ${DT2_RATES[-1]} it does at {dt2_first[DT2_RATES[-1]]}. A better contract lowers the "
                     "volume the clinic needs to break even.")
     scen_rows = ". ".join(f"{k}: visits per day {s['vpd']}, Medicaid share {s['medicaid']:.1%}, Commercial share "
                           f"{s['commercial']:.1%}, billing fee {s['fee']:.1%}" for k, s in SCENARIOS.items())
@@ -560,9 +564,9 @@ def build() -> Lesson:
         explanation=f"Requiring one more support hour raises the minimum cost by {money2(float(shadow_total))}. That's one CNA hour "
                     f"at ${cna_rate:.2f} plus {benefits_load:.1%} benefits, because the cheapest way to cover an hour that "
                     "doesn't need a licensed nurse is a CNA hour. The live result in the key repeats that arithmetic. The "
-                    "licensed-hours constraint has a higher shadow price "
-                    f"({money2(float(shadow_licensed))}). An extra licensed hour costs 0.6 RN hours plus 0.4 LPN hours, but "
-                    "it also replaces a CNA hour that's no longer needed.")
+                    f"licensed-hours constraint (B{S['c_lic']}) has a shadow price of only {money2(float(shadow_licensed))}, "
+                    "even though licensed nurses cost more. An extra licensed hour costs 0.6 RN hours plus 0.4 LPN hours, "
+                    "but licensed hours also count toward the total, so it replaces a CNA hour that's no longer needed.")
     L.tasks = [t_oi, t_margin, t_hard, t_be, t_rate, t_dt190, t_dtfirst, t_dt2, t_dtcount, t_down, t_up, t_solver,
                t_shadow]
 
@@ -979,6 +983,7 @@ def build() -> Lesson:
         for row in so.iter_rows(min_row=2, max_row=so.max_row):
             for c in row:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
+        fit(so)
 
         # ------------------------------------------------------------------ self-test: simulate the learner's work
         if selftest:

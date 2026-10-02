@@ -334,6 +334,8 @@ def build() -> Lesson:
     apr_n = sum(e["AdmitDateTime"].year == 2025 and e["AdmitDateTime"].month == 4 for e in stays)
     apr_last_day = sum(e["AdmitDateTime"].date() == date(2025, 4, 30) for e in stays)
     assert apr_last_day > 0
+    apr30_eg = next(e["AdmitDateTime"] for e in stays
+                    if e["AdmitDateTime"].date() == date(2025, 4, 30) and e["AdmitDateTime"].hour >= 12)
 
     # 7. LOS column (decimal days) -> average
     los = [(e["DischargeDateTime"] - e["AdmitDateTime"]).total_seconds() / 86400 for e in stays]
@@ -439,11 +441,11 @@ def build() -> Lesson:
                          f"day {int(t1_serial):,} counting from January 1, 1900. The decimal part, {t1_serial % 1:.4f}, is the "
                          f"time as a fraction of a 24-hour day: {s1['AdmitDateTime']:%H:%M} is "
                          f"{s1['AdmitDateTime'].hour * 60 + s1['AdmitDateTime'].minute:,} minutes ÷ 1,440 minutes per day. You can also "
-                         "see the number by giving the cell the General format (Ctrl + Shift + ~, or Control + Shift + ~ on a Mac). Because dates and times are "
+                         "see the number by giving the cell the General format with Ctrl + Shift + ~ (Mac: Control + Shift + ~). Because dates and times are "
                          "numbers, you can add, subtract, and compare them."),
         # ---------------- EDATE / DATE
         Task(f"The patient in Stays row {row2} (encounter {s2['EncounterID']}) was 64 at admission. On what date does the "
-             f"patient turn 65 and become age-eligible for Medicare? Use the DOB in that row.",
+             f"patient turn 65, the usual age of Medicare eligibility? Use the DOB in that row.",
              answer=bday65, fmt="mm/dd/yyyy",
              solution=f"=EDATE(Stays!{B}{row2},65*12)",
              hint="EDATE moves a date by whole months. How many months are in 65 years?",
@@ -493,7 +495,7 @@ def build() -> Lesson:
              hint="On or after April 1, and before May 1",
              explanation="DATE(2025,4,1) builds the serial number for April 1, and multiplying the two TRUE/FALSE lists keeps only "
                          "rows that pass both tests (AND logic). The upper bound is **before May 1**, not on or before April 30. "
-                         f"AdmitDateTime includes a time, so 04/30/2025 19:59 is *greater* than DATE(2025,4,30), which means midnight. "
+                         f"AdmitDateTime includes a time, so {apr30_eg:%m/%d/%Y %H:%M} is *greater* than DATE(2025,4,30), which means midnight. "
                          f"`<=DATE(2025,4,30)` would miss the {apr_last_day} admissions on April 30 and return {apr_n - apr_last_day}. "
                          f"`=SUMPRODUCT((MONTH({sr('AdmitDateTime')})=4)*(YEAR({sr('AdmitDateTime')})=2025))` also works."),
         # ---------------- LOS
@@ -535,8 +537,8 @@ def build() -> Lesson:
              explanation=f"An empty PaidDate counts as 0 in arithmetic, so a bare `={ccol('PaidDate')}-{ccol('SubmitDate')}` "
                          f"returns minus the submit date's serial number for every unpaid claim (−{unpaid_serial:,} for the first one), which "
                          "wrecks the average. The IF returns empty text for those rows, and AVERAGE ignores text. "
-                         f"`=DAYS({ccol('PaidDate')},{ccol('SubmitDate')})` gives the same number of days. Notice that DAYS takes "
-                         "the **end** date first."),
+                         f"`=IF({ccol('PaidDate')}=\"\",\"\",DAYS({ccol('PaidDate')},{ccol('SubmitDate')}))` gives the same result. "
+                         "Notice that DAYS takes the **end** date first, and that it needs the same blank guard."),
         # ---------------- NETWORKDAYS / WORKDAY
         Task(f"Claim {c10['ClaimID']} (Claims row {row10}) is still Pending. As of the report date in Settings!B2, how many "
              f"business days has it been waiting? Count from its SubmitDate through the report date, both days included, "
@@ -580,9 +582,9 @@ def build() -> Lesson:
                          "visits out of the average instead of counting them as huge negative waits."),
         Task(f"The Shifts sheet's ClockIn and ClockOut columns hold clock times only, with no dates, and {n_overnight} shifts "
              f"end after midnight. Fill the yellow PaidTime column with each shift's paid time: clock-out minus clock-in, "
-             f"corrected for shifts that cross midnight, minus a 30-minute unpaid meal break. Start in "
-             f"{sh.cell('PaidTime', 0, sheet=False)}. The gray cell totals your column in [h]:mm format. What is the total "
-             f"paid time for the week?",
+             f"corrected for shifts that cross midnight, minus a 30-minute unpaid meal break. Keep each result as a time "
+             f"value (don't multiply by 24). Start in {sh.cell('PaidTime', 0, sheet=False)}. The gray cell totals your column "
+             f"in [h]:mm format. What is the total paid time for the week?",
              answer=paid_total, fmt="[h]:mm", title="PaidTime column with MOD (total paid time for the week)",
              solution=f"=MOD({shcol('ClockOut')}-{shcol('ClockIn')},1)-TIME(0,30,0)",
              summary=f'=IF(COUNT({sh.rng("PaidTime")})=0,"",SUM({sh.rng("PaidTime")}))',
@@ -609,7 +611,7 @@ def build() -> Lesson:
         "simplified, educational version (not billing guidance): count the midnights between two date-times by comparing "
         "their dates, not the hours between them. The nurse also wants to know whether the day of the week a patient is "
         "admitted affects how long they stay. Fill the yellow Midnights, BenchMidnights, and AdmitDay columns on the Stays "
-        "sheet as you go. B2 and B4 also use your LOSDays column from task 7.")
+        "sheet as you go. B2, B4, and B5 also use your LOSDays column from task 7.")
     L.bonus = [
         Task(f"Fill the Midnights column with the number of midnights each stay crossed between AdmitDateTime and "
              f"DischargeDateTime. Start in {st.cell('Midnights', 0, sheet=False)}. The gray cell counts your rows with 2 or more. "

@@ -41,15 +41,15 @@ The last two rows are the same cell with two different formats. Nothing about th
 **Calculations always use the stored value.** On the Budget sheet, once every budget shows in thousands, add up the 16
 department budgets *as displayed* and you get 150,080. The Total row holds the true total of the stored values, 150,078,282,
 so it shows `$150,078K`, and a SUM of the budget column would return the same 150,078,282. Neither number is wrong. The
-displayed values were each rounded, and the small differences add up. When a report needs the
-rounded number itself, round the value with `ROUND` (Lesson 1.4) instead of relying on the format.
+displayed values were each rounded, and the small differences add up. When a report needs the rounded number itself, round
+the value with `ROUND` (Lesson 1.4) instead of relying on the format.
 
 > 💡 **Tip:** To see a cell's raw stored value, apply the **General** format with **Ctrl + Shift + ~** (Mac: **⌃ + Shift + ~**),
 > then press **Ctrl + Z** (Mac: **⌘ + Z**) to put the format back.
 
 > ⚠️ **Don't turn on "Set precision as displayed."** It's under **File → Options → Advanced** (Mac: **Excel → Settings →
-> Calculation**; Preferences in older versions), and it permanently rounds every stored value in the workbook to what's displayed. The lost digits can't be
-> recovered, so leave it off.
+> Calculation**; Preferences in older versions), and it permanently rounds every stored value in the workbook to what's
+> displayed. The lost digits can't be recovered, so leave it off.
 
 **General** is the format every new cell starts with. It shows a number with as many digits as fit in the column, with no
 thousands separators, and it switches to scientific notation (`1.23457E+11`) for numbers with 12 or more digits. If a formatted
@@ -383,7 +383,7 @@ expect, and you can make the repeats look quieter with a gray font if you like.
 > 💡 **Tip:** For a long list with many blocks, select just the label cells (A5:A20 on the Budget sheet, not the whole column,
 > which would also catch the blank rows above and below the list), press **F5** or **Ctrl + G** (Mac: **⌃ + G**), and click
 > **Special… → Blanks → OK**. Type `=`, press **↑**, and press **Ctrl + Enter** (Mac: **⌘ + Return**). Every blank now copies the
-> label above it. Then copy the column and use Paste Special → Values (Lesson 1.2) to replace those formulas with plain text.
+> label above it. Then copy the same cells and use Paste Special → Values (Lesson 1.2) to replace those formulas with plain text.
 
 ### 11. Fonts, fills, and borders
 
@@ -505,7 +505,7 @@ Download [`1.3-formatting-cells.xlsx`](1.3-formatting-cells.xlsx) and open the *
 task names, then type your answer in the yellow cell. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, and tasks 8–11 the Stays sheet. Work in order, because some tasks build on earlier ones. Most tasks ask you to apply a format and then type exactly what the cell displays, including any dollar sign, commas, parentheses, minus sign, or % sign. Those yellow cells are formatted as Text, so Excel keeps your entry exactly as you type it. Tasks 3, 9, and 12 ask for a plain number instead. Answers assume US regional settings.
+Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, and tasks 8–11 the Stays sheet. Work in order, because some tasks build on earlier ones. Most tasks ask you to apply a format and then type exactly what the cell displays, including any dollar sign, commas, parentheses, minus sign, or % sign. Those yellow cells are formatted as Text, so Excel keeps your entry exactly as you type it. Type the answer rather than pasting a copied cell, because pasting brings the cell's number and format along. Tasks 3, 9, and 12 ask for a plain number instead. Answers assume US regional settings.
 
 | # | Task | Hint |
 |:-:|------|------|

@@ -1,7 +1,7 @@
 # Lesson 4.1 · Dynamic Arrays: FILTER, SORT, UNIQUE & More
 
 > **Level:** Advanced · **Time:** about 60 minutes · **Workbook:** [`4.1-dynamic-arrays.xlsx`](4.1-dynamic-arrays.xlsx)
-> **Data:** 2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with facility, department, attending, diagnosis category, and payer names already joined in. Also includes the provider roster (147) and the department list (31).
+> **Data:** 2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with facility, department, attending, diagnosis category, and payer names already joined in. Also includes the provider roster (147) and the department list (31, with StaffedBeds 0 for departments that have no inpatient beds).
 
 A case manager asks for *"every Cedar Ridge patient who stayed a week or longer, longest first."* A revenue-cycle lead
 wants *"each payer type's encounter count, biggest first."* In older Excel, each request meant filtering, copying,
@@ -79,8 +79,11 @@ Spill references also work outside formulas:
 
 - **Drop-down lists.** In **Data → Data Validation**, choose **Allow: List** and enter `=Workspace!$B$6#` as the
   **Source**. The drop-down then always offers the current payer list.
-- **Charts.** The reliable way to chart a spill is through a name. Choose **Formulas → Name Manager → New**, name it
-  (for example, `MonthCounts`), and set **Refers to** `=Workspace!$G$6#`. Then use that name for the chart series values.
+- **Charts.** In Microsoft 365 and Excel 2024, a chart built from a spill range resizes by itself when the spill grows
+  or shrinks. In Excel 2021, chart the spill through a name instead. Choose **Formulas → Name Manager → New**, name it
+  (for example, `MonthCounts`), and set **Refers to** `=Workspace!$G$6#`. Then choose **Chart Design → Select Data**,
+  edit the series, and set **Series values** to `=Workspace!MonthCounts`. A chart series needs the sheet (or file)
+  name in front of a defined name.
 
 ### 3. When spilling fails: `#SPILL!` and its relatives
 
@@ -92,7 +95,7 @@ anchor and click the warning icon (a yellow diamond with an exclamation mark) to
 | **Spill range isn't blank** | Something sits in the way: a value, a stray space, even a formula that returns `""` | Choose **Select Obstructing Cells**, then delete or move what's there |
 | **Spill range has merged cells** | The results would land in merged cells | Unmerge them (**Home → Merge & Center → Unmerge Cells**) |
 | **Spill range in table** | The formula is inside an Excel Table, and Tables don't allow spills | Move the formula outside the Table, or convert the Table to a range |
-| **Spill range extends beyond the worksheet's edge** | The result is taller or wider than the sheet allows, often from a whole-column reference like `A:A+1` typed below row 1 | Refer to a Table column or a fixed range instead |
+| **Spill range is too big** | The result would run past the edge of the worksheet, often from a whole-column reference like `=A:A+1` typed below row 1 | Refer to a Table column or a fixed range instead |
 | **Spill range is unknown** | The result size changes between calculation passes, as in `=SEQUENCE(RANDBETWEEN(1,100))` | Base the size on something stable instead of a volatile function |
 
 Two related errors come from the functions themselves rather than from the sheet:
@@ -185,7 +188,7 @@ StaffedBeds):
 
 The array has five columns (Department through StaffedBeds), so `5` means StaffedBeds and `-1` means largest first.
 The first rows are Medical-Surgical 4 West (36 beds), Medical-Surgical 5 East (32), and Cedar Ridge's Medical-Surgical
-unit (30).
+unit (30). The 13 departments with 0 beds, such as the emergency departments and clinics, come last.
 
 ```
 =SORT(tblDepartments[[Department]:[StaffedBeds]], {2,5}, {1,-1})
@@ -205,8 +208,10 @@ the result. SORT can't do this because its key must be a column of the array it 
 > `SORT(tblDepartments[[Department]:[StaffedBeds]], 5, -1)` the 5 is StaffedBeds even though StaffedBeds is column F
 > on the sheet.
 
-> ⚠️ Empty cells come back as **0** in a spilled result. Departments without beds, such as the emergency departments
-> and clinics, show 0 in the sorted list.
+> ⚠️ **Watch for empty cells in the sort column.** They come back as **0** in the result, but SORT and SORTBY don't
+> rank them as zeros, so in a largest-first sort they can end up above the real numbers. That's why this lesson's
+> tblDepartments stores a real 0 for departments without beds. With your own data, remove the empty rows with FILTER
+> (section 7) before you sort: `SORT(FILTER(array, sort_column<>""), …)`.
 
 > 💡 When two rows tie on the sort key, add a second key so the order is predictable, for example
 > `SORT(…, {3,4}, {-1,-1})` sorts by column 3 and breaks ties with column 4.
@@ -475,7 +480,7 @@ Tasks 1, 2, 12, and 13 are spill exercises: build them in the yellow anchor cell
 | 2 | In Workspace!D6, enter one formula that spills the distinct ServiceLine values from tblEncounters sorted A to Z. It shows #SPILL! at first. Find out why, fix the problem without moving your formula, and the gray cell summarizes your list. | SORT(UNIQUE(…)). Then click the warning icon next to the error |
 | 3 | Department names repeat across hospitals (each hospital has its own 'Emergency Department'). How many distinct Facility + Department combinations (units) appear in tblEncounters? | UNIQUE over two adjacent columns, then count the rows |
 | 4 | How many patients (PatientID) have exactly one encounter in this extract? | UNIQUE has an optional third argument |
-| 5 | Switch to the Departments sheet (tblDepartments). Using FILTER, how many departments have UnitType "Inpatient" and 20 or more StaffedBeds? | Multiply the two conditions with *, then count the rows FILTER returns |
+| 5 | This one uses tblDepartments (on the Departments sheet), but the formula still goes in the yellow cell here. Using FILTER, how many departments have UnitType "Inpatient" and 20 or more StaffedBeds? | Multiply the two conditions with *, then count the rows FILTER returns |
 | 6 | How many different attending providers (Attending) treated Emergency encounters? | FILTER first, then UNIQUE, then count |
 | 7 | Flu-season review: what were the total charges of Emergency encounters admitted in January or February 2025 whose DxCategory is Respiratory or Infectious? Enter dollars and cents. | AND with *, OR with +. Wrap the OR part in its own parentheses |
 | 8 | What is the combined TotalCharges of the five most expensive Emergency encounters? | SORT the ED charges largest first, TAKE the first 5, then add them |
@@ -534,7 +539,7 @@ The third argument, exactly_once, set to TRUE keeps only values that occur once.
 ```
 
 
-Each condition returns TRUE or FALSE for all 31 rows. Multiplying them turns TRUE/FALSE into 1/0, so only rows where both are 1 pass the filter (AND logic). The ICUs don't count because their UnitType is 'Critical Care'. COUNTIFS gives the same number here. FILTER is worth learning because the same include argument can also return the rows themselves.
+Each condition returns TRUE or FALSE for all 31 rows. Multiplying them turns TRUE/FALSE into 1/0, so only rows where both are 1 pass the filter (AND logic). Bluestone Memorial Hospital's Intensive Care Unit has 20 beds but doesn't count, because its UnitType is 'Critical Care'. COUNTIFS gives the same number here. FILTER is worth learning because the same include argument can also return the rows themselves.
 
 **6. Distinct ED attendings**
 
@@ -632,7 +637,7 @@ Build it from the inside out. FILTER(tblEncounters, …) returns all 16 columns 
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least 50 encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), sorted by AvgCharge from highest to lowest, under a header row. Build it in Workspace!N6 as ONE formula. LET (previewed in the guide) makes it much easier to read. Then answer the questions below with formulas that refer to your leaderboard through N6#.
+The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least 50 encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. LET (previewed in the guide) makes it much easier to read. Then answer the questions below with formulas that refer to your leaderboard through N6#.
 
 Work on the **Bonus** sheet of the workbook.
 
@@ -659,7 +664,7 @@ Work on the **Bonus** sheet of the workbook.
      dept,  CHOOSECOLS(units, 2),
      n,     COUNTIFS(tblEncounters[Facility], fac, tblEncounters[Department], dept),
      avg,   AVERAGEIFS(tblEncounters[TotalCharges], tblEncounters[Facility], fac, tblEncounters[Department], dept),
-     VSTACK({"Facility", "Department", "Encounters", "AvgCharge"},
+     VSTACK({"Facility","Department","Encounters","AvgCharge"},
             SORT(FILTER(HSTACK(units, n, avg), n >= 50), 4, -1)))
 ```
 
@@ -701,7 +706,7 @@ DROP(N6#,1) removes the header so only numbers remain. CHOOSECOLS pulls out the 
 
 - A dynamic array formula lives in one **anchor cell** and **spills** its results into the cells around it. Leave
   room, because anything in the way causes `#SPILL!`.
-- `A2#` refers to a whole spill and resizes with it. Use it in formulas, drop-down lists, and named ranges for charts.
+- `A2#` refers to a whole spill and resizes with it. Use it in formulas, drop-down lists, and charts.
 - **UNIQUE**, **SORT**/**SORTBY**, and **FILTER** replace copy-paste-dedupe routines with live lists. In FILTER, `*`
   means AND and `+` means OR.
 - Wrap a spill in **ROWS**, **SUM**, **AVERAGE**, **INDEX**, or **TAKE(…,1)** when you need one number.

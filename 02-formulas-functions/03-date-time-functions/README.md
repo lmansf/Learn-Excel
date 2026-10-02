@@ -66,7 +66,8 @@ fixed values that never change, which makes them useful as time stamps.
 > for dates of birth.
 
 > 📋 **The 1904 date system.** Excel for Mac 2008 and earlier counted days from January 1, 1904, and any workbook can still be set
-> to that system (Windows: **File → Options → Advanced → Use 1904 date system**; Mac: **Excel → Preferences → Calculation**). Dates
+> to that system (Windows: **File → Options → Advanced → Use 1904 date system**; Mac: **Excel → Settings → Calculation**, called
+> **Preferences** in older versions). Dates
 > copied between a 1900 workbook and a 1904 workbook shift by 1,462 days, which is four years and a day. If pasted dates jump by four
 > years, check that setting. Excel also treats 1900 as a leap year, a bug kept for compatibility with Lotus 1-2-3, so serial numbers
 > before March 1, 1900 are off by one day. That never affects modern dates. Dates before 1900 can't be stored as dates at all.
@@ -114,7 +115,7 @@ in Settings!B2 (12/31/2025, the date the course data is current to).
 | Question | Changes every day | Repeatable |
 |---|---|---|
 | Age of the Stays row 5 patient | `=DATEDIF(E5,TODAY(),"Y")` | `=DATEDIF(E5,Settings!$B$2,"Y")` → 78 |
-| Days since a claim was submitted | `=TODAY()-F2` | `=Settings!$B$2-F2` |
+| Days since a claim was submitted | `=TODAY()-Claims!F2` | `=Settings!$B$2-Claims!F2` |
 
 The `$` signs lock the reference, so it stays on Settings!B2 when you copy the formula down a column (Lesson 1.5; press **F4**, or
 **⌘ + T** on a Mac, to add them). To rerun the report for another date, you change one cell.
@@ -239,15 +240,15 @@ Claims row 270 is claim CLM519179, with a ServiceDate of 10/15/2025:
 | `=DAY(EOMONTH(E270,0))` | 31 | The number of days in the service month |
 
 When the target month is shorter, EDATE stops at its last day: `=EDATE(DATE(2025,8,31),1)` returns 09/30/2025. That makes EDATE the
-right tool for birthdays and anniversaries. `=EDATE(E5,65*12)` returns 09/01/2012, the same 65th birthday as the DATE formula in
-section 4. In a hospital you'll use EDATE for six-month follow-up visits and credential renewals, and EOMONTH for month-end close and
+right tool for birthdays and anniversaries. `=EDATE(Stays!E5,65*12)` returns 09/01/2012, the same 65th birthday as the DATE formula
+in section 4. In a hospital you'll use EDATE for six-month follow-up visits and credential renewals, and EOMONTH for month-end close and
 "by the end of next month" deadlines.
 
 > ⚠️ **Format the result as a date.** EDATE, EOMONTH, and WORKDAY return a serial number, and a General cell shows it as a number
 > like 46021. Press **Ctrl + Shift + #** (Mac: **Control + Shift + #**) to see the date.
 
 > ⚠️ **One date at a time.** Give EDATE and EOMONTH a single date. Passing a whole range, as in `EOMONTH(E2:E370,0)`, returns
-> #VALUE! in many versions of Excel. Work row by row in a helper column instead.
+> #VALUE!, even in Microsoft 365. Work row by row in a helper column instead.
 
 ### 7. Date arithmetic: lengths of stay and turnaround times
 
@@ -438,8 +439,8 @@ Subtraction works for a day shift, but not for a shift that ends the next mornin
 =MOD(ClockOut - ClockIn, 1)
 ```
 
-`MOD(number, 1)` always returns a value from 0 up to 1. A positive duration passes through unchanged. A negative one gets a whole day
-added, so −0.4694 becomes 0.5306, which is 12:44. `=IF(G21<F21,G21+1-F21,G21-F21)` does the same thing in a longer way.
+`MOD(number, 1)` always returns a value of at least 0 and less than 1. A positive duration passes through unchanged. A negative one
+gets a whole day added, so −0.4694 becomes 0.5306, which is 12:44. `=IF(G21<F21,G21+1-F21,G21-F21)` does the same thing in a longer way.
 
 To get paid time, subtract the 30-minute unpaid meal break as a time: `=MOD(G21-F21,1)-TIME(0,30,0)` returns 12:14.
 
@@ -463,13 +464,15 @@ pay week, and their paid time adds up to 1.6958 days:
 
 To apply one, press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Number → Custom**, and type the code in the **Type** box.
 
-> ⚠️ **Multiply by 24 before you multiply by a rate.** At $19.83 an hour, `=total*19.83` pays $33.63, because the total is 1.6958
-> *days*. `=total*24*19.83` correctly pays $807.08.
+> ⚠️ **Multiply by 24 before you multiply by a rate.** At EMP2124's rate of $19.83 an hour, `=total*19.83` pays $33.63, because
+> the total is 1.6958 *days*. `=total*24*19.83` correctly pays $807.08.
 
 ### 13. Text that looks like a date: DATEVALUE and TIMEVALUE
 
 Exports from other systems sometimes store dates as text. Signs of text dates: they stay left-aligned, `=ISNUMBER(A2)` returns FALSE,
-and date math returns #VALUE!. Convert them with DATEVALUE and TIMEVALUE:
+SUM and MAX skip them, and comparisons like `>=DATE(2025,1,1)` treat them as text (section 4). Plain arithmetic such as `=A2+1` may
+still work, because Excel converts date-like text on the fly, but only when the text matches your regional date order. Otherwise it
+returns #VALUE!. Convert text dates once, with DATEVALUE and TIMEVALUE, so every formula sees a real date:
 
 | Formula | Result |
 |---|---|
@@ -513,7 +516,7 @@ Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 1
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Stays!G2 shows the first admission of 2025: 01/01/2025 21:09. What number does Excel actually store in that cell? Point a formula at the cell (the answer cell is already formatted to show 4 decimal places). | A date-time is one number: whole days since 1900, plus a fraction of a day |
-| 2 | The patient in Stays row 15 (encounter ENC110973) was 64 at admission. On what date does the patient turn 65 and become age-eligible for Medicare? Use the DOB in that row. | EDATE moves a date by whole months. How many months are in 65 years? |
+| 2 | The patient in Stays row 15 (encounter ENC110973) was 64 at admission. On what date does the patient turn 65, the usual age of Medicare eligibility? Use the DOB in that row. | EDATE moves a date by whole months. How many months are in 65 years? |
 | 3 | Fill the yellow AgeAtAdmit column on the Stays sheet with each patient's age in completed years on the admit date. Start in I2. The gray cell averages your column. What was the average age at admission? | DATEDIF(start_date, end_date, "Y") counts completed years. Type it in full, because Excel won't suggest it |
 | 4 | The youngest patient (Stays row 42, encounter ENC112029) was an infant. Calculate the exact age in years at admission with YEARFRAC, using basis 1 (actual/actual). Round to 2 decimal places. | YEARFRAC(start_date, end_date, basis). Don't skip the third argument |
 | 5 | How many stays were admitted on a weekend (Saturday or Sunday)? Use the AdmitDateTime column. | WEEKDAY with return_type 2 numbers Monday as 1 and Sunday as 7 |
@@ -524,7 +527,7 @@ Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 1
 | 10 | Claim CLM520056 (Claims row 307) is still Pending. As of the report date in Settings!B2, how many business days has it been waiting? Count from its SubmitDate through the report date, both days included, skipping weekends and the dates on the Holidays sheet. | NETWORKDAYS(start_date, end_date, holidays) |
 | 11 | Claim CLM517132 (Claims row 207) was only partially paid by Evergreen Mutual Insurance, and the payment posted on its PaidDate. Bluestone Health's policy gives the appeals team 10 business days to send an underpayment appeal, so the deadline is the 10th business day after the PaidDate (the PaidDate itself doesn't count). Weekends and the dates on the Holidays sheet aren't business days. What is the deadline? | WORKDAY(start_date, days, holidays) returns a date |
 | 12 | Fill the yellow DoorToProviderMin column on the ED sheet with the minutes from ArrivalDateTime to ProviderSeenDateTime. 9 patients left without being seen and have no ProviderSeenDateTime, so make those rows return "". Start in H2. The gray cell averages your column. What is the average door-to-provider time in minutes? | A difference of date-times is in days. A day has 24 × 60 = 1,440 minutes |
-| 13 | The Shifts sheet's ClockIn and ClockOut columns hold clock times only, with no dates, and 69 shifts end after midnight. Fill the yellow PaidTime column with each shift's paid time: clock-out minus clock-in, corrected for shifts that cross midnight, minus a 30-minute unpaid meal break. Start in H2. The gray cell totals your column in [h]:mm format. What is the total paid time for the week? | MOD(…, 1) turns a negative time difference into the right positive one. Half an hour is a time value, not 0.5 |
+| 13 | The Shifts sheet's ClockIn and ClockOut columns hold clock times only, with no dates, and 69 shifts end after midnight. Fill the yellow PaidTime column with each shift's paid time: clock-out minus clock-in, corrected for shifts that cross midnight, minus a 30-minute unpaid meal break. Keep each result as a time value (don't multiply by 24). Start in H2. The gray cell totals your column in [h]:mm format. What is the total paid time for the week? | MOD(…, 1) turns a negative time difference into the right positive one. Half an hour is a time value, not 0.5 |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -541,7 +544,7 @@ runs a working formula for every formula-based answer, so you can watch it calcu
 - **Answer:** 45,658.8812
 - **Solution:** `=Stays!G2`
 
-The whole part, 45,658, is the **date serial number**: January 1, 2025 is day 45,658 counting from January 1, 1900. The decimal part, 0.8812, is the time as a fraction of a 24-hour day: 21:09 is 1,269 minutes ÷ 1,440 minutes per day. You can also see the number by giving the cell the General format (Ctrl + Shift + ~, or Control + Shift + ~ on a Mac). Because dates and times are numbers, you can add, subtract, and compare them.
+The whole part, 45,658, is the **date serial number**: January 1, 2025 is day 45,658 counting from January 1, 1900. The decimal part, 0.8812, is the time as a fraction of a 24-hour day: 21:09 is 1,269 minutes ÷ 1,440 minutes per day. You can also see the number by giving the cell the General format with Ctrl + Shift + ~ (Mac: Control + Shift + ~). Because dates and times are numbers, you can add, subtract, and compare them.
 
 **2. The patient in Stays row 15 (encounter ENC110973) was 64 at admission. On what date…**
 
@@ -597,7 +600,7 @@ Subtracting two date-times gives the elapsed days, with the hours as a decimal: 
 - **Answer:** 27.6
 - **Solution:** `=IF(G2="","",G2-F2)`
 
-An empty PaidDate counts as 0 in arithmetic, so a bare `=G2-F2` returns minus the submit date's serial number for every unpaid claim (−45,666 for the first one), which wrecks the average. The IF returns empty text for those rows, and AVERAGE ignores text. `=DAYS(G2,F2)` gives the same number of days. Notice that DAYS takes the **end** date first.
+An empty PaidDate counts as 0 in arithmetic, so a bare `=G2-F2` returns minus the submit date's serial number for every unpaid claim (−45,666 for the first one), which wrecks the average. The IF returns empty text for those rows, and AVERAGE ignores text. `=IF(G2="","",DAYS(G2,F2))` gives the same result. Notice that DAYS takes the **end** date first, and that it needs the same blank guard.
 
 **10. Claim CLM520056 (Claims row 307) is still Pending. As of the report date in…**
 
@@ -633,7 +636,7 @@ Shift SH915484 clocked in at 18:48 and out at 08:20. 08:20 − 18:48 is negative
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-Ashby Falls' utilization review nurse is preparing for a Medicare audit. Under the CMS two-midnight benchmark, an inpatient admission is generally expected to span at least two midnights of hospital care. This bonus uses a simplified, educational version (not billing guidance): count the midnights between two date-times by comparing their dates, not the hours between them. The nurse also wants to know whether the day of the week a patient is admitted affects how long they stay. Fill the yellow Midnights, BenchMidnights, and AdmitDay columns on the Stays sheet as you go. B2 and B4 also use your LOSDays column from task 7.
+Ashby Falls' utilization review nurse is preparing for a Medicare audit. Under the CMS two-midnight benchmark, an inpatient admission is generally expected to span at least two midnights of hospital care. This bonus uses a simplified, educational version (not billing guidance): count the midnights between two date-times by comparing their dates, not the hours between them. The nurse also wants to know whether the day of the week a patient is admitted affects how long they stay. Fill the yellow Midnights, BenchMidnights, and AdmitDay columns on the Stays sheet as you go. B2, B4, and B5 also use your LOSDays column from task 7.
 
 Work on the **Bonus** sheet of the workbook.
 

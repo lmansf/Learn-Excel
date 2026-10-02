@@ -29,7 +29,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import column_index_from_string, get_column_letter
 
 from xlcourse import Lesson, Task, data
-from xlcourse.lesson import BOX, HEADER_FILL, INPUT_BORDER, INPUT_FILL, NAVY
+from xlcourse.lesson import BOX, HEADER_FILL, INPUT_BORDER, INPUT_FILL, NAVY, WRAP_TOP, _estimate_lines, _plain
 from xlcourse.xlfn import to_file_formula
 
 CODE = "1.5"
@@ -181,7 +181,8 @@ def build() -> Lesson:
         columns=["EmployeeID", "Name", "JobTitle", "HourlyRate", "ShiftsWorked", "WorkedHours", "OTHours"],
         extra_cols=["OTPay"],
         formats={"HourlyRate": "#,##0.00", "WorkedHours": "0.00", "OTHours": "0.00", "OTPay": "#,##0.00"},
-        widths={"EmployeeID": 20, "Name": 22, "JobTitle": 29, "HourlyRate": 11, "OTPay": 12},
+        widths={"EmployeeID": 20, "Name": 22, "JobTitle": 29, "HourlyRate": 12, "ShiftsWorked": 14,
+                "WorkedHours": 14, "OTHours": 11, "OTPay": 12},
         notes=["Medical-Surgical 4 West · overtime for hourly staff · December 2025",
                "OTHours = December's total of paid hours worked beyond each shift's scheduled hours (time clock). "
                "Bluestone pays each OT hour at the base HourlyRate × the overtime multiplier in B3 (a simplified, fictional "
@@ -377,8 +378,9 @@ def build() -> Lesson:
                          "one layout. A 3-D reference adds cells by position, not by department name. Q4 Summary sits to the left "
                          "of Oct, outside the Oct:Dec range, so it never adds itself."),
         Task(f"A colleague drags the Nov tab to the right of the Dec tab. What would =SUM(Oct:Dec!{TCOL}{TOT}) return then? "
-             f"({TCOL}{TOT} is each month's hospital total.) Predict it with a formula. If you test it by moving the tab, "
-             "drag Nov back between Oct and Dec afterwards.",
+             f"({TCOL}{TOT} is each month's hospital total.) Answer with a formula that uses ordinary sheet references, not a "
+             "3-D reference, so it stays correct with the tabs in their usual order. If you test the move, drag Nov back "
+             "between Oct and Dec afterwards.",
              answer=moved_total,
              solution=f"=Oct!{TCOL}{TOT}+Dec!{TCOL}{TOT}",
              hint="A 3-D range is defined by tab positions, not by month names",
@@ -420,7 +422,8 @@ def build() -> Lesson:
     )
     L.bonus = [
         Task(f"Fill the yellow grid on the Plan 2026 sheet ({C0}{FIRST}:{C1}{LAST}) with ONE formula typed in {C0}{FIRST} and "
-             "copied across and down. The gray cell adds up your grid: what is the 2026 plan total? (Don't round.)",
+             "copied across and down. The gray cell adds up your grid: what is the 2026 plan total? (Don't round inside "
+             "the formula.)",
              answer=round(plan_total, 6), fmt="#,##0.00", title="2026 plan grid (three kinds of reference in one formula)",
              solution=plan_formula,
              summary=f'=IF(COUNT({plan_rng})=0,"",SUM({plan_rng}))',
@@ -465,18 +468,22 @@ def build() -> Lesson:
                          f"({INFLATION['Pharmaceuticals']:.1%}), so its mix pushes the total up faster."),
         Task(f"Pharmaceutical prices are the shakiest assumption. If pharmaceutical inflation were {PHARMA_WHATIF:.1%} instead of "
              f"{INFLATION['Pharmaceuticals']:.1%}, how many dollars higher would the 2026 plan total be? Change the one input cell, "
-             "compare the totals, then put it back. Round to the nearest dollar.",
+             "compare the totals, and type the difference here as a number, rounded to the nearest dollar. Then put the input "
+             "back.",
              answer=round(pharma_rise), fmt="#,##0", tol=1,
-             solution=f"1. Note the plan total in {PS}!{TCOL}{TOT} (or the gray cell in B1).\n"
+             solution=f"1. Keep a copy of the current plan total: copy {PS}!{TCOL}{TOT} and paste it as a value "
+                      f"(**Paste Special → Values**) into a spare cell such as {PS}!L{TOT}.\n"
                       f"2. Change {PS}!{pharma_col}{INF_ROW} from {INFLATION['Pharmaceuticals']:.1%} to {PHARMA_WHATIF:.1%}.\n"
-                      f"3. Subtract the old total from the new one and round to the nearest dollar.\n"
-                      f"4. Set {pharma_col}{INF_ROW} back to {INFLATION['Pharmaceuticals']:.1%}.",
+                      f"3. Subtract the old total from the new one (`={TCOL}{TOT}-L{TOT}` on Plan 2026), round to the nearest "
+                      "dollar, and type that number into this task's yellow cell.\n"
+                      f"4. Set {pharma_col}{INF_ROW} back to {INFLATION['Pharmaceuticals']:.1%} so B1 and B3 show ✔ again.",
              live=f"=ROUND(SUMPRODUCT(Expenses!{pharma_col}{FIRST}:{pharma_col}{LAST}*(1+{PS}!{GROW_COL}{FIRST}:{GROW_COL}{LAST}))"
                   f"*({PHARMA_WHATIF}-{PS}!{pharma_col}{INF_ROW}),0)",
              hint="Because of the $ signs, one edit flows to all 16 Pharmaceuticals cells",
              title="Sensitivity: pharmaceutical inflation",
              explanation="Only the Pharmaceuticals column reads that input, so only those 16 cells change. Each one rises by its 2025 "
-                         f"amount × (1 + growth) × {(PHARMA_WHATIF - INFLATION['Pharmaceuticals']) * 100:.1f} percentage points. Testing the shakiest "
+                         f"amount × (1 + growth) × {PHARMA_WHATIF - INFLATION['Pharmaceuticals']:.3f}, which is the "
+                         f"{(PHARMA_WHATIF - INFLATION['Pharmaceuticals']) * 100:.1f}-point rise in the rate. Testing the shakiest "
                          "assumption like this is called a sensitivity check, and it only takes seconds because the assumption "
                          "lives in one cell."),
     ]
@@ -484,8 +491,7 @@ def build() -> Lesson:
     L.start_notes = [
         "The data sheets are plain ranges, not Excel Tables, so the formulas you write use ordinary A1 references "
         "with $ signs. (Tables use structured references instead; see Lesson 3.1.)",
-        "Staffing Grid, Q4 Summary, and Plan 2026 are layout sheets with yellow grids for you to fill with one formula each.",
-        "Keep the Oct, Nov, and Dec tabs together and in that order: 3-D formulas depend on tab positions.",
+        "Keep the Oct, Nov, and Dec tabs together and in that order, because 3-D formulas depend on tab positions.",
     ]
     L.sheet_order = ["Start Here", "Practice", "Expenses", "4 West OT", "Staffing Grid", "Q4 Summary", "Oct", "Nov", "Dec",
                      "Bonus", "Plan 2026", "Answer Key", "Bonus Key"]
@@ -633,7 +639,8 @@ def build() -> Lesson:
         ws.sheet_properties.tabColor = "BF9000"
         titled(ws, "Bluestone Memorial Hospital · 2026 operating expense plan ($)",
                f"2026 = 2025 actual from the Expenses sheet (same cell) × (1 + price inflation in row {INF_ROW}) × "
-               f"(1 + volume growth in column {GROW_COL}). Blue cells are planning assumptions.")
+               f"(1 + volume growth in column {GROW_COL}). Blue cells are planning assumptions. Fill the yellow grid with ONE "
+               f"formula typed in {C0}{FIRST} (bonus task B1).")
         c = ws.cell(row=INF_ROW, column=1, value="Price inflation →")
         c.font = Font(bold=True)
         c.alignment = Alignment(horizontal="right")
@@ -665,5 +672,57 @@ def build() -> Lesson:
                 if t.live_cell and live and re.search(r"[A-Za-z0-9_']+:[A-Za-z0-9_' ]+!", live):
                     ks[t.live_cell] = to_file_formula(live)
                     lesson._dynamic.discard((ks.title, t.live_cell))
+            # Step-by-step (non-formula) solutions are Markdown for the README. Show them without ** and ` in the key.
+            for i, t in enumerate(tasks):
+                if t.solution and not t.is_formula:
+                    ks.cell(row=5 + i, column=4).value = _plain(t.solution)
+
+        # ---------------------------------------------------------- Start Here: describe every sheet
+        # The library lists only the data sheets ("Data: 17 rows", which counts the total row). Replace that
+        # list with one line per sheet that says what it holds and which tasks use it.
+        num = {t.title: t.number for t in lesson.tasks + lesson.bonus}
+
+        def tasks_for(*prefixes):
+            ns = [num[next(k for k in num if k.startswith(p))] for p in prefixes]
+            return ("task " if len(ns) == 1 else "tasks ") + (ns[0] if len(ns) == 1 else f"{ns[0]}–{ns[-1]}")
+
+        sheet_lines = [
+            (lesson.practice_sheet, f"{len(lesson.tasks)} tasks. Type answers in the yellow cells. Gray cells check work you "
+                                    "do on the other sheets."),
+            ("Expenses", f"Bluestone Memorial's 2025 operating expense: {len(f01)} departments (rows {FIRST}–{LAST}) × "
+                         f"{len(CATS)} categories (columns {C0}–{C1}), with totals in column {TCOL} and row {TOT}. You fill the "
+                         f"yellow % of Total column {SCOL} ({tasks_for('% of Total')})."),
+            ("4 West OT", f"December 2025 overtime for {len(ot_rows)} hourly staff on Medical-Surgical 4 West, with the overtime "
+                          f"multiplier in {MULT_CELL}. You fill the yellow OTPay column {OT_PAY} "
+                          f"({tasks_for('Overtime pay', 'What-if')})."),
+            ("Staffing Grid", f"Census values down column A × HPPD targets across row {G_HDR}. You fill the yellow grid with "
+                              f"one formula ({tasks_for('Staffing grid')})."),
+            ("Q4 Summary", "Same layout as Oct, Nov, and Dec. You fill the yellow grid with one 3-D formula "
+                           f"({tasks_for('Q4 Summary')})."),
+            ("Oct · Nov · Dec", "Monthly actuals for October, November, and December 2025, in the same layout as Expenses "
+                                f"({tasks_for('3-D SUM', '3-D gotcha')})."),
+            (lesson.bonus_sheet, f"{len(lesson.bonus)} harder tasks that build and test a 2026 expense plan."),
+            ("Plan 2026", f"The 2026 plan, with blue planning assumptions: price inflation in row {INF_ROW} and volume growth "
+                          f"in column {GROW_COL}. You fill the yellow grid with one formula (bonus task B1)."),
+        ]
+        ws = wb["Start Here"]
+        hdr_row = next(r for r in range(1, ws.max_row + 1) if ws.cell(row=r, column=2).value == "Sheets in this workbook")
+        tail = {}
+        for r in range(hdr_row + 1, ws.max_row + 1):
+            label = ws.cell(row=r, column=2).value
+            if label in ("About the data", "Disclaimer"):
+                tail[label] = ws.cell(row=r, column=3).value
+            for col in (2, 3):
+                ws.cell(row=r, column=col).value = None
+            ws.row_dimensions[r].height = None
+        r = hdr_row + 1
+        for label, text in sheet_lines + [(k, tail[k]) for k in ("About the data", "Disclaimer") if tail.get(k)]:
+            a = ws.cell(row=r, column=2, value=label)
+            a.font = Font(bold=True)
+            a.alignment = WRAP_TOP
+            b = ws.cell(row=r, column=3, value=text)
+            b.alignment = WRAP_TOP
+            ws.row_dimensions[r].height = 15 * _estimate_lines(text, 100) + 3
+            r += 1
 
     return L
