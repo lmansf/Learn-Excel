@@ -671,7 +671,7 @@ def build() -> Lesson:
                          f"{top_sl} first but shrinks its lead to {_pct(sl_with_dec[0][0])} against "
                          f"{_pct(dict((s, r) for r, s in sl_with_dec)[second_sl])}. A **PivotTable** works too: add two helper columns, "
                          "`IndexStay` (1 when the stay meets the definition) and `ReadmitFlag` (1 when Readmit30 = Y), as "
-                         "guide section 6.5 shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of "
+                         "guide section 6e shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of "
                          "ReadmitFlag in Values. In an executive summary, "
                          f"say that the top two are within half a point and that {top_sl} has fewer stays, so its rate is "
                          "less certain. Don't present it as the clear outlier."),
@@ -727,7 +727,7 @@ def build() -> Lesson:
              summary=f'=IFERROR(IF(COUNT({ind("B2:E2")})=0,"",SUM({ind("B2:E2")})),"")',
              fill={"range": "RefreshLog!B2:E2", "values": [len(enc), len(ed), len(claims), n_unique_surveys]},
              live=f'=ROWS({R(es, "EncounterID")})+ROWS({edA})+ROWS({clA})+ROWS(UNIQUE(FILTER({svA},{svA}<>"")))',
-             hint="Guide section 8.2 lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp)",
+             hint="Guide section 8b lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp)",
              explanation=f"Expected: {len(enc):,} + {len(ed):,} + {len(claims):,} + {n_unique_surveys:,} = "
                          f"{log_total:,}. The full module, with the DataRowCount and LogSheet helpers, is in "
                          "solutions/RefreshReview_Solution.bas. An **audit row** of record counts is a cheap safety net: "
@@ -747,7 +747,7 @@ def build() -> Lesson:
              explanation=f"Expected text: **{sentence}**. The simplest route links to cells you already built: "
                          "`=\"Denial rate \"&TEXT(Practice!D14,\"0.0%\")&\"; top reason \"&G2&\" (\"&TEXT(H2,\"0.0%\")&\" "
                          "of denials)\"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table "
-                         "(guide section 6.5), and D14 is your task 9 answer. "
+                         "(guide section 6e), and D14 is your task 9 answer. "
                          "The one-formula version above needs no helper cells. It uses **LET** to name each step: it filters the reasons of "
                          "denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the "
                          "largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid "

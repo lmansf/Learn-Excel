@@ -122,7 +122,8 @@ class Task:
     fmt          Number format for the answer cell and key (e.g. '#,##0.00', '0.0%', 'mm/dd/yyyy').
     check        'auto' (from answer type), 'number', 'percent', 'text', 'date', 'datetime', 'duration',
                  'bool', 'manual' or 'custom'.
-    tol          Absolute tolerance for numeric checks (default 0.0051 for floats, 0 for ints).
+    tol          Absolute tolerance for numeric checks (defaults: 0.0001 for ints, 0.0051 for other numbers,
+                 0.00051 for percents, 1 minute for date-times/durations, same day for dates).
     accept       Extra accepted answers (numbers or case-insensitive text).
     custom_check Formula fragment that is TRUE when correct; use {cell} for the learner's cell and
                  {key} for the key's expected-value cell. Only with check='custom'.
@@ -687,6 +688,7 @@ class Lesson:
         line("✘ Not yet", "Not matching yet. Check the hint and try again.", fill=BAD_FILL)
         r += 1
         section("Sheets in this workbook")
+        line(self.practice_sheet, f"{len(self.tasks)} practice tasks, each with a Check cell.")
         for spec in self._data_specs:
             n = len(spec["rows"])
             desc = f"Data: {n:,} row{'s' if n != 1 else ''}" + (f", in the Excel Table '{spec['table']}'" if spec["table"] else "")
@@ -695,6 +697,8 @@ class Lesson:
             line(spec["name"], desc)
         for name, desc in self.sheet_notes:
             line(name, desc)
+        if self.bonus:
+            line(self.bonus_sheet, f"The bonus challenge ({len(self.bonus)} parts).")
         if self.data_note:
             line("About the data", self.data_note)
         line("Disclaimer", "All people, places, and numbers are synthetic and fictional. Not clinical guidance.")

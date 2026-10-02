@@ -1,6 +1,6 @@
 # Lesson 4.4 · Data Model, Power Pivot & DAX
 
-> **Level:** Advanced · **Time:** about 75 minutes · **Workbook:** [`4.4-power-pivot-dax.xlsx`](4.4-power-pivot-dax.xlsx)
+> **Level:** Advanced · **Time:** about 175 minutes · **Workbook:** [`4.4-power-pivot-dax.xlsx`](4.4-power-pivot-dax.xlsx)
 > **Data:** A star schema of the whole Bluestone Health System for 2024–2025: every encounter (21,857 rows) and every claim (21,857 rows) as fact tables, plus dimension tables for dates, facilities, departments, providers, patients, payers, and diagnoses. The columns come from [`encounters.csv`](../../data/README.md#encounterscsv), [`claims.csv`](../../data/README.md#claimscsv), and the reference files in the [data dictionary](../../data/README.md).
 
 The CFO asks for charges by facility, the revenue-cycle director asks for denial rates by payer type, and the quality

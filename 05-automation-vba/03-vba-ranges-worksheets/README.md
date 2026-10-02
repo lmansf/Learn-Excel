@@ -1,6 +1,6 @@
 # Lesson 5.3 · VBA: Ranges, Worksheets & Workbooks
 
-> **Level:** Expert · **Time:** about 65 minutes · **Workbook:** [`5.3-vba-ranges-worksheets.xlsx`](5.3-vba-ranges-worksheets.xlsx)
+> **Level:** Expert · **Time:** about 180 minutes · **Workbook:** [`5.3-vba-ranges-worksheets.xlsx`](5.3-vba-ranges-worksheets.xlsx)
 > **Data:** 2,000 encounters admitted in 2025 at all four Bluestone facilities (inpatient, observation, emergency, and outpatient), exported from the EHR as a plain range, plus the facility list as an Excel Table.
 
 Every month, Bluestone's finance team receives the encounter export from the EHR: a few thousand rows, one per visit or

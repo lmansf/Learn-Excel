@@ -42,7 +42,7 @@ OUT = {"reasons": "B4", "patients": "B5", "top_name": "B6", "top_count": "B7"}
 
 NAVY = "1F4E79"
 HEADER_FILL = PatternFill("solid", fgColor=NAVY)
-MACRO_FILL = PatternFill("solid", fgColor="E2EFDA")
+MACRO_FILL = PatternFill("solid", fgColor="DDEBF7")   # blue, like the Output sheets of 5.2 and 5.3
 THIN = Side(style="thin", color="BFBFBF")
 BOX = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 
@@ -1160,6 +1160,19 @@ def build() -> Lesson:
         "The Output sheet is where your macros write their results. The Snippets sheet shows the code for the "
         "predict-the-output tasks. The bonus macro creates a PayerSummary sheet.",
     ]
+    # The library's generic how-to lines say "type a formula or value into each yellow cell". Here 7 of the 13 Practice
+    # answers and every auto-checked Bonus answer are gray cells fed by UDF columns or macros, so say that instead.
+    L.practice_how = ("Go to the 'Practice' sheet. Type your answers for tasks 1, 6, 7, and 11–13 in the yellow cells. For "
+                      "tasks 2–5, fill the yellow UDF columns on the data sheets. For tasks 8–10, run your macros. The gray "
+                      "cells for those tasks fill in by themselves.")
+    L.practice_instructions = (
+        "Type your answers for tasks 1, 6, 7, and 11–13 in the yellow cells. The gray cells for tasks 2–5 and 8–10 fill in "
+        "by themselves from your UDF columns and your macros. The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "There's nothing to type on this sheet. The gray cells for B1–B4 fill in once BuildPayerSummary has run, and the "
+        "Check column turns green when they match. B5 is a test you run by hand, so compare your results with the key. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
     L.practice_intro = (
         "Save the workbook as .xlsm and import the starter modules first (see the Start Here sheet). In tasks 1–6 you write "
         "user-defined functions and use them in cells: tasks 1 and 6 in the yellow cell, and tasks 2–5 in yellow columns on "
@@ -1495,11 +1508,11 @@ def build() -> Lesson:
 
 def _output_sheet(wb):
     ws = wb.create_sheet("Output")
-    ws.sheet_properties.tabColor = "548235"
+    ws.sheet_properties.tabColor = "2E75B6"
     ws["A1"] = "Output: your macros write their results here"
     ws["A1"].font = Font(bold=True, size=14, color=NAVY)
-    ws["A2"] = ("Don't type in column B. Run the macro named in column C and it fills the green cell. The gray cells on "
-                "the Practice sheet read these cells.")
+    ws["A2"] = ("Macros write into the blue cells. Don't type in column B: run the macro named in column C. The gray cells "
+                "on the Practice sheet read these cells.")
     ws["A2"].font = Font(italic=True, color="595959")
     ws["A2"].alignment = Alignment(wrap_text=True, vertical="top")
     ws.merge_cells("A2:C2")

@@ -1,6 +1,6 @@
 # Lesson 5.2 · VBA Fundamentals
 
-> **Level:** Expert · **Time:** about 60 minutes · **Workbook:** [`5.2-vba-fundamentals.xlsx`](5.2-vba-fundamentals.xlsx)
+> **Level:** Expert · **Time:** about 160 minutes · **Workbook:** [`5.2-vba-fundamentals.xlsx`](5.2-vba-fundamentals.xlsx)
 > **Data:** 505 lab results from Bluestone's three intensive care units (Bluestone Memorial, Ashby Falls, Cedar Ridge), collected January–April 2025 and listed in the order the results were released.
 
 In Lesson 5.1 the macro recorder wrote code for you. The recorder can repeat your clicks, but it can't make a decision

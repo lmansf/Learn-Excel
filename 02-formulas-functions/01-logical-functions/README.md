@@ -1,6 +1,6 @@
 # Lesson 2.1 · Logical Functions: IF, AND, OR, IFS & More
 
-> **Level:** Beginner → Intermediate · **Time:** about 50 minutes · **Workbook:** [`2.1-logical-functions.xlsx`](2.1-logical-functions.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 105 minutes · **Workbook:** [`2.1-logical-functions.xlsx`](2.1-logical-functions.xlsx)
 > **Data:** 391 lab results collected December 1–4, 2025 across Bluestone Health, and all 423 emergency department visits at Bluestone Memorial Hospital in December 2025 with triage vital signs. Triage blood pressure was not recorded for 12 of those visits.
 
 Hospitals run on rules. A glucose above 99 mg/dL gets flagged High. Two abnormal vital signs trigger a sepsis screen. A walk-in

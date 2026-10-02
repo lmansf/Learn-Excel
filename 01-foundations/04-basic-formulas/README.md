@@ -1,6 +1,6 @@
 # Lesson 1.4 · Your First Formulas & Functions
 
-> **Level:** Beginner · **Time:** about 45 minutes · **Workbook:** [`1.4-basic-formulas.xlsx`](1.4-basic-formulas.xlsx)
+> **Level:** Beginner · **Time:** about 55 minutes · **Workbook:** [`1.4-basic-formulas.xlsx`](1.4-basic-formulas.xlsx)
 > **Data:** Daily census for Medical-Surgical 4 West at Bluestone Memorial Hospital, Jan–Mar 2025 (90 days), plus the unit's supply room stock.
 
 Every morning, a nurse manager has to answer questions like *"How full were we last month?"*, *"How long are patients staying?"*,
@@ -36,7 +36,8 @@ update it for you.
 > address for you. Press **Enter** to finish, or **Esc** to cancel.
 
 The cell shows the **result**. The **formula bar** shows the formula. Click a cell and look at the formula bar to see how its value was
-calculated. Press **Ctrl + `** (the grave accent key, next to 1; on a Mac, **⌃ + `**) to toggle *Show Formulas* for the whole sheet.
+calculated. Press **Ctrl + `` ` ``** (the grave accent key, next to 1; Mac: **⌃ + `` ` ``**) to toggle
+*Show Formulas* for the whole sheet.
 
 ### 2. Operators and the order of operations
 
@@ -117,8 +118,8 @@ most of the standard unit metrics:
 > percentages. When the denominators differ from day to day (for example, if beds open and close), the average of daily rates is
 > slightly wrong. The SUM/SUM pattern is always right.
 
-To show a rate as a percentage, select the cell and press **Ctrl + Shift + %** or click **Home → %**. The stored value is still
-0.9126…. Formatting only changes how it's *displayed* (see Lesson 1.3).
+To show a rate as a percentage, select the cell and press **Ctrl + Shift + %** (Mac: **⌃ + Shift + %**) or click **Home → %**.
+The stored value is still 0.9126…. Formatting only changes how it's *displayed* (see Lesson 1.3).
 
 ### 6. Copying formulas down a column
 
@@ -127,7 +128,7 @@ copy it:
 
 1. In the first data row, type `=E2/B2` and press **Enter**.
 2. Select that cell and **double-click the fill handle** (the small square at the cell's bottom-right corner). Excel copies the formula
-   down to the last row of data. You can also drag the fill handle, or select the range and press **Ctrl + D**.
+   down to the last row of data. You can also drag the fill handle, or select the range and press **Ctrl + D** (Mac: **⌘ + D**).
 
 Each copied formula **adjusts to its own row**: row 3 gets `=E3/B3`, row 4 gets `=E4/B4`, and so on. These are called
 **relative references**, and Lesson 1.5 explains exactly how they work (and how to stop a reference from moving).
@@ -160,7 +161,7 @@ staff half a nurse"), and `MROUND`, `CEILING.MATH`, and `FLOOR.MATH` round to mu
 | `#DIV/0!` | Dividing by zero or by an empty cell | Check the denominator. Later you'll wrap it in `IFERROR` (Lesson 2.1) |
 | `#NAME?` | Excel doesn't recognize a name, often a typo like `=SUMM(...)` or text missing its quotes | Fix the spelling and use AutoComplete |
 | `#VALUE!` | Wrong type of data, such as math on text (`="abc"*2`) | Check for text that only *looks* like a number |
-| `#REF!` | A referenced cell was deleted | Undo (Ctrl + Z) or rewrite the reference |
+| `#REF!` | A referenced cell was deleted | Undo (Ctrl + Z, Mac: ⌘ + Z) or rewrite the reference |
 | `#####` | The column is too narrow to show the number or date | Widen the column (double-click its right border) |
 
 To investigate any formula, select the cell and press **F2**. Excel color-codes each reference and outlines the matching cells on the
@@ -271,7 +272,7 @@ Each patient in a bed at midnight counts as one patient day. Patient days drive 
 - **Answer:** 91.3%
 - **Solution:** `=SUM(Census!E2:E91)/SUM(Census!B2:B91)`
 
-A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage (Ctrl+Shift+%) to see 91.3% instead of 0.9126…
+A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage (Ctrl + Shift + %, Mac: ⌃ + Shift + %) to see 91.3% instead of 0.9126…
 
 **10. Daily occupancy column (days at or over 100%)**
 

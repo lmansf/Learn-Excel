@@ -30,14 +30,14 @@ MODULES = {
     "01-foundations": ("Level 1 · Foundations", "Beginner", "Find your way around Excel, enter and format data, write your first formulas, and sort and filter a real dataset."),
     "02-formulas-functions": ("Level 2 · Formulas & Functions", "Beginner → Intermediate", "The core function families every analyst uses daily: logic, text, dates, statistics, conditional aggregation, and lookups."),
     "03-data-analysis": ("Level 3 · Data Analysis", "Intermediate", "Structure, validate, clean, summarize, and visualize data — Tables, PivotTables, charts, and what-if models."),
-    "04-advanced-analysis": ("Level 4 · Advanced Analysis", "Advanced", "Modern Excel: dynamic arrays, LET/LAMBDA, Power Query, the Data Model with DAX, statistics, and dashboards."),
-    "05-automation-vba": ("Level 5 · Automation with Macros & VBA", "Expert", "Record macros, then write VBA: variables, loops, ranges, custom functions, error handling, events, and UserForms."),
-    "06-capstone": ("Level 6 · Capstone", "Expert", "Bring every skill together in an end-to-end hospital performance review."),
+    "04-advanced-analysis": ("Level 4 · Advanced Analysis", "Advanced", "Modern Excel: dynamic arrays, LET/LAMBDA, Power Query, the Data Model with DAX, statistics, and dashboards. Lesson 4.1 and parts of 4.2 need Microsoft 365 or Excel 2024, and Lesson 4.4 needs Excel for Windows."),
+    "05-automation-vba": ("Level 5 · Automation with Macros & VBA", "Expert", "Record macros, then write VBA: variables, loops, ranges, custom functions, error handling, events, and UserForms. You need desktop Excel for Windows or Mac, and you save each workbook as a macro-enabled .xlsm file."),
+    "06-capstone": ("Level 6 · Capstone", "Expert", "Bring every skill together in an end-to-end hospital performance review. The refresh macro needs desktop Excel for Windows or Mac."),
 }
 
 LESSONS: list[LessonInfo] = [
     # ------------------------------------------------------------------ Level 1
-    LessonInfo("1.1", "01-foundations", "01-excel-interface-navigation", "The Excel Interface & Navigation", 30, [
+    LessonInfo("1.1", "01-foundations", "01-excel-interface-navigation", "The Excel Interface & Navigation", 70, [
         "Name the parts of the Excel window: ribbon, Quick Access Toolbar, Name Box, formula bar, grid, sheet tabs, status bar",
         "Understand workbooks, worksheets, cells, ranges, and cell addresses",
         "Move around large datasets fast with keyboard shortcuts and Go To",
@@ -52,16 +52,16 @@ Name Box jumps), status bar quick stats (Average/Count/Numerical Count/Min/Max/S
 This lesson also teaches how to UNHIDE A SHEET — which learners need for every answer key in the course; make that prominent.
 DATA: ~500 patients (selected columns) on a 'Patients' sheet; a second small sheet (e.g. 'Departments') that the builder
 HIDES on purpose (learners unhide it for one task); optionally hide one column on Patients for an unhide task.
-PRACTICE (8–10, no formulas required; learners type what they find): value in a specific cell via Name Box; last data row
+PRACTICE (12–13, no formulas required; learners type what they find): value in a specific cell via Name Box; last data row
 number (Ctrl+Down); last used column letter; status-bar Sum/Average/Count of a stated selection (state exactly which cells);
 a value found after unhiding the hidden sheet / hidden column; a Find All count (e.g. patients in a town).
 Use check='text' for addresses/IDs, numbers for counts/stats (state rounding, e.g. "to 1 decimal").
 BONUS: a multi-step 'scavenger hunt' combining Go To, Find All, freeze panes, and the status bar.
 DO NOT teach formulas (Lesson 1.4) or formatting (1.3).
 """),
-    LessonInfo("1.2", "01-foundations", "02-data-entry-autofill", "Data Entry, AutoFill & Editing", 40, [
+    LessonInfo("1.2", "01-foundations", "02-data-entry-autofill", "Data Entry, AutoFill & Editing", 80, [
         "Recognize how Excel stores text, numbers, dates, times, and TRUE/FALSE",
-        "Enter and edit data efficiently (F2, Ctrl+Enter, Ctrl+D, Alt+Enter)",
+        "Enter and edit data efficiently (F2, Ctrl + Enter, Ctrl + D, Alt + Enter)",
         "Create series with AutoFill, the Fill Series dialog, and Flash Fill",
         "Use Copy, Paste Special (values, transpose, formats), and Find & Replace",
         "Avoid classic traps: lost leading zeros, numbers stored as text, accidental dates",
@@ -76,13 +76,13 @@ scientific notation, 16+ digit truncation).
 DATA: a December 2025 unit staffing-schedule template (blank yellow ranges to AutoFill), a short supply list, and a short list
 of 'Last, First' names for Flash Fill. Use `summary` formulas + `fill` self-test values so AutoFill results are auto-checked
 (e.g. summary '=IF(COUNTA(Schedule!A5:A35)=0,"",Schedule!A35)' expecting a date).
-PRACTICE (8–10): AutoFill dates/weekdays-only, Fill Series with a step (15-minute appointment slots), ID series (e.g. SKU-1001…),
+PRACTICE (12–13): AutoFill dates/weekdays-only, Fill Series with a step (15-minute appointment slots), ID series (e.g. SKU-1001…),
 Flash Fill first names, Paste Special Transpose, Find & Replace count (state the exact replacement), entering an MRN with leading zeros.
 BONUS: build a 2-week weekday clinic appointment grid (times 08:00–16:45 every 15 min × weekdays) entirely with AutoFill/Fill Series;
 check counts and specific cells.
 DO NOT teach formulas (1.4) or number formats beyond a mention (1.3).
 """),
-    LessonInfo("1.3", "01-foundations", "03-formatting-cells", "Formatting Cells & Number Formats", 45, [
+    LessonInfo("1.3", "01-foundations", "03-formatting-cells", "Formatting Cells & Number Formats", 100, [
         "Apply number formats: Number, Currency vs Accounting, Percentage, Date, Time, Text",
         "Write custom number formats (leading zeros, units, colors, thousands)",
         "Format fonts, fills, borders, alignment, and wrap text — and avoid merged cells",
@@ -98,21 +98,21 @@ Selection vs Merge & Center (and why merging hurts), borders, fills, Format Pain
 themes, column width/row height autofit, clearing formats.
 DATA: 2025 department budget summary (one row per department: DeptName, Budget, Actual, Variance, Variance %) as raw unformatted
 numbers; a column of MRNs stored as numbers (lost zeros); some durations in days.
-PRACTICE (8–10): mix of (a) "what does the cell display" text answers after applying a format (be explicit, e.g. value 0.0875 with
+PRACTICE (12–13): mix of (a) "what does the cell display" text answers after applying a format (be explicit, e.g. value 0.0875 with
 0.0% → '8.8%'); (b) "what custom format code…" text answers (use `accept` for equivalent codes); (c) stored-value questions
 (a cell shows 4.7 — what is the actual value?); (d) manual formatting tasks checked against the key.
 BONUS: format a 'Monthly Budget Report' to spec: thousands with K, negative variances red in parentheses, percentages 1 decimal,
 header styling — answer key lists the format codes; auto-check what specific cells display (a text-answer question per format).
 DO NOT teach conditional formatting (3.2) or the TEXT function (2.2) beyond a forward pointer.
 """),
-    LessonInfo("1.4", "01-foundations", "04-basic-formulas", "Your First Formulas & Functions", 45, [
+    LessonInfo("1.4", "01-foundations", "04-basic-formulas", "Your First Formulas & Functions", 55, [
         "Write formulas with operators and the correct order of operations",
         "Use SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, and COUNTBLANK",
         "Calculate rates and percentages such as bed occupancy",
         "Copy formulas down a column and read common errors (#DIV/0!, #NAME?, #VALUE!)",
         "Round results with ROUND",
-    ], spec="(Reference lesson written by the course lead — use it as the quality bar and pattern for every other lesson.)"),
-    LessonInfo("1.5", "01-foundations", "05-cell-references", "Relative, Absolute & Mixed References", 45, [
+    ], spec="(Reference lesson written by the course lead. Use it as the pattern for README structure and task design. Its guide is shorter than most, so see tools/README.md for the expected depth.)"),
+    LessonInfo("1.5", "01-foundations", "05-cell-references", "Relative, Absolute & Mixed References", 85, [
         "Predict how relative references change when a formula is copied",
         "Lock references with $ (absolute) and use F4 to toggle",
         "Build two-way grids with mixed references ($A1 and A$1)",
@@ -125,14 +125,14 @@ Trace Precedents (brief). Name a cell (brief preview; full named ranges in 3.1).
 DATA: (1) 2025 department expense summary for % of total; (2) staffing hours with a single 'overtime premium' / hourly rate
 cell; (3) three monthly sheets Oct/Nov/Dec 2025 with identical layout (department × category actuals from budget.csv) for 3-D sums;
 (4) a staffing grid: census values down rows and HPPD (hours per patient day) targets across columns.
-PRACTICE (8–10): % of total for a stated row; cost with a fixed rate cell; fill a grid with ONE formula using mixed refs
+PRACTICE (12–13): % of total for a stated row; cost with a fixed rate cell; fill a grid with ONE formula using mixed refs
 (summary = SUM of grid + fill self-test with the formula); 3-D SUM total; a 'predict what the formula becomes when copied to X'
 text task (e.g. '=B$2*$A3' copied two right, three down → '=D$2*$A6').
 BONUS: 2026 budget projection grid: 2025 actual × (1+category inflation row) × (1+volume growth column) with one formula;
 check the grand total and two specific cells.
 DO NOT teach named ranges in depth (3.1) or lookup functions (2.6).
 """),
-    LessonInfo("1.6", "01-foundations", "06-sorting-filtering", "Sorting & Filtering Data", 45, [
+    LessonInfo("1.6", "01-foundations", "06-sorting-filtering", "Sorting & Filtering Data", 110, [
         "Sort by one or several columns, including custom orders",
         "Filter text, numbers, and dates with AutoFilter (and Top 10, by color)",
         "Summarize only visible rows with SUBTOTAL and AGGREGATE",
@@ -145,7 +145,7 @@ reapplying; status bar count of visible rows; SUBTOTAL(9/101-111 family) vs SUM 
 hidden rows); Advanced Filter (criteria range, AND on same row, OR on separate rows, copy to another location, unique records only).
 DATA: ~1,000 ED visits from 2025 at one facility with a precomputed DoorToProviderMin column (blank for LWBS), ESILevel,
 ArrivalMode, ChiefComplaint, EDDisposition, ArrivalDateTime.
-PRACTICE (8–10): after a stated multi-level sort, what is the EDVisitID in the first/10th row (text); filtered counts
+PRACTICE (12–13): after a stated multi-level sort, what is the EDVisitID in the first/10th row (text); filtered counts
 (e.g. Ambulance arrivals with ESI 1–2); Top 10 by wait — the 10th largest value; SUBTOTAL average of a filtered set;
 date filter count (e.g. arrivals in November 2025 on weekends — state how); Advanced Filter unique chief complaint count.
 BONUS: Advanced Filter with OR logic (ESI 1, OR ESI 2 arriving by ambulance after 6 pm) copied to a new sheet — count and average
@@ -153,7 +153,7 @@ door-to-provider minutes; and a custom-list sort question.
 DO NOT teach COUNTIFS (2.5) except as a forward pointer; formulas only via SUBTOTAL/AGGREGATE.
 """),
     # ------------------------------------------------------------------ Level 2
-    LessonInfo("2.1", "02-formulas-functions", "01-logical-functions", "Logical Functions: IF, AND, OR, IFS & More", 50, [
+    LessonInfo("2.1", "02-formulas-functions", "01-logical-functions", "Logical Functions: IF, AND, OR, IFS & More", 105, [
         "Compare values to produce TRUE/FALSE and use booleans in math",
         "Make decisions with IF, nested IF, and IFS",
         "Combine conditions with AND, OR, NOT (and XOR)",
@@ -165,17 +165,17 @@ mistakes (text numbers, ="" blanks, order of nested conditions). Clinical exampl
 (Temp >100.4°F or <96.8°F; HR >90; RR >20 — state the simplified rule clearly as 'educational, not clinical guidance').
 DATA: ~400 lab results (TestName, ResultValue, RefLow, RefHigh) and ~500 ED visits with triage vitals and ESILevel.
 Add empty learner columns (extra_cols) where tasks ask to fill a column; check with `summary` + `fill`.
-PRACTICE (10–12): High/Low/Normal flag column via nested IF (summary = COUNTIF of "High"); IFS version; AND/OR fever+tachycardia
+PRACTICE (12–13): High/Low/Normal flag column via nested IF (summary = COUNTIF of "High"); IFS version; AND/OR fever+tachycardia
 count; SIRS criteria count (0–3) and SIRS-positive (≥2) count; SWITCH ESI level names; IFERROR on a ratio; NOT; an XOR question.
 BONUS: a qSOFA-style screening score (RR ≥22, SBP ≤100, altered mentation if ChiefComplaint contains 'Altered' — can use
 ISNUMBER(SEARCH()) with a short explanation) → count of patients with score ≥2 and their average heart rate.
 DO NOT teach COUNTIFS (2.5) beyond COUNTIF for summaries; text functions only minimal.
 """),
-    LessonInfo("2.2", "02-formulas-functions", "02-text-functions", "Text Functions", 50, [
+    LessonInfo("2.2", "02-formulas-functions", "02-text-functions", "Text Functions", 110, [
         "Extract parts of text with LEFT, RIGHT, MID, FIND, and SEARCH",
         "Clean and standardize text with TRIM, CLEAN, UPPER, LOWER, PROPER, and SUBSTITUTE",
         "Join text with &, CONCAT, and TEXTJOIN; format numbers as text with TEXT",
-        "Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365)",
+        "Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365 and Excel 2024)",
     ], spec="""
 GUIDE: text vs numbers, LEN, LEFT/RIGHT/MID, FIND (case-sensitive) vs SEARCH (wildcards, case-insensitive), nesting FIND inside
 MID/LEFT, TRIM/CLEAN (and CHAR(160) non-breaking spaces via SUBSTITUTE), UPPER/LOWER/PROPER (PROPER pitfalls: McDonald, O'Brien),
@@ -184,14 +184,14 @@ EXACT, REPT, TEXTBEFORE/TEXTAFTER/TEXTSPLIT with version notes. Healthcare: ICD-
 TEXT(…,"00000000"), 'LAST, First' names, phone digits, email domains, ChronicConditions list 'HTN;DM;HF'.
 DATA: ~400 patients with a builder-made 'PatientName' ('LAST, First' with mixed case), MRN as number, Phone, Email,
 ChronicConditions; ~300 encounters with PrimaryDxCode; providers for label building.
-PRACTICE (10–12): first name from 'Last, First'; ICD category; email domain; digits-only phone (SUBSTITUTE chain); provider label
+PRACTICE (12–13): first name from 'Last, First'; ICD category; email domain; digits-only phone (SUBSTITUTE chain); provider label
 'Dr. First Last, MD'; MRN padded to 8 chars; count of patients whose ChronicConditions contain 'DM' (ISNUMBER(SEARCH)) or via
 LEN-SUBSTITUTE counting of items; TEXT a date as 'Mon-YYYY'. Use summary+fill for column tasks; single-cell answers for others.
 BONUS: parse the messy 'CityStateZip' strings (from data/messy) into City, State, ZIP (5 digits even when ZIP+4) using
 FIND/MID or TEXTBEFORE/TEXTAFTER — check counts/specific outputs; plus count of chronic conditions per patient.
 DO NOT teach data cleaning workflow tools (Text to Columns, Remove Duplicates → 3.3) beyond a pointer.
 """),
-    LessonInfo("2.3", "02-formulas-functions", "03-date-time-functions", "Dates & Times", 55, [
+    LessonInfo("2.3", "02-formulas-functions", "03-date-time-functions", "Dates & Times", 115, [
         "Understand date serial numbers and times as fractions of a day",
         "Build and take apart dates with DATE, YEAR, MONTH, DAY, WEEKDAY, EOMONTH, and EDATE",
         "Calculate ages, lengths of stay, and turnaround times (DATEDIF, YEARFRAC, NETWORKDAYS, WORKDAY)",
@@ -204,14 +204,14 @@ with holiday lists, date arithmetic (LOS = discharge − admit; INT for calendar
 (×24 hours, ×1440 minutes), [h]:mm formats, overnight shifts =MOD(out−in,1), DATEVALUE/TIMEVALUE for text dates (light).
 DATA: ~300 inpatient encounters (Admit/Discharge datetimes + patient DOB pre-joined), ~300 ED visits (timestamps),
 ~200 shifts including night shifts, ~300 claims (Service/Submit/Paid dates), a small 2025 holiday list.
-PRACTICE (10–12): age at admission (DATEDIF); LOS days (decimal) and calendar days; # of weekend admissions; month-end of a
+PRACTICE (12–13): age at admission (DATEDIF); LOS days (decimal) and calendar days; # of weekend admissions; month-end of a
 service date; days from submit to paid (average); door-to-provider minutes for a stated visit and the average; worked hours
 of a night shift with MOD; a WORKDAY appeal deadline with holidays; NETWORKDAYS count.
 BONUS: CMS-style 'two-midnight' check: count stays crossing ≥2 midnights; and average LOS in hours by weekday of admission
 (state which weekday's value to enter).
 DO NOT teach COUNTIFS/AVERAGEIFS in depth (2.5) — simple COUNTIF/AVERAGE over helper columns is fine.
 """),
-    LessonInfo("2.4", "02-formulas-functions", "04-math-statistical-functions", "Math & Statistical Functions", 50, [
+    LessonInfo("2.4", "02-formulas-functions", "04-math-statistical-functions", "Math & Statistical Functions", 100, [
         "Round correctly with ROUND, ROUNDUP, ROUNDDOWN, MROUND, CEILING.MATH, and FLOOR.MATH",
         "Use INT, TRUNC, MOD, ABS, and SUMPRODUCT",
         "Describe data with MEDIAN, MODE, STDEV, PERCENTILE, and QUARTILE — and know when the mean misleads",
@@ -223,13 +223,13 @@ center (AVERAGE, MEDIAN, MODE.SNGL, TRIMMEAN) and spread (MIN/MAX/range, STDEV.S
 QUARTILE.INC, PERCENTRANK, RANK.EQ vs RANK.AVG, LARGE/SMALL; skewed healthcare data (charges, LOS) → median; precision vs display.
 DATA: ~600 inpatient encounters from 2025 with LOS (days) and TotalCharges; ~800 ED visits with DoorToProviderMin; ~300
 medication orders (DosesDispensed, UnitCost).
-PRACTICE (10–12): mean vs median LOS; mode of ESI; STDEV.S charges; 90th percentile door-to-provider; Q1/Q3; rank of a given
+PRACTICE (12–13): mean vs median LOS; mode of ESI; STDEV.S charges; 90th percentile door-to-provider; Q1/Q3; rank of a given
 encounter's charge; 3rd largest; MROUND minutes to 15; CEILING.MATH vials; SUMPRODUCT total med cost; ROUNDUP vs ROUNDDOWN result.
 BONUS: outlier analysis of charges: IQR fences (Q1−1.5·IQR, Q3+1.5·IQR) → count of high outliers; compare with mean+3·SD rule;
 TRIMMEAN(…,10%).
 DO NOT teach conditional versions (AVERAGEIFS etc. → 2.5) or regression/forecasting (4.5).
 """),
-    LessonInfo("2.5", "02-formulas-functions", "05-conditional-aggregation", "Conditional Counting & Summing", 55, [
+    LessonInfo("2.5", "02-formulas-functions", "05-conditional-aggregation", "Conditional Counting & Summing", 110, [
         "Count and sum with conditions using COUNTIF(S), SUMIF(S), and AVERAGEIF(S)",
         "Find conditional extremes with MAXIFS and MINIFS",
         "Write criteria with operators, cell references, wildcards, and date ranges",
@@ -241,14 +241,14 @@ AVERAGEIF(S), MAXIFS/MINIFS (2019+), criteria strings (">=100", "<>"&A1, "*sepsi
 references (links back to 1.5), rates = COUNTIFS(numerator)/COUNTIFS(denominator), divide-by-zero guard.
 DATA: ~3,000 2025 encounters (with FacilityName, DeptName, PayerName, DxCategory, LOS pre-joined) and their claims
 (ClaimStatus, DenialReason, BilledAmount, PaidAmount, SubmitDate, PaidDate).
-PRACTICE (10–12): counts by type & facility; total charges for a payer; average LOS for heart failure; denied claims count for a
+PRACTICE (12–13): counts by type & facility; total charges for a payer; average LOS for heart failure; denied claims count for a
 reason; claims submitted in Q3; MAXIFS charges for sepsis; wildcard count of circulatory (I*) diagnoses; a facility × type grid
 filled with one formula (summary = grid total, plus one specific cell task); readmission rate for a service line.
 BONUS: payer scorecard — denial rate per payer, average days to pay (helper column), and which payer has the highest denial rate
 (text answer) plus its rate.
 DO NOT use PivotTables (3.4) or SUMPRODUCT array tricks (4.2).
 """),
-    LessonInfo("2.6", "02-formulas-functions", "06-lookup-functions", "Lookups: VLOOKUP, INDEX/MATCH & XLOOKUP", 60, [
+    LessonInfo("2.6", "02-formulas-functions", "06-lookup-functions", "Lookups: VLOOKUP, INDEX/MATCH & XLOOKUP", 125, [
         "Look up exact matches with VLOOKUP and XLOOKUP",
         "Use approximate matches for tiers like age bands and BMI categories",
         "Combine INDEX and MATCH for flexible and two-way lookups",
@@ -261,7 +261,7 @@ IFNA vs IFERROR, approximate tier tables (age bands, BMI categories <18.5, 18.5�
 performance & robustness tips, version notes (XLOOKUP needs 365/2021+).
 DATA: ~500 encounters (IDs only) + lookup sheets: Patients, Providers, Diagnoses, Payers, Departments; a BMI tier table; a
 2-D table of 2025 budget by department × category.
-PRACTICE (10–12): patient last name (VLOOKUP) for a stated encounter; dx description (XLOOKUP); payer type; attending specialty
+PRACTICE (12–13): patient last name (VLOOKUP) for a stated encounter; dx description (XLOOKUP); payer type; attending specialty
 (INDEX/MATCH); fill a column with payer names (summary = COUNTIF of one payer); BMI category with approximate match; two-way budget
 lookup; most recent encounter date for a patient (XLOOKUP search_mode -1); missing-ID handling returning 'Not found'.
 BONUS: an 'Encounter lookup card' — type an EncounterID → patient name, age at admission, dx description, attending name &
@@ -269,7 +269,7 @@ specialty, payer, claim status; tasks ask for the outputs for two stated IDs (on
 DO NOT teach dynamic-array FILTER (4.1).
 """),
     # ------------------------------------------------------------------ Level 3
-    LessonInfo("3.1", "03-data-analysis", "01-tables-named-ranges", "Excel Tables, Structured References & Named Ranges", 50, [
+    LessonInfo("3.1", "03-data-analysis", "01-tables-named-ranges", "Excel Tables, Structured References & Named Ranges", 105, [
         "Convert ranges to Excel Tables and name them",
         "Write structured references like tblInventory[UnitCost] and [@QtyOnHand]",
         "Use calculated columns, the Total Row, and slicers on Tables",
@@ -285,13 +285,13 @@ IMPORTANT TECH NOTE: Practice summary/check formulas must NOT reference a table 
 (Excel may refuse to open a file with a formula pointing to a missing table). Use plain A1 ranges in summaries. Provide the
 supply inventory as a PLAIN RANGE (as_table=False) so the learner converts it; in self-test mode a `customize` hook may add the table.
 DATA: supply_inventory (~257 rows) + a 'Settings' sheet with ReportDate (12/31/2025) and ExpiringWindowDays (90).
-PRACTICE (8–10): calculated column ExtendedValue = [@QtyOnHand]*[@UnitCost] (summary = SUM of that column range); total
+PRACTICE (12–13): calculated column ExtendedValue = [@QtyOnHand]*[@UnitCost] (summary = SUM of that column range); total
 inventory value; count of rows at/below reorder point; items expiring within the window of ReportDate; Total Row average; a
 named-constant question; a structured-reference 'what does this return' question.
 BONUS: reorder report: for rows at/below reorder point compute order cost (ReorderQty × UnitCost) by vendor; answer the vendor with
 the largest reorder cost (text) and the amount.
 """),
-    LessonInfo("3.2", "03-data-analysis", "02-data-validation-conditional-formatting", "Data Validation & Conditional Formatting", 55, [
+    LessonInfo("3.2", "03-data-analysis", "02-data-validation-conditional-formatting", "Data Validation & Conditional Formatting", 120, [
         "Restrict entries with list, number, date, length, and custom-formula validation",
         "Build dependent drop-down lists",
         "Highlight what matters with conditional formatting rules, data bars, color scales, and icon sets",
@@ -304,13 +304,13 @@ Scales, Icon Sets, duplicate values, dates occurring, formula rules with $-ancho
 'Stop If True', Manage Rules, applies-to ranges, performance). Clinical uses: critical lab values, expiring supplies, overflow census.
 DATA: ~400 lab results, supply inventory, ~60 days of unit census, and an 'Intake Log' sheet with some invalid entries
 (bad MRN lengths, impossible dates, out-of-list payers) for Circle Invalid Data.
-PRACTICE (8–10): most tasks ask the learner to create a rule AND answer a checkable count ("how many cells/rows will your rule
+PRACTICE (12–13): most tasks ask the learner to create a rule AND answer a checkable count ("how many cells/rows will your rule
 highlight?" — compute with Python; solution shows the rule and an equivalent COUNTIFS); validation tasks ask "how many entries are
 circled as invalid?" Mark pure build steps check='manual' with clear steps in the solution.
 BONUS: unit 'huddle board' — occupancy color scale, icon sets on day-over-day change, overflow rows highlighted, and a dependent
 Facility → Department dropdown; checkable counts for each rule.
 """),
-    LessonInfo("3.3", "03-data-analysis", "03-data-cleaning", "Cleaning Messy Data", 60, [
+    LessonInfo("3.3", "03-data-analysis", "03-data-cleaning", "Cleaning Messy Data", 145, [
         "Spot common data problems: stray spaces, inconsistent case and categories, text dates, duplicates",
         "Fix them with TRIM, PROPER, SUBSTITUTE, VALUE, DATEVALUE, and lookup mapping tables",
         "Use Text to Columns, Flash Fill, Remove Duplicates, and Go To Special",
@@ -324,14 +324,14 @@ Go To Special → Blanks → fill down, Find & Replace with wildcards, keeping r
 Forward pointer: Power Query (4.3) automates this.
 DATA: data/messy/patient_registrations_raw.csv (650 rows) on a 'Raw' sheet; a payer mapping table; tools/_truth/
 patient_registrations_truth.csv gives each RecordID's true PatientID (use it to compute answers; never put it in the workbook).
-PRACTICE (10–12): count rows with extra spaces in PatientName; standardized Sex column (summary = count of F); proper-case
+PRACTICE (12–13): count rows with extra spaces in PatientName; standardized Sex column (summary = count of F); proper-case
 'First Last' names; DOB text in 5 formats → real dates (the formula can be long; show a robust approach) — summary = count of
 valid dates or the earliest DOB; phone → 10 digits; MRN → 8-digit text; Insurance variants → PayerID via mapping; exact duplicate
 row count; number of distinct patients after cleaning MRNs (should equal the truth: 560).
 BONUS: dedupe to one row per patient keeping the most recent RegisteredOn (parse both datetime formats) — how many rows remain
 and the RegisteredOn kept for a stated MRN.
 """),
-    LessonInfo("3.4", "03-data-analysis", "04-pivottables", "PivotTables", 60, [
+    LessonInfo("3.4", "03-data-analysis", "04-pivottables", "PivotTables", 130, [
         "Build PivotTables from a Table and arrange rows, columns, values, and filters",
         "Change summaries (Sum, Count, Average) and Show Values As (% of total, difference, running total)",
         "Group dates and numbers; filter with slicers and timelines",
@@ -345,13 +345,13 @@ fields (and their limits: they sum before dividing), refresh/change data source,
 grand totals), drill-down (double-click), GETPIVOTDATA (and turning it off), PivotCharts (brief; charts in 3.5), Recommended PivotTables.
 DATA: all 2025 encounters (~11k) with pre-joined FacilityName, DeptName, ServiceLine, PayerName, PayerType, DxCategory, AgeAtAdmit,
 LOS, Readmit30, TotalCharges, plus a numeric ReadmitFlag (1/0) for averages.
-PRACTICE (10–12): learners build pivots and type the numbers: counts by facility/type, average charges by payer type, month with
+PRACTICE (12–13): learners build pivots and type the numbers: counts by facility/type, average charges by payer type, month with
 most observation stays (text), % of ED visits that are Medicaid, inpatient readmission rate by service line (average of ReadmitFlag),
 age-band grouping counts, a calculated field result, a GETPIVOTDATA value. Every answer is computed in Python.
 BONUS: readmission deep-dive pivot: rate by service line × payer type; which combination (with ≥30 index stays) has the highest
 rate (text) and the rate; top 3 diagnoses by readmission count.
 """),
-    LessonInfo("3.5", "03-data-analysis", "05-charts-visualization", "Charts & Data Visualization", 55, [
+    LessonInfo("3.5", "03-data-analysis", "05-charts-visualization", "Charts & Data Visualization", 135, [
         "Choose the right chart for comparisons, trends, parts of a whole, distributions, and relationships",
         "Build and format column, line, bar, scatter, histogram, combo, and Pareto charts",
         "Add trendlines, dynamic titles, and sparklines",
@@ -364,13 +364,13 @@ templates, accessibility (alt text, color-blind friendly palettes, direct labels
 truncated axes for bars), PivotCharts.
 DATA (pre-aggregated by the builder): monthly ED visits by facility (24 months), LWBS rate by month, readmission rate by service
 line, payer mix, ED arrivals by hour of day, LOS vs age sample (300 inpatient stays), denial reasons counts.
-PRACTICE (8–10): build-a-chart tasks paired with checkable numeric reads of the charted data (peak month — text; slope of a linear
+PRACTICE (12–13): build-a-chart tasks paired with checkable numeric reads of the charted data (peak month — text; slope of a linear
 trendline via SLOPE; R² via RSQ; busiest hour; cumulative % of the top two denial reasons). Pure build steps are check='manual'.
 Use a `customize` hook to add REFERENCE CHARTS built with openpyxl.chart to the hidden Answer Key (or a hidden 'Chart Key' sheet).
 BONUS: combo chart (monthly ED volume columns + LWBS % line on secondary axis) and a Pareto chart of denial reasons; checks on
 the numbers behind them.
 """),
-    LessonInfo("3.6", "03-data-analysis", "06-what-if-analysis", "What-If Analysis: Goal Seek, Scenarios, Data Tables & Solver", 60, [
+    LessonInfo("3.6", "03-data-analysis", "06-what-if-analysis", "What-If Analysis: Goal Seek, Scenarios, Data Tables & Solver", 125, [
         "Structure a model with separate inputs, calculations, and outputs",
         "Find break-even points with Goal Seek",
         "Compare cases with Scenario Manager and sensitivity Data Tables",
@@ -383,14 +383,14 @@ calculation option 'Automatic except data tables'), Solver add-in (enable it; ob
 Simplex LP vs GRG Nonlinear, answer report), interpreting sensitivity.
 DATA: build a Primary Care Clinic monthly P&L model on a 'Model' sheet from realistic inputs derived from the data (visits/day,
 payer mix, average reimbursement by payer from claims for D400, provider/staff costs, supply cost per visit, fixed costs).
-PRACTICE (8–10): base-case operating margin (formula); Goal Seek visits/day for break-even (compute exactly in Python — the model
+PRACTICE (12–13): base-case operating margin (formula); Goal Seek visits/day for break-even (compute exactly in Python — the model
 should be linear so the answer is unique; tell learners to round to 1 decimal); required average reimbursement for a 5% margin;
 values from a one-variable and a two-variable data table at stated inputs (compute in Python); scenario summary value.
 BONUS: Solver staffing mix — choose integer RN/LPN/CNA counts minimizing cost subject to coverage hours, RN ≥ 60% of licensed staff,
 and a CNA cap; solve by brute force in Python; ask for the minimum cost and the RN count.
 """),
     # ------------------------------------------------------------------ Level 4
-    LessonInfo("4.1", "04-advanced-analysis", "01-dynamic-arrays", "Dynamic Arrays: FILTER, SORT, UNIQUE & More", 60, [
+    LessonInfo("4.1", "04-advanced-analysis", "01-dynamic-arrays", "Dynamic Arrays: FILTER, SORT, UNIQUE & More", 125, [
         "Understand spilling, the # spill reference, and #SPILL! errors",
         "Extract lists with UNIQUE, FILTER, SORT, and SORTBY",
         "Generate sequences with SEQUENCE and reshape with TAKE, DROP, CHOOSECOLS, VSTACK, and HSTACK",
@@ -406,13 +406,13 @@ COUNTA(Workspace!B5:B200), INDEX positions). The library writes formulas contain
 formulas automatically so they evaluate correctly; LibreOffice verification supports FILTER/SORT/UNIQUE/XLOOKUP/LET/SEQUENCE/
 VSTACK/TAKE but NOT LAMBDA/MAP/BYROW — set live=False for those and verify with Python.
 DATA: 2,000 2025 encounters (pre-joined names), providers, departments.
-PRACTICE (10–12): count of distinct attending providers in the ED via ROWS(UNIQUE(FILTER())); top-5 charges via TAKE(SORT()) — enter
+PRACTICE (12–13): count of distinct attending providers in the ED via ROWS(UNIQUE(FILTER())); top-5 charges via TAKE(SORT()) — enter
 the 5th value; FILTER count & sum with two criteria; FILTER with OR; SORTBY first item; SEQUENCE-based month starts (enter the 7th);
 CHOOSECOLS/VSTACK questions; spill tasks on Workspace with count checks.
 BONUS: a one-formula 'department leaderboard': departments with ≥100 encounters sorted by average charge descending (show name,
 count, average) — checks: number of rows, first department, its average.
 """),
-    LessonInfo("4.2", "04-advanced-analysis", "02-advanced-formulas-let-lambda", "Advanced Formulas: LET, LAMBDA & Array Logic", 65, [
+    LessonInfo("4.2", "04-advanced-analysis", "02-advanced-formulas-let-lambda", "Advanced Formulas: LET, LAMBDA & Array Logic", 150, [
         "Write multi-condition array logic with SUMPRODUCT and boolean math",
         "Make complex formulas readable and fast with LET",
         "Create reusable custom functions with LAMBDA and the Name Manager",
@@ -428,14 +428,14 @@ sure the Python answer is computed independently. Do NOT define LAMBDA names in 
 fragile); the learner creates them.
 DATA: all ~5,900 inpatient encounters (PatientID, Admit/Discharge datetimes, DischargeDisposition, Facility, Dx, Readmit30 omitted!)
 for computing 30-day readmissions from scratch; ~1,000 lab results.
-PRACTICE (10–12): readmission flag column via COUNTIFS on same patient with AdmitDate in (Discharge, Discharge+30] (summary = count of
+PRACTICE (12–13): readmission flag column via COUNTIFS on same patient with AdmitDate in (Discharge, Discharge+30] (summary = count of
 1s, must match the dataset's Readmit30 = Y count — define the rule exactly as data/README.md does), SUMPRODUCT revenue with OR logic,
 LET-based average LOS for a facility/dx, a LAMBDA BMI or LOS function (answer = its result for given inputs), MAP/BYROW results,
 multi-criteria XLOOKUP, FREQUENCY of LOS bins (enter one bin count).
 BONUS: readmission rate by facility with CMS-like exclusions (exclude index stays ending in death, transfer, or AMA) — one LET
 formula per facility; answer the highest facility and its rate.
 """),
-    LessonInfo("4.3", "04-advanced-analysis", "03-power-query", "Power Query: Import, Transform & Combine", 70, [
+    LessonInfo("4.3", "04-advanced-analysis", "03-power-query", "Power Query: Import, Transform & Combine", 170, [
         "Import CSV files and whole folders with Get & Transform",
         "Clean and reshape data with Applied Steps: types, splits, filters, unpivot, group by",
         "Merge (join) and append queries",
@@ -452,14 +452,14 @@ FILES: the lesson folder must include a `data/` subfolder created by the builder
 `claims_monthly/claims_2025_01.csv` … `_12.csv` (2025 claims split by SubmitDate month), `budget_2025_wide.csv` (months as columns),
 `payers.csv`, `encounters_2025.csv` (subset of columns), and `new_month/claims_2026_01.csv` for the bonus refresh (create a plausible
 January 2026 file by re-dating a sample of December 2025 claims; state clearly it is synthetic).
-PRACTICE (10–12): learners run the transformation in Power Query and type resulting numbers: combined row count and total PaidAmount;
+PRACTICE (12–13): learners run the transformation in Power Query and type resulting numbers: combined row count and total PaidAmount;
 unpivoted budget row count and Q1 actual total; denied claims grouped by reason (count for one reason); merged payer type totals;
 left-anti count of encounters without claims; custom column results. Solutions are M code (solution_lang='m') + steps; check numbers
 are computed in Python.
 BONUS: refreshable denial dashboard query: folder combine + merge payers + group by PayerType & DenialReason; then drop the January
 2026 file into the folder and refresh — new totals.
 """),
-    LessonInfo("4.4", "04-advanced-analysis", "04-power-pivot-dax", "Data Model, Power Pivot & DAX", 75, [
+    LessonInfo("4.4", "04-advanced-analysis", "04-power-pivot-dax", "Data Model, Power Pivot & DAX", 175, [
         "Design a star schema and load tables into the Data Model",
         "Create relationships and a proper date table",
         "Write DAX measures with SUM, COUNTROWS, DISTINCTCOUNT, DIVIDE, and CALCULATE",
@@ -473,14 +473,14 @@ SUMX/AVERAGEX, time intelligence TOTALYTD, SAMEPERIODLASTYEAR, DATEADD; implicit
 Data Model; CUBEVALUE/CUBEMEMBER (brief); version notes (Power Pivot = Windows; Mac can't edit the model).
 DATA: separate sheets/tables: FactEncounters (all 2024–2025 encounters, keys + measures incl. LOS days, charges, Readmit flag),
 FactClaims, DimPatient (subset of columns + AgeGroup), DimProvider, DimDepartment, DimFacility, DimPayer, DimDiagnosis, DimDate.
-PRACTICE (10–12): learners create measures and type the value the pivot shows for a stated filter context, e.g. Total Charges 2025;
+PRACTICE (12–13): learners create measures and type the value the pivot shows for a stated filter context, e.g. Total Charges 2025;
 Encounter count for Cedar Ridge ED in Q3 2025; Avg LOS inpatient by facility; Distinct patients 2025; Denial Rate for Commercial;
 Readmission Rate; YoY % change in ED visits (2025 vs 2024); YTD charges at end of June 2025. Solutions are DAX (solution_lang='dax').
 Compute every value in Python.
 BONUS: rolling 3-month average ED visits for Dec 2025; % change vs same month last year for one facility; RANKX of attending
 providers by inpatient encounters — the #1 provider's name.
 """),
-    LessonInfo("4.5", "04-advanced-analysis", "05-statistics-forecasting", "Statistics & Forecasting", 70, [
+    LessonInfo("4.5", "04-advanced-analysis", "05-statistics-forecasting", "Statistics & Forecasting", 150, [
         "Summarize distributions with the Analysis ToolPak and histograms",
         "Measure relationships with correlation and linear regression",
         "Test differences with t-tests and quantify uncertainty with confidence intervals",
@@ -494,12 +494,12 @@ moving-range σ = MR̄/1.128 or STDEV — say which), p-chart for rates with var
 TECH NOTE: FORECAST.ETS results are implementation-specific → make ETS tasks manual or use a wide tolerance; everything else exact.
 DATA: daily ED arrivals per facility (731 days, aggregated from ed_visits), monthly inpatient volumes & readmission counts,
 ~400 inpatient stays (age, LOS, charges), door-to-provider minutes by facility.
-PRACTICE (10–12): CORREL(age, LOS); SLOPE/INTERCEPT/RSQ; predicted LOS for age 80; T.TEST p-value for LOS F01 vs F03 (two-tailed,
+PRACTICE (12–13): CORREL(age, LOS); SLOPE/INTERCEPT/RSQ; predicted LOS for age 80; T.TEST p-value for LOS F01 vs F03 (two-tailed,
 unequal variance); 95% CI half-width for mean door-to-provider; FORECAST.LINEAR next month; 7-day moving average on a stated date;
 I-chart UCL/LCL; count of days above UCL; a histogram bin count.
 BONUS: p-chart of monthly readmission rates (varying n) — months above the UCL (count) and the UCL for a stated month.
 """),
-    LessonInfo("4.6", "04-advanced-analysis", "06-dashboards", "Building Interactive Dashboards", 70, [
+    LessonInfo("4.6", "04-advanced-analysis", "06-dashboards", "Building Interactive Dashboards", 160, [
         "Plan a dashboard around audience, questions, and KPIs",
         "Build KPI cards and selector-driven formulas",
         "Connect slicers to multiple PivotTables and drive charts from selections",
@@ -513,13 +513,13 @@ dynamic charts (chart series pointing at formula ranges), sparklines, conditiona
 gridlines/headings, protecting the sheet, printing to one page, performance (avoid volatile functions), accessibility.
 DATA: a 'KPI_Monthly' table built by the builder: month × facility rows with ED visits, LWBS %, median door-to-provider, inpatient
 admits, ALOS, readmission rate, occupancy %, HCAHPS top-box % (OverallRating 9–10), denial rate; plus targets table.
-PRACTICE (10–12): with stated selector values (e.g. Facility = Cedar Ridge Medical Center, Month = 2025-10) compute KPI values
+PRACTICE (12–13): with stated selector values (e.g. Facility = Cedar Ridge Medical Center, Month = 2025-10) compute KPI values
 with formulas (checkable); variance to target; YoY change; trend direction text ('▲'/'▼' or 'Up'/'Down'); system-wide totals.
 BONUS: build the full dashboard to spec; customize hook adds a REFERENCE dashboard sheet (KPI cells + openpyxl charts) inside the
 hidden key or a hidden 'Reference Dashboard' sheet; checkable questions about selected KPI values.
 """),
     # ------------------------------------------------------------------ Level 5
-    LessonInfo("5.1", "05-automation-vba", "01-recording-macros", "Recording Your First Macros", 45, [
+    LessonInfo("5.1", "05-automation-vba", "01-recording-macros", "Recording Your First Macros", 110, [
         "Show the Developer tab and set macro security safely",
         "Record, run, and save macros in a macro-enabled workbook (.xlsm)",
         "Choose between absolute and relative recording",
@@ -534,13 +534,13 @@ recorder can't do (loops, decisions) → leads to 5.2; Excel for the web/iPad ca
 FILES: workbook is .xlsx (the learner saves as .xlsm). Provide `solutions/` folder with .bas files of reference recorded macros
 (clean, commented) — and a README note that solutions are spoilers. Keep code realistic (what the recorder emits, then a cleaned version).
 DATA: an unformatted daily census export for one unit (one month) to turn into a report via a recorded macro; ED visits for bonus.
-PRACTICE (8–10): knowledge checks with text answers (file extension, relative vs absolute, where Personal Macro Workbook lives,
+PRACTICE (12–13): knowledge checks with text answers (file extension, relative vs absolute, where Personal Macro Workbook lives,
 shortcut to open VBE) + 'after running your macro' checks read via summary formulas from cells the macro writes (e.g. the macro adds
 a TOTAL row → summary reads it; use INDIRECT if referencing a sheet the macro creates). Self-test uses fill values.
 BONUS: record → then edit a macro that filters ED visits to ESI 1–2, copies to a new sheet 'HighAcuity', sorts by arrival; checks
 via INDIRECT("'HighAcuity'!A1") style summaries (count of rows, first EDVisitID).
 """),
-    LessonInfo("5.2", "05-automation-vba", "02-vba-fundamentals", "VBA Fundamentals", 60, [
+    LessonInfo("5.2", "05-automation-vba", "02-vba-fundamentals", "VBA Fundamentals", 160, [
         "Navigate the Visual Basic Editor and organize code in modules",
         "Declare variables with the right data types and Option Explicit",
         "Control flow with If, Select Case, For, For Each, and Do loops",
@@ -555,13 +555,13 @@ a Range, Do While/Until, Exit For/Do, string & date functions in VBA (Left, InSt
 FILES: `starter/` .bas modules with TODO stubs and `solutions/` .bas with full answers (spoilers). Practice workbook .xlsx with an
 'Output' sheet where macros write results (Practice checks read Output cells via summary formulas; self-test uses fill values).
 DATA: ~500 lab results.
-PRACTICE (10–12): mix of predict-the-output questions (text/number answers about given snippets: loops, \\ and Mod, Select Case)
+PRACTICE (12–13): mix of predict-the-output questions (text/number answers about given snippets: loops, \\ and Mod, Select Case)
 and macro-output tasks (CountCriticals writes count to Output!B2; average potassium; first critical LabResultID; loop flags written
 to a column → summary count).
 BONUS: a macro that color-codes rows by AbnormalFlag and writes a per-test summary table (count, # abnormal, % abnormal) to Output;
 checks on specific summary cells.
 """),
-    LessonInfo("5.3", "05-automation-vba", "03-vba-ranges-worksheets", "VBA: Ranges, Worksheets & Workbooks", 65, [
+    LessonInfo("5.3", "05-automation-vba", "03-vba-ranges-worksheets", "VBA: Ranges, Worksheets & Workbooks", 180, [
         "Navigate the object model: Application, Workbooks, Worksheets, Range",
         "Find the last row and work with CurrentRegion, Offset, and Resize",
         "Loop through sheets; add, copy, rename, and delete them",
@@ -576,13 +576,13 @@ avoiding Select/Activate, opening/closing other workbooks (Workbooks.Open, SaveA
 FILES: starter/ and solutions/ .bas (spoilers). Checks must read sheets the macros create through INDIRECT (a missing sheet gives
 #REF!, which the check treats as 'Not yet') — never a direct reference to a sheet that doesn't exist yet.
 DATA: 2,000 2025 encounters.
-PRACTICE (10–12): split encounters into one sheet per facility (checks: row counts via INDIRECT); summary sheet of counts and total
+PRACTICE (12–13): split encounters into one sheet per facility (checks: row counts via INDIRECT); summary sheet of counts and total
 charges by EncounterType written by macro (checks); last-row function results; array-based LOS calculation written to a column
 (summary = SUM); delete-and-recreate safety question; predict-the-output questions about Offset/Resize addresses.
 BONUS: 'monthly packet' macro: for each month of 2025 create a sheet with that month's inpatient encounters sorted by charges desc and
 a header total; checks on two months' row counts and top charge.
 """),
-    LessonInfo("5.4", "05-automation-vba", "04-vba-functions-error-handling", "VBA: Custom Functions, Dictionaries & Error Handling", 65, [
+    LessonInfo("5.4", "05-automation-vba", "04-vba-functions-error-handling", "VBA: Custom Functions, Dictionaries & Error Handling", 185, [
         "Write user-defined functions (UDFs) you can call from cells",
         "Pass arguments ByVal/ByRef, use Optional arguments, and return errors with CVErr",
         "Count and group with Collections and Scripting.Dictionary",
@@ -598,12 +598,12 @@ UDF ideas: BMI(weightLb, heightIn), AGEAT(dob, asOf), LOSDAYS(admit, discharge) 
 ESINAME(level), DENIALRATE(range).
 FILES: starter/ and solutions/ .bas (spoilers). Practice uses learner-filled UDF columns with summary formulas; self-test fills values.
 DATA: ~500 patients (height, weight, DOB), ~500 encounters, claims for dictionary counts.
-PRACTICE (10–12): UDF results for stated inputs (number answers), column sums produced by UDFs, Dictionary macro output cells (count of
+PRACTICE (12–13): UDF results for stated inputs (number answers), column sums produced by UDFs, Dictionary macro output cells (count of
 distinct payers, top payer by claims), error-handling predict-the-output questions.
 BONUS: a robust 'payer summary' macro: Dictionary of payer → (count, billed, paid, denied) written to a sorted summary table with full
 error handling (missing sheet → friendly message); checks on summary cells.
 """),
-    LessonInfo("5.5", "05-automation-vba", "05-events-userforms-automation", "Events, UserForms & Automated Reports", 75, [
+    LessonInfo("5.5", "05-automation-vba", "05-events-userforms-automation", "Events, UserForms & Automated Reports", 195, [
         "Respond to workbook and worksheet events (Open, Change, BeforeSave)",
         "Build a validated data-entry UserForm that writes to a Table",
         "Automate a report: combine files with Dir, export to PDF, save timestamped copies",
@@ -620,13 +620,13 @@ FILES: starter/ and solutions/ (.bas for modules, .cls for sheet/workbook event 
 give UserForm build steps + code-behind as text), and a `data/census_monthly/` folder with 12 monthly census CSVs (2025) for the
 Dir-combine task. Checks read cells the macros write (summary formulas; INDIRECT for created sheets).
 DATA: an 'Intake' sheet with a ListObject table for the form; monthly census CSVs.
-PRACTICE (8–10): combine 12 census files → total rows and total patient days (checkable); intake form adds a row → checks on table
+PRACTICE (12–13): combine 12 census files → total rows and total patient days (checkable); intake form adds a row → checks on table
 row count after entering 3 specified patients; Worksheet_Change timestamp (manual); knowledge questions (EnableEvents, Intersect).
 BONUS: one-click monthly report macro — combine, summarize by unit (ADC, occupancy), write a summary sheet, export PDF; checks on
 summary values.
 """),
     # ------------------------------------------------------------------ Level 6
-    LessonInfo("6.1", "06-capstone", "01-hospital-performance-review", "Capstone: Hospital Performance Review", 180, [
+    LessonInfo("6.1", "06-capstone", "01-hospital-performance-review", "Capstone: Hospital Performance Review", 240, [
         "Plan an analysis from business questions to deliverables",
         "Prepare multi-table data (cleaning, joins, calculated fields)",
         "Analyze throughput, quality, utilization, and finance KPIs",
@@ -638,7 +638,7 @@ GUIDE: a project brief from the (fictional) Bluestone CMO/CFO asking for a 2025 
 collection rate = Paid / Allowed for adjudicated claims, cost per encounter optional), tips that reference earlier lessons by number,
 and a rubric/checklist for the deliverables. Encourage any toolset (formulas, pivots, Power Query, DAX, VBA).
 DATA: 2025 slices of encounters, ed_visits, claims, patient_satisfaction, daily_census, diagnoses, departments, facilities, payers.
-PRACTICE (12–15): the key numbers the executive summary needs, each auto-checked (state definitions precisely so answers are
+PRACTICE (12–13): the key numbers the executive summary needs, each auto-checked (state definitions precisely so answers are
 unambiguous), e.g. system ALOS (inpatient, decimal days), O/E LOS index by facility (enter F03), readmission rate by facility, the
 service line with the highest readmission rate (text), ED median door-to-provider by facility, LWBS %, average occupancy for ICUs,
 HCAHPS top-box %, denial rate overall and the top denial reason (text), net collection rate.

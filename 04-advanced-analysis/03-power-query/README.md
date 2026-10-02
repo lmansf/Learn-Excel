@@ -1,6 +1,6 @@
 # Lesson 4.3 · Power Query: Import, Transform & Combine
 
-> **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.3-power-query.xlsx`](4.3-power-query.xlsx) · **Files:** [`data/`](data/) (one download: [`4.3-power-query-data.zip`](data/4.3-power-query-data.zip))
+> **Level:** Advanced · **Time:** about 170 minutes · **Workbook:** [`4.3-power-query.xlsx`](4.3-power-query.xlsx) · **Files:** [`data/`](data/) (one download: [`4.3-power-query-data.zip`](data/4.3-power-query-data.zip))
 > **Data:** CSV exports in the lesson's data folder: twelve monthly files of claims submitted in 2025, a January 2026 claim file (simulated next-month export) for the bonus, the payer list, 11,196 encounters discharged in 2025, and a wide 2025 budget-vs-actual export. The workbook adds a hand-maintained denial-reason mapping table.
 
 Early every month, a revenue-cycle analyst at Bluestone Health downloads the billing system's claims export. She pastes it
@@ -42,10 +42,10 @@ its source, is a **query**. Three properties make a query different from a formu
 
 | Approach | Best for | Weak spot |
 |---|---|---|
-| Formulas (Modules 1–2, Lesson 4.1) | Calculations that update the moment someone types | Slow on very large data, and they can't import, clean, or combine CSV files |
+| Formulas (Levels 1–2, Lesson 4.1) | Calculations that update the moment someone types | Slow on very large data, and they can't import, clean, or combine CSV files |
 | Manual cleanup (Lesson 3.3) | One-off fixes to a single file | You redo every step next month |
 | **Power Query** (this lesson) | Importing, cleaning, reshaping, and combining the same kind of data again and again | Results change only when you refresh |
-| VBA macros (Module 5) | Automating Excel itself: formatting, buttons, emailing reports | Code to maintain, and macro security prompts |
+| VBA macros (Level 5) | Automating Excel itself: formatting, buttons, emailing reports | Code to maintain, and macro security prompts |
 
 > 💡 **Tip:** A good rule of thumb is to let Power Query get the data into shape, then use formulas, PivotTables, and
 > charts on the clean result. Lesson 3.3 cleaned a messy file by hand. This lesson is the "do it once, refresh forever"

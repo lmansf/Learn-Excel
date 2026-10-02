@@ -1688,14 +1688,14 @@ DICTIONARY = {
         "PatientID": "FK → patients.", "FacilityID": "FK → facilities.", "ArrivalDateTime": "Door time.", "TriageDateTime": "Triage time.",
         "ProviderSeenDateTime": "First provider contact (blank = left without being seen).", "DispositionDateTime": "Decision time (discharge/admit).",
         "DepartureDateTime": "Left the ED.", "ArrivalMode": "Walk-In, Ambulance, Police, Air Transport.", "ESILevel": "Emergency Severity Index 1 (most urgent) – 5.",
-        "ChiefComplaint": "Reason for visit.", "EDDisposition": "Discharged, Admitted, Observation, Transferred, LWBS, Left AMA, Expired.",
+        "ChiefComplaint": "Reason for visit.", "EDDisposition": "Discharged, Admitted, Observation, Transferred, LWBS, Left AMA.",
         "TempF": "Triage temperature °F.", "HeartRate": "Beats/min.", "RespRate": "Breaths/min.", "SystolicBP": "mmHg.", "DiastolicBP": "mmHg.",
         "SpO2": "Oxygen saturation %.", "PainScore": "0–10."}),
-    "claims": ("One claim per encounter with payment status as of 12/31/2025.", {
+    "claims": ("One claim per encounter with payment status as of 12/31/2025 (claims submitted in 2026 show their eventual outcome; see SubmitDate).", {
         "ClaimID": "Primary key.", "EncounterID": "FK → encounters.", "PatientID": "FK → patients.", "PayerID": "FK → payers.",
-        "ServiceDate": "Discharge/service date.", "SubmitDate": "Date the claim was submitted.", "BilledAmount": "Gross charges billed ($).",
+        "ServiceDate": "Discharge/service date.", "SubmitDate": "Date the claim was submitted. 263 claims for late-2025 services were submitted in January–May 2026, after the as-of date. Filter on SubmitDate ≤ 12/31/2025 when you need only the claims billed by the as-of date.", "BilledAmount": "Gross charges billed ($).",
         "AllowedAmount": "Contracted allowed amount (0 if denied).", "PatientResponsibility": "Copay/coinsurance/deductible owed by patient.",
-        "PaidAmount": "Amount received to date.", "ClaimStatus": "Paid, Partially Paid, Denied, Appealed, Pending.",
+        "PaidAmount": "Amount received to date.", "ClaimStatus": "Paid, Partially Paid, Denied, Appealed, Pending. For claims submitted after 12/31/2025, this is the eventual outcome, not the status on 12/31/2025.",
         "DenialReason": "Reason for denial or partial payment.", "PaidDate": "Date payment received (blank if unpaid)."}),
     "lab_results": ("Laboratory results with reference ranges and turnaround timestamps.", {
         "LabResultID": "Primary key.", "EncounterID": "FK → encounters.", "PatientID": "FK → patients.", "TestCode": "Short test code.",
@@ -1880,6 +1880,15 @@ def write_readme(counts):
         for c, d in cols.items():
             lines.append(f"| `{c}` | {d} |")
         lines.append("")
+    lines += ["## Common metric definitions", "",
+              "Each lesson states its exact definitions in the task text. These are the defaults used across the course:", "",
+              "| Metric | Default definition |", "|---|---|",
+              "| **Length of stay (LOS)** | Elapsed time from `AdmitDateTime` to `DischargeDateTime` in decimal days (hours ÷ 24). Some lessons count calendar days (discharge date − admit date) or midnights instead, sometimes with a 1-day minimum, and say so. |",
+              "| **ALOS** | Average LOS of Inpatient encounters. |",
+              "| **30-day readmission** | The `Readmit30` flag defined above. |",
+              "| **Door-to-provider** | `ProviderSeenDateTime` − `ArrivalDateTime` in minutes (blank when the patient left without being seen). |",
+              "| **Occupancy** | Total midnight census ÷ total staffed beds over the period (patient days ÷ bed days). |",
+              "| **Denial rate** | Claims with ClaimStatus Denied or Appealed (an appeal starts with a denial) ÷ adjudicated claims (every claim except Pending). |", ""]
     lines += ["## Regenerating", "", "```bash", "python tools/generate_data.py", "```", ""]
     text = "\n".join(lines)
     text = re.sub(r"(?<!\\)\$", r"\\$", text)  # GitHub would render $...$ pairs as math

@@ -1,6 +1,6 @@
 # Lesson 5.5 · Events, UserForms & Automated Reports
 
-> **Level:** Expert · **Time:** about 75 minutes · **Workbook:** [`5.5-events-userforms-automation.xlsx`](5.5-events-userforms-automation.xlsx)
+> **Level:** Expert · **Time:** about 195 minutes · **Workbook:** [`5.5-events-userforms-automation.xlsx`](5.5-events-userforms-automation.xlsx)
 > **Data:** Bluestone Memorial Hospital: the 4 West bed board (36 beds, 12/31/2025) and the ED intake log (Dec 25–31, 2025), plus 12 monthly census CSV files covering all 18 inpatient units in the health system in 2025 (6,570 rows).
 
 At 2 p.m. on New Year's Eve the 4 West charge nurse marks bed 405B *Dirty*, and environmental services needs to know
@@ -22,7 +22,7 @@ instead.
 ## 📖 Guide
 
 This lesson builds on everything in Level 5 so far: recording and macro security (5.1), the VBE and control flow (5.2),
-ranges, sheets and workbooks (5.3), and error handling (5.4). VBA runs only in desktop Excel for Windows and Mac.
+ranges, sheets, and workbooks (5.3), and error handling (5.4). VBA runs only in desktop Excel for Windows and Mac.
 
 ### 1. Set up your workbook and files
 
@@ -63,7 +63,7 @@ The starter and solution files come in three kinds, and each kind goes into the 
 | File | What it holds | How it goes into the VBE |
 |---|---|---|
 | [`starter/modLog.bas`](starter/modLog.bas) | `WriteLog` (adds a row to the Log sheet) and `EventsOn` (repair macro). Already complete | **File → Import File…** |
-| [`starter/modReports.bas`](starter/modReports.bas) | `CombineCensusFiles` (task 11), `SaveTimestampedCopy` (section 9) and `BuildCensusReport` (bonus) | **File → Import File…** |
+| [`starter/modReports.bas`](starter/modReports.bas) | `CombineCensusFiles` (task 11), `SaveTimestampedCopy` (section 9), and `BuildCensusReport` (bonus) | **File → Import File…** |
 | [`starter/ThisWorkbook.cls`](starter/ThisWorkbook.cls) | `Workbook_Open` and `Workbook_BeforeSave` (task 6) | Open it in a text editor, copy, and **paste** into the **ThisWorkbook** code window, replacing what's there |
 | [`starter/BedBoard.cls`](starter/BedBoard.cls) | `Worksheet_Change` (task 7) | **Paste** into the **BedBoard** sheet's code window, replacing what's there |
 | [`starter/frmIntake.vba`](starter/frmIntake.vba) | The intake form's code (tasks 8–10) | Build the form (section 7), then **paste** into its code window |
@@ -99,7 +99,7 @@ VBE shortcuts you'll use in this lesson:
 | Step through code one line at a time | **F8** | **Debug → Step Into** |
 | Toggle a breakpoint | **F9** | **Debug → Toggle Breakpoint** |
 | Show a form's code / its designer | **F7** / **Shift + F7** | **View → Code** / **View → Object** |
-| Run a macro from Excel | **Alt + F8** | **Developer → Macros** |
+| Run a macro from Excel | **Alt + F8** | **Option + F8**, or **Developer → Macros** |
 
 ### 2. Events: code that runs by itself
 
@@ -140,7 +140,7 @@ The events you'll use most:
 | `Worksheet_Activate()` | Sheet | The sheet becomes the active sheet | Refresh a summary |
 | `Worksheet_Calculate()` | Sheet | The sheet recalculates | React when a formula result crosses a limit |
 
-> ⚠️ `Worksheet_Change` fires when cell **values** are entered, pasted, cleared or written by VBA. It does **not** fire
+> ⚠️ `Worksheet_Change` fires when cell **values** are entered, pasted, cleared, or written by VBA. It does **not** fire
 > when a formula's result changes because of a recalculation, and it doesn't fire for formatting changes. Use
 > `Worksheet_Calculate` to react to formula results.
 
@@ -210,7 +210,7 @@ sheet now shows a Save row and an Open row.
 > Older workbooks use a Sub named `Auto_Open` in a standard module instead. It still works, but `Workbook_Open` is the
 > modern choice.
 
-### 4. Worksheet_Change, Target and Intersect
+### 4. Worksheet_Change, Target, and Intersect
 
 ```vba
 Private Sub Worksheet_Change(ByVal Target As Range)
@@ -356,7 +356,7 @@ code never stops there, run through this checklist:
 | Excel freezes or shows *Out of stack space* | The handler's own writes fire it again | Wrap the writes in `EnableEvents = False` / `True` |
 | *Procedure declaration does not match…* | The signature was typed by hand | Recreate it from the drop-downs |
 
-### 6. UserForms: controls, properties and events
+### 6. UserForms: controls, properties, and events
 
 A **UserForm** is a dialog box you design yourself. People type into its controls, your code checks the input, and
 only clean data reaches the sheet. To add one, choose **Insert → UserForm** in the VBE. The **Toolbox** appears next to
@@ -526,7 +526,7 @@ End Function
 ```
 
 **Writing a new row to the Table.** `ListRows.Add` adds an empty row at the bottom of the Table and returns it as a
-**ListRow**. The Table grows, so its banding, formats and every formula that refers to `tblIntake` include the new
+**ListRow**. The Table grows, so its banding, formats, and every formula that refers to `tblIntake` include the new
 row automatically. Write each field by **column name** so the code survives someone reordering the columns:
 
 ```vba
@@ -544,8 +544,8 @@ and harmful for others:
 | Field | The control gives you | Write it as | Why |
 |---|---|---|---|
 | MRN | Text `"00787672"` | Set the cell's `NumberFormat = "@"` **first**, then write the text | In a General cell Excel stores the number 787672, and the leading zeros are gone for good |
-| ArrivalDateTime | Text `"2025-12-31 11:44"` | `CDate(txtArrival.Value)` | A real date-time sorts, filters and calculates. Text dates can have day and month swapped on non-US systems |
-| ESILevel | A Long from `SelectedESI()` | The number | `COUNTIFS(...,"<=2")`, AVERAGE and PivotTables need numbers |
+| ArrivalDateTime | Text `"2025-12-31 11:44"` | `CDate(txtArrival.Value)` | A real date-time sorts, filters, and calculates. Text dates can have day and month swapped on non-US systems |
+| ESILevel | A Long from `SelectedESI()` | The number | `COUNTIFS(...,"<=2")`, AVERAGE, and PivotTables need numbers |
 | Interpreter | `True` / `False` | `CBool(chkInterpreter.Value)` | Shows as TRUE / FALSE and filters cleanly |
 
 > ⚠️ Don't rely on the column's existing format. A new Table row copies the formats of the row above it, and in this
@@ -632,7 +632,7 @@ Fail:
 
 > 📋 Power Query (Lesson 4.3) can also combine a folder of CSV files with **Data → Get Data → From File → From Folder**,
 > with no code, and refresh it in one click. Choose VBA when combining is one step in a longer job, such as the bonus
-> report, which combines, summarizes, exports and archives in one run.
+> report, which combines, summarizes, exports, and archives in one run.
 
 **Summarize the combined rows by unit (for the bonus).** The bonus report turns the combined rows into one row per
 unit for a single month. You already have most of the tools. Read the Combined sheet into an array with one `.Value`
@@ -651,7 +651,7 @@ MidnightCensus and StaffedBeds to slot `k` (or to slot `n` for a new unit).
 
 ### 9. Export to PDF and save timestamped copies
 
-**`ExportAsFixedFormat`** saves a workbook, a sheet, a range or a chart as a PDF:
+**`ExportAsFixedFormat`** saves a workbook, a sheet, a range, or a chart as a PDF:
 
 ```vba
 wsRep.ExportAsFixedFormat Type:=xlTypePDF, Filename:=pdfPath, Quality:=xlQualityStandard, _
@@ -704,7 +704,7 @@ trouble-free:
 
 > 📋 `nn` works only in VBA's `Format`. The worksheet `TEXT` function writes minutes as `mm` after `h`.
 
-**Save, SaveAs or SaveCopyAs?** All three write a file, but they leave you in different places:
+**Save, SaveAs, or SaveCopyAs?** All three write a file, but they leave you in different places:
 
 | Method | What happens to the workbook you're in | Use it for |
 |---|---|---|
@@ -845,7 +845,7 @@ census summary from practice task 5 is a three-step flow:
 |---|---|---|---|
 | Runs in | Desktop Excel for Windows and Mac | Excel for the web and Microsoft 365 desktop Excel | Microsoft's cloud |
 | Language | VBA | TypeScript | A visual flow designer |
-| Started by | Events, buttons, shortcuts, OnTime | A button or the Automate tab, or a flow | Schedules, new emails, new files, forms, Teams messages and more |
+| Started by | Events, buttons, shortcuts, OnTime | A button or the Automate tab, or a flow | Schedules, new emails, new files, forms, Teams messages, and more |
 | Reacts to cell edits as they happen | ✔ (`Worksheet_Change`) | ✘ | ✘ |
 | Custom dialog boxes | ✔ (UserForms) | ✘ | Via Power Apps or Microsoft Forms |
 | Local files and folders | ✔ (`Dir`, `Workbooks.Open`) | ✘ (only the workbook it runs on) | Cloud files through connectors |
@@ -867,7 +867,7 @@ Tasks 1–5 are quick concept checks you can answer from the guide. Tasks 6–12
 | 1 | On the BedBoard sheet, the Status column of tblBeds is C2:C37. Suppose you select A30:E40 and press Delete. Worksheet_Change runs once with Target = A30:E40. How many cells are in Intersect(Target, Range("C2:C37"))? | Intersect keeps only the cells that are in both ranges: shared columns AND shared rows |
 | 2 | A run-time error stopped your Worksheet_Change handler right after it set Application.EnableEvents = False, and now nothing happens when you edit a Status cell. Type the exact statement you would run in the Immediate window (Ctrl + G) to switch events back on. | It's the same property your handler switched off |
 | 3 | Your archive macro runs at 5:07 PM on 12/31/2025 and calls ThisWorkbook.SaveCopyAs folder & "CensusReport_" & Format(Now, "yyyy-mm-dd_hhnn") & ".xlsm". What file name does it create? Type the name only, without the folder. | Look up each code in the Format table in Guide §9 (hh is a 24-hour clock unless you add AM/PM) |
-| 4 | After ThisWorkbook.SaveCopyAs runs, which workbook are you working in? Type A, B, or C.<br>A = the original file (the copy was written to disk but isn't open)<br>B = the new copy (Excel switched to it, the way Save As does)<br>C = both files are open in Excel | Compare Save, SaveAs and SaveCopyAs in Guide §9 |
+| 4 | After ThisWorkbook.SaveCopyAs runs, which workbook are you working in? Type A, B, or C.<br>A = the original file (the copy was written to disk but isn't open)<br>B = the new copy (Excel switched to it, the way Save As does)<br>C = both files are open in Excel | Compare Save, SaveAs, and SaveCopyAs in Guide §9 |
 | 5 | The house supervisor wants the census summary rebuilt at 06:00 every morning and posted to a Microsoft Teams channel, even on days when nobody has Excel open. Which tool fits? Type A, B, or C.<br>A = Application.OnTime in your .xlsm<br>B = a Workbook_Open macro<br>C = an Office Script run by a scheduled Power Automate flow | Which option doesn't need desktop Excel to be running? |
 | 6 | Save the workbook as .xlsm and import modLog. Paste starter/ThisWorkbook.cls into the ThisWorkbook module and finish Workbook_Open and Workbook_BeforeSave so they call WriteLog "Open", … and WriteLog "Save", …. Save, close, reopen with macros enabled, then save again. The gray cell shows TRUE when the Log sheet has at least one Open row and one Save row. | Choose Workbook in the left drop-down of the ThisWorkbook code window, then the event on the right |
 | 7 | Paste starter/BedBoard.cls into the BedBoard sheet's module and finish its Worksheet_Change handler. For each changed Status cell it should stamp StatusTime with Now and call WriteLog "Bed status", … once. Delete any "Bed status" rows that your testing left on the Log sheet, then make exactly these edits:<br>• Change 4W-405B's Status to Dirty.<br>• Select the Status cells of 4W-410A, 4W-410B and 4W-411A, type Clean, and press Ctrl + Enter (Mac: ⌘ + Return) to fill all three at once.<br>• In 4W-415A's Notes cell, type Bed alarm on.<br>The gray cell counts the Log's "Bed status" rows. | Intersect Target with the Status column, then loop For Each over the result |
@@ -901,7 +901,7 @@ Rows 38–40 are below the table and columns other than C aren't Status cells, s
 - **Answer:** Application.EnableEvents = True
 - **Solution:** `Application.EnableEvents = True` (type it in the Immediate window and press Enter)
 
-EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays False after the macro stops, for every open workbook, until something sets it back. That's why every handler that turns it off needs an error handler that always turns it back on. The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Developer → Macros).
+EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays False after the macro stops, for every open workbook, until something sets it back. That's why every handler that turns it off needs an error handler that always turns it back on. The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or Developer → Macros).
 
 **3. Timestamped file name from Format**
 
@@ -1059,7 +1059,7 @@ End Sub
 ```
 
 
-The table started with 69 arrivals, and three valid saves make 72. If you see 73, the 6-digit MRN got through, so check your Like "########" test (# matches exactly one digit). An extra, half-empty row instead means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row (right-click → Delete → Table Rows) and fix the error. ListRows.Add grows the Table itself, so formats, formulas and anything that refers to tblIntake pick up the new row automatically. The full form code is in solutions/frmIntake.vba.
+The table started with 69 arrivals, and three valid saves make 72. If you see 73, the 6-digit MRN got through, so check your Like "########" test (# matches exactly one digit). An extra, half-empty row instead means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row (right-click → Delete → Table Rows) and fix the error. ListRows.Add grows the Table itself, so formats, formulas, and anything that refers to tblIntake pick up the new row automatically. The full form code is in solutions/frmIntake.vba.
 
 **9. Intake form: MRNs kept as text**
 
@@ -1094,7 +1094,7 @@ End Function
 ```
 
 
-Option buttons don't share a single value, so SelectedESI asks optESI1 to optESI5 in turn and returns the number of the one that's selected (0 if none, which validation rejects). Writing that Long keeps ESILevel numeric, so COUNTIFS, AVERAGE and PivotTables all work. 17 of the original 69 arrivals were ESI 1–2, and Jennifer Rice (ESI 2) brings the total to 18.
+Option buttons don't share a single value, so SelectedESI asks optESI1 to optESI5 in turn and returns the number of the one that's selected (0 if none, which validation rejects). Writing that Long keeps ESILevel numeric, so COUNTIFS, AVERAGE, and PivotTables all work. 17 of the original 69 arrivals were ESI 1–2, and Jennifer Rice (ESI 2) brings the total to 18.
 
 **11. CombineCensusFiles: rows on Combined**
 
@@ -1330,7 +1330,7 @@ End Function
 ```
 
 
-The macro reads Combined into an array once, then loops in memory. That's far faster than reading cells one by one. A Collection maps each DeptID to its position in the parallel arrays (UnitIndex returns 0 for a new unit), which works on Windows and Mac. Scripting.Dictionary (Lesson 5.4) would also work, but it's Windows-only. DateSerial(y, m + 1, 0) returns the last day of the month, so the same code handles 28-, 30- and 31-day months.
+The macro reads Combined into an array once, then loops in memory. That's far faster than reading cells one by one. A Collection maps each DeptID to its position in the parallel arrays (UnitIndex returns 0 for a new unit), which works on Windows and Mac. Scripting.Dictionary (Lesson 5.4) would also work, but it's Windows-only. DateSerial(y, m + 1, 0) returns the last day of the month, so the same code handles 28-, 30-, and 31-day months.
 
 **B2. December's fullest unit**
 
@@ -1402,7 +1402,7 @@ After the January rerun the answer is CensusReport_2025-01.pdf (the check also a
   each file, copy values, and close it without saving.
 - `ExportAsFixedFormat` makes the PDF, and `SaveCopyAs` with `Format(Now, "yyyy-mm-dd_hhnn")` makes a sortable backup
   without moving you out of the original.
-- VBA needs desktop Excel. For scheduled, unattended or browser-based automation, use Office Scripts with Power
+- VBA needs desktop Excel. For scheduled, unattended, or browser-based automation, use Office Scripts with Power
   Automate.
 
 <!-- BEGIN GENERATED: nav -->

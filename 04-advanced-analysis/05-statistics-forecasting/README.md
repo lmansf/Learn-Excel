@@ -1,6 +1,6 @@
 # Lesson 4.5 · Statistics & Forecasting
 
-> **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.5-statistics-forecasting.xlsx`](4.5-statistics-forecasting.xlsx)
+> **Level:** Advanced · **Time:** about 150 minutes · **Workbook:** [`4.5-statistics-forecasting.xlsx`](4.5-statistics-forecasting.xlsx)
 > **Data:** A random sample of 400 inpatient stays discharged in 2025 (200 each from Bluestone Memorial and Cedar Ridge), every Q4 2025 emergency department visit at the three hospitals with door-to-provider minutes, daily ED arrivals per hospital for 2024–2025, and 24 months of system-wide ED, LWBS, inpatient, and 30-day readmission counts.
 
 Every month, the quality committee looks at last month's readmission rate and someone asks, *"Is that real, or just noise?"*
@@ -186,22 +186,10 @@ Range empty, Excel picks evenly spaced bins between the minimum and maximum, whi
 > the same sheet as the data, or start the tool while the *bins* sheet is active. For Task 2, select the Bins sheet, open the tool,
 > type `Stays!$F$2:$F$401` as the Input Range and `$A$4:$A$10` as the Bin Range, and leave **Labels** unticked.
 
-**The Histogram chart (Excel 2016 and later).** Lesson 3.5 built this chart. Select the data column, then **Insert → Insert
-Statistic Chart → Histogram**.
-Excel chooses the bins itself. To control them, right-click the horizontal axis, select **Format Axis** (**Ctrl + 1**, Mac:
-**⌘ + 1**), and set:
-
-| Axis option | What it does |
-|---|---|
-| Automatic | Excel picks a bin width with a formula called Scott's rule |
-| Bin width | Every bin is this wide, such as 10000 |
-| Number of bins | Excel divides the range into this many equal bins |
-| Overflow bin | Puts every value above this number in one last bar, labeled like `> 100000` |
-| Underflow bin | Puts every value at or below this number in one first bar, labeled like `≤ 10000` |
-
-The chart labels each bar in interval notation. `(20000, 30000]` means "more than 20,000, up to and including 30,000." A square
-bracket includes the edge and a round bracket excludes it. The first bar starts at the smallest value and includes it, so its
-label starts with `[`.
+**The Histogram chart (Excel 2016 and later).** Lesson 3.5, section 9, built this chart with **Insert → Insert Statistic Chart →
+Histogram** and set its bins in **Format Axis** (bin width, number of bins, overflow, and underflow). The chart labels each bar in
+interval notation, so the bar `(20000, 30000]` holds the same stays as FREQUENCY's 30,000 bin. Here is how the three methods
+compare:
 
 | | FREQUENCY | Histogram tool | Histogram chart |
 |---|---|---|---|

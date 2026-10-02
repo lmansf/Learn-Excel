@@ -1,6 +1,6 @@
 # Lesson 1.5 · Relative, Absolute & Mixed References
 
-> **Level:** Beginner · **Time:** about 45 minutes · **Workbook:** [`1.5-cell-references.xlsx`](1.5-cell-references.xlsx)
+> **Level:** Beginner · **Time:** about 85 minutes · **Workbook:** [`1.5-cell-references.xlsx`](1.5-cell-references.xlsx)
 > **Data:** Bluestone Memorial Hospital's 2025 operating expenses by department and category, the same breakdown for October, November, and December 2025, December 2025 overtime for the hourly staff of Medical-Surgical 4 West, and a 4 West staffing grid.
 
 A hospital finance analyst doesn't write 112 formulas for 16 departments and 7 expense categories. The analyst writes one formula
@@ -354,7 +354,7 @@ You can't see a copying mistake by looking at results. These tools show the form
 
 | Tool | How | What it shows |
 |---|---|---|
-| **Show Formulas** | **Ctrl + `** (Mac: **⌃ + `**), or **Formulas → Show Formulas** | Every formula instead of its result. Press it again to switch back |
+| **Show Formulas** | **Ctrl + `` ` ``** (Mac: **⌃ + `` ` ``**), or **Formulas → Show Formulas** | Every formula instead of its result. Press it again to switch back |
 | **Edit mode** | **F2** (Mac: **⌃ + U**) | Each reference in a different color, with a matching colored box around the cells it uses |
 | **Trace Precedents** | **Formulas → Trace Precedents** | Arrows from the cells a formula uses. A dashed arrow with a small sheet icon means the source is on another sheet |
 | **Trace Dependents** | **Formulas → Trace Dependents** | Arrows to the formulas that use the selected cell. Clear them with **Remove Arrows** |
@@ -569,7 +569,8 @@ Only the Pharmaceuticals column reads that input, so only those 16 cells change.
   Press **F4** (Mac: **⌘ + T**) to cycle through the four forms.
 - Put every assumption in its own labeled cell and point formulas at it with an absolute reference. One edit then updates the whole
   model, which makes what-if questions fast.
-- One formula with mixed references (`=$A5*B$4`) fills an entire two-way grid. Check it with Show Formulas (**Ctrl + `**).
+- One formula with mixed references (`=$A5*B$4`) fills an entire two-way grid. Check it with Show Formulas
+  (**Ctrl + `` ` ``**, Mac: **⌃ + `` ` ``**).
 - Other sheets are `Sheet!A1`, with single quotes for names that need them: `'4 West OT'!B3`. Build them by clicking.
 - `=SUM(Oct:Dec!C5)` adds the same cell across a stack of identically laid-out sheets, but the stack is defined by tab
   *positions*, so moving a tab can silently change the total.

@@ -1,6 +1,6 @@
 # Lesson 2.6 · Lookups: VLOOKUP, INDEX/MATCH & XLOOKUP
 
-> **Level:** Beginner → Intermediate · **Time:** about 60 minutes · **Workbook:** [`2.6-lookup-functions.xlsx`](2.6-lookup-functions.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 125 minutes · **Workbook:** [`2.6-lookup-functions.xlsx`](2.6-lookup-functions.xlsx)
 > **Data:** Every 2025 encounter (529) for the 185 patients on Dr. Isabella Nguyen's internal medicine panel, stored as IDs only, plus the lookup tables that turn those IDs into names: the panel roster, providers, ICD-10 diagnoses, payers, departments, and claims. Also a 2025 department budget grid, BMI and age-band tier tables, and the practice's December 2025 referral list.
 
 Open any extract from an electronic health record and you'll see rows like `ENC110776 · PT12169 · PRV1137 · J06.9 · PY05`.
@@ -381,9 +381,13 @@ XLOOKUP uses wildcards only when match_mode is 2:
 =XLOOKUP("*sepsis*",Diagnoses!$B$2:$B$52,Diagnoses!$A$2:$A$52,,2)      → A41.9
 ```
 
-MATCH with match_type 0, and VLOOKUP with FALSE, accept wildcards automatically. `=INDEX(Diagnoses!\$A\$2:\$A\$52,
-MATCH("*sepsis*",Diagnoses!\$B\$2:\$B\$52,0))` also returns A41.9. Lookups ignore upper and lower case, with or without wildcards,
-so "SEPSIS" finds the same row.
+MATCH with match_type 0, and VLOOKUP with FALSE, accept wildcards automatically:
+
+```
+=INDEX(Diagnoses!$A$2:$A$52,MATCH("*sepsis*",Diagnoses!$B$2:$B$52,0))      → A41.9
+```
+
+Lookups ignore upper and lower case, with or without wildcards, so "SEPSIS" finds the same row.
 
 > ⚠️ A wildcard lookup still returns only the **first** match. `"Type 2*"` matches two descriptions,
 > E11.65 (with hyperglycemia) and E11.9 (without complications), and XLOOKUP returns E11.65 because it comes first. Make the
@@ -554,7 +558,7 @@ Most of the time you'll add a lookup as a new column, such as a payer name next 
 
 *Question: what happened in encounter ENC110776, in words a care manager can read?*
 
-1. Find the encounter. Press **Ctrl + F** (Mac: **⌘ + F**) on the Encounters sheet and search for ENC110776. It's row 3. Type
+1. Find the encounter. Press **Ctrl + F** (Mac: **⌃ + F**) on the Encounters sheet and search for ENC110776. It's row 3. Type
    the formulas below in empty cells of column N on the Encounters sheet.
 2. Patient: `=XLOOKUP(B3,Patients!$A$2:$A$186,Patients!$C$2:$C$186)&" "&XLOOKUP(B3,Patients!$A$2:$A$186,Patients!$D$2:$D$186)`
    returns Christine Miller.
@@ -590,7 +594,7 @@ small charge (\$304.68) both make sense. If a lookup had returned a cardiac surg
 | Toggle `$` in a reference | **F4** | **⌘ + T** |
 | Edit the active cell (shows each range in color) | **F2** | **⌃ + U** |
 | Fill the selection down | **Ctrl + D** | **⌘ + D** |
-| Find an ID on a sheet | **Ctrl + F** | **⌘ + F** |
+| Find an ID on a sheet | **Ctrl + F** | **⌃ + F** |
 | Show formulas instead of results (the `` ` `` key is the grave accent, left of 1) | **Ctrl + \`** | **⌃ + \`** |
 | Line break inside a formula | **Alt + Enter** | **⌃ + ⌥ + Return** |
 

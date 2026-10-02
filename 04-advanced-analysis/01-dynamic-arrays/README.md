@@ -1,6 +1,6 @@
 # Lesson 4.1 · Dynamic Arrays: FILTER, SORT, UNIQUE & More
 
-> **Level:** Advanced · **Time:** about 60 minutes · **Workbook:** [`4.1-dynamic-arrays.xlsx`](4.1-dynamic-arrays.xlsx)
+> **Level:** Advanced · **Time:** about 125 minutes · **Workbook:** [`4.1-dynamic-arrays.xlsx`](4.1-dynamic-arrays.xlsx)
 > **Data:** 2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with facility, department, attending, diagnosis category, and payer names already joined in. Also includes the provider roster (147) and the department list (31, with StaffedBeds 0 for departments that have no inpatient beds). Column definitions are in the [data dictionary](../../data/README.md#encounterscsv).
 
 A case manager asks for *"every Cedar Ridge patient who stayed a week or longer, longest first."* A revenue-cycle lead

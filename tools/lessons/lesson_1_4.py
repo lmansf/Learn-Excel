@@ -99,8 +99,8 @@ def build() -> Lesson:
         Task("What was the unit's occupancy rate for the whole quarter? Divide total patient days by total staffed-bed days. "
              "Enter it as a percentage.", answer=sum(mc) / sum(beds), fmt="0.0%",
              solution=f"=SUM({rng('MidnightCensus')})/SUM({rng('StaffedBeds')})", hint="SUM(…)/SUM(…), then format as %",
-             explanation="A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage (Ctrl+Shift+%) "
-                         "to see 91.3% instead of 0.9126…"),
+             explanation="A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage "
+                         "(Ctrl + Shift + %, Mac: ⌃ + Shift + %) to see 91.3% instead of 0.9126…"),
         Task(f"In the Census sheet, fill the yellow Occupancy column with a formula for each day (MidnightCensus ÷ StaffedBeds). "
              f"The gray cell counts the days your column shows 100% or more. (Type it in {cen.cell('Occupancy', 0, sheet=False)}, "
              f"then double-click the fill handle to copy it down.)",

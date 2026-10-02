@@ -1,6 +1,6 @@
 # Lesson 2.5 · Conditional Counting & Summing
 
-> **Level:** Beginner → Intermediate · **Time:** about 55 minutes · **Workbook:** [`2.5-conditional-aggregation.xlsx`](2.5-conditional-aggregation.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 110 minutes · **Workbook:** [`2.5-conditional-aggregation.xlsx`](2.5-conditional-aggregation.xlsx)
 > **Data:** 2,724 encounters that ended in 2025 across all four Bluestone Health System facilities (every 2025 encounter for a fixed sample of about 900 patients), with facility, department, service line, diagnosis, payer, charges, and length of stay. The 2,666 claims for those encounters that had been submitted by 12/31/2025, with status, denial reason, and payment dates.
 
 Every month, someone at Bluestone Health System answers the same questions. How many patients did each hospital discharge? How

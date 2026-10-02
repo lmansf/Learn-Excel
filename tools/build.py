@@ -234,6 +234,15 @@ def verify(lesson: Lesson, path: Path) -> list[str]:
     return problems
 
 
+def sync_metadata(text: str, info) -> str:
+    """Keep the README quote line (level, time) and the objectives list in step with curriculum.py."""
+    text = re.sub(r"(\*\*Level:\*\* )[^·\n]+?( · )", lambda m: m.group(1) + info.level + m.group(2), text, count=1)
+    text = re.sub(r"(\*\*Time:\*\* about )\d+( minutes)", lambda m: f"{m.group(1)}{info.minutes}{m.group(2)}", text, count=1)
+    bullets = "\n".join(f"- {o}" for o in info.objectives)
+    text = re.sub(r"(## What you'll learn\n\n)(?:- .*\n)+", lambda m: m.group(1) + md_escape_dollars(bullets) + "\n", text, count=1)
+    return text
+
+
 def lint_readme(path: Path, text: str) -> list[str]:
     """Cheap checks for things that render badly or break on GitHub."""
     out = []
@@ -284,6 +293,8 @@ def build_lesson(code: str, do_verify: bool = True) -> list[str]:
     lesson: Lesson = mod.build()
     assert lesson.code == info.code, f"builder code {lesson.code} != curriculum {info.code}"
     assert lesson.module_dir == info.module and lesson.slug == info.slug, "builder folder doesn't match curriculum"
+    # curriculum.py is the single source of truth for learner-facing metadata
+    lesson.minutes, lesson.level, lesson.objectives = info.minutes, info.level, list(info.objectives)
     lesson.dir.mkdir(parents=True, exist_ok=True)
     path = lesson.save(lesson.dir / lesson.workbook_name)
     lesson.write_extra_files()
@@ -293,6 +304,7 @@ def build_lesson(code: str, do_verify: bool = True) -> list[str]:
         print(f"  created README skeleton at {readme.relative_to(ROOT)}")
     text = readme.read_text(encoding="utf-8")
     text = inject(text, lesson.readme_blocks(nav=nav_block(code)))
+    text = sync_metadata(text, info)
     readme.write_text(text, encoding="utf-8")
     size = path.stat().st_size / 1024
     print(f"Lesson {code}: wrote {path.relative_to(ROOT)} ({size:,.0f} KB), {len(lesson.tasks)} tasks + {len(lesson.bonus)} bonus")
@@ -313,7 +325,7 @@ def refresh_course_readmes():
     for mod, (mtitle, level, blurb) in CUR.MODULES.items():
         lines += [f"### [{mtitle}]({mod}/README.md)", "", f"*{level}* — {blurb}", "", "| # | Lesson | Time | You'll learn to… |", "|:-:|---|:-:|---|"]
         for l in [x for x in CUR.LESSONS if x.module == mod]:
-            learn = "; ".join(o[0].lower() + o[1:] for o in l.objectives[:3])
+            learn = "; ".join(o[0].lower() + o[1:] for o in l.objectives)
             lines.append(f"| {l.code} | [{l.title}]({l.path}/README.md) | {l.minutes} min | {learn} |")
         lines.append("")
         # module README

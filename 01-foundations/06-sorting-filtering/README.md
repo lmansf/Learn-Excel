@@ -1,6 +1,6 @@
 # Lesson 1.6 · Sorting & Filtering Data
 
-> **Level:** Beginner · **Time:** about 45 minutes · **Workbook:** [`1.6-sorting-filtering.xlsx`](1.6-sorting-filtering.xlsx)
+> **Level:** Beginner · **Time:** about 110 minutes · **Workbook:** [`1.6-sorting-filtering.xlsx`](1.6-sorting-filtering.xlsx)
 > **Data:** All 937 emergency department visits at Cedar Ridge Medical Center in 2025: arrival time, day and hour, arrival mode, ESI triage level, chief complaint, two triage vital signs, a shock index formula, door-to-provider minutes, and disposition. Rows shaded orange were flagged by the triage sepsis screen.
 
 Every morning the emergency department (ED) manager at Cedar Ridge gets the same kinds of questions. *Who waited longest to see

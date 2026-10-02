@@ -1,6 +1,6 @@
 # Lesson 1.3 · Formatting Cells & Number Formats
 
-> **Level:** Beginner · **Time:** about 45 minutes · **Workbook:** [`1.3-formatting-cells.xlsx`](1.3-formatting-cells.xlsx)
+> **Level:** Beginner · **Time:** about 100 minutes · **Workbook:** [`1.3-formatting-cells.xlsx`](1.3-formatting-cells.xlsx)
 > **Data:** Bluestone Memorial Hospital's 2025 expense budget vs actual by department, two days of ED registrations (12/30–12/31/2025), December 2025 discharges from Cardiac Step-Down, and the Emergency Department's December 2025 budget report (bonus). Every number arrives unformatted, the way it comes out of a source system.
 
 Finance exports the 2025 budget, and Perioperative Services' variance arrives as `-290135` with a variance percentage of

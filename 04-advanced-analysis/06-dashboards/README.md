@@ -1,6 +1,6 @@
 # Lesson 4.6 · Building Interactive Dashboards
 
-> **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx)
+> **Level:** Advanced · **Time:** about 160 minutes · **Workbook:** [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx)
 > **Data:** Monthly KPIs for Bluestone Health's three hospitals, Jan 2024 – Dec 2025 (72 hospital-months), every ED visit's door-to-provider time, and a KPI dictionary with targets and owners. The monthly numbers are built from [`ed_visits.csv`](../../data/README.md#ed_visitscsv), [`encounters.csv`](../../data/README.md#encounterscsv), [`daily_census.csv`](../../data/README.md#daily_censuscsv), [`patient_satisfaction.csv`](../../data/README.md#patient_satisfactioncsv), and [`claims.csv`](../../data/README.md#claimscsv) in the [data dictionary](../../data/README.md).
 
 Every month, Bluestone Health's leaders ask the same questions. Are ED patients waiting too long? Will there be a bed for
@@ -210,8 +210,8 @@ Select the cell and press **Alt + ↓** (Mac: **Option + ↓**) to open the list
 > in the dropdown but puts a real date in the cell, so `EDATE` and `SUMIFS` can work with it.
 
 > ⚠️ A data-validation **Source** can't be a Table reference such as `=tblKPI[Facility]`. Point it at a plain range, at a
-> defined name that refers to the column, or (in Microsoft 365) at a spill: put `=SORT(UNIQUE(tblKPI[Facility]))` in a cell
-> such as Lists!G2 and use `=Lists!$G$2#` as the Source.
+> defined name that refers to the column, or (in Microsoft 365 and Excel 2021 or later) at a spill: put
+> `=SORT(UNIQUE(tblKPI[Facility]))` in a cell such as Lists!G2 and use `=Lists!$G$2#` as the Source.
 
 **Name the selector cells.** Click Dashboard!C4, click the **Name Box** (left of the formula bar), type `SelFacility`, and
 press **Enter**. The workbook already names C4 `SelFacility` and C5 `SelMonth`. Names make formulas read like sentences
@@ -448,9 +448,10 @@ selectors. When a selector changes, the formulas recalculate and the chart redra
    `=EDATE(SelMonth,ROWS(B$17:B17)-12)` runs from 11 months back to SelMonth itself.
 3. In the value column, use the selector-driven SUMIFS with that row's month as the Month criterion.
 
-In Microsoft 365, `=EDATE(SelMonth,SEQUENCE(12,1,-11))` spills all 12 months from one cell
-([Lesson 4.1](../01-dynamic-arrays/README.md)). A chart built from a spill keeps a fixed range, so if a spill can change
-size, chart it through a defined name that refers to the spill, such as `=Calc!$B$17#`.
+In Microsoft 365 and Excel 2021 or later, `=EDATE(SelMonth,SEQUENCE(12,1,-11))` spills all 12 months from one cell
+([Lesson 4.1](../01-dynamic-arrays/README.md)). In Microsoft 365 and Excel 2024, a chart built from a spill resizes with
+it. In Excel 2021, the chart keeps a fixed range, so chart the spill through a defined name that refers to it, such as
+`=Calc!$B$17#`.
 
 **Insert and place the chart:**
 
@@ -671,10 +672,10 @@ Center and Nov 2025 before you start the practice tasks, because they're checked
 | Feature | Availability |
 |---|---|
 | SUMIFS, EDATE, data-validation lists, conditional formatting | Every current version, including Excel for the web |
-| UNICHAR | Excel 2013 and later |
+| UNICHAR | Excel 2013 and later (Windows), Excel 2016 and later (Mac) |
 | XLOOKUP, LET, FILTER, SEQUENCE | Microsoft 365 and Excel 2021 or later |
 | Slicers for PivotTables | Excel 2010 and later (Windows), current Mac versions, Excel for the web |
-| Timelines | Excel 2013 and later (Windows), Excel 2016 and later (Mac) |
+| Timelines | Excel 2013 and later (Windows), Excel 2019 and later (Mac) |
 | Form Controls | Excel for Windows and Mac. They don't run in Excel for the web |
 | Sparklines | Excel 2010 and later (Windows), Excel 2011 and later (Mac) |
 | Linked Picture | Windows and Mac. The Camera command is Windows only |
@@ -845,7 +846,7 @@ A combo box writes the position of the chosen item, not its text: Ashby Falls Co
 5. Change the selectors on the Dashboard and watch the line redraw.
 
 
-The chart's series points at formula cells, and those cells point at the selectors, so one dropdown redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). A chart built from a spill keeps a fixed range, so if a spill can change size, chart it through a defined name that refers to it (for example =Calc!\$B\$17#). If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
+The chart's series points at formula cells, and those cells point at the selectors, so one dropdown redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 and Excel 2021 or later you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). In Microsoft 365 and Excel 2024, a chart built from a spill resizes with it. In Excel 2021, the chart keeps a fixed range, so chart the spill through a defined name that refers to it (for example =Calc!\$B\$17#). If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
 
 **12. PivotTable 1 with a slicer and a timeline**
 
@@ -883,9 +884,6 @@ Report Connections is what lets one slicer filter several pivots. If you skipped
 
 ## 🏆 Bonus challenge
 
-This is the dashboard you'd actually hand to a board. Sketch the layout on paper first, build the model cells before the
-cards, and compare your finished page with the hidden **Dashboard Key** sheet.
-
 <!-- BEGIN GENERATED: bonus -->
 Each month the COO presents one page to the board's Quality & Operations Committee. It must answer three questions at a glance: Are we on target? Where are we missing? Which way are things heading? Build it on the Board sheet to this spec:
 
@@ -895,7 +893,7 @@ Each month the COO presents one page to the board's Quality & Operations Committ
 4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.
 5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one landscape page when printed.
 
-Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
+Sketch the layout on paper first, and build the model cells before the cards. Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
 
 Work on the **Bonus** sheet of the workbook.
 

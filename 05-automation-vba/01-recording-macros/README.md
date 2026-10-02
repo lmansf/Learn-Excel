@@ -1,6 +1,6 @@
 # Lesson 5.1 · Recording Your First Macros
 
-> **Level:** Expert · **Time:** about 45 minutes · **Workbook:** [`5.1-recording-macros.xlsx`](5.1-recording-macros.xlsx)
+> **Level:** Expert · **Time:** about 110 minutes · **Workbook:** [`5.1-recording-macros.xlsx`](5.1-recording-macros.xlsx)
 > **Data:** Raw daily census exports for the Medical-Surgical unit at Cedar Ridge Medical Center (November and December 2025), plus the hospital's raw Emergency Department visit exports for the same two months (bonus).
 
 On the first working day of every month, someone on Cedar Ridge's Medical-Surgical unit downloads last month's census from the

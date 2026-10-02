@@ -299,7 +299,7 @@ def build() -> Lesson:
              explanation="EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays "
                          "False after the macro stops, for every open workbook, until something sets it back. That's "
                          "why every handler that turns it off needs an error handler that always turns it back on. "
-                         "The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Developer → Macros)."),
+                         "The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or Developer → Macros)."),
         Task("Your archive macro runs at 5:07 PM on 12/31/2025 and calls ThisWorkbook.SaveCopyAs folder & "
              "\"CensusReport_\" & Format(Now, \"yyyy-mm-dd_hhnn\") & \".xlsm\". What file name does it create? "
              "Type the name only, without the folder.",
@@ -316,7 +316,7 @@ def build() -> Lesson:
              "C = both files are open in Excel",
              answer="A", title="Where you are after SaveCopyAs",
              solution="**A.** SaveCopyAs writes a snapshot to a new file and leaves the open workbook alone.",
-             hint="Compare Save, SaveAs and SaveCopyAs in Guide §9",
+             hint="Compare Save, SaveAs, and SaveCopyAs in Guide §9",
              explanation="SaveAs renames the open workbook, so afterwards you're editing the new file and the "
                          "original file is no longer open. SaveCopyAs is the right tool for backups because nothing about the open "
                          "workbook changes: same name, same folder, and the copy keeps the original's file format, "
@@ -388,7 +388,7 @@ def build() -> Lesson:
                          "Like \"########\" test (# matches exactly one digit). An extra, half-empty row instead "
                          "means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row "
                          "(right-click → Delete → Table Rows) and fix the error. ListRows.Add grows the Table itself, "
-                         "so formats, formulas and anything that refers to tblIntake pick up the new row "
+                         "so formats, formulas, and anything that refers to tblIntake pick up the new row "
                          "automatically. The full form code is in solutions/frmIntake.vba."),
         Task("How many MRNs in tblIntake are stored as 8-character text? The gray cell counts them with ISTEXT and "
              "LEN. If the count is lower than your row count in task 8, your form wrote some MRNs as numbers. Delete "
@@ -416,7 +416,7 @@ def build() -> Lesson:
              hint="Loop over the five option buttons with Me.Controls(\"optESI\" & i)",
              explanation="Option buttons don't share a single value, so SelectedESI asks optESI1 to optESI5 in turn "
                          "and returns the number of the one that's selected (0 if none, which validation rejects). "
-                         "Writing that Long keeps ESILevel numeric, so COUNTIFS, AVERAGE and PivotTables all work. "
+                         "Writing that Long keeps ESILevel numeric, so COUNTIFS, AVERAGE, and PivotTables all work. "
                          f"{esi12 - len(esi12_new)} of the original {n0} arrivals were ESI 1–2, and "
                          f"{esi12_new[0]['FirstName']} {esi12_new[0]['LastName']} (ESI {esi12_new[0]['ESILevel']}) "
                          f"brings the total to {esi12}."),
@@ -489,7 +489,7 @@ def build() -> Lesson:
                          "arrays (UnitIndex returns 0 for a new unit), which works on Windows and Mac. "
                          "Scripting.Dictionary (Lesson 5.4) would also work, but it's Windows-only. "
                          "DateSerial(y, m + 1, 0) returns the last day of the month, so the same code handles 28-, "
-                         "30- and 31-day months."),
+                         "30-, and 31-day months."),
         Task("Which unit (DeptID) had the highest occupancy in December 2025? The gray cell reads the first unit "
              "row of Report_2025-12, so your sort must be right.",
              answer=dec_units[0][0], title="December's fullest unit",
@@ -603,7 +603,7 @@ def build() -> Lesson:
         bb = wb["BedBoard"]
         dv = DataValidation(type="list", formula1='"Occupied,Clean,Dirty,Blocked"', allow_blank=True,
                             showErrorMessage=True, errorTitle="Bed status",
-                            error="Choose Occupied, Clean, Dirty or Blocked.")
+                            error="Choose Occupied, Clean, Dirty, or Blocked.")
         bb.add_data_validation(dv)
         dv.add(f"{st_col}{st_first}:{st_col}{st_last}")
 

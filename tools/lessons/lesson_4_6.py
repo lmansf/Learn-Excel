@@ -494,9 +494,10 @@ def build() -> Lesson:
                          f"dropdown redraws the chart. The block for {SEL_FAC} runs "
                          f"{trend_months[0].strftime('%b %Y')}–{trend_months[-1].strftime('%b %Y')} and peaks at "
                          f"{by[(SEL_FAC, t11_peak)]['EDVisits']} visits in {t11_peak.strftime('%b %Y')}. In Microsoft "
-                         "365 you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). A chart built from "
-                         "a spill keeps a fixed range, so if a spill can change size, chart it through a defined name "
-                         "that refers to it (for example =Calc!$B$17#). If "
+                         "365 and Excel 2021 or later you can instead spill the months with "
+                         "=EDATE(SelMonth,SEQUENCE(12,1,-11)). In Microsoft 365 and Excel 2024, a chart built from a "
+                         "spill resizes with it. In Excel 2021, the chart keeps a fixed range, so chart the spill through "
+                         "a defined name that refers to it (for example =Calc!$B$17#). If "
                          "you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. "
                          "Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of "
                          "plunging to zero."),
@@ -560,6 +561,7 @@ def build() -> Lesson:
         "4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.\n"
         "5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one "
         "landscape page when printed.\n\n"
+        "Sketch the layout on paper first, and build the model cells before the cards. "
         "Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a "
         "finished reference build, so compare your numbers with it when you're done.")
 

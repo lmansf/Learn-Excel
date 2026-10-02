@@ -435,7 +435,7 @@ def build() -> Lesson:
                          "had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for "
                          "each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing "
                          "space by looking at a cell, so a count like this is how you find out a problem exists before you fix "
-                         f"it. In Microsoft 365, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too."),
+                         f"it. In Microsoft 365 or Excel 2021+, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too."),
         # ---------------------------------------------------------------- standardize a category with a formula
         Task(f"On the Clean sheet, fill the yellow SexClean column ({cl.col('SexClean')}) with a single capital letter, F or M. "
              f"The raw Sex column has {len(sex_spellings)} spellings, including Female, MALE, lowercase f, and values with a "
@@ -464,7 +464,7 @@ def build() -> Lesson:
                        "Click **OK**.\n"
                        f"4. Excel reports *{exact_dups} duplicate values found and removed; {n - exact_dups} unique values "
                        "remain.*\n\n"
-                       f"Formula check without deleting anything (Microsoft 365 / Excel 2021+): "
+                       f"Formula check without deleting anything (Microsoft 365 or Excel 2021+): "
                        f"`=ROWS(Raw!B{F}:J{LR})-ROWS(UNIQUE(Raw!B{F}:J{LR}))`"),
              live=f"=ROWS(Raw!B{F}:J{LR})-ROWS(UNIQUE(Raw!B{F}:J{LR}))",
              hint="Untick RecordID in the Remove Duplicates dialog. Excel's message tells you the count",
@@ -526,7 +526,7 @@ def build() -> Lesson:
                        f"4. Check the result: `=SUMPRODUCT(--(LEN({C('ZIP5')})<>5))` should return 0. If some rows are "
                        "wrong, press Ctrl + Z, type the correct ZIP on one of the wrong rows as an extra example, and run "
                        "Flash Fill again.\n\n"
-                       f"Formula alternative (Microsoft 365): `=LEFT(TEXTAFTER({c1('CityStateZip')},\" \",-1),5)`"),
+                       f"Formula alternative (Microsoft 365 or Excel 2024): `=LEFT(TEXTAFTER({c1('CityStateZip')},\" \",-1),5)`"),
              summary=f'=IF(COUNTA({C("ZIP5")})=0,"",SUMPRODUCT(({C("ZIP5")}<>"")/COUNTIF({C("ZIP5")},{C("ZIP5")}&"")))',
              fill=fill("ZIP5", values=zips),
              live=f'=ROWS(UNIQUE(MID({R("CityStateZip")},FIND(" OH ",{R("CityStateZip")})+4,5)))',

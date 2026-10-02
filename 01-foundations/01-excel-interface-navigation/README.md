@@ -1,6 +1,6 @@
 # Lesson 1.1 · The Excel Interface & Navigation
 
-> **Level:** Beginner · **Time:** about 30 minutes · **Workbook:** [`1.1-excel-interface-navigation.xlsx`](1.1-excel-interface-navigation.xlsx)
+> **Level:** Beginner · **Time:** about 70 minutes · **Workbook:** [`1.1-excel-interface-navigation.xlsx`](1.1-excel-interface-navigation.xlsx)
 > **Data:** 500 registered patients from the Bluestone Health System patient index (every 8th record), plus a small payer list that starts out hidden. Column definitions are in the [data dictionary](../../data/README.md#patientscsv).
 
 In your first week in any hospital job, someone will send you a spreadsheet with a quick question. *How many patients on this

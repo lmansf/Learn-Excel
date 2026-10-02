@@ -1,6 +1,6 @@
 # Lesson 1.2 · Data Entry, AutoFill & Editing
 
-> **Level:** Beginner · **Time:** about 40 minutes · **Workbook:** [`1.2-data-entry-autofill.xlsx`](1.2-data-entry-autofill.xlsx)
+> **Level:** Beginner · **Time:** about 80 minutes · **Workbook:** [`1.2-data-entry-autofill.xlsx`](1.2-data-entry-autofill.xlsx)
 > **Data:** A December 2025 rotating-RN schedule for Medical-Surgical 4 West, a registration record, a Q15 observation form, 4 West's bed list, supply room, and December admissions, plus a January 2026 clinic template for the bonus. The schedule, admissions, and supplies come from [`shifts.csv`](../../data/README.md#shiftscsv), [`encounters.csv`](../../data/README.md#encounterscsv), and [`supply_inventory.csv`](../../data/README.md#supply_inventorycsv) in the data dictionary.
 
 Every number a hospital reports started as something a person typed or pasted. A registrar types an MRN, a charge nurse
@@ -12,7 +12,7 @@ and IDs in seconds, how to reshape and clean what you paste, and how to avoid th
 ## What you'll learn
 
 - Recognize how Excel stores text, numbers, dates, times, and TRUE/FALSE
-- Enter and edit data efficiently (F2, Ctrl+Enter, Ctrl+D, Alt+Enter)
+- Enter and edit data efficiently (F2, Ctrl + Enter, Ctrl + D, Alt + Enter)
 - Create series with AutoFill, the Fill Series dialog, and Flash Fill
 - Use Copy, Paste Special (values, transpose, formats), and Find & Replace
 - Avoid classic traps: lost leading zeros, numbers stored as text, accidental dates

@@ -1,6 +1,6 @@
 # Lesson 2.4 · Math & Statistical Functions
 
-> **Level:** Beginner → Intermediate · **Time:** about 50 minutes · **Workbook:** [`2.4-math-statistical-functions.xlsx`](2.4-math-statistical-functions.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 100 minutes · **Workbook:** [`2.4-math-statistical-functions.xlsx`](2.4-math-statistical-functions.xlsx)
 > **Data:** All 573 inpatient stays discharged from Bluestone Memorial Hospital in Q4 2025 (October–December), with age, length of stay, expected length of stay, and charges. All 785 emergency department visits at Bluestone Memorial in November–December 2025, with wait and length-of-stay minutes. The 388 medication orders written for that quarter's Medical-Surgical 5 East stays.
 
 A draft board report says Bluestone Memorial's average inpatient charge last quarter was \$32,042. That figure is correct, and

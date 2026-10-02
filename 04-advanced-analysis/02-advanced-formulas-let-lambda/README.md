@@ -1,6 +1,6 @@
 # Lesson 4.2 · Advanced Formulas: LET, LAMBDA & Array Logic
 
-> **Level:** Advanced · **Time:** about 65 minutes · **Workbook:** [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx)
+> **Level:** Advanced · **Time:** about 150 minutes · **Workbook:** [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx)
 > **Data:** All 5,586 inpatient stays at Bluestone's three hospitals, Jan 2024–Dec 2025 (with the Readmit30 flag removed so you can rebuild it), the diagnosis lookup with benchmark LOS, 1,018 lab results from Ashby Falls stays discharged Jul–Dec 2025, and the Bluestone Memorial ICU's daily census for 2024–2025.
 
 The quality director wants 30-day readmission rates by hospital, calculated with the exclusions that **CMS** (the Centers for
@@ -580,7 +580,7 @@ A long formula that returns a believable number can still be wrong. These tools 
 | **Trace Precedents / Trace Dependents** | Formulas → Formula Auditing | Arrows to the cells a formula uses, or to the formulas that use this cell. **Remove Arrows** clears them |
 | **Ctrl + [** (Mac: **⌃ + [**) | Keyboard | Selects the cells the formula refers to, even on another sheet |
 | **Watch Window** | Formulas → Watch Window | Keeps chosen cells' values in view while you work elsewhere (on a Mac: Microsoft 365, or Excel 2021 and later) |
-| **Show Formulas**, **Ctrl + `** (Mac: **⌃ + `**) | Keyboard | Shows formulas instead of results in every cell |
+| **Show Formulas**, **Ctrl + `` ` ``** (Mac: **⌃ + `` ` ``**) | Keyboard | Shows formulas instead of results in every cell |
 
 **Debugging a LET.** Temporarily replace the last argument with one of the names. If the average looks wrong, change
 `SUM(los*keep)/SUM(keep)` to `SUM(keep)` and press Enter. For the heart failure example in section 5 you should see 36. If you see 0,

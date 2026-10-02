@@ -1,6 +1,6 @@
 # Lesson 5.4 · VBA: Custom Functions, Dictionaries & Error Handling
 
-> **Level:** Expert · **Time:** about 65 minutes · **Workbook:** [`5.4-vba-functions-error-handling.xlsx`](5.4-vba-functions-error-handling.xlsx)
+> **Level:** Expert · **Time:** about 185 minutes · **Workbook:** [`5.4-vba-functions-error-handling.xlsx`](5.4-vba-functions-error-handling.xlsx)
 > **Data:** Cedar Ridge Medical Center, 2025: adult patients with height and weight, inpatient and observation stays, every claim with its payer and status, and the 8 payers. A few rows contain deliberate data-entry errors for your code to catch.
 
 Analysts at Cedar Ridge Medical Center calculate the same things over and over: a patient's BMI, an age on the

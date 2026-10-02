@@ -1,6 +1,6 @@
 # Lesson 2.2 · Text Functions
 
-> **Level:** Beginner → Intermediate · **Time:** about 50 minutes · **Workbook:** [`2.2-text-functions.xlsx`](2.2-text-functions.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 110 minutes · **Workbook:** [`2.2-text-functions.xlsx`](2.2-text-functions.xlsx)
 > **Data:** 400 patients from Bluestone's registration system (names, MRNs, phones, emails, chronic-condition flags), their 283 encounters in Q4 2025, the 147-provider roster, and a 650-row legacy registration export with messy addresses.
 
 Hospital data is full of text that is *almost* right. The registration system exports names as `ABBOTT, Edward`, but the
@@ -15,7 +15,7 @@ rebuild realistic patient, encounter, and provider text from Bluestone Health Sy
 - Extract parts of text with LEFT, RIGHT, MID, FIND, and SEARCH
 - Clean and standardize text with TRIM, CLEAN, UPPER, LOWER, PROPER, and SUBSTITUTE
 - Join text with &, CONCAT, and TEXTJOIN; format numbers as text with TEXT
-- Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365)
+- Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365 and Excel 2024)
 
 ## 📖 Guide
 

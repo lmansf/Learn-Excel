@@ -1,6 +1,6 @@
 # Lesson 3.5 · Charts & Data Visualization
 
-> **Level:** Intermediate · **Time:** about 55 minutes · **Workbook:** [`3.5-charts-visualization.xlsx`](3.5-charts-visualization.xlsx)
+> **Level:** Intermediate · **Time:** about 135 minutes · **Workbook:** [`3.5-charts-visualization.xlsx`](3.5-charts-visualization.xlsx)
 > **Data:** Bluestone Health System, pre-summarized for charting: monthly ED visits by hospital with counts of patients who left without being seen (LWBS), Jan 2024 – Dec 2025, 2025 ED arrivals and average door-to-provider minutes by hour of day, 2025 readmission rates by service line, 2025 payer mix, a sample of 300 inpatient stays from 2025, 2025 claim denials by reason, and 4 West's FY2025 budget-to-actual margin bridge. The summaries come from [`ed_visits.csv`](../../data/README.md#ed_visitscsv), [`encounters.csv`](../../data/README.md#encounterscsv), [`claims.csv`](../../data/README.md#claimscsv), and [`budget.csv`](../../data/README.md#budgetcsv) in the data dictionary.
 
 A table of 24 months × 3 hospitals holds every number the ED director needs, but nobody sees the winter surge in it.
@@ -375,8 +375,9 @@ reference line or label the cut-off:
 
 1. Sort the table by the value column, largest first.
 2. Add a cumulative-share column. With the values in C2:C8, type `=SUM($C$2:C2)/SUM($C$2:$C$8)` in D2 and fill down. In
-   a Table, Excel fills the column for you. The mixed reference `$C$2:C2` keeps its start fixed while its end moves down a
-   row at a time (Lesson 1.5), so each row adds up every value from the top to that row and divides by the grand total.
+   a Table, Excel fills the column for you. `$C$2:C2` is an **expanding range** (Lesson 3.3). Its start is absolute and its
+   end is relative (Lesson 1.5), so the start stays fixed while the end moves down a row at a time. Each row adds up every
+   value from the top to that row and divides by the grand total.
 3. Select the categories, the values, and the cumulative shares, and insert a **Clustered Column – Line on Secondary Axis**
    combo chart.
 4. Set the secondary axis **Minimum** to 0 and **Maximum** to 1 (100%), and set the columns' **Gap Width** to about 10%.
@@ -862,7 +863,7 @@ R² = 0.121. The trendline slopes upward (about 0.43 percentage points of LWBS p
 5. Find the first bar where the line reaches 80%.
 
 
-Cumulative shares by dollars: Authorization Required 36.1%, Medical Necessity 59.4%, Coding Error 76.3%, Missing Documentation 86.1%, Eligibility / Coverage 95.1%, Timely Filing 97.9%, Duplicate Claim 100.0%. The line first passes 80% at reason 4, so 4 of the 7 reasons hold 86.1% of the \$13,906,332 at risk. The mixed reference `$C$2:C2` keeps its start fixed while its end moves down one row at a time (Lesson 1.5). Building a Pareto by hand takes longer than the built-in chart, but it works in every Excel version and lets you add an 80% reference line or label the cut-off. Cross-check (counts the reasons whose running share is still below 80%, then adds one): `=SUMPRODUCT(--(SUMIF(tblDenials[DeniedCharges],">="&tblDenials[DeniedCharges])<0.8*SUM(tblDenials[DeniedCharges])))+1`
+Cumulative shares by dollars: Authorization Required 36.1%, Medical Necessity 59.4%, Coding Error 76.3%, Missing Documentation 86.1%, Eligibility / Coverage 95.1%, Timely Filing 97.9%, Duplicate Claim 100.0%. The line first passes 80% at reason 4, so 4 of the 7 reasons hold 86.1% of the \$13,906,332 at risk. The expanding range `$C$2:C2` (Lesson 3.3) has an absolute start and a relative end (Lesson 1.5), so its start stays fixed while its end moves down one row at a time. Building a Pareto by hand takes longer than the built-in chart, but it works in every Excel version and lets you add an 80% reference line or label the cut-off. Cross-check (counts the reasons whose running share is still below 80%, then adds one): `=SUMPRODUCT(--(SUMIF(tblDenials[DeniedCharges],">="&tblDenials[DeniedCharges])<0.8*SUM(tblDenials[DeniedCharges])))+1`
 
 **B5. Which reason climbs when you rank by dollars**
 

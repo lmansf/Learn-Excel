@@ -799,8 +799,8 @@ def build() -> Lesson:
                          + ", ".join(f"{r['DenialReason']} {c:.1%}" for r, c in zip(dn_by_dollars, cum_dollars))
                          + f". The line first passes {PARETO_CUT:.0%} at reason {b4}, so {b4} of the "
                            f"{len(denials)} reasons hold {cum_dollars[b4 - 1]:.1%} of the ${dollars_total:,.0f} at risk. "
-                           "The mixed reference `$C$2:C2` keeps its start fixed while its end moves down one row at a "
-                           "time (Lesson 1.5). Building a Pareto by hand takes longer than the built-in chart, but it "
+                           "The expanding range `$C$2:C2` (Lesson 3.3) has an absolute start and a relative end "
+                           "(Lesson 1.5), so its start stays fixed while its end moves down one row at a time. Building a Pareto by hand takes longer than the built-in chart, but it "
                            "works in every Excel version and lets you add an 80% reference line or label the cut-off. "
                            "Cross-check (counts the reasons whose running share is still below 80%, then adds one): "
                            f"`{fb4}`"),

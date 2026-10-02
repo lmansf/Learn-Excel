@@ -46,8 +46,9 @@ python tools/build.py readme           # refresh the syllabus in README.md and t
 1. Every **live formula** in the hidden Answer Key equals the Python-computed answer (within tolerance).
 2. A **self-test** copy of the workbook, with each sample solution typed into its answer cell (or the `fill` formulas
    filled down), shows `✔ Correct` in every Check cell.
-3. The pristine workbook's Check cells are blank (nothing is pre-answered), key sheets are hidden, and there are no error
-   values on the Practice/Bonus/Key sheets.
+3. The pristine workbook's Check cells are blank (nothing is pre-answered), the Answer Key and Bonus Key sheets are hidden,
+   and those two key sheets have no error values. Error values on the Practice and Bonus sheets (and on `verify_scan`
+   sheets) only print as warnings, so read the warnings too.
 
 A lesson is done only when `python tools/build.py X.Y` prints `verification: PASS`.
 
@@ -55,9 +56,12 @@ A lesson is done only when `python tools/build.py X.Y` prints `verification: PAS
 
 # Authoring a lesson
 
-Read the reference lesson first: [`lessons/lesson_1_4.py`](lessons/lesson_1_4.py) and
-[`01-foundations/04-basic-formulas/README.md`](../01-foundations/04-basic-formulas/README.md). Your lesson's spec
-(objectives, data, practice ideas, bonus idea, and what NOT to cover) is in [`curriculum.py`](curriculum.py).
+Read the reference lesson first for the README structure and task design: [`lessons/lesson_1_4.py`](lessons/lesson_1_4.py)
+and [`01-foundations/04-basic-formulas/README.md`](../01-foundations/04-basic-formulas/README.md). Its guide is shorter than
+most, so for depth also read a typical guide such as
+[Lesson 2.5](../02-formulas-functions/05-conditional-aggregation/README.md) or
+[Lesson 3.1](../03-data-analysis/01-tables-named-ranges/README.md). Your lesson's spec (objectives, data, practice ideas,
+bonus idea, and what NOT to cover) is in [`curriculum.py`](curriculum.py).
 
 ## Files you create
 
@@ -70,12 +74,18 @@ Read the reference lesson first: [`lessons/lesson_1_4.py`](lessons/lesson_1_4.py
 
 ## Lesson README structure (keep this order)
 
-1. `# Lesson X.Y · Title`, then a quote line: Level · Time · Workbook link · Data description
+1. `# Lesson X.Y · Title`, then a quote line: Level · Time · Workbook link · Data description. The time must match the
+   lesson's `minutes` in `curriculum.py`. The build rewrites the Level and Time in this line, and the "What you'll learn"
+   bullets, from `curriculum.py` on every run, so change them there.
 2. A short hook paragraph: why this skill matters in a hospital/health-system job
 3. `## What you'll learn` (the curriculum objectives)
 4. `## 📖 Guide`: the real teaching. Numbered `###` sections, syntax blocks, tables comparing functions, worked examples on
    the lesson data, ⚠️ pitfalls, 💡 tips, keyboard shortcuts for **Windows and Mac**, and **version notes** (e.g. "XLOOKUP
-   needs Microsoft 365 or Excel 2021+"). Teach everything the practice tasks need. Aim for the depth of the reference lesson.
+   needs Microsoft 365 or Excel 2021+"). Teach everything the practice tasks need. Most guides run about 4,000–7,000 words
+   in 10–16 numbered sections.
+   - Number subsections as `####` headings with the section number and a letter: `#### 4a. …`, `#### 4b. …`.
+   - End the guide with one reference section: a Windows/Mac shortcut table and a version table. Title it
+     `### N. Shortcuts and version notes`, or `### N. Quick reference` when it also summarizes the lesson's functions.
 5. `## 🧪 Hands-on practice`: one or two sentences, then the `practice` generated block
 6. `## ✅ Answer key`: one or two sentences about the hidden sheet, then the `answers` generated block (collapsed `<details>`)
 7. `## 🏆 Bonus challenge`: the `bonus` block, then the `bonus-answers` block (collapsed)
@@ -96,9 +106,18 @@ without rereading.
 - **Define a term the first time you use it**, in bold, and use that same term for the rest of the lesson. Don't switch
   between synonyms.
 - **Use healthcare examples from the lesson data** instead of generic ones like "sales" or "widgets."
-- **Name shortcuts with both platforms:** "Ctrl + Shift + L (Mac: ⌘ + Shift + F)".
-- **Use the callouts** `💡 Tip:` and `⚠️` (pitfall), and add `📋` when you need a side note. Don't add other kinds of
-  callout.
+- **Name shortcuts with both platforms:** "Ctrl + Shift + L (Mac: ⌘ + Shift + F)". Put spaces around every `+`
+  (Ctrl + click, not Ctrl+click), in READMEs and in builder prompts, hints, and solutions alike. On a Mac, write ⌘ for
+  Command and the words **Control** and **Option** for those keys (Control + Option + Return, Option + ↓), and write **Fn**
+  with a capital F. Lesson 1.1 introduces this convention.
+- **Write Mac settings paths with Settings:** **Excel → Settings → Calculation**. Lesson 1.1 explains that older versions
+  call it Preferences.
+- **Bold every menu path:** **File → Options → Advanced**, **Formulas → Name Manager**.
+- **Use one spelling for shared terms across the course**, not just within a lesson. For example, write *drop-down list*
+  (Excel's spelling), and keep *In-cell dropdown* only where you quote the dialog.
+- **Use the callouts** `💡 **Tip:**` and `⚠️` (pitfall), and add `📋` for a neutral side note such as a version or platform
+  note. Start every 💡 callout with **Tip:**, label version notes `📋 **Version note:**`, and keep ⚠️ for pitfalls. Don't
+  add other kinds of callout.
 - **Use tables** to compare functions or options and **numbered lists** for procedures. Use prose for explanations.
 - **Write explanations in tasks the same way.** The `explanation` field appears in the README answer key, so it should say
   *why* the solution works, not just restate the formula.
@@ -119,8 +138,9 @@ without rereading.
   `0.913` and `91.3`; `'#,##0.00'` for money; `'mm/dd/yyyy'` for dates.
 - **Choose the check type.** It's inferred from the answer type (number, percent, date, datetime, duration via
   `timedelta`, bool, text). Text checks are case-insensitive and trimmed; add `accept=[...]` for equivalent answers
-  (`"00000000"`, `"0000000#"`). Integers must match exactly. Floats default to ±0.0051, so tell learners how to round,
-  or set `tol=`.
+  (`"00000000"`, `"0000000#"`). Default tolerances: integers match exactly, other numbers ±0.0051, percentages
+  (a `fmt` with `%`) ±0.00051, which is 0.05 percentage points, so ask for a percentage to 1 decimal place. Date-times and
+  durations allow ±1 minute, and dates must be the same day. Tell learners how to round, or set `tol=`.
 - **Column-filling tasks** ("fill this new column"): add the column with `extra_cols=[...]` on the data sheet, set
   `summary=` to a gray formula that condenses the learner's column into one number, and set
   `fill={"range": "Sheet!G2:G91", "formula": "=E2/B2"}` so the self-test can fill it. **The summary must return `""`
@@ -140,8 +160,8 @@ without rereading.
 - **Use `live=False`** when a solution refers to Practice-sheet cells (the key lives on another sheet) or uses functions
   LibreOffice can't evaluate (LAMBDA family). Set `self_test=False` only when the solution genuinely can't be evaluated
   in LibreOffice, and double-check those answers in Python.
-- Use **8–13 practice tasks** that progress from easy to harder and cover every objective, plus **one bonus problem**
-  with 2–5 parts that is clearly harder: multi-step, realistic, combining skills.
+- Use **12–13 practice tasks** that progress from easy to harder and cover every objective, plus **one bonus problem**
+  with 4–5 parts that is clearly harder: multi-step, realistic, combining skills.
 - `solution_lang="vba" | "m" | "dax"` renders the solution as a code block in the README.
 
 ## Excel vs. LibreOffice pitfalls the verifier can't catch
@@ -176,6 +196,7 @@ LibreOffice is only a stand-in for Excel, and a few behaviors differ. Write summ
 | `lesson.key_note` | You want a different subtitle on the hidden key sheets |
 | `lesson.bonus_where` | The bonus work happens on another sheet (`""` omits the README line) |
 | `lesson.sheet_notes = [(sheet, description)]` | You add sheets in a customize hook and want them listed on Start Here |
+| `lesson.sheet_order = [...]` | You need a different tab order. Put sheets that only the bonus uses right after the **Bonus** tab |
 | `lesson.verify_scan = [(sheet, "A1:Z99")]` | The verifier should also scan a custom sheet for error values |
 | `add_table_sheet(..., freeze=False, hidden=True, hidden_cols=[...])` | The lesson needs unfrozen, hidden sheets or hidden columns |
 | `Task(fill=[{...}, {...}])` | The self-test must fill several ranges |
@@ -192,7 +213,8 @@ hand-written README text and about broken relative links.
 `lesson.add_table_sheet(name, rows, columns=[...], table="tblX", extra_cols=[...], formats={...}, widths={...})`
 writes a formatted Excel Table. Rows are dicts from `xlcourse.data.load("encounters")` (typed: dates are `date`,
 timestamps `datetime`). Pre-join or pre-compute columns in Python when the lesson isn't about that join. Keep workbooks
-reasonably small: a few hundred rows for beginner lessons, and at most ~12k rows for pivot and Data Model lessons.
+reasonably small: a few hundred rows for beginner lessons, at most ~12k rows per sheet for pivot lessons, and at most
+~22k rows per fact table for Data Model lessons (4.4 loads all 21,857 encounters and claims).
 Pick subsets deterministically (sort, then slice), never randomly without a seed.
 
 ## Custom content

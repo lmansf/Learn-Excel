@@ -1,6 +1,6 @@
 # Lesson 3.6 · What-If Analysis: Goal Seek, Scenarios, Data Tables & Solver
 
-> **Level:** Intermediate · **Time:** about 60 minutes · **Workbook:** [`3.6-what-if-analysis.xlsx`](3.6-what-if-analysis.xlsx)
+> **Level:** Intermediate · **Time:** about 125 minutes · **Workbook:** [`3.6-what-if-analysis.xlsx`](3.6-what-if-analysis.xlsx)
 > **Data:** A monthly operating model for Bluestone's Primary Care Clinic (D400, Bluestone Outpatient Pavilion). Payer mix and reimbursement come from the clinic's 2,079 claims with 2025 service dates, wage rates from Bluestone HR records, and benefits, supply, and fixed costs from the clinic's 2025 budget actuals. The source files are [`claims.csv`](../../data/README.md#claimscsv), [`encounters.csv`](../../data/README.md#encounterscsv), [`employees.csv`](../../data/README.md#employeescsv), and [`budget.csv`](../../data/README.md#budgetcsv) in the data dictionary.
 
 Bluestone's Primary Care Clinic loses a little money every month, like many hospital-owned primary care practices. The
@@ -157,7 +157,7 @@ one.
 **How precise is Goal Seek?** Goal Seek tries a value, measures how far the set cell is from the target, and adjusts. It
 stops when the result is close enough or after 100 tries. Both limits come from the iteration settings in **File →
 Options → Formulas**: **Maximum Iterations** (default 100) and **Maximum Change** (default 0.001) (Mac: **Excel →
-Preferences → Calculation**). For a linear model like this one, Goal Seek lands on the exact answer almost at once. For a
+Settings → Calculation**). For a linear model like this one, Goal Seek lands on the exact answer almost at once. For a
 ratio such as operating margin, it can stop anywhere within about 0.001 of the target, which is 0.1 percentage point of
 margin. Lower Maximum Change (for example, to 0.000001) when you need more precision. The two boxes are grayed out until
 you tick **Enable iterative calculation**, so tick it, change the value, and then untick it again so Excel keeps warning
@@ -309,7 +309,7 @@ More Data Table rules:
   conditional formatting work on the result block too.
 - **Big tables slow everything down.** Excel recalculates every Data Table each time the workbook recalculates, even when
   the change has nothing to do with the table. In a large model, choose **Formulas → Calculation Options → Automatic
-  Except for Data Tables** (Mac: also in **Excel → Preferences → Calculation**). Press **F9** (Mac: **⌘ + =**) whenever
+  Except for Data Tables** (Mac: also in **Excel → Settings → Calculation**). Press **F9** (Mac: **⌘ + =**) whenever
   you want the tables refreshed.
 
 > 💡 **Tip:** If a Data Table seems stuck showing old numbers, check the calculation option first. The calculation mode

@@ -1,6 +1,6 @@
 # Lesson 3.4 · PivotTables
 
-> **Level:** Intermediate · **Time:** about 60 minutes · **Workbook:** [`3.4-pivottables.xlsx`](3.4-pivottables.xlsx)
+> **Level:** Intermediate · **Time:** about 130 minutes · **Workbook:** [`3.4-pivottables.xlsx`](3.4-pivottables.xlsx)
 > **Data:** All 11,145 encounters that began in 2025 at Bluestone's four facilities (one row per encounter), with facility, department, service line, payer, and diagnosis names already joined in, plus age, length of stay, charges, and a 30-day readmission flag.
 
 Every week someone at Bluestone is asked a version of the same question: *how many, how much, and broken down by what?*
@@ -526,8 +526,9 @@ in Rows, Count of EncounterID in Values, top-left cell A3), clicking the Observa
 A plain reference such as `=B6` points at a *position*. After someone sorts, filters, or adds a field, B6 may hold a
 different number. GETPIVOTDATA points at a *meaning*, so it keeps finding the Observation count wherever it moves.
 
-- **Make it interactive:** replace a typed item with a cell reference, such as `=GETPIVOTDATA("EncounterID",\$A\$3,
-  "EncounterType",F2)`, where F2 holds a drop-down list of encounter types (Lesson 3.2).
+- **Make it interactive:** replace a typed item with a cell reference, such as
+  `=GETPIVOTDATA("EncounterID",$A$3,"EncounterType",F2)`, where F2 holds a drop-down list of encounter
+  types (Lesson 3.2).
 - **It needs a visible item:** if the item is filtered out, or its field isn't in the pivot, GETPIVOTDATA returns #REF!.
 
 > 💡 **Tip:** If you want plain references when you click, turn the feature off on Windows with **PivotTable Analyze →

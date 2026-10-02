@@ -667,6 +667,8 @@ def build() -> Lesson:
         "what your rules highlight.",
         "ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Use the names in your rules.",
         "Circle Invalid Data circles disappear when you save or close the file. They are a checking tool, not formatting.",
+        "The hidden 'Huddle Key' sheet shows the finished bed huddle board with every rule and both drop-down lists in place. "
+        "Unhide it the same way as the Answer Key once you've tried the bonus.",
     ]
 
     # ------------------------------------------------------------------ customize: Lists, Huddle, Huddle Key

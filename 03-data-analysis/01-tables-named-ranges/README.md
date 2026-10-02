@@ -1,6 +1,6 @@
 # Lesson 3.1 · Excel Tables, Structured References & Named Ranges
 
-> **Level:** Intermediate · **Time:** about 50 minutes · **Workbook:** [`3.1-tables-named-ranges.xlsx`](3.1-tables-named-ranges.xlsx)
+> **Level:** Intermediate · **Time:** about 105 minutes · **Workbook:** [`3.1-tables-named-ranges.xlsx`](3.1-tables-named-ranges.xlsx)
 > **Data:** Supply inventory snapshot for 15 storerooms across three Bluestone hospitals (257 stock rows, as of 12/31/2025), a Settings sheet with the report date and expiry window, and Purchasing's vendor list.
 
 Bluestone's supply chain team gets a fresh inventory snapshot every week. Today it has 257 stock rows, and next Monday it will

@@ -1,6 +1,6 @@
 # Lesson 3.3 · Cleaning Messy Data
 
-> **Level:** Intermediate · **Time:** about 60 minutes · **Workbook:** [`3.3-data-cleaning.xlsx`](3.3-data-cleaning.xlsx)
+> **Level:** Intermediate · **Time:** about 145 minutes · **Workbook:** [`3.3-data-cleaning.xlsx`](3.3-data-cleaning.xlsx)
 > **Data:** A 650-row patient registration export from Bluestone's legacy registration system (names, DOBs, phones, insurance, and MRNs typed every which way, plus duplicates), a payer mapping table, a one-week bed-board census export, and a 116-line lab interface feed from Cedar Ridge Medical Center. The raw export is also available as [`data/messy/patient_registrations_raw.csv`](../../data/messy/patient_registrations_raw.csv), and the [data dictionary](../../data/README.md) describes every course file.
 
 Every hospital report starts with data that someone typed or some system exported. Registration clerks type names in capitals or
@@ -83,11 +83,11 @@ counts become the "before" numbers in your cleaning log.
 
 | Question | Quick look | Formula |
 |---|---|---|
-| Which spellings exist? | Turn on filters with Ctrl + Shift + L (Mac: ⌘ + Shift + F) and open the column's dropdown | `=UNIQUE(Raw!D2:D651)` (Microsoft 365) |
+| Which spellings exist? | Turn on filters with Ctrl + Shift + L (Mac: ⌘ + Shift + F) and open the column's dropdown | `=UNIQUE(Raw!D2:D651)` (Microsoft 365 or Excel 2021+) |
 | How many rows hold one value? | Filter, then read the status bar | `=COUNTIF(Raw!D2:D651,"Female")` (counts `FEMALE` too) |
 | How many values have extra spaces? | You can't see them | `=SUMPRODUCT(--(LEN(Raw!H2:H651)<>LEN(TRIM(Raw!H2:H651))))` |
 | How many are in ALL CAPS? | Scroll and squint | `=SUMPRODUCT(--EXACT(Raw!B2:B651,UPPER(Raw!B2:B651)))` |
-| How many match a pattern? | Find All with Ctrl + F (Mac: ⌘ + F) | `=COUNTIF(Raw!B2:B651,"*,*")` counts names that contain a comma |
+| How many match a pattern? | Find All with Ctrl + F (Mac: ⌃ + F) | `=COUNTIF(Raw!B2:B651,"*,*")` counts names that contain a comma |
 | Real numbers and dates, or text? | Alignment, green triangles, status bar | `=COUNT(Raw!C2:C651)` compared with `=COUNTA(Raw!C2:C651)` |
 | Placeholder text posing as a blank? | The filter list | `=COUNTIF(Raw!F2:F651,"N/A")` |
 
@@ -95,7 +95,7 @@ The extra-space formula deserves a closer look, because you'll use the pattern t
 `LEN(Raw!H2:H651)<>LEN(TRIM(Raw!H2:H651))` compares all 650 rows at once and returns 650 TRUE/FALSE results. TRUE means TRIM would
 shorten that value, so it has extra spaces. The double minus `--` turns TRUE into 1 and FALSE into 0, and SUMPRODUCT adds them up.
 On the Insurance column the answer is **37**: 25 rows of `Medicare ` and 12 rows of `Silverline Medicare Advantage `, each with a
-trailing space. In Microsoft 365, `=SUM(…)` works in place of SUMPRODUCT.
+trailing space. In Microsoft 365 or Excel 2021+, `=SUM(…)` works in place of SUMPRODUCT.
 
 **Two traps while profiling.** The filter dropdown and UNIQUE both ignore capitals, so `F` and `f` appear as one entry. To count
 case problems, use **EXACT**, which compares two texts character by character and is case-sensitive. Spaces, on the other hand,
@@ -180,7 +180,8 @@ there is no comma, and ISNUMBER turns that into TRUE or FALSE. Here are the piec
 
 Join the first name, a space, and the last name with `&`. That is the fix for `Last, First` rows. The fix for names that are
 already `First Last` is just TRIM. Wrap the whole IF in PROPER so that both layouts get the same capitals. Practice task 10 asks you
-to put this together. In Microsoft 365, `TRIM(TEXTAFTER(B10,","))` and `TRIM(TEXTBEFORE(B10,","))` give the same two pieces.
+to put this together. In Microsoft 365 or Excel 2024, `TRIM(TEXTAFTER(B10,","))` and `TRIM(TEXTBEFORE(B10,","))` give the
+same two pieces.
 
 > ⚠️ **Names are not identifiers.** Different patients can share a name, and one patient's name can change through marriage, a
 > legal name change, or a typo. Use names to read the data, and the MRN to match and deduplicate it.
@@ -355,10 +356,10 @@ patients. A **mapping table** (also called a *crosswalk*) lists every spelling y
 To build and use a map:
 
 1. **List the distinct spellings.** Copy the column to an empty sheet and run **Data → Remove Duplicates**, or in Microsoft 365
-   type `=UNIQUE(TRIM(Raw!H2:H651))`. Both ignore capitals. UNIQUE(TRIM(…)) returns 19 spellings, one for each spelling a lookup
-   has to recognize. Remove Duplicates leaves 21, because it keeps `Medicare ` and `Silverline Medicare Advantage ` (with their
-   trailing spaces) as separate entries, so those two need trimming before they join the map. Paste the UNIQUE result as values
-   before you edit it.
+   or Excel 2021+ type `=UNIQUE(TRIM(Raw!H2:H651))`. Both ignore capitals. UNIQUE(TRIM(…)) returns 19 spellings, one for each
+   spelling a lookup has to recognize. Remove Duplicates leaves 21, because it keeps `Medicare ` and
+   `Silverline Medicare Advantage ` (with their trailing spaces) as separate entries, so those two need trimming before they join
+   the map. Paste the UNIQUE result as values before you edit it.
 2. **Type the standard value next to each spelling.** Where the meaning isn't obvious, ask the data's owner and write the rule
    down. Here, Patient Access says "Uninsured" means Self-Pay, so the map records that in its Note column.
 3. **Look up with TRIM.** XLOOKUP ignores capitals but not spaces, so `TRIM(H2)` makes `Medicare ` match `MEDICARE`.
@@ -415,7 +416,7 @@ Other ways to split text, compared:
 | Tool | Result | Updates when the data changes? | Best for |
 |---|---|---|---|
 | Text to Columns | Values, in place | No | One-off splits, and converting a column's type |
-| TEXTSPLIT, TEXTBEFORE, TEXTAFTER (Microsoft 365, Lesson 2.2) | Formulas | Yes | Splits you'll repeat on new data |
+| TEXTSPLIT, TEXTBEFORE, TEXTAFTER (Microsoft 365 or Excel 2024, Lesson 2.2) | Formulas | Yes | Splits you'll repeat on new data |
 | Flash Fill | Values | No | Irregular patterns you can show by example |
 | Power Query (Lesson 4.3) | A refreshable table | Yes, when you click Refresh | Monthly feeds |
 
@@ -536,8 +537,8 @@ instead of one value, COUNTIF runs once for each cell in it and returns one coun
 650 counts, each one saying how many rows share that row's MRN. A value that appears 3 times contributes 1/3 + 1/3 + 1/3 = 1 to
 the sum, so the total is the number of distinct values. COUNTIFS works the same way, with a range in any of its criteria. If the
 range can contain blanks, use `=SUMPRODUCT((Q2:Q651<>"")/COUNTIF(Q2:Q651,Q2:Q651&""))`, which skips them instead of dividing by
-zero. In Microsoft 365, SUM can replace SUMPRODUCT in these formulas. In older versions, keep SUMPRODUCT, because it handles
-the per-row arrays without any special entry.
+zero. In Microsoft 365 or Excel 2021+, SUM can replace SUMPRODUCT in these formulas. In Excel 2019 and earlier, keep
+SUMPRODUCT, because it handles the per-row arrays without any special entry.
 
 > ⚠️ COUNTIF and COUNTIFS treat text that looks like a number as a number. On the raw MRN column they would count `1955231` and
 > `01955231` as the same value, and they can confuse ID numbers longer than 15 digits. That's harmless once every MRN is padded to
@@ -612,7 +613,7 @@ cleaning step and replays them all with one click on **Refresh**, which is the n
 | Go To (then **Special…**) | F5 or Ctrl + G | ⌃ + G |
 | Put one entry in every selected cell | Ctrl + Enter | ⌘ + Return |
 | Flash Fill | Ctrl + E | **Data → Flash Fill** |
-| Find / Replace | Ctrl + F / Ctrl + H | ⌘ + F / ⌃ + H |
+| Find / Replace | Ctrl + F / Ctrl + H | ⌃ + F / ⌃ + H |
 | Paste Special | Ctrl + Alt + V | ⌃ + ⌘ + V |
 | Select visible cells only | Alt + ; | ⌘ + Shift + Z |
 | Undo | Ctrl + Z | ⌘ + Z |
@@ -667,7 +668,7 @@ proves most answers straight from the Raw sheet. The same answers are below, col
 - **Answer:** 69
 - **Solution:** `=SUMPRODUCT(--(LEN(Raw!B2:B651)<>LEN(TRIM(Raw!B2:B651))))`
 
-TRIM removes leading and trailing spaces and shrinks inner runs to one space, so any name it shortens had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing space by looking at a cell, so a count like this is how you find out a problem exists before you fix it. In Microsoft 365, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too.
+TRIM removes leading and trailing spaces and shrinks inner runs to one space, so any name it shortens had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing space by looking at a cell, so a count like this is how you find out a problem exists before you fix it. In Microsoft 365 or Excel 2021+, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too.
 
 **2. SexClean column (rows that are exactly F)**
 
@@ -686,7 +687,7 @@ Every spelling starts with the right letter once the stray space is gone, so the
 3. Keep **My data has headers** ticked. Untick **RecordID** and leave the other nine columns ticked. Click **OK**.
 4. Excel reports *40 duplicate values found and removed; 610 unique values remain.*
 
-Formula check without deleting anything (Microsoft 365 / Excel 2021+): `=ROWS(Raw!B2:J651)-ROWS(UNIQUE(Raw!B2:J651))`
+Formula check without deleting anything (Microsoft 365 or Excel 2021+): `=ROWS(Raw!B2:J651)-ROWS(UNIQUE(Raw!B2:J651))`
 
 
 Remove Duplicates only removes rows that match in **every** ticked column, so it finds the 40 rows that were exported twice, character for character. That is not all of them, as task 7 will show when you count the real patients. Many more rows are re-registrations typed differently. For example, row 18 ("Amber White", (555) 556-3833) and row 410 ("WHITE, AMBER", 5555563833) are the same patient, but Remove Duplicates sees two different rows. Standardize first, then remove duplicates on the cleaned key column. UNIQUE on all nine columns counts the same thing without deleting anything. Both ignore case.
@@ -717,7 +718,7 @@ After Go To Special, Excel has selected only the 88 empty cells, and the formula
 3. Select **O4**, the first empty cell, and press **Ctrl + E** (or **Data → Flash Fill**).
 4. Check the result: `=SUMPRODUCT(--(LEN(Clean!O2:O651)<>5))` should return 0. If some rows are wrong, press Ctrl + Z, type the correct ZIP on one of the wrong rows as an extra example, and run Flash Fill again.
 
-Formula alternative (Microsoft 365): `=LEFT(TEXTAFTER(G2," ",-1),5)`
+Formula alternative (Microsoft 365 or Excel 2024): `=LEFT(TEXTAFTER(G2," ",-1),5)`
 
 
 Flash Fill looks for a rule that explains every example you typed. Two plain ZIPs fit several rules (the first number, the last number, the last five characters), and on 45501-8106 those give different answers. The ZIP+4 example leaves only "the first number". If the +4 survives, the distinct count jumps to 108. Flash Fill writes typed-in values, not formulas, so it won't update when next month's export arrives. The Lesson 2.2 bonus did the same job with TEXTAFTER. The formula is the repeatable choice, and Flash Fill is the fast one for a one-off.

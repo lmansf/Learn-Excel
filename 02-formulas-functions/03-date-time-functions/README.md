@@ -1,6 +1,6 @@
 # Lesson 2.3 · Dates & Times
 
-> **Level:** Beginner → Intermediate · **Time:** about 55 minutes · **Workbook:** [`2.3-date-time-functions.xlsx`](2.3-date-time-functions.xlsx)
+> **Level:** Beginner → Intermediate · **Time:** about 115 minutes · **Workbook:** [`2.3-date-time-functions.xlsx`](2.3-date-time-functions.xlsx)
 > **Data:** All 369 inpatient stays admitted at Ashby Falls Community Hospital in 2025 (with each patient's date of birth and, for ED admissions, the ED arrival time), the insurance claim for each stay, and the hospital's 226 emergency department visits in Q4 2025. The workbook also has one pay week (December 14–20, 2025) of worked shifts on Medical-Surgical 4 West at Bluestone Memorial Hospital and the business office's 2025–2026 holiday calendar. The columns come from [`encounters.csv`](../../data/README.md#encounterscsv), [`claims.csv`](../../data/README.md#claimscsv), [`ed_visits.csv`](../../data/README.md#ed_visitscsv), and [`shifts.csv`](../../data/README.md#shiftscsv) in the data dictionary.
 
 Almost every number a hospital reports has a clock behind it. Length of stay drives bed planning and reimbursement. Door-to-provider
@@ -496,7 +496,7 @@ returns #VALUE!. Convert text dates once, with DATEVALUE and TIMEVALUE, so every
 | `=DATEVALUE("2025-12-31")` | 46022 |
 | `=TIMEVALUE("7:30 PM")` | 0.8125 |
 | `=DATEVALUE("12/31/2025")` | 46022 when your computer's regional settings put the month first, as in the US, but #VALUE! where dates are written day first |
-| `=--"2025-12-31"` | 46022. The double minus converts text to a number (Lesson 2.1) |
+| `=--"2025-12-31"` | 46022. The double minus converts text to a number (Lesson 2.2) |
 
 The ISO form yyyy-mm-dd converts correctly under any regional setting. Lesson 3.3 covers cleaning whole columns of mixed text dates.
 

@@ -55,7 +55,7 @@ erDiagram
 | [`patients.csv`](patients.csv) | 4,000 | Registered patients. Ages are realistic; names, contact details, and MRNs are fictional. |
 | [`encounters.csv`](encounters.csv) | 21,857 | One row per patient encounter (visit or stay), Jan 2024 – Dec 2025. A representative extract, not every visit. |
 | [`ed_visits.csv`](ed_visits.csv) | 12,292 | Emergency department timeline for every ED arrival (treat-and-release and admitted). |
-| [`claims.csv`](claims.csv) | 21,857 | One claim per encounter with payment status as of 12/31/2025. |
+| [`claims.csv`](claims.csv) | 21,857 | One claim per encounter with payment status as of 12/31/2025 (claims submitted in 2026 show their eventual outcome; see SubmitDate). |
 | [`lab_results.csv`](lab_results.csv) | 51,527 | Laboratory results with reference ranges and turnaround timestamps. |
 | [`medications.csv`](medications.csv) | 25,834 | Pharmacy medication orders and doses dispensed. |
 | [`patient_satisfaction.csv`](patient_satisfaction.csv) | 1,823 | Post-discharge patient experience surveys (HCAHPS-style, inpatient & observation). |
@@ -202,7 +202,7 @@ Emergency department timeline for every ED arrival (treat-and-release and admitt
 | `ArrivalMode` | Walk-In, Ambulance, Police, Air Transport. |
 | `ESILevel` | Emergency Severity Index 1 (most urgent) – 5. |
 | `ChiefComplaint` | Reason for visit. |
-| `EDDisposition` | Discharged, Admitted, Observation, Transferred, LWBS, Left AMA, Expired. |
+| `EDDisposition` | Discharged, Admitted, Observation, Transferred, LWBS, Left AMA. |
 | `TempF` | Triage temperature °F. |
 | `HeartRate` | Beats/min. |
 | `RespRate` | Breaths/min. |
@@ -213,7 +213,7 @@ Emergency department timeline for every ED arrival (treat-and-release and admitt
 
 ### `claims.csv`
 
-One claim per encounter with payment status as of 12/31/2025.
+One claim per encounter with payment status as of 12/31/2025 (claims submitted in 2026 show their eventual outcome; see SubmitDate).
 
 | Column | Description |
 |---|---|
@@ -222,12 +222,12 @@ One claim per encounter with payment status as of 12/31/2025.
 | `PatientID` | FK → patients. |
 | `PayerID` | FK → payers. |
 | `ServiceDate` | Discharge/service date. |
-| `SubmitDate` | Date the claim was submitted. |
+| `SubmitDate` | Date the claim was submitted. 263 claims for late-2025 services were submitted in January–May 2026, after the as-of date. Filter on SubmitDate ≤ 12/31/2025 when you need only the claims billed by the as-of date. |
 | `BilledAmount` | Gross charges billed (\$). |
 | `AllowedAmount` | Contracted allowed amount (0 if denied). |
 | `PatientResponsibility` | Copay/coinsurance/deductible owed by patient. |
 | `PaidAmount` | Amount received to date. |
-| `ClaimStatus` | Paid, Partially Paid, Denied, Appealed, Pending. |
+| `ClaimStatus` | Paid, Partially Paid, Denied, Appealed, Pending. For claims submitted after 12/31/2025, this is the eventual outcome, not the status on 12/31/2025. |
 | `DenialReason` | Reason for denial or partial payment. |
 | `PaidDate` | Date payment received (blank if unpaid). |
 
@@ -389,6 +389,19 @@ Monthly budget vs. actual by department and category, 2024–2025 (fiscal year =
 | `Category` | Revenue or expense category. |
 | `BudgetAmount` | Budget (\$). |
 | `ActualAmount` | Actual (\$). |
+
+## Common metric definitions
+
+Each lesson states its exact definitions in the task text. These are the defaults used across the course:
+
+| Metric | Default definition |
+|---|---|
+| **Length of stay (LOS)** | Elapsed time from `AdmitDateTime` to `DischargeDateTime` in decimal days (hours ÷ 24). Some lessons count calendar days (discharge date − admit date) or midnights instead, sometimes with a 1-day minimum, and say so. |
+| **ALOS** | Average LOS of Inpatient encounters. |
+| **30-day readmission** | The `Readmit30` flag defined above. |
+| **Door-to-provider** | `ProviderSeenDateTime` − `ArrivalDateTime` in minutes (blank when the patient left without being seen). |
+| **Occupancy** | Total midnight census ÷ total staffed beds over the period (patient days ÷ bed days). |
+| **Denial rate** | Claims with ClaimStatus Denied or Appealed (an appeal starts with a denial) ÷ adjudicated claims (every claim except Pending). |
 
 ## Regenerating
 

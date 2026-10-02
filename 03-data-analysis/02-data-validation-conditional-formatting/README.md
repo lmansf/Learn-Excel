@@ -1,6 +1,6 @@
 # Lesson 3.2 · Data Validation & Conditional Formatting
 
-> **Level:** Intermediate · **Time:** about 55 minutes · **Workbook:** [`3.2-data-validation-conditional-formatting.xlsx`](3.2-data-validation-conditional-formatting.xlsx)
+> **Level:** Intermediate · **Time:** about 120 minutes · **Workbook:** [`3.2-data-validation-conditional-formatting.xlsx`](3.2-data-validation-conditional-formatting.xlsx)
 > **Data:** A December 2025 Patient Access intake log with entry errors, STAT lab results from the three ICUs (Jul–Dec 2025), the system supply inventory (12/31/2025 snapshot), and Medical-Surgical 5 East's daily census (Nov–Dec 2025). The bonus adds a bed-huddle board for every inpatient unit. Column definitions are in the [data dictionary](../../data/README.md).
 
 A registrar who types "Self Pay" instead of "Self-Pay" creates a claim that bounces weeks later. An MRN that lost its

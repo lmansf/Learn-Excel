@@ -1,6 +1,6 @@
 # Lesson 6.1 · Capstone: Hospital Performance Review
 
-> **Level:** Expert · **Time:** about 180 minutes · **Workbook:** [`6.1-hospital-performance-review.xlsx`](6.1-hospital-performance-review.xlsx)
+> **Level:** Expert · **Time:** about 240 minutes · **Workbook:** [`6.1-hospital-performance-review.xlsx`](6.1-hospital-performance-review.xlsx)
 > **Data:** Bluestone Health System, 2025: 11,196 encounters discharged in 2025 and their 11,196 claims, 6,217 ED arrivals, 987 patient-experience survey rows (including a duplicated batch), 6,570 unit-days of census, and the Facilities, Departments, Diagnoses, and Payers lookup tables.
 
 Every January, a hospital's leaders ask the same question in a dozen forms: *how did we do last year?* The Chief Medical
@@ -62,7 +62,7 @@ about patients who died? Section 5 lists the agreed definitions for every KPI in
 
 Then follow a **work plan**. Each phase produces something you can check before you move on.
 
-| Phase | What you do | Practice tasks | Time | Review |
+| Phase | What you do | Practice tasks | Time | Lessons to review |
 |---|---|:-:|:-:|---|
 | 1. Plan | Read the brief, write the metric map, sketch the dashboard | — | 15 min | 4.6 |
 | 2. Prepare | Remove duplicates, add calculated and lookup columns, check row counts | 1, 2 (and the columns in 7, 8) | 35 min | 2.3, 2.6, 3.1, 3.3 |
@@ -75,11 +75,11 @@ You may use any tool from the course. Each one has strengths in this project:
 
 | Tool | Good for here | Watch out for |
 |---|---|---|
-| **Formulas** (COUNTIFS, SUMIFS, XLOOKUP, LET) | Exact KPI cells, selector-driven dashboard cards, sentences that update | Long formulas are hard to audit. Name steps with LET (4.2) |
-| **PivotTables** (3.4) | Fast exploration, ranking groups such as service lines, averages of 1/0 flags | No median. They don't refresh until you click **Refresh** |
-| **Power Query** (4.3) | Repeatable cleaning (remove duplicates, merges) when next month's extract arrives | Full editor on Windows. The Mac editor has fewer connectors |
-| **Data Model and DAX** (4.4) | Measures across related tables without lookup columns | Building the model needs Excel for Windows |
-| **VBA** (5.1–5.5) | The one-click refresh, the audit log, PDF export | Needs an .xlsm file and desktop Excel. Not available in Excel for the web |
+| **Formulas** (COUNTIFS, SUMIFS, XLOOKUP, LET) | Exact KPI cells, selector-driven dashboard cards, sentences that update | Long formulas are hard to audit. Name steps with LET (Lesson 4.2) |
+| **PivotTables** (Lesson 3.4) | Fast exploration, ranking groups such as service lines, averages of 1/0 flags | No median. They don't refresh until you click **Refresh** |
+| **Power Query** (Lesson 4.3) | Repeatable cleaning (remove duplicates, merges) when next month's extract arrives | Full editor on Windows. The Mac editor has fewer connectors |
+| **Data Model and DAX** (Lesson 4.4) | Measures across related tables without lookup columns | Building the model needs Excel for Windows |
+| **VBA** (Lessons 5.1–5.5) | The one-click refresh, the audit log, PDF export | Needs an .xlsm file and desktop Excel. Not available in Excel for the web |
 
 > 💡 **Tip:** Agree on the definitions with whoever asked the question *before* you present numbers. "Readmission rate"
 > without a definition invites a debate about the definition instead of a discussion about patients.
@@ -152,7 +152,7 @@ Preparation is where most real-world errors start, so work in a fixed order and 
 4. **Enrich** the facts with calculated columns and lookup columns.
 5. **Validate**: reconcile counts and spot-check a few rows by hand.
 
-#### 4.1 Profile before you trust
+#### 4a. Profile before you trust
 
 These quick checks take a minute and catch most extract problems:
 
@@ -167,7 +167,7 @@ These quick checks take a minute and catch most extract problems:
 XMATCH and UNIQUE need Microsoft 365 or Excel 2021+. In older versions, use
 `=SUMPRODUCT(--(COUNTIF(Encounters!A2:A11197,Claims!B2:B11197)=0))` for the join check, which is slower but works.
 
-#### 4.2 Remove duplicate rows
+#### 4b. Remove duplicate rows
 
 The survey vendor re-sent one month's file, so a block of rows at the bottom of Surveys repeats earlier rows exactly.
 Counting them twice would give that month's patients double weight in the top-box score.
@@ -192,7 +192,7 @@ Two non-destructive alternatives: `=UNIQUE(Surveys!A2:M988)` spills a de-duplica
 365 or Excel 2021+), and Power Query's **Home → Remove Rows → Remove Duplicates** step repeats the clean-up every time you
 refresh (Lesson 4.3).
 
-#### 4.3 Calculated columns
+#### 4c. Calculated columns
 
 A **calculated column** adds a value to every row from that row's own data. Excel stores a date-time as a day number with
 the time as a fraction, so subtracting two date-times gives a duration in days.
@@ -216,7 +216,7 @@ Encounters. The Table grows to include the new column (Lesson 3.1), and a formul
 > floating-point errors, so 39 minutes can come out as 38.99999999. ROUND in the helper column removes them. A
 > MEDIAN without ROUND still matches the answer key, because the checks allow for this.
 
-#### 4.4 Joins with XLOOKUP
+#### 4d. Joins with XLOOKUP
 
 A **join** brings a column from a lookup table into a fact table by matching keys. Three joins prepare everything this
 review needs:
@@ -237,8 +237,8 @@ The `$` signs lock the lookup ranges so they don't slide down as the formula fil
 |---|---|
 | Microsoft 365, Excel 2021 or later | XLOOKUP as above |
 | Excel 2019 or earlier | `=INDEX(Diagnoses!$D$2:$D$52,MATCH(H2,Diagnoses!$A$2:$A$52,0))` or `=VLOOKUP(H2,Diagnoses!$A$2:$D$52,4,FALSE)` |
-| Power Query | **Home → Merge Queries**, Left Outer join on the key, then expand the column (4.3) |
-| Data Model | A relationship in Diagram View, with no lookup column at all (4.4) |
+| Power Query | **Home → Merge Queries**, Left Outer join on the key, then expand the column (Lesson 4.3) |
+| Data Model | A relationship in Diagram View, with no lookup column at all (Lesson 4.4) |
 
 > ⚠️ **A blank result becomes 0.** Outpatient diagnoses such as E11.9 (type 2 diabetes) have no ExpectedLOS, and XLOOKUP
 > returns 0 for them, not a blank. The `if_not_found` argument doesn't help, because the code *was* found. Every 2025
@@ -248,7 +248,7 @@ The `$` signs lock the lookup ranges so they don't slide down as the formula fil
 > ⚠️ **#N/A means a key is missing.** If a lookup column shows #N/A, the fact table holds a code the lookup table lacks.
 > Don't hide it with IFERROR. Find out why, because a missing benchmark or department silently drops stays from a KPI.
 
-#### 4.5 Validate your preparation
+#### 4e. Validate your preparation
 
 Check each new column before you build on it:
 
@@ -275,6 +275,11 @@ expect them.
 | Finance | **Denial rate** | Claims with ClaimStatus Denied or Appealed | **Adjudicated claims**: every claim except Pending | An appealed claim was denied first |
 | Finance | **Net collection rate** | Sum of PaidAmount | Sum of AllowedAmount | Adjudicated claims only |
 
+> 📋 This review measures LOSDays as elapsed time in decimal days, the first of the three measures in Lesson 2.3.
+> Lessons 2.4, 2.5, 3.4, 5.3, and 5.4 counted midnights instead, and Lessons 4.2, 4.4, and 4.5 counted midnights with a
+> minimum of 1 day. So don't reuse the LOSDAYS LAMBDA from Lesson 4.2 or the LOSDAYS function from Lesson 5.4 here.
+> Counted in midnights with a 1-day minimum, Cedar Ridge's O/E index (task 7) comes out at 1.245 instead of 1.255.
+
 Small choices in a definition move the result. Here's the *system-wide* readmission rate under three choices:
 
 | Population | Index stays | Readmissions | Rate |
@@ -291,7 +296,7 @@ would show a false improvement, so the definition leaves it out until January's 
 Most KPIs in this review come from five patterns. Each worked example below uses a slice that isn't a Practice task, so
 you can follow along and then apply the same pattern yourself.
 
-#### 6.1 A rate is COUNTIFS ÷ COUNTIFS
+#### 6a. A rate is COUNTIFS ÷ COUNTIFS
 
 Write the denominator first, then copy it and add one more condition for the numerator. Two formulas with the same
 conditions can't drift apart.
@@ -313,7 +318,7 @@ To count several values of one column, give COUNTIF an **array constant** and ad
 treatment was finished are LWBS plus Left AMA:
 `=SUM(COUNTIF(ED_Visits!I2:I6218,{"LWBS","Left AMA"}))/COUNTA(ED_Visits!A2:A6218)` gives 146 ÷ 6,217 = **2.3%**.
 
-#### 6.2 Date-time windows
+#### 6b. Date-time windows
 
 DischargeDateTime holds a date *and* a time, and `DATE(2025,11,30)` means midnight at the start of November 30. So the
 end of a window needs `<` the next day:
@@ -326,7 +331,7 @@ end of a window needs `<` the next day:
 
 Start dates work the other way round: `">="&DATE(2025,7,1)` includes everything from midnight on July 1.
 
-#### 6.3 Ratios of totals: O/E, occupancy, ALOS
+#### 6c. Ratios of totals: O/E, occupancy, ALOS
 
 O/E, occupancy, and ALOS are all **a total divided by a total**. Add up the numerator over the whole population, add up the
 denominator, then divide once.
@@ -355,7 +360,7 @@ pool units, as in `{"D110","D111"}` for both Bluestone Memorial med-surg units (
 > short stays the same weight as large ones. Total ÷ total weights every bed-day and every patient-day equally. The same
 > rule appears in Lesson 1.4 for a single unit.
 
-#### 6.4 Medians with conditions
+#### 6d. Medians with conditions
 
 Excel has AVERAGEIFS but no MEDIANIFS. Put an IF *inside* MEDIAN instead: the IF returns the value on rows that pass and
 FALSE on the others, and MEDIAN ignores FALSE.
@@ -382,10 +387,10 @@ times are reported as medians. Add a second condition by multiplying, as in `(ED
 If you filled the DoorToProviderMin helper column, `=MEDIAN(IF(ED_Visits!C2:C6218="F01",ED_Visits!J2:J6218))` works
 too, because MEDIAN also ignores the "" text on LWBS rows.
 
-> ⚠️ A PivotTable can't show a median. Its **Summarize Values By** list has Average but no Median. In the Data Model, DAX
-> has a MEDIAN function (Lesson 4.4).
+> ⚠️ A PivotTable can't show a median. Its **Summarize Values By** list has Average but no Median. In the Data Model, a
+> measure can return a median, because DAX has a MEDIAN function. Lesson 4.4 shows how to write measures.
 
-#### 6.5 Which group is highest?
+#### 6e. Which group is highest?
 
 Questions such as "which service line has the highest readmission rate" need a rate *per group* and then the top group.
 There are three good routes:
@@ -419,7 +424,7 @@ ReadmitFlag in **Values** summarized by **Average**. Format the values as a perc
 The answer is **Self-Pay**, with 296 of 589 claims (50.3%) still pending. Patients paying for themselves pay slowly, which
 is a finding the CFO will want to see.
 
-#### 6.6 Where Power Query and DAX fit
+#### 6f. Where Power Query and DAX fit
 
 If you're comfortable with Lessons 4.3 and 4.4, you can build the same review as a model instead of with lookup columns:
 
@@ -462,7 +467,7 @@ The **Dashboard** sheet is your template. It's laid out the way an executive rea
 | H8:H19 | Your status formula: Met or Missed. The green and red formatting is already applied |
 | H2 | The refresh time, which your macro writes |
 
-#### 7.1 Make every card selector-driven
+#### 7a. Make every card selector-driven
 
 A **selector-driven formula** refers to the selector cell instead of a typed value, so one set of formulas serves every
 hospital. First turn the name into an ID:
@@ -477,7 +482,7 @@ Then write each card with `$C$5` wherever you would have typed "F01". A few patt
 |---|---|---|
 | ED visits | `=COUNTIF(ED_Visits!$C$2:$C$6218,$C$5)` | `=COUNTA(ED_Visits!$A$2:$A$6218)` |
 | ALOS | `=AVERAGEIFS(Encounters!$M$2:$M$11197,Encounters!$D$2:$D$11197,$C$5,Encounters!$C$2:$C$11197,"Inpatient")` | the same AVERAGEIFS without the FacilityID pair |
-| Readmission rate | section 6.1's formula with `$C$5` in place of `"F02"` | the same COUNTIFS ÷ COUNTIFS without the FacilityID pair |
+| Readmission rate | section 6a's formula with `$C$5` in place of `"F02"` | the same COUNTIFS ÷ COUNTIFS without the FacilityID pair |
 
 The finance rows are system-wide, because Claims has no FacilityID column, so put the same formula in D and E.
 
@@ -485,7 +490,7 @@ The finance rows are system-wide, because Claims has no FacilityID column, so pu
 > still contains a typed ID. A card that shows #N/A has a lookup that found nothing, and #DIV/0! means a denominator
 > condition matched no rows.
 
-#### 7.2 Status against target
+#### 7b. Status against target
 
 The Goal column tells one formula which direction is good:
 
@@ -497,7 +502,7 @@ The outer IF leaves the status blank until the card has a value. Without it, an 
 below every "≤" target, so the row would show Met. Copy the formula to every row that has a goal. Conditional formatting (Lesson 3.2) colors Met green and Missed red. To change the
 colors, select H8:H19 and choose **Home → Conditional Formatting → Manage Rules**.
 
-#### 7.3 Add a chart
+#### 7c. Add a chart
 
 Build a small table that lists each hospital's O/E index or readmission rate, select it, and insert a **Clustered
 Column** chart from **Insert → Charts** (Lesson 3.5). Follow three rules:
@@ -507,7 +512,7 @@ Column** chart from **Insert → Charts** (Lesson 3.5). Follow three rules:
 - Write the message in the title, for example "Every hospital runs above the LOS benchmark".
 - Use one color, and use a second color only for the bar you want the reader to notice.
 
-#### 7.4 Finish and share
+#### 7d. Finish and share
 
 1. Delete the build notes under the KPI table. The Dashboard already hides gridlines. On any sheet you add for
    readers, clear **View → Gridlines** so the page reads as a report.
@@ -524,7 +529,7 @@ Column** chart from **Insert → Charts** (Lesson 3.5). Follow three rules:
 Next month the extracts will be replaced and the review rerun. A **refresh macro** turns that into one click and leaves an
 **audit row**, a record of what was loaded and when, so you can prove the dashboard reflects complete data.
 
-#### 8.1 Set up and run
+#### 8a. Set up and run
 
 1. Save your workbook as **Excel Macro-Enabled Workbook (\*.xlsm)** with **File → Save As**. An .xlsx file can't keep
    code.
@@ -542,7 +547,7 @@ The finished module is in [`solutions/RefreshReview_Solution.bas`](solutions/Ref
 so try the starter first. If you import the solution as well, remove the starter module first, because both are named
 modRefresh.
 
-#### 8.2 What the macro does
+#### 8b. What the macro does
 
 | Step | Code | Why |
 |---|---|---|
@@ -601,7 +606,7 @@ Index stays discharged Jan 1 – Nov 30, 2025. [n] duplicate surveys removed. Sy
 Write each finding so that it would survive a challenge. Give the number *and* its denominator ("58 of 323 stays"), compare
 it to something, and state the definition you used. Say so when a group is small or two groups are close.
 
-#### 9.1 Link the numbers with TEXT
+#### 9a. Link the numbers with TEXT
 
 A summary that retypes numbers goes stale the moment the data refreshes. Build each sentence with a formula instead:
 
@@ -684,7 +689,7 @@ The tasks follow the work plan in the lesson guide: 1–2 prepare the data, 3–
 | 9 | Finance. What was the claim denial rate? Count claims whose ClaimStatus is Denied or Appealed, and divide by adjudicated claims (every claim except Pending). Enter it as a percentage to 1 decimal place. | COUNTIF with an array constant for the two statuses, and "<>Pending" for the denominator |
 | 10 | Finance. What was the net collection rate: total PaidAmount ÷ total AllowedAmount over adjudicated claims (ClaimStatus is not Pending)? Enter it as a percentage to 1 decimal place. | SUMIFS ÷ SUMIFS with the same "<>Pending" condition |
 | 11 | Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name chosen in C4 into its FacilityID. Then make the LWBS % card (D10) a formula driven by C5: ED visits with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. The gray answer cell here shows Dashboard!D10. | XLOOKUP the name on Facilities. Then COUNTIFS(…,\$C\$5,…,"LWBS") ÷ COUNTIF(…,\$C\$5) |
-| 12 | Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after duplicates are removed. The gray cell adds B2:E2. If a test run logged wrong counts, delete the RefreshLog sheet and run the macro again. | Guide section 8.2 lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp) |
+| 12 | Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after duplicates are removed. The gray cell adds B2:E2. If a test run logged wrong counts, delete the RefreshLog sheet and run the macro again. | Guide section 8b lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp) |
 | 13 | Deliverable · executive summary. In the yellow cell, write a formula that builds this sentence, so it updates whenever the data changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the task 9 denial rate. The top reason is the DenialReason that appears most often among Denied or Appealed claims, and the second % is its share of those claims. Format both percentages with TEXT(…,"0.0%"). The formula may refer to helper cells, such as a small table of denials by reason. | TEXT(x,"0.0%") and &. For the top reason, a small COUNTIFS table plus INDEX/MATCH/MAX, or LET + UNIQUE |
 <!-- END GENERATED: practice -->
 
@@ -779,7 +784,7 @@ In N2 type `=XLOOKUP(H2,Diagnoses!$A$2:$A$52,Diagnoses!$D$2:$D$52)` (or `=INDEX(
 5. In D2, `=IF(B2=0,"",C2/B2)` and copy down. Sort by D (largest first), or use `=INDEX(A2:A13,MATCH(MAX(D2:D13),D2:D13,0))`.
 
 
-Critical Care (19.9% of 166 index stays) edges out Cardiovascular (19.5% of 308). If you leave Expired stays in the population, Cardiovascular comes out on top instead (19.0% against 18.3%), which shows why the definition must be fixed before anyone ranks anything. Adding December discharges keeps Critical Care first but shrinks its lead to 19.0% against 18.8%. A **PivotTable** works too: add two helper columns, `IndexStay` (1 when the stay meets the definition) and `ReadmitFlag` (1 when Readmit30 = Y), as guide section 6.5 shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of ReadmitFlag in Values. In an executive summary, say that the top two are within half a point and that Critical Care has fewer stays, so its rate is less certain. Don't present it as the clear outlier.
+Critical Care (19.9% of 166 index stays) edges out Cardiovascular (19.5% of 308). If you leave Expired stays in the population, Cardiovascular comes out on top instead (19.0% against 18.3%), which shows why the definition must be fixed before anyone ranks anything. Adding December discharges keeps Critical Care first but shrinks its lead to 19.0% against 18.8%. A **PivotTable** works too: add two helper columns, `IndexStay` (1 when the stay meets the definition) and `ReadmitFlag` (1 when Readmit30 = Y), as guide section 6e shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of ReadmitFlag in Values. In an executive summary, say that the top two are within half a point and that Critical Care has fewer stays, so its rate is less certain. Don't present it as the clear outlier.
 
 **9. Denial rate (adjudicated claims)**
 
@@ -892,7 +897,7 @@ Expected: 11,196 + 6,217 + 11,196 + 917 = 29,526. The full module, with the Data
 ```
 
 
-Expected text: **Denial rate 11.5%; top reason Authorization Required (34.6% of denials)**. The simplest route links to cells you already built: `="Denial rate "&TEXT(Practice!D14,"0.0%")&"; top reason "&G2&" ("&TEXT(H2,"0.0%")&" of denials)"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table (guide section 6.5), and D14 is your task 9 answer. The one-formula version above needs no helper cells. It uses **LET** to name each step: it filters the reasons of denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid ones, makes Coding Error the top reason, because partial payments carry reasons too. Among real denials, Authorization Required (395 claims) leads Medical Necessity. Text built with TEXT and & refreshes with the data, so the summary never quotes a stale number.
+Expected text: **Denial rate 11.5%; top reason Authorization Required (34.6% of denials)**. The simplest route links to cells you already built: `="Denial rate "&TEXT(Practice!D14,"0.0%")&"; top reason "&G2&" ("&TEXT(H2,"0.0%")&" of denials)"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table (guide section 6e), and D14 is your task 9 answer. The one-formula version above needs no helper cells. It uses **LET** to name each step: it filters the reasons of denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid ones, makes Coding Error the top reason, because partial payments carry reasons too. Among real denials, Authorization Required (395 claims) leads Medical Necessity. Text built with TEXT and & refreshes with the data, so the summary never quotes a stale number.
 
 </details>
 <!-- END GENERATED: answers -->
