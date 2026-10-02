@@ -394,9 +394,10 @@ def build() -> Lesson:
     # ======================================================================== tasks
     L.practice_intro = (
         "Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green "
-        f"only while the Model holds its base-case inputs ({VISITS_PER_DAY} visits per day, Commercial ${rate['Commercial']}, and so on). After each "
-        "Goal Seek run, click Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't "
-        "feed the Model, so you can keep Solver's solutions there.")
+        f"only while the Model holds its base-case inputs ({VISITS_PER_DAY} visits per day, Commercial ${rate['Commercial']}, and so on). The same "
+        "is true of any answer you type as a link to a Model cell, such as =Model!H11. After each Goal Seek run, click "
+        "Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't feed the Model, so "
+        "you can keep Solver's solutions there.")
 
     t_oi = Task(
         f"On the Model sheet, complete the yellow Operating income cell ({OI}): net patient revenue minus total operating "
@@ -413,7 +414,7 @@ def build() -> Lesson:
                     "hospital-owned primary care, which is why the rest of the lesson asks what it would take to break even.")
     t_margin = Task(
         f"Complete the yellow Operating margin cell ({MARGIN}): operating income as a share of net patient revenue. "
-        "What is the base-case operating margin? (Format it as a percentage.)",
+        "What is the base-case operating margin? The cell is already formatted as a percentage.",
         answer=base["margin"], fmt=PCT1, title="Operating margin (Model!B60)",
         solution=f"=B{R['oi']}/B{R['rev']}",
         summary=f'=IF(Model!{MARGIN}="","",Model!{MARGIN})',
@@ -428,21 +429,24 @@ def build() -> Lesson:
         "points to the input. Task 10 depends on the fix.",
         answer=f"B{R['c_fee']}", accept=[f"$B${R['c_fee']}", f"Model!B{R['c_fee']}", f"Model!$B${R['c_fee']}"],
         title="Find the hard-coded number",
-        solution=f"1. Press **Ctrl + `** (Mac: **⌃ + `**) to show formulas, and read down rows {R['vpm']}–{R['exp']}.\n"
+        # No literal grave-accent shortcut here: two lone backticks on one line pair up into a code span on GitHub.
+        solution=f"1. On the Model sheet, choose **Formulas → Show Formulas** (or press the Show Formulas shortcut from "
+                 f"section 2), and read down rows {R['vpm']}–{R['exp']}.\n"
                  f"2. B{R['c_fee']} reads `=NetRevenue*0.04`. The 4% is typed in, although the fee has its own input cell, "
                  f"B{R['fee']}.\n"
-                 f"3. Change B{R['c_fee']} to `=NetRevenue*BillingFeePct` (or `=B{R['rev']}*B{R['fee']}`), then press Ctrl + ` "
-                 "again to show values.",
+                 f"3. Change B{R['c_fee']} to `=NetRevenue*BillingFeePct` (or `=B{R['rev']}*B{R['fee']}`), then turn "
+                 "**Show Formulas** off again to see values.",
         live=False, hint="Show Formulas, or Trace Dependents on each input",
         explanation=f"Today both versions return the same number, so nothing looks wrong. The trouble starts when someone changes "
                     f"the fee input in B{R['fee']}: the model ignores it. Another way to catch this is **Formulas → Trace "
                     f"Dependents** on B{R['fee']}. Excel draws no arrows and tells you no formula refers to the active cell, "
                     "because no formula reads that input.")
     t_be = Task(
-        "Use Goal Seek to find the break-even volume: set Operating income to 0 by changing Visits per day (Model!B8). "
-        f"How many visits per day does the clinic need? Round to 1 decimal place, then click Cancel to restore {VISITS_PER_DAY}.",
+        f"On the Model sheet, use Goal Seek to find the break-even volume: set Operating income ({OI}) to 0 by "
+        f"changing Visits per day (B{R['vpd']}). How many visits per day does the clinic need? Round to 1 decimal place, "
+        f"then click Cancel to restore {VISITS_PER_DAY}.",
         answer=round(breakeven_vpd, 1), fmt="0.0", tol=0.051, title="Goal Seek: break-even visits per day",
-        solution=f"1. Choose **Data → What-If Analysis → Goal Seek**.\n"
+        solution=f"1. On the Model sheet, choose **Data → What-If Analysis → Goal Seek**.\n"
                  f"2. **Set cell:** `{OI}` · **To value:** `0` · **By changing cell:** `B{R['vpd']}`.\n"
                  f"3. Click **OK**. B{R['vpd']} shows {breakeven_vpd:.1f} (the cell holds {breakeven_vpd:.4f}…). Note it, "
                  "then click **Cancel**.",
@@ -459,12 +463,12 @@ def build() -> Lesson:
                     f"{MD_FTE * MD_VPD + APP_FTE * APP_VPD}-visit daily capacity, so volume alone is a fragile fix. The live "
                     "result in the key does this algebra, and Goal Seek reaches the same answer by trial and error.")
     t_rate = Task(
-        "The CFO is renegotiating commercial contracts. Use Goal Seek to set Operating margin to 5% (type 0.05) by changing "
-        f"the Commercial $ per visit (Model!C{COM_ROW}). What commercial reimbursement per visit is needed? Round to the "
-        f"nearest dollar, then click Cancel to restore ${rate['Commercial']}.",
+        f"The CFO is renegotiating commercial contracts. On the Model sheet, use Goal Seek to set Operating margin ({MARGIN}) "
+        f"to 5% (type 0.05) by changing the Commercial $ per visit (C{COM_ROW}). What commercial reimbursement per visit is "
+        f"needed? Round to the nearest dollar, then click Cancel to restore ${rate['Commercial']}.",
         answer=round(comm_rate_5, 2), fmt=MONEY2, tol=0.8, title="Goal Seek: commercial rate for a 5% margin",
         answer_display=f"about ${comm_rate_5:,.0f} (Goal Seek shows {comm_rate_5:,.2f})",
-        solution=f"1. **Data → What-If Analysis → Goal Seek**.\n"
+        solution=f"1. On the Model sheet, choose **Data → What-If Analysis → Goal Seek**.\n"
                  f"2. **Set cell:** `{MARGIN}` · **To value:** `0.05` · **By changing cell:** `C{COM_ROW}`.\n"
                  f"3. Click **OK**, read C{COM_ROW}, and click **Cancel**.",
         live=(f"=Model!C{COM_ROW}+(({m('exp')}-{m('c_fee')})/(1-{m('c_fee')}/{m('rev')}-0.05)/{m('vpm')}-{m('avg')})"
@@ -558,9 +562,10 @@ def build() -> Lesson:
         f"On the Staffing sheet, use Solver to minimize the monthly staff cost (B{S['objective']}) by changing the RN, LPN, "
         f"and CNA FTEs (B{S['rn']}:B{S['cna']}), subject to the three constraints in rows {S['c_total']}–{S['c_rn']} "
         f"(leave out the CNA cap in row {S['c_cap']}). Keep Make Unconstrained Variables Non-Negative ticked and choose "
-        "Simplex LP. What is the minimum monthly cost? Round to the nearest dollar.",
+        "Simplex LP. What is the minimum monthly cost? Round to the nearest dollar, and type the number rather than a link "
+        f"to B{S['objective']}, because the bonus runs Solver on this sheet again.",
         answer=round(float(lp_cost)), tol=0.51, fmt="#,##0", title="Solver: lowest-cost staffing mix (FTEs)",
-        solution=f"1. Choose **Data → Solver**.\n"
+        solution=f"1. On the Staffing sheet, choose **Data → Solver**.\n"
                  f"2. **Set Objective:** `$B${S['objective']}` · **To:** Min · **By Changing Variable Cells:** "
                  f"`$B${S['rn']}:$B${S['cna']}`.\n"
                  f"3. Click **Add** and enter `$B${S['c_total']}:$B${S['c_rn']}` **>=** `$D${S['c_total']}:$D${S['c_rn']}`, "
@@ -578,9 +583,8 @@ def build() -> Lesson:
                     f"{float(lp_x[2]):.1f} CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every "
                     "hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN "
                     f"minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs {money(float(current_cost))}, so "
-                    f"the plan saves about {money(float(current_cost - lp_cost))} a month. Type the number rather than "
-                    f"pointing at B{S['objective']}, because the bonus runs Solver on the same sheet again. The key's live "
-                    "result rebuilds this optimum with algebra from the Staffing sheet's own cells.")
+                    f"the plan saves about {money(float(current_cost - lp_cost))} a month. The key's live result rebuilds "
+                    "this optimum with algebra from the Staffing sheet's own cells.")
     t_shadow = Task(
         f"Run Solver again (same setup) and select Sensitivity under Reports before you click OK. On the Sensitivity Report "
         f"sheet, what is the Shadow Price of the Total support hours constraint (Staffing!B{S['c_total']})? Enter it in "
@@ -604,10 +608,11 @@ def build() -> Lesson:
     # ======================================================================== bonus
     L.bonus_title = "Bonus: Staff the 2026 growth plan"
     L.bonus_scenario = (
-        f"Bluestone wants the Primary Care Clinic to grow to {GROWTH_VPD} visits per day in 2026 by adding a fourth APP "
-        f"(capacity rises from {MD_FTE * MD_VPD + APP_FTE * APP_VPD} to {MD_FTE * MD_VPD + GROWTH_APP * APP_VPD} visits per "
-        f"day). HR hires whole people, so every role needs a whole number of 1.0-FTE staff. Only {CNA_CAP} CNA positions "
-        f"are approved (Staffing!B{S['cap']}). Find the cheapest staffing plan, then test the full plan in the P&L.")
+        f"Bluestone wants the Primary Care Clinic to grow to {GROWTH_VPD} visits per day in 2026 by adding a fourth advanced "
+        f"practice provider (APP: a nurse practitioner or physician assistant). Capacity rises from "
+        f"{MD_FTE * MD_VPD + APP_FTE * APP_VPD} to {MD_FTE * MD_VPD + GROWTH_APP * APP_VPD} visits per day. HR hires whole "
+        f"people, so every role needs a whole number of 1.0-FTE staff. Only {CNA_CAP} CNA positions are approved "
+        f"(Staffing!B{S['cap']}). Find the cheapest staffing plan, then test the full plan in the Model's P&L.")
     L.bonus = [
         Task(f"On the Staffing sheet, change B{S['vpd']} to {GROWTH_VPD}. Re-run Solver with two more constraints: "
              f"B{S['rn']}:B{S['cna']} = int (integer) and B{S['c_cap']} <= D{S['c_cap']} (the CNA cap). In Solver Options, set "
@@ -619,17 +624,18 @@ def build() -> Lesson:
                       "4. **Options** → *All Methods* tab → **Integer Optimality (%)** = 0 → **OK**. Check that **Ignore "
                       "Integer Constraints** is not ticked.\n"
                       f"5. **Solve**, keep the solution, and read B{S['objective']}.",
-             live=False, hint="Add an int constraint on the three variable cells",
+             live=False,
+             hint="In Add Constraint, pick int from the middle list. Integer Optimality is on the All Methods tab of Options",
              explanation=f"With fractions allowed, the cheapest plan costs {money(float(g_lp_cost))} "
                          f"({float(g_lp_x[0]):.1f} RN, {float(g_lp_x[1]):.1f} LPN, {float(g_lp_x[2]):.1f} CNA). Requiring "
-                         f"whole people raises that to {money(float(g_int_cost))}, so indivisibility costs "
-                         f"{money(float(g_int_cost - g_lp_cost))} a month. Solver handles integer constraints by "
+                         f"whole people raises that to {money(float(g_int_cost))}, so hiring whole people costs "
+                         f"{money(float(g_int_cost - g_lp_cost))} a month more. Solver handles integer constraints by "
                          "**branch and bound**, solving many LPs with tighter and tighter bounds. Its default Integer "
                          "Optimality of 1% lets it stop at any plan within 1% of the best possible, so set it to 0 when "
                          "the exact answer matters."),
         Task("How many RNs does that plan hire?", answer=g_rn, title="Integer plan: RNs",
              solution=f"Read Staffing!B{S['rn']} after Solver finishes.", live=False,
-             hint=f"Look at B{S['rn']}",
+             hint=f"Read Staffing!B{S['rn']}. The RN rule in row {S['c_rn']} should still say OK",
              explanation=f"{g_rn} RNs out of {g_rn + g_lpn} licensed staff is {g_rn / (g_rn + g_lpn):.1%}, which meets the "
                          "60% rule."),
         Task("How many LPNs does that plan hire?", answer=g_lpn, title="Integer plan: LPNs",
@@ -644,28 +650,36 @@ def build() -> Lesson:
                             if not naive_ok else "")
                          + "Rounding each variable separately can't see how the constraints interact, but Solver's "
                            "integer search can."),
-        Task(f"Test the plan in the P&L. On the Model, add two more scenarios that change B{R['vpd']}, B{R['app']} and "
-             f"B{R['rn']}:B{R['cna']}: Today ({VISITS_PER_DAY}, {APP_FTE}, {RN_FTE}, {LPN_FTE}, {CNA_FTE}) and Growth 2026 "
-             f"({GROWTH_VPD}, {GROWTH_APP}, and your RN, LPN, "
-             "and CNA counts). What operating income does Growth 2026 produce? Round to the nearest dollar.",
+        Task(f"Test the plan in the P&L. On the Model, first select the Base plan scenario and click Show, so the payer mix "
+             f"and billing fee are back at their base values. Then add two more scenarios that change B{R['vpd']}, "
+             f"B{R['app']}, and B{R['rn']}:B{R['cna']} (visits per day, APP FTEs, and RN, LPN, and CNA FTEs, in that order): "
+             f"Today ({VISITS_PER_DAY}, {APP_FTE}, {RN_FTE}, {LPN_FTE}, {CNA_FTE}) and Growth 2026 ({GROWTH_VPD}, "
+             f"{GROWTH_APP}, and the RN, LPN, and CNA counts in Staffing!B{S['rn']}:B{S['cna']}). What operating income does "
+             "Growth 2026 produce? Round to the nearest dollar.",
              answer=round(growth["oi"]), tol=0.51, fmt="#,##0", title="Growth 2026 scenario: operating income",
-             solution=f"1. On the Model, select B{R['vpd']}, B{R['app']} and B{R['rn']}:B{R['cna']} (Ctrl-click, or "
-                      "⌘-click on a Mac).\n"
-                      f"2. **Scenario Manager → Add…** *Today*: {VISITS_PER_DAY}, {APP_FTE}, {RN_FTE}, {LPN_FTE}, {CNA_FTE}.\n"
-                      f"3. **Add…** *Growth 2026*: {GROWTH_VPD}, {GROWTH_APP}, {g_rn}, {g_lpn}, {g_cna}.\n"
-                      f"4. **Summary…** with result cells `B{R['oi']},B{R['margin']}`, or select Growth 2026, click "
+             solution=f"1. On the Model, open **Scenario Manager**, select *Base plan*, and click **Show**. Close the "
+                      "dialog.\n"
+                      f"2. Select B{R['vpd']}, B{R['app']}, and B{R['rn']}:B{R['cna']} (Ctrl-click, or ⌘-click on a Mac).\n"
+                      f"3. **Scenario Manager → Add…** *Today*: {VISITS_PER_DAY}, {APP_FTE}, {RN_FTE}, {LPN_FTE}, {CNA_FTE}.\n"
+                      f"4. **Add…** *Growth 2026*: {GROWTH_VPD}, {GROWTH_APP}, {g_rn}, {g_lpn}, {g_cna}.\n"
+                      f"5. **Summary…** with result cells `B{R['oi']},B{R['margin']}`, or select Growth 2026, click "
                       f"**Show**, read B{R['oi']}, then **Show** Today to restore the base case.",
-             live=False, hint="Scenario Manager can switch five inputs at once, and switch them back",
+             live=False,
+             hint="A scenario changes only its own cells. Every other input keeps the value it has when you click Show",
              explanation=f"The growth plan turns a {money(base['oi'])} monthly loss into {money(growth['oi'])} "
                          f"({growth['margin']:.1%} margin). The new APP costs ${APP_SALARY:,} plus benefits, and the larger "
                          f"staff costs {money(float(g_int_cost - current_cost))} more a month than today's. The extra "
                          f"{(GROWTH_VPD - VISITS_PER_DAY) * CLINIC_DAYS} visits a month each contribute "
-                         f"{money2(base['cm'])}, which covers both. Using scenarios instead of overwriting inputs means one "
-                         "click (Show Today) puts the base case back for every other task."),
+                         f"{money2(base['cm'])}, which covers both. Growth 2026 changes only its five cells, so it "
+                         "inherits the payer mix and billing fee already on the Model. If Upside was the last scenario you "
+                         "showed, Growth 2026 would quietly use Upside's mix and fee, which is why you show Base plan first. "
+                         "Using scenarios instead of overwriting inputs also means one click (Show Today) puts the base case "
+                         "back for every other task."),
     ]
 
     L.start_notes = [
-        "Model is the clinic's monthly P&L, laid out as INPUTS (blue numbers), CALCULATIONS (black formulas), and OUTPUTS. You "
+        "Model is the clinic's monthly profit and loss (P&L) model, laid out as INPUTS (blue numbers), CALCULATIONS (black "
+        "formulas), and OUTPUTS. You "
         "complete two yellow output cells and build two Data Tables in the Sensitivity area (columns F–K).",
         "Staffing is a Solver worksheet. The green cells are the decision variables that Solver changes. Sources lists where "
         "every data-derived input came from.",

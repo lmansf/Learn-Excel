@@ -1,7 +1,7 @@
 # Lesson 3.3 · Cleaning Messy Data
 
 > **Level:** Intermediate · **Time:** about 60 minutes · **Workbook:** [`3.3-data-cleaning.xlsx`](3.3-data-cleaning.xlsx)
-> **Data:** A 650-row patient registration export from Bluestone's legacy registration system (names, DOBs, phones, insurance, and MRNs typed every which way, plus duplicates), a payer mapping table, a one-week bed-board census export, and a 116-line lab interface feed from Cedar Ridge Medical Center.
+> **Data:** A 650-row patient registration export from Bluestone's legacy registration system (names, DOBs, phones, insurance, and MRNs typed every which way, plus duplicates), a payer mapping table, a one-week bed-board census export, and a 116-line lab interface feed from Cedar Ridge Medical Center. The raw export is also available as [`data/messy/patient_registrations_raw.csv`](../../data/messy/patient_registrations_raw.csv), and the [data dictionary](../../data/README.md) describes every course file.
 
 Every hospital report starts with data that someone typed or some system exported. Registration clerks type names in capitals or
 in lowercase, an old interface strips the leading zeros from MRNs, and one insurance plan ends up spelled five different ways.
@@ -58,18 +58,22 @@ To copy a sheet, right-click its tab → **Move or Copy…** → tick **Create a
 
 Raw and Clean share the same columns and rows, so a worked example below such as `=TRIM(B10)` means "row 10's PatientName". Try
 the examples on the Clean sheet in column V or further right, never on Raw. Keep them out of the yellow columns, because a formula
-typed into an empty Table column fills the whole column (a **calculated column**, Lesson 3.1). Keep them out of column T too,
-because typing right next to a Table adds that column to the Table.
+typed into an empty Table column fills the whole column (a **calculated column**, [Lesson 3.1](../01-tables-named-ranges/README.md)).
+Keep them out of column T too, because typing right next to a Table adds that column to the Table.
+
+If you point at a cell with the mouse while you build a formula in a yellow column, Excel writes a structured reference such as
+`=TRIM([@PatientName])` instead of `=TRIM(B2)`. From column V, outside the Table, it writes `tblClean[@PatientName]`. All of
+these mean "this row's PatientName", so any form is correct. The answer key uses the A1 form because it is shorter.
 
 Cleaning in new columns, instead of overwriting the messy ones, has three advantages. You see the before and after side by side,
 the logic is visible in the formula bar, and you can fix a mistake by editing one formula. When the clean data is final, you can
-freeze it: select the clean columns, copy them, and use **Paste Special → Values** (Ctrl + Alt + V, then V and Enter.
-Mac: ⌃ + ⌘ + V).
+freeze it: select the clean columns, copy them, press Ctrl + Alt + V (Mac: ⌃ + ⌘ + V) to open **Paste Special**, choose
+**Values**, and click **OK**.
 
 > 📋 **Why Raw is all text.** When you double-click a CSV file, Excel converts values as it opens them: `04979796` becomes the
 > number 4979796, `03-Apr-1957` becomes a date, `01.11.2003` stays text, and long ID numbers lose every digit after the 15th. The
 > Raw sheet keeps every value exactly as the source system wrote it, which is what you get when every column is imported as Text
-> (Lesson 4.3 shows how with Power Query). In Microsoft 365 you can switch some of these conversions off under **File → Options →
+> ([Lesson 4.3](../../04-advanced-analysis/03-power-query/README.md) shows how with Power Query). In Microsoft 365 you can switch some of these conversions off under **File → Options →
 > Data → Automatic data conversion** (Mac: **Excel → Preferences → Edit**).
 
 ### 3. Profile before you fix
@@ -94,9 +98,10 @@ On the Insurance column the answer is **37**: 25 rows of `Medicare ` and 12 rows
 trailing space. In Microsoft 365, `=SUM(…)` works in place of SUMPRODUCT.
 
 **Two traps while profiling.** The filter dropdown and UNIQUE both ignore capitals, so `F` and `f` appear as one entry. To count
-case problems, use **EXACT**, which compares two texts character by character and is case-sensitive. Spaces, on the other hand, do
-count, so `F` and `·F` (with a leading space) appear as separate entries. Also glance at the **status bar** when you select a column. If it shows only
-*Count* and no *Sum* or *Average*, nothing in the selection is a number, so a column of "dates" is really text.
+case problems, use **EXACT**, which compares two texts character by character and is case-sensitive. Spaces, on the other hand,
+do count, so `F` and `·F` (with a leading space) appear as separate entries. Also glance at the **status bar** when you select a
+column. If it shows only *Count* and no *Sum* or *Average*, nothing in the selection is a number, so a column of "dates" is
+really text.
 
 Here is what profiling finds in the Raw sheet (each `·` below marks a space):
 
@@ -119,12 +124,13 @@ placeholders you found in your log.
 
 ### 4. Spaces and capitals
 
-Lesson 2.2 introduced these functions one cell at a time. In cleaning you apply them to whole columns:
+[Lesson 2.2](../../02-formulas-functions/02-text-functions/README.md) introduced these functions one cell at a time. In cleaning
+you apply them to whole columns:
 
 | Function | What it does | Use it for |
 |---|---|---|
 | `TRIM(text)` | Removes spaces at both ends and shrinks inner runs of spaces to one | Every text column |
-| `CLEAN(text)` | Removes non-printing characters such as line breaks | Text pasted from EHR notes |
+| `CLEAN(text)` | Removes non-printing characters such as line breaks | Text pasted from electronic health record (EHR) notes |
 | `SUBSTITUTE(text,UNICHAR(160)," ")` | Turns non-breaking spaces into normal ones, which TRIM can then remove | Text copied from web pages |
 | `UPPER(text)` | ALL CAPITALS | Codes such as sex, state, or lookup keys |
 | `LOWER(text)` | all lowercase | Email addresses |
@@ -219,7 +225,7 @@ Two kinds of data look like numbers, and they need opposite treatment:
 | Kind | Examples | Store as | Why |
 |---|---|---|---|
 | **Quantities** | Charges, lab results, census counts, doses | Numbers | You add, average, and compare them |
-| **Identifiers** | MRN, ZIP, phone, NPI, account number | Text | Leading zeros matter, nobody adds MRNs, and IDs longer than 15 digits lose precision as numbers |
+| **Identifiers** | MRN, ZIP, phone, NPI (National Provider Identifier), account number | Text | Leading zeros matter, nobody adds MRNs, and IDs longer than 15 digits lose precision as numbers |
 
 **Spotting numbers stored as text.** They line up on the left, Excel marks them with a small green triangle (*Number Stored as
 Text*), SUM ignores them, and COUNT is lower than COUNTA. `=ISTEXT(A2)` tells you for sure.
@@ -231,7 +237,7 @@ Text*), SUM ignores them, and COUNT is lower than COUNTA. `=ISTEXT(A2)` tells yo
 | VALUE | `=VALUE(A2)` | A number, in a new column |
 | Double minus | `=--A2` | The same, shorter |
 | Error button | Select the cells, click the warning icon → **Convert to Number** | Converted in place |
-| Paste Special → Multiply | Copy a cell that contains 1, select the cells, then Paste Special → **Multiply** (Lesson 1.2) | Converted in place |
+| Paste Special → Multiply | Copy a cell that contains 1, select the cells, then Paste Special → **Multiply** ([Lesson 1.2](../../01-foundations/02-data-entry-autofill/README.md)) | Converted in place |
 | Text to Columns | Select one column → **Data → Text to Columns** → **Finish** | Converted in place (section 10) |
 
 **When identifiers have lost their zeros,** rebuild them as text. Row 11's MRN is `1955231`:
@@ -245,7 +251,8 @@ Both formulas leave an MRN that is already correct, like `05927600`, unchanged. 
 (`MRN-05927600`), so remove that with SUBSTITUTE before you pad.
 
 > ⚠️ A custom number format of `00000000` only changes what you see. The cell still stores 1955231, and an XLOOKUP for `"01955231"`
-> won't find it, because lookups treat the number 1955231 and the text `01955231` as different values (Lesson 2.2, section 8).
+> won't find it, because lookups treat the number 1955231 and the text `01955231` as different values
+> ([Lesson 2.6](../../02-formulas-functions/06-lookup-functions/README.md), section 8).
 
 > ⚠️ **Find & Replace can strip zeros too.** If you replace `MRN-` with nothing in a General-formatted column, Excel re-reads each
 > result as if you had typed it, so `05927600` becomes the number 5927600. Format the column as Text first (**Home → Number Format
@@ -256,14 +263,20 @@ Both formulas leave an MRN that is already correct, like `05927600`, unchanged. 
 A **text date** looks like a date but is stored as characters. The signs: it sits on the left of the cell, changing the number
 format does nothing, it sorts alphabetically (so `01.11.2003` lands above `08/06/1989`), and `=COUNT(Raw!C2:C651)` returns 0.
 
-Three functions turn date text into real dates and times, which Excel stores as serial numbers (Lesson 2.3). Format the results as
-dates with **Home → Number Format → Short Date**.
+Three functions turn date text into real dates and times, which Excel stores as serial numbers
+([Lesson 2.3](../../02-formulas-functions/03-date-time-functions/README.md)). Format the results as dates with
+**Home → Number Format → Short Date**.
 
 | Function | Reads | Example | Result |
 |---|---|---|---|
 | `DATEVALUE(text)` | A date. Any time in the text is ignored | `=DATEVALUE("3/22/1961")` | 22362 (3/22/1961) |
 | `VALUE(text)` or `--text` | A date, a time, or both | `=VALUE("05/30/2022 05:42 PM")` | 44711.7375 |
 | `TIMEVALUE(text)` | A time | `=TIMEVALUE("05:42 PM")` | 0.7375 (17:42) |
+
+A **date-time** is the date's serial number plus the time's fraction of a day: 44711.7375 is 5/30/2022 (44711) plus 17:42
+(0.7375). So when the date and the time need different handling, convert them separately and add them.
+`=DATE(2022,5,30)+TIMEVALUE("05:42 PM")` returns the same 44711.7375. Format a date-time column with a custom format such as
+`mm/dd/yyyy hh:mm` to see both parts.
 
 **How DATEVALUE reads the five DOB layouts** on a computer with U.S. regional settings:
 
@@ -302,7 +315,7 @@ Two tricks complete the table:
   has the separators in the same positions, so LEFT and MID still work on the original text.
 
 To choose between the layouts, test where the first dash is. `MID(C2,5,1)="-"` is TRUE only for ISO dates, and `MID(C2,3,1)="-"`
-only for `03-Apr-1957`. Nest the tests in IF (Lesson 2.1), and you have practice task 11's formula. LEFT, MID, and RIGHT return
+only for `03-Apr-1957`. Nest the tests in IF ([Lesson 2.1](../../02-formulas-functions/01-logical-functions/README.md)), and you have practice task 11's formula. LEFT, MID, and RIGHT return
 text, but DATE accepts text digits like `"1961"` and converts them for you.
 
 > ⚠️ **DATE never complains.** `=DATE(1961,22,3)` doesn't return an error. It returns 10/3/1962, because month 22 rolls over into
@@ -344,7 +357,8 @@ To build and use a map:
 1. **List the distinct spellings.** Copy the column to an empty sheet and run **Data → Remove Duplicates**, or in Microsoft 365
    type `=UNIQUE(TRIM(Raw!H2:H651))`. Both ignore capitals. UNIQUE(TRIM(…)) returns 19 spellings, one for each spelling a lookup
    has to recognize. Remove Duplicates leaves 21, because it keeps `Medicare ` and `Silverline Medicare Advantage ` (with their
-   trailing spaces) as separate entries, so those two need trimming before they join the map. Paste the UNIQUE result as values before you edit it.
+   trailing spaces) as separate entries, so those two need trimming before they join the map. Paste the UNIQUE result as values
+   before you edit it.
 2. **Type the standard value next to each spelling.** Where the meaning isn't obvious, ask the data's owner and write the rule
    down. Here, Patient Access says "Uninsured" means Self-Pay, so the map records that in its Note column.
 3. **Look up with TRIM.** XLOOKUP ignores capitals but not spaces, so `TRIM(H2)` makes `Medicare ` match `MEDICARE`.
@@ -506,25 +520,37 @@ the same real-world thing, here the same patient, even when the typing differs. 
 
 Only the email address matches character for character, so Remove Duplicates, which needs every ticked column to match, sees two
 different rows. After cleaning, the two rows agree on every cleaned column except the time of registration, and the clean MRN
-identifies them as one patient. That's why you **standardize first and dedupe second, on an ID column**.
+identifies them as one patient. That's why you **standardize first and deduplicate second, on an ID column**.
 
 | Goal | Tool or formula |
 |---|---|
-| See duplicates | **Home → Conditional Formatting → Highlight Cells Rules → Duplicate Values** (Lesson 3.2). It colors every copy, the first one included, and ignores capitals |
+| See duplicates | **Home → Conditional Formatting → Highlight Cells Rules → Duplicate Values** ([Lesson 3.2](../02-data-validation-conditional-formatting/README.md)). It colors every copy, the first one included, and ignores capitals |
 | Highlight whole rows that repeat an ID | Select A2:S651 on Clean with A2 as the active cell, then **Home → Conditional Formatting → New Rule → Use a formula**: `=COUNTIF($Q$2:$Q$651,$Q2)>1`. The `$Q2` reference keeps the column fixed, so every cell in a row tests that row's MRNClean |
 | Number each copy | `=COUNTIF($Q$2:Q2,Q2)` copied down gives 1 on a value's first row, 2 on its second, and so on. The range `$Q$2:Q2` grows by one row each time the formula moves down |
 | Count all copies of a value | `=COUNTIF($Q$2:$Q$651,Q2)` |
 | Count distinct values | `=SUMPRODUCT(1/COUNTIF(Q2:Q651,Q2:Q651))` in any version, or `=ROWS(UNIQUE(Q2:Q651))` in Microsoft 365 or Excel 2021+ |
 | Delete duplicates | **Data → Remove Duplicates** (Windows key tips: Alt, A, M) |
 
-The distinct-count formula works because a value that appears 3 times contributes 1/3 + 1/3 + 1/3 = 1. If the range can contain
-blanks, use `=SUMPRODUCT((Q2:Q651<>"")/COUNTIF(Q2:Q651,Q2:Q651&""))`, which skips them instead of dividing by zero.
+The distinct-count formula relies on a COUNTIF behavior you haven't needed before. When the *criteria* argument is a whole range
+instead of one value, COUNTIF runs once for each cell in it and returns one count per row. So `COUNTIF(Q2:Q651,Q2:Q651)` returns
+650 counts, each one saying how many rows share that row's MRN. A value that appears 3 times contributes 1/3 + 1/3 + 1/3 = 1 to
+the sum, so the total is the number of distinct values. COUNTIFS works the same way, with a range in any of its criteria. If the
+range can contain blanks, use `=SUMPRODUCT((Q2:Q651<>"")/COUNTIF(Q2:Q651,Q2:Q651&""))`, which skips them instead of dividing by
+zero. In Microsoft 365, SUM can replace SUMPRODUCT in these formulas. In older versions, keep SUMPRODUCT, because it handles
+the per-row arrays without any special entry.
 
 > ⚠️ COUNTIF and COUNTIFS treat text that looks like a number as a number. On the raw MRN column they would count `1955231` and
 > `01955231` as the same value, and they can confuse ID numbers longer than 15 digits. That's harmless once every MRN is padded to
 > the same 8 characters, but on raw IDs, count with `=SUMPRODUCT(--(range="01955231"))`, which compares the text exactly.
 
-**Remove Duplicates** asks which columns define a duplicate, then deletes every row that repeats an earlier row in those columns.
+**Remove Duplicates** asks which columns define a duplicate, then deletes every row that repeats an earlier row in those columns:
+
+1. Click any cell in the data, then choose **Data → Remove Duplicates**. Excel selects the whole block of data around that cell.
+2. Keep **My data has headers** ticked, so Excel lists the columns by name and never deletes the header row.
+3. Tick only the columns that define a duplicate. **Select All** and **Unselect All** save clicks. Untick a unique ID such as
+   RecordID. No two rows share it, so with it ticked Excel finds no duplicates at all.
+4. Click **OK** and read the message.
+
 Know its rules before you trust it:
 
 - It keeps the **first** row of each group and deletes the later ones. It removes the whole row of your selection, not just the
@@ -616,15 +642,15 @@ Raw is the untouched export: never edit it. Clean is your working copy of the sa
 | 1 | Profile first. On the Raw sheet, how many PatientName values contain extra spaces (leading, trailing, or doubled)? Compare each name's length with the length of its TRIMmed version. | LEN(x)<>LEN(TRIM(x)) is TRUE when TRIM would remove something. SUMPRODUCT(--(…)) counts the TRUEs |
 | 2 | On the Clean sheet, fill the yellow SexClean column (M) with a single capital letter, F or M. The raw Sex column has 10 spellings, including Female, MALE, lowercase f, and values with a stray space. The gray cell counts cells that are exactly F (case-sensitive). | TRIM first, then take the first letter, then capitalize it |
 | 3 | Make a copy of the Raw sheet (right-click its tab → Move or Copy → tick Create a copy). On the copy, run Data → Remove Duplicates on all the data (A1:J651) with every column ticked except RecordID (each row has its own RecordID, so leaving it ticked finds nothing). How many duplicate rows does Excel remove? | Untick RecordID in the Remove Duplicates dialog. Excel's message tells you the count |
-| 4 | Switch to CensusExport, a bed-board report that prints each Facility and Unit only on the first row of its block. Fill every blank cell in A2:B50 with the value above it: select that range, use Go To Special → Blanks, type = and press the Up arrow, then press Ctrl + Enter (Mac: ⌘ + Return). The gray cell stays blank until every gap is filled, then totals the week's midnight census for the Intensive Care Unit at Cedar Ridge Medical Center (ICU patient days). | Go To Special selects only the blanks; Ctrl + Enter fills them all with one relative formula |
+| 4 | Switch to CensusExport, a bed-board report that prints each Facility and Unit only on the first row of its block. Fill every blank cell in A2:B50 with the value above it: select that range, use Go To Special → Blanks, type = and press the Up arrow, then press Ctrl + Enter (Mac: ⌘ + Return). The gray cell stays blank until every gap is filled, then totals the week's midnight census for the Intensive Care Unit at Cedar Ridge Medical Center (ICU patient days). | Go To Special selects only the blanks, and Ctrl + Enter fills them all with one relative formula |
 | 5 | Back on Clean, use Flash Fill to fill the yellow ZIP5 column (O) with the 5-digit ZIP from CityStateZip. 101 rows carry a ZIP+4 such as 45501-8106, and those must become 45501. Type three examples yourself: rows 2 and 3, plus the first ZIP+4 row (row 11). Then select the first empty cell and press Ctrl + E (Mac: Data → Flash Fill). The gray cell counts the distinct ZIP codes in your column. | Give Flash Fill an example from each layout, especially a ZIP+4 row |
 | 6 | Fill the yellow PhoneClean column (N) with each phone as exactly 10 digits and nothing else, or an empty result when Phone is blank. Phones arrive as (555) 476-7432, 555-722-8468, 555.468.7891, 5553869767, and +1 555 597 3811. The gray cell counts rows that end up with exactly 10 digits. | Nest one SUBSTITUTE per unwanted character, then keep the RIGHT 10 characters |
 | 7 | Fill the yellow MRNClean column (Q) with every MRN as 8-digit text: 05927600, not MRN-05927600, and 01955231, not 1955231. The gray cell first checks that every value is 8 characters long, then counts the distinct MRNs, which is the number of real patients in the file. | Remove the prefix with SUBSTITUTE, make it a number with VALUE, then pad it back with TEXT(…,"00000000") |
 | 8 | Fill the yellow PayerID column (P) by looking up each Insurance value in the PayerMap table, so all 30 spellings become one of seven PayerIDs. Some values carry a trailing space. Return UNMAPPED for anything missing from the map. The gray cell shows a warning if any row is unmapped. Otherwise it counts PY02 (Silverline Medicare Advantage) rows. | XLOOKUP the TRIMmed Insurance value in tblPayerMap, and use XLOOKUP's if_not_found argument for UNMAPPED |
 | 9 | Switch to LabFeed: 116 STAT results from a lab interface, each crammed into one cell as MRN\|TestCode\|Result\|Units\|CollectedDateTime. Split A1:A117 into five columns with Data → Text to Columns (Delimited, Other: \|). In step 3 of the wizard, set the MRN column's format to Text so its leading zeros survive. The gray cell checks the MRNs, then shows the average potassium (TestCode K) result in mmol/L. | Text to Columns step 3: click the first column in the preview, then choose Text |
-| 10 | Fill the yellow NameClean column (K) with every name as First Last in Proper Case, with single spaces: "Haddad, Jonathan" → Jonathan Haddad, "  Alexander ,  Gary " → Gary Alexander, and "Amber White" stays Amber White. 92 rows are already First Last (no comma). The gray cell warns if any name still has extra spaces or is ALL CAPS or all lowercase. Otherwise it counts distinct names. | IF(ISNUMBER(FIND(",",B2)), flip the two parts, just TRIM), then wrap everything in PROPER |
+| 10 | Fill the yellow NameClean column (K) with every name as First Last in Proper Case, with single spaces. For example, `"Haddad, Jonathan"` becomes Jonathan Haddad, `"  Alexander ,  Gary "` becomes Gary Alexander, and `"Amber White"` stays Amber White. 92 rows are already First Last (no comma). The gray cell warns if any name still has extra spaces or is ALL CAPS or all lowercase. Otherwise it counts distinct names. | IF(ISNUMBER(FIND(",",B2)), flip the two parts, just TRIM), then wrap everything in PROPER |
 | 11 | Fill the yellow DOBClean column (L) with real dates. DOB is text in five layouts: 2002-03-31, 03-Apr-1957, 08/06/1989, 3/22/1961, and 01.11.2003. The export is from a U.S. system, so the slash and dot layouts are month first. The gray cell checks that every row is a real date, then counts DOBs that fall on the 13th or later of their month (a quick test that month and day weren't swapped). | DATEVALUE can't read 01.11.2003 until the dots become slashes. For a version that works with any regional setting, build DATE(year, month, day) from the pieces |
-| 12 | Document your work. On the CleaningLog sheet, put a formula in the yellow RowsChanged cell for step 2 (E3) that counts how many rows your SexClean column actually changed: rows where the raw Sex value is not exactly the same as SexClean (case-sensitive). The gray cell here reads your log entry. | EXACT compares case-sensitively; NOT flips it; SUMPRODUCT(--…) counts |
+| 12 | Document your work. On the CleaningLog sheet, put a formula in the yellow RowsChanged cell for step 2 (E3) that counts how many rows your SexClean column actually changed: rows where the raw Sex value is not exactly the same as SexClean (case-sensitive). The gray cell here reads your log entry. | EXACT compares case-sensitively, NOT flips TRUE and FALSE, and SUMPRODUCT(--…) counts the TRUEs |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -641,14 +667,14 @@ proves most answers straight from the Raw sheet. The same answers are below, col
 - **Answer:** 69
 - **Solution:** `=SUMPRODUCT(--(LEN(Raw!B2:B651)<>LEN(TRIM(Raw!B2:B651))))`
 
-TRIM removes leading and trailing spaces and shrinks inner runs to one space, so any name it shortens had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing space by looking at a cell, so a count like this is how you find out a problem exists before you fix it. (In Microsoft 365, =SUM(--(LEN(…)<>LEN(TRIM(…)))) works too.)
+TRIM removes leading and trailing spaces and shrinks inner runs to one space, so any name it shortens had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing space by looking at a cell, so a count like this is how you find out a problem exists before you fix it. In Microsoft 365, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too.
 
 **2. SexClean column (rows that are exactly F)**
 
 - **Answer:** 335
 - **Solution:** `=UPPER(LEFT(TRIM(D2),1))`
 
-Every spelling starts with the right letter once the stray space is gone, so the fix is TRIM → LEFT(…,1) → UPPER. The order matters: LEFT(" F",1) is a space. The check uses EXACT because COUNTIF ignores case and would count a lowercase f as F. This shortcut works only because each value is identified by its first letter. Medicare and Medicaid share a first letter, so Insurance needs a mapping table instead (task 8).
+Every spelling starts with the right letter once the stray space is gone, so the fix is TRIM, then `LEFT(…,1)`, then UPPER. The order matters: `LEFT(" F",1)` is a space. The check uses EXACT because COUNTIF ignores case and would count a lowercase f as F. This shortcut works only because each value is identified by its first letter. Medicare and Medicaid share a first letter, so Insurance needs a mapping table instead (task 8).
 
 **3. Remove Duplicates on the raw columns**
 
@@ -694,7 +720,7 @@ After Go To Special, Excel has selected only the 88 empty cells, and the formula
 Formula alternative (Microsoft 365): `=LEFT(TEXTAFTER(G2," ",-1),5)`
 
 
-Flash Fill looks for a rule that explains every example you typed. Two plain ZIPs fit several rules (the first number, the last number, the last five characters), and on 45501-8106 those give different answers. The ZIP+4 example leaves only "the first number". If the +4 survives, the distinct count jumps to 108. Flash Fill writes typed-in values, not formulas, so it won't update when next month's export arrives. In Lesson 2.2 you did the same job with TEXTAFTER. The formula is the repeatable choice, and Flash Fill is the fast one for a one-off.
+Flash Fill looks for a rule that explains every example you typed. Two plain ZIPs fit several rules (the first number, the last number, the last five characters), and on 45501-8106 those give different answers. The ZIP+4 example leaves only "the first number". If the +4 survives, the distinct count jumps to 108. Flash Fill writes typed-in values, not formulas, so it won't update when next month's export arrives. The Lesson 2.2 bonus did the same job with TEXTAFTER. The formula is the repeatable choice, and Flash Fill is the fast one for a one-off.
 
 **6. PhoneClean column (rows with exactly 10 digits)**
 
@@ -706,21 +732,21 @@ Flash Fill looks for a rule that explains every example you typed. Two plain ZIP
 ```
 
 
-Each SUBSTITUTE deletes one kind of character: parentheses, dashes, dots, and spaces. That leaves 5554767432 for most rows, but +15555973811 for the 40 numbers with a country code, so RIGHT(…,10) keeps the last ten digits, which is always the U.S. number. A blank phone stays empty, and the 30 blanks are why the count is 620, not 650. Keep phones as text: they are identifiers, not quantities. In Microsoft 365, =RIGHT(REGEXREPLACE(E2,"[^0-9]",""),10) removes every non-digit in one step.
+Each SUBSTITUTE deletes one kind of character: parentheses, dashes, dots, and spaces. That leaves 5554767432 for most rows, but +15555973811 for the 40 numbers with a country code, so `RIGHT(…,10)` keeps the last ten digits, which is always the U.S. number. A blank phone needs no special handling, because SUBSTITUTE and RIGHT on an empty cell return an empty result. The 30 blanks are why the count is 620, not 650. Keep phones as text, because they are identifiers, not quantities. In Microsoft 365, `=RIGHT(REGEXREPLACE(E2,"[^0-9]",""),10)` removes every non-digit in one step.
 
 **7. MRNClean column (distinct patients)**
 
 - **Answer:** 560
 - **Solution:** `=TEXT(VALUE(SUBSTITUTE(I2,"MRN-","")),"00000000")`
 
-Two problems hide in this column. 86 rows carry an MRN- prefix, which SUBSTITUTE removes. 141 rows lost their leading zeros somewhere upstream, because a system treated the MRN as a number. VALUE turns the remaining text into a number, and TEXT(…,"00000000") writes it back as text with exactly 8 digits, adding the zeros it needs. =RIGHT("0000000"&SUBSTITUTE(I2,"MRN-",""),8) does the same without VALUE. The result: 650 rows but only 560 patients, so 90 rows are duplicates.
+Two problems hide in this column. 86 rows carry an MRN- prefix, which SUBSTITUTE removes. 141 rows lost their leading zeros somewhere upstream, because a system treated the MRN as a number. VALUE turns the remaining text into a number, and `TEXT(…,"00000000")` writes it back as text with exactly 8 digits, adding the zeros it needs. `=RIGHT("0000000"&SUBSTITUTE(I2,"MRN-",""),8)` does the same without VALUE. The result: 650 rows but only 560 patients, so 90 rows are duplicates.
 
 **8. PayerID column via mapping table (PY02 rows)**
 
 - **Answer:** 68
 - **Solution:** `=XLOOKUP(TRIM(H2),tblPayerMap[Variant],tblPayerMap[PayerID],"UNMAPPED")`
 
-A mapping table turns a messy category into a standard code with one lookup, and it documents your decisions where everyone can see them, such as Uninsured → PY07 Self-Pay. XLOOKUP ignores case, so the map needs only one row per spelling, not one per capitalization. It does not ignore spaces, so TRIM comes first. Without TRIM, the 12 rows typed "Silverline Medicare Advantage " with a trailing space come back UNMAPPED. The "UNMAPPED" result makes new spellings easy to find next month: filter for it, add the spelling as a new row of the map, and every formula picks it up. The Table references (tblPayerMap[Variant]) grow with the map. A fixed range such as PayerMap!$A$2:$A$20 works today but would miss a row added below it. Without XLOOKUP: =IFNA(VLOOKUP(TRIM(H2),tblPayerMap,2,FALSE),"UNMAPPED").
+A mapping table turns a messy category into a standard code with one lookup, and it documents your decisions where everyone can see them, such as the rule that Uninsured means PY07 (Self-Pay). XLOOKUP ignores case, so the map needs only one row per spelling, not one per capitalization. It does not ignore spaces, so TRIM comes first. Without TRIM, the 12 rows typed "Silverline Medicare Advantage " with a trailing space come back UNMAPPED. The "UNMAPPED" result makes new spellings easy to find next month: filter for it, add the spelling as a new row of the map, and every formula picks it up. The Table references (`tblPayerMap[Variant]`) grow with the map. A fixed range such as `PayerMap!$A$2:$A$20` works today but would miss a row added below it. Without XLOOKUP, use `=IFNA(VLOOKUP(TRIM(H2),tblPayerMap,2,FALSE),"UNMAPPED")`.
 
 **9. Text to Columns on the lab feed (average potassium)**
 
@@ -747,7 +773,7 @@ Text to Columns splits each cell at every |, and step 3 decides what each piece 
 ```
 
 
-FIND(",",B2) returns a position when there is a comma and #VALUE! when there isn't, so ISNUMBER(FIND(…)) tells the two layouts apart. For Last, First rows, MID takes everything after the comma (the first name) and LEFT takes everything before it (the last name). TRIM each piece before joining, because the spaces sit around the comma. PROPER on the outside fixes the case of both layouts at once. Two checks on the result. First, the flip matters: =PROPER(TRIM(B2)) alone gives 578 distinct names, and deleting the comma without flipping still gives 569, because the same patient then appears as both "Amber White" (row 18) and "White Amber" (row 410). Second, the count is 557, not 560, because 3 names belong to two different patients (Justin Lewis, Lisa Morris, Mei Myers). That's why you dedupe on MRN, never on name. PROPER also turns McDonald into Mcdonald, so fix known exceptions by hand and note them in the cleaning log.
+`FIND(",",B2)` returns a position when there is a comma and #VALUE! when there isn't, so `ISNUMBER(FIND(…))` tells the two layouts apart. For Last, First rows, MID takes everything after the comma (the first name) and LEFT takes everything before it (the last name). TRIM each piece before joining, because the spaces sit around the comma. PROPER on the outside fixes the case of both layouts at once. Two checks on the result. First, the flip matters: `=PROPER(TRIM(B2))` alone gives 578 distinct names, and deleting the comma without flipping still gives 569, because the same patient then appears as both "Amber White" (row 18) and "White Amber" (row 410). Second, the count is 557, not 560, because 3 names belong to two different patients (Justin Lewis, Lisa Morris, Mei Myers). That's why you deduplicate on MRN, never on name. PROPER also turns McDonald into Mcdonald, so fix known exceptions by hand and note them in the cleaning log.
 
 **11. DOBClean column (DOBs on day 13 or later)**
 
@@ -759,14 +785,14 @@ FIND(",",B2) returns a position when there is a comma and #VALUE! when there isn
 ```
 
 
-This solution works on any computer: it reads the layout and builds DATE(year, month, day) from the pieces. ISO dates have a dash in position 5. In 03-Apr-1957 the dash is in position 3, and the month comes from where Apr sits in "JanFebMarAprMayJunJulAugSepOctNovDec" (position 10, and (10+2)/3 = 4). Everything else is month/day/year with a / or . after the month. If your Windows or Mac region is United States, the much shorter =DATEVALUE(SUBSTITUTE(C2,".","/")) gives identical results, because U.S. settings read the ISO and 03-Apr-1957 layouts and read slashes month first. In a day-first region it reads 08/06/1989 as 8 June and fails on 3/22/1961, and in a language whose month names differ from English it can fail on 03-Apr-1957 too. The day-13 test catches a swap: a month number is never above 12, so if the slash and dot rows had month and day swapped, none of them could show a day above 12 and the count would fall to 145 instead of 397.
+This solution works on any computer: it reads the layout and builds DATE(year, month, day) from the pieces. ISO dates have a dash in position 5. In 03-Apr-1957 the dash is in position 3, and the month comes from where Apr sits in "JanFebMarAprMayJunJulAugSepOctNovDec" (position 10, and (10+2)/3 = 4). Everything else is month/day/year with a / or . after the month. If your Windows or Mac region is United States, the much shorter `=DATEVALUE(SUBSTITUTE(C2,".","/"))` gives identical results, because U.S. settings read the ISO and 03-Apr-1957 layouts and read slashes month first. In a day-first region it reads 08/06/1989 as 8 June and fails on 3/22/1961, and in a language whose month names differ from English it can fail on 03-Apr-1957 too. The day-13 test catches a swap: a month number is never above 12, so if the slash and dot rows had month and day swapped, none of them could show a day above 12 and the count would fall to 145 instead of 397.
 
 **12. Cleaning log: rows changed by the Sex step**
 
 - **Answer:** 424
 - **Solution:** `=SUMPRODUCT(--NOT(EXACT(Clean!D2:D651,Clean!M2:M651)))`
 
-A cleaning log records what you changed and how much, so the next person (or you, next month) can repeat it and audit it. "Rows changed" is the most useful number in it: here 424 of 650 rows changed and 226 were already F or M. EXACT matters again: with =, "f" equals "F" and those rows would look unchanged. A count that is suspiciously high or low is often the first sign that a cleaning formula is wrong.
+A cleaning log records what you changed and how much, so the next person (or you, next month) can repeat it and audit it. "Rows changed" is the most useful number in it: here 424 of 650 rows changed and 226 were already F or M. EXACT matters again, because with `=` the values "f" and "F" count as equal and those rows would look unchanged. A count that is suspiciously high or low is often the first sign that a cleaning formula is wrong.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -774,15 +800,15 @@ A cleaning log records what you changed and how much, so the next person (or you
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-Bluestone is moving to a new EHR, and the vendor needs a master patient load file with exactly one row per patient. The rule from Patient Access is: keep each patient's most recent registration (latest RegisteredOn). Work on the Clean sheet's last two yellow columns (RegisteredClean and Keep), using your MRNClean and PhoneClean columns from the practice tasks, then answer on the Bonus sheet. RegisteredOn has two layouts: 2015-11-06 18:33:00 (24-hour clock) and 05/30/2022 05:42 PM (12-hour clock).
+Bluestone is moving to a new EHR, and the vendor needs a master patient load file with exactly one row per patient. The rule from Patient Access is: keep each patient's most recent registration (latest RegisteredOn). Fill the Clean sheet's last two yellow columns (RegisteredClean and Keep), using your MRNClean and PhoneClean columns from the practice tasks. RegisteredOn has two layouts: 2015-11-06 18:33:00 (24-hour clock) and 05/30/2022 05:42 PM (12-hour clock). If you want helper columns, put them on the Clean sheet in column V or further right, outside the Table.
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Fill the yellow RegisteredClean column (R) with real date-times. Make sure 05:42 PM becomes 17:42. The gray cell checks every row, then counts registrations made at 5:00 PM or later (the evening Patient Access shift). *(Hint: In both layouts the time starts at character 12, and TIMEVALUE understands both 18:33:00 and 05:42 PM. Build the date part with DATE)*
-- **B2.** Fill the yellow Keep column (S) with TRUE on exactly one row per patient (MRNClean): the row with that patient's latest RegisteredClean. If the latest time appears on two identical rows, keep only the first of them. Every other row is FALSE. The gray cell counts the TRUEs. *(Hint: MAXIFS finds the patient's latest time. A COUNTIFS over an expanding range ($Q$2:Q2) breaks ties)*
-- **B3.** Which RegisteredOn did you keep for MRN 01276260? Enter it as a date and time. *(Hint: MAXIFS (or XLOOKUP) with two conditions: this MRN, and Keep = TRUE)*
-- **B4.** Remove Duplicates always keeps the first row it meets. For how many patients is the row you kept NOT that patient's first row in the file? These are the patients that Remove Duplicates on MRNClean would have gotten wrong. *(Hint: A row is a patient's first occurrence when MATCH(its MRN, the MRN column, 0) returns its own position. Or add a helper column with COUNTIF($Q$2:Q2,Q2)=1)*
-- **B5.** Survivorship check: "keep the latest row" can throw away good data. How many kept rows have an empty PhoneClean even though another registration for the same patient has a phone number? *(Hint: For each row, COUNTIFS(MRN column, this MRN, PhoneClean column, "?*") counts that patient's rows that have a phone)*
+- **B1.** Fill the yellow RegisteredClean column (R) with real date-times. Make sure 05:42 PM becomes 17:42. The gray cell checks every row, then counts registrations made at 5:00 PM or later (the evening Patient Access shift). *(Hint: In both layouts the time starts at character 12, and TIMEVALUE understands both 18:33:00 and 05:42 PM. Build the date part with DATE, then add the time to it)*
+- **B2.** Fill the yellow Keep column (S) with TRUE on exactly one row per patient (MRNClean): the row with that patient's latest RegisteredClean. If the latest time appears on two identical rows, keep only the first of them. Every other row is FALSE. The gray cell counts the TRUEs. *(Hint: MAXIFS (Lesson 2.5) finds the patient's latest time. A COUNTIFS over an expanding range (`$Q$2:Q2`) breaks ties)*
+- **B3.** Which RegisteredOn did you keep for MRN 01276260? Enter it as a date and time. *(Hint: MAXIFS with two conditions: MRNClean is this MRN, and Keep is TRUE. Or filter Clean on those two columns and read RegisteredClean)*
+- **B4.** Remove Duplicates always keeps the first row it meets. For how many patients is the row you kept NOT that patient's first row in the file? These are the patients that Remove Duplicates on MRNClean would have gotten wrong. *(Hint: A row is a patient's first occurrence when MATCH(its MRN, the MRN column, 0) returns its own position. Or add a helper column with `=COUNTIF($Q$2:Q2,Q2)=1`)*
+- **B5.** The rule "keep the latest row" decides which registration survives into the master list, and it can throw away good data. How many kept rows have an empty PhoneClean even though another registration for the same patient has a phone number? *(Hint: For each row, COUNTIFS(MRN column, this MRN, PhoneClean column, `"?*"`) counts that patient's rows that have a phone)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -799,14 +825,14 @@ Work on the **Bonus** sheet of the workbook.
 ```
 
 
-Both layouts put the time at character 12, so TIMEVALUE(MID(J2,12,8)) reads "18:33:00" and "05:42 PM" alike, and AM/PM is handled for you. The date part differs, so the IF builds it with DATE from the right pieces. A date-time is just date + time (a whole number plus a fraction of a day). If PM were ignored, the evening count would drop to 76. With U.S. regional settings, =--J2 (or =VALUE(J2)) converts both layouts in one step.
+Both layouts put the time at character 12, so `TIMEVALUE(MID(J2,12,8))` reads "18:33:00" and "05:42 PM" alike, and AM/PM is handled for you. The date part differs, so the IF builds it with DATE from the right pieces. In the ISO layout the day is `MID(J2,9,2)`, not `RIGHT(J2,2)`, because the time follows it. A date-time is just date + time (a whole number plus a fraction of a day). If PM were ignored, the evening count would drop to 76. With U.S. regional settings, `=--J2` (or `=VALUE(J2)`) converts both layouts in one step.
 
 **B2. Keep column (rows in the master list)**
 
 - **Answer:** 560
 - **Solution:** `=AND(R2=MAXIFS($R$2:$R$651,$Q$2:$Q$651,Q2),COUNTIFS($Q$2:Q2,Q2,$R$2:R2,R2)=1)`
 
-The first test, RegisteredClean = MAXIFS(all RegisteredClean, all MRNClean, this MRN), is TRUE on the patient's latest row. Exact copies share that time, so the second test counts how many rows so far (the range $Q$2:Q2 grows as the formula goes down) have this MRN and this time. It equals 1 only on the first of them. The total must equal the 560 distinct MRNs from practice task 7, which is a good cross-check. Avoid comparing date-times with ">"&R2 inside COUNTIFS: that turns the time into text with 15 digits and can miss by a rounding error.
+The first test, RegisteredClean = MAXIFS(all RegisteredClean, all MRNClean, this MRN), is TRUE on the patient's latest row. Exact copies share that time, so the second test counts how many rows so far (the range `$Q$2:Q2` grows as the formula goes down) have this MRN and this time. It equals 1 only on the first of them. The total must equal the 560 distinct MRNs from practice task 7, which is a good cross-check. Avoid comparing date-times with `">"&R2` inside COUNTIFS, because that turns the time into text with 15 digits and can miss by a rounding error.
 
 **B3. Registration kept for MRN 01276260**
 
@@ -820,7 +846,7 @@ This patient has three rows. Two of them say 1276260 (the MRN lost its leading z
 - **Answer:** 27
 - **Solution:** `=SUMPRODUCT(Clean!S2:S651*(MATCH(Clean!Q2:Q651,Clean!Q2:Q651,0)<>ROW(Clean!Q2:Q651)-1))`
 
-MATCH(MRN, MRN column, 0) returns the position of the first row with that MRN. ROW(…)-1 is each row's own position in the column (row 2 is position 1). Where they differ, the row is a repeat. Multiplying by Keep counts kept rows that are repeats. For these 27 patients a newer registration sits further down the file. To make Remove Duplicates keep the newest row, sort by RegisteredClean (newest to oldest) first, then remove duplicates on MRNClean: the first row it meets is then the newest.
+MATCH(MRN, MRN column, 0) returns the position of the first row with that MRN. `ROW(…)-1` is each row's own position in the column (row 2 is position 1). Where they differ, the row is a repeat. Multiplying by Keep counts kept rows that are repeats. For these 27 patients a newer registration sits further down the file. To make Remove Duplicates keep the newest row, sort by RegisteredClean (newest to oldest) first, then remove duplicates on MRNClean: the first row it meets is then the newest.
 
 **B5. Kept rows that lose a phone number**
 
@@ -832,7 +858,7 @@ MATCH(MRN, MRN column, 0) returns the position of the first row with that MRN. R
 ```
 
 
-When its criteria argument is a range instead of a single value, COUNTIFS returns one count per row: how many rows share this row's MRN and have a phone. "?*" means at least one character, which works because PhoneClean is text. Multiply by Keep and by an empty PhoneClean to find the 2 patients who would arrive in the new EHR with no phone, although an older registration has one. Real MPI loads use survivorship rules for this: take each field from the most recent row that has it filled in, not every field from the most recent row.
+When its criteria argument is a range instead of a single value, COUNTIFS returns one count per row: how many rows share this row's MRN and have a phone. The criteria `"?*"` means at least one character, which works because PhoneClean is text. Multiply by Keep and by an empty PhoneClean to find the 2 patients who would arrive in the new EHR with no phone, although an older registration has one. Real master patient index (MPI) loads prevent this with **survivorship rules**, which decide field by field which value survives. A common rule takes each field from the most recent row that has it filled in, instead of taking every field from the most recent row.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

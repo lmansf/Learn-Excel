@@ -64,6 +64,24 @@ BUDGET_STEPS = [
     ("Expense", "Other Operating", "Other operating"),
 ]
 
+# openpyxl writes the Office 2007 theme, whose accents run blue, red, green, purple. Every chart a learner builds in
+# this workbook takes its default colors from the theme, so swap in the Office 2013-2022 colors (blue, orange, gray,
+# gold, ...) that match current Excel and the lesson's "avoid red with green" advice. Only the color scheme changes.
+OFFICE_2013_COLORS = {"1F497D": "44546A", "EEECE1": "E7E6E6", "4F81BD": "4472C4", "C0504D": "ED7D31",
+                      "9BBB59": "A5A5A5", "8064A2": "FFC000", "4BACC6": "5B9BD5", "F79646": "70AD47",
+                      "0000FF": "0563C1", "800080": "954F72"}
+
+
+def _office_2013_theme() -> bytes:
+    from openpyxl.writer.theme import theme_xml
+    start, end = theme_xml.index("<a:clrScheme"), theme_xml.index("</a:clrScheme>")
+    scheme = theme_xml[start:end]
+    for old, new in OFFICE_2013_COLORS.items():
+        assert scheme.count(f'val="{old}"') == 1, old
+        scheme = scheme.replace(f'val="{old}"', f'val="{new}"')
+    return (theme_xml[:start] + scheme + theme_xml[end:]).encode("utf-8")
+
+
 # Okabe-Ito colour-blind-safe colours used in the reference charts.
 BLUE, ORANGE, SKY, GREY, VERMILLION = "0072B2", "E69F00", "56B4E9", "A6A6A6", "D55E00"
 
@@ -228,8 +246,8 @@ def build() -> Lesson:
     total_ed = sum(r["Total"] for r in monthly)
 
     L.data_note = (
-        "Bluestone Health System, pre-summarized for charting: monthly ED visits by hospital with LWBS counts (Jan 2024 – "
-        "Dec 2025), 2025 ED arrivals and average door-to-provider minutes by hour of day, 2025 readmission rates by "
+        "Bluestone Health System, pre-summarized for charting: monthly ED visits by hospital with counts of patients who "
+        "left without being seen (LWBS), Jan 2024 – Dec 2025, 2025 ED arrivals and average door-to-provider minutes by hour of day, 2025 readmission rates by "
         f"service line, 2025 payer mix, a sample of {SAMPLE_N} of the {n_ip:,} inpatient stays that began in 2025, 2025 "
         "claim denials by reason, "
         "and 4 West's FY2025 budget-to-actual margin bridge.")
@@ -408,6 +426,16 @@ def build() -> Lesson:
     swapped_row = next(r for r in denials if r["DenialReason"] == swapped)
     avg_claim = {r["DenialReason"]: r["DeniedCharges"] / r["Claims"] for r in denials}
 
+    # Qualitative claims made in explanations and Chart Key titles must hold for the data.
+    assert 12 <= t1 < 18, "Chart Key title says arrivals peak in the afternoon"
+    assert len(payers) == 5 and {r["PayerType"] for r in payers[:2]} == {"Government", "Commercial"}
+    assert (payers[0]["Encounters"] + payers[1]["Encounters"]) / pm_total > 0.6, "two payer types should dominate"
+    assert t8 < 0.05 and reg_age.slope > 0, "Task 8 text: weak but upward trend"
+    assert corr_hour > 0.8, "Task 9 text: waits rise and fall with arrivals"
+    assert reg_lwbs.slope > 0 and b3 < 0.25, "B3 text: slight upward trend, weak fit"
+    assert t11_row["Step"] == "Net patient revenue" and biggest_up["Step"] == "Salaries & wages"
+    assert (a_margin - b_margin - t11_row["Amount"]) > 0.5 * -t11_row["Amount"], "expense savings offset most of it"
+
     # ------------------------------------------------------------------ cross-check formulas
     H_HOUR, H_ARR, H_WAIT = col(hr, "ArrivalHour"), col(hr, "Arrivals"), col(hr, "AvgDoorToProviderMin")
     M_MONTH, M_TOTAL, M_LWBS = col(mo, "Month"), col(mo, "Total"), col(mo, "LWBS")
@@ -456,7 +484,7 @@ def build() -> Lesson:
         "It draws the histogram, Pareto, and waterfall the classic way (column charts with helper data), so they look "
         "slightly different from Excel 2016's built-in versions.",
         "Histogram, Pareto, and waterfall charts need Excel 2016 or later (Windows or Mac) or Microsoft 365.",
-        "Stays → LOSDays is the exact length of stay (discharge time minus admit time, in days, rounded to 1 decimal "
+        "On the Stays sheet, LOSDays is the exact length of stay (discharge time minus admit time, in days, rounded to 1 decimal "
         "place), so it can differ slightly from the count of midnights used in Lesson 3.4.",
     ]
 
@@ -501,7 +529,7 @@ def build() -> Lesson:
              "(A1:A9, then Ctrl+click D1:D9, or ⌘+click on a Mac) and insert a clustered bar chart. Before you change anything else, which "
              "service line's bar is at the TOP of the chart? (Afterwards, fix the order so the highest rate is on top.)",
              answer=t3, accept=[t3.replace("&", "and")], title="Bar chart: which bar Excel puts on top",
-             hint="Excel draws the first row of a bar chart at the bottom. Fix: Format Axis → Categories in reverse order",
+             hint="Read the chart, not the table. Guide section 6 explains the bar order and how to fix it",
              solution="1. Click any ReadmitRate cell and choose **Data → Sort Largest to Smallest** (Mac: **Data → "
                       "Sort**, or the column's filter button).\n2. Select **A1:A9**, hold **Ctrl** (Mac: **⌘**), and "
                       "select **D1:D9**.\n3. Choose **Insert → Insert Column or Bar Chart → 2-D Bar → Clustered Bar**.\n"
@@ -518,7 +546,8 @@ def build() -> Lesson:
                          + cross(f3)),
         Task(f"The Makeover sheet has a colleague's column chart of the same readmission rates. Its vertical axis starts at "
              f"{AXIS_MIN:.0%}, not 0%. Measured from that axis, how many times taller is the {hi_sl['ServiceLine']} bar "
-             f"than the {lo_sl['ServiceLine']} bar? Round to 1 decimal place. Then fix the chart.",
+             f"than the {lo_sl['ServiceLine']} bar? Round to 1 decimal place. Then fix the chart in place, using the "
+             "checklist in Guide section 16, and add alt text.",
              answer=t4, fmt="0.0", tol=0.051, title="Makeover: how much a truncated axis exaggerates",
              hint=f"A bar's drawn height is its value minus the axis minimum ({AXIS_MIN:.0%})",
              solution=f"1. Each bar is drawn up from the axis minimum, so its height is its rate minus {AXIS_MIN:.0%}.\n"
@@ -526,8 +555,10 @@ def build() -> Lesson:
                       f"**{t4_raw:.1f}**.\n3. Fix the chart: double-click the vertical axis, and in **Format Axis → Axis "
                       "Options → Bounds** set **Minimum** to `0` (or click **Reset** so Excel chooses 0). Turn off "
                       "**Vary colors by point** (**Format Data Series → Fill & Line → Fill**), delete the legend, add data "
-                      "labels, "
-                      "and give the chart a title that states the finding.",
+                      "labels, and give the chart a title that states the finding.\n4. Right-click the chart → **Edit Alt "
+                      "Text** and describe it, for example: *Column chart of 2025 30-day readmission rates by service line. "
+                      f"{hi_sl['ServiceLine']} is highest at {hi_sl['ReadmitRate']:.1%} and {lo_sl['ServiceLine']} lowest "
+                      f"at {lo_sl['ReadmitRate']:.1%}.*",
              live=f4,
              explanation=f"The real ratio is {hi_sl['ReadmitRate']:.1%} ÷ {lo_sl['ReadmitRate']:.1%} = {t4_true:.1f}, but "
                          f"the truncated chart draws the {hi_sl['ServiceLine']} bar {t4_raw:.1f} times as tall. A bar's "
@@ -566,15 +597,17 @@ def build() -> Lesson:
              live=f6,
              explanation=f"A histogram answers \"how are the values distributed?\" by counting values in equal-width bins. "
                          f"Here the tallest bin is {tallest_bin[0]} days with {tallest_bin[1]} stays, and the long right "
-                         f"tail ends in the >{HIST_OVER} overflow bin with {t6} stays. That skew is why the median LOS "
-                         f"({los_median:.1f} days) sits below the mean ({los_mean:.2f}). A bin label such as (3, 4] means "
+                         f"tail ends in the >{HIST_OVER} overflow bin with {t6} stays. That skew is why the median length "
+                         f"of stay ({los_median:.2f} days) sits below the mean ({los_mean:.2f} days). The few long stays "
+                         "pull the mean up but barely move the median. A bin label such as (3, 4] means "
                          "\"more than 3, up to and including 4\". The overflow and underflow bins stop a few extreme "
                          "stays from stretching the axis. " + cross(f6)),
         Task("On Stays, select D1:E301 (LOSDays and TotalCharges) and insert an XY scatter chart, so LOSDays is on the "
              "horizontal axis. Add a linear trendline and display its equation. By how many dollars do charges rise for "
              "each extra day in the hospital? Confirm with SLOPE and round to the nearest dollar.",
              answer=t7, fmt="#,##0", tol=0.5, answer_display=f"{t7:,.0f} (dollars per extra day)", title="Scatter + trendline: dollars per extra day",
-             hint="Insert → Insert Scatter (X, Y) → Scatter. Then + → Trendline → More Options → Display Equation on chart",
+             hint="Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter. Right-click a point → Add Trendline, then "
+                  "tick Display Equation on chart. SLOPE takes the Y range first",
              solution="1. Select **D1:E301**. The left column (LOSDays) becomes X, the right one (TotalCharges) becomes Y.\n"
                       "2. Choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**.\n"
                       "3. Right-click any point → **Add Trendline…**. In **Format Trendline**, keep **Linear** and tick "
@@ -610,16 +643,18 @@ def build() -> Lesson:
              solution="1. Select **A1:C25** on **ED_Hourly**.\n2. Choose **Insert → Insert Combo Chart → Clustered Column "
                       "– Line on Secondary Axis**. (Or insert any chart, then **Chart Design → Change Chart Type → "
                       "Combo**, set AvgDoorToProviderMin to **Line** and tick its **Secondary Axis** box.)\n"
-                      "3. Add axis titles (**+ → Axis Titles**): *Arrivals* on the left and *Avg minutes to provider* on "
-                      "the right.\n4. Hover over the highest point of the line.",
+                      "3. Add axis titles with **Chart Elements (+) → Axis Titles** (Mac: **Chart Design → Add Chart "
+                      "Element → Axis Titles**): *Arrivals* on the left and *Avg minutes to provider* on the right.\n"
+                      "4. Hover over the highest point of the line.",
              live=f9,
              explanation=f"Arrivals peak at {hour_txt(t1)}, and the average wait peaks at {hour_txt(t9)} "
                          f"({by_wait[0]['AvgDoorToProviderMin']} minutes, against {short_wait['AvgDoorToProviderMin']} at "
                          f"{hour_txt(short_wait['Hour'])}). The two series use different units (visits and minutes) and "
                          "very different sizes, so the line needs its own axis. Otherwise it would be squashed flat. "
-                         f"The shapes match closely (correlation {corr_hour:.2f}): waits grow when arrivals outpace "
-                         "staffing. Always title both axes on a dual-axis chart so nobody reads minutes off the arrivals "
-                         "scale. " + cross(f9)),
+                         f"The two shapes match closely (correlation {corr_hour:.2f}), so waits rise and fall with "
+                         "arrivals. That suggests staffing doesn't keep pace in the busy hours, but the chart alone can't "
+                         "prove the cause. Always title both axes on a dual-axis chart so nobody reads minutes off the "
+                         "arrivals scale. " + cross(f9)),
         Task("On Denials, select A1:B8 (DenialReason and Claims) and insert a Pareto chart. What cumulative percentage does "
              "the line reach at the second bar (the top two reasons together)? Enter it as a percentage to 1 decimal place.",
              answer=t10, fmt="0.0%", title="Pareto: cumulative share of the top two denial reasons",
@@ -627,14 +662,18 @@ def build() -> Lesson:
              solution="1. Select **A1:B8** on **Denials**.\n2. Choose **Insert → Insert Statistic Chart → Pareto**. Excel "
                       "sorts the reasons from most to fewest claims and adds a cumulative-percentage line on a secondary "
                       "axis that runs to 100%.\n3. Hover over the line at the second bar.\n4. To get the exact value, "
-                      "type `=SUM(LARGE(Denials!B2:B8,{1,2}))/SUM(Denials!B2:B8)` and format it as a percentage.",
+                      "type `=(LARGE(Denials!B2:B8,1)+LARGE(Denials!B2:B8,2))/SUM(Denials!B2:B8)` and format it as a "
+                      "percentage with 1 decimal place.",
              live=f10,
              explanation=f"{dn_by_claims[0]['DenialReason']} ({dn_by_claims[0]['Claims']} claims) and "
                          f"{dn_by_claims[1]['DenialReason']} ({dn_by_claims[1]['Claims']}) make up "
                          f"{dn_by_claims[0]['Claims'] + dn_by_claims[1]['Claims']} of {dn_total:,} denied claims. A Pareto "
                          "chart ranks causes so a team can see the \"vital few\" worth fixing first. Here the first two "
                          f"reasons cover {t10:.1%} of denials and the first four cover {cum_claims[3]:.1%}. The built-in "
-                         "Pareto sorts the data for you, so the table itself can stay in any order. " + cross(f10)),
+                         "Pareto sorts the data for you, so the table itself can stay in any order. LARGE(range,1) and "
+                         "LARGE(range,2) return the largest and second-largest claim counts, which are the first two "
+                         "bars. The shorter cross-check formula that follows hands LARGE the array constant {1,2} (Lesson "
+                         "2.5) so it returns both at once, and SUM adds them. " + cross(f10)),
         Task("On Budget, select A4:B14 and insert a waterfall chart. Set the first and last bars as totals. Which step is "
              "the largest drop (the longest downward bar)? Type the Step name as it appears in the table.",
              answer=t11, accept=["Revenue", "Net patient service revenue", "Net revenue", "Patient revenue"],
@@ -643,7 +682,8 @@ def build() -> Lesson:
              solution="1. Select **A4:B14** on **Budget**.\n2. Choose **Insert → Insert Waterfall, Funnel, Stock, Surface, "
                       "or Radar Chart → Waterfall** (Mac: **Insert → Waterfall**).\n3. Click the first bar once to "
                       "select the series and once more to select only that bar. Right-click it → **Set as Total**. Do the "
-                      "same for the last bar.\n4. The longest orange (Decrease) bar is the answer.",
+                      "same for the last bar.\n4. Find the longest bar in the **Decrease** color (the legend shows which color "
+                      "that is). Hover over it to read its Step name.",
              live=f11,
              explanation=f"A waterfall shows how a starting total becomes an ending total through a series of increases "
                          f"and decreases. 4 West budgeted a margin of ${b_margin:,} and earned ${a_margin:,}. Revenue came "
@@ -672,41 +712,45 @@ def build() -> Lesson:
         Task("Write a formula in the yellow cell that builds this chart title from tblEDMonthly: ED visits by facility, "
              "[first month] to [last month] ([total visits] visits). Show each month as a three-letter month and year, and "
              "the total with a thousands separator. Example of the pattern: ED visits by facility, Mar 2023 to Feb 2024 "
-             "(9,876 visits). Then link your line chart's title to this cell.",
+             "(9,876 visits). Then link the title of your Task 2 line chart to this cell.",
              answer=t13, accept=t13_accept, solution=f13, title="Dynamic chart title",
              hint='TEXT(MIN(…),"mmm yyyy") and TEXT(SUM(…),"#,##0"), joined with &',
              live=True,
              explanation="Build the title in a cell, because a chart title can show text or one cell reference, but not "
-                         "a formula. To link it, click the chart title, type `=` in the formula bar, click this yellow "
-                         "cell, and press **Enter**. The formula bar then shows a reference such as `=Practice!$D$18`. "
+                         "a formula. To link it, click the chart title on ED_Monthly, type `=` in the formula bar, click "
+                         "the **Practice** sheet tab, click this yellow cell, and press **Enter**. The formula bar then "
+                         "shows a reference such as `=Practice!$D$18`. "
                          "TEXT turns the dates and the total into formatted text. Without it, `&` would join the raw "
                          f"serial number {excel_serial(monthly[0]['Month']):.0f} instead of Jan 2024. Because the formula "
                          "uses tblEDMonthly, adding January 2026 as a new row updates the chart and its title together."),
     ]
 
     # ------------------------------------------------------------------ bonus
-    L.bonus_title = "Bonus: Two charts for the operations review"
+    L.bonus_title = "Bonus: Charts for the operations review"
     L.bonus_scenario = (
         "Two directors bring questions to Bluestone's monthly operations review. The ED medical director believes patients "
         "leave without being seen (LWBS) mainly in busy months, and the ED's target is an LWBS rate of "
         f"{LWBS_TARGET:.0%} or less. The revenue-cycle director wants to know which denial reasons to work first, ranked by "
-        "dollars at risk (DeniedCharges) rather than by claim counts. Build one chart for each question and check the "
-        "numbers behind them.")
+        "dollars at risk (DeniedCharges) rather than by claim counts. Build a combo chart and a scatter chart for the "
+        "first question and a Pareto chart for the second, then check the numbers behind them.")
     rate_col = mo.col("LWBSRate")
     L.bonus = [
-        Task(f"On ED_Monthly, fill the yellow LWBSRate column with LWBS ÷ Total for each month and format it as a "
-             f"percentage. The gray cell counts the months above the {LWBS_TARGET:.0%} target. How many of the 24 months "
-             "missed the target?",
+        Task(f"On ED_Monthly, fill the yellow LWBSRate column with LWBS ÷ Total for each month. The column is already "
+             f"formatted as a percentage. The gray cell counts the months above the {LWBS_TARGET:.0%} target. How many of "
+             "the 24 months missed the target?",
              answer=b1, title="LWBSRate column (months above the 2% target)",
-             solution=f"={mo.col('LWBS')}{mfirst}/{mo.col('Total')}{mfirst}",
+             solution="=[@LWBS]/[@Total]",
              summary=f'=IF(COUNT({lwbs_rng})=0,"",COUNTIF({lwbs_rng},">{LWBS_TARGET}"))',
              fill={"range": f"ED_Monthly!{rate_col}{mfirst}:{rate_col}{mlast}",
                    "formula": f"={mo.col('LWBS')}{mfirst}/{mo.col('Total')}{mfirst}"},
-             live=fb1_live, hint="Type =[@LWBS]/[@Total] in the first LWBSRate cell, and the Table fills the rest",
-             explanation=f"Type `=[@LWBS]/[@Total]` (or `=F{mfirst}/E{mfirst}`) in {rate_col}{mfirst}. The Table fills the "
-                         "column for you. Rates make months comparable even though volume swings by "
+             live=fb1_live,
+             hint=f"Write one formula in {rate_col}{mfirst} with [@Column] references (Lesson 3.1). The Table fills the "
+                  "other 23 rows",
+             explanation=f"Type the formula in {rate_col}{mfirst} (`=F{mfirst}/E{mfirst}` works too). [@LWBS] means "
+                         "\"the LWBS value in this row\", and the Table fills the column for you. Rates make months comparable even though volume swings by "
                          f"{busiest_month['Total'] - quietest_month['Total']} visits between the busiest and quietest "
-                         f"months. {b1} of the 24 months were above {LWBS_TARGET:.0%}."),
+                         f"months. The gray cell runs `COUNTIF({rate_col}{mfirst}:{rate_col}{mlast},\">{LWBS_TARGET}\")` on "
+                         f"your column, and {b1} of the 24 months were above {LWBS_TARGET:.0%}."),
         Task("Build a combo chart on ED_Monthly with Total as clustered columns and LWBSRate as a line on the secondary "
              "axis (select Month, then Ctrl+click or ⌘+click Total and LWBSRate). Which month had the highest LWBS rate? Type the "
              "month and year.",
@@ -741,10 +785,10 @@ def build() -> Lesson:
              "DeniedCharges as columns and CumulativePct as a line on the secondary axis (fix that axis at 0% to 100%). "
              f"How many reasons does it take to reach at least {PARETO_CUT:.0%} of denied charges?",
              answer=b4, title="Manual Pareto: reasons needed to reach 80% of denied charges",
-             hint="Running share: =SUM($C$2:C2)/SUM($C$2:$C$8) filled down",
+             hint="Follow 'A Pareto by hand' in Guide section 12. DeniedCharges is column C. Sort before you chart",
              solution="1. Click a DeniedCharges cell → **Data → Sort Largest to Smallest**.\n"
-                      "2. In **D2** type `=SUM($C$2:C2)/SUM($C$2:$C$8)` and press **Enter**. The Table fills it down. "
-                      "Format the column as a percentage.\n"
+                      "2. In **D2** type `=SUM($C$2:C2)/SUM($C$2:$C$8)` and press **Enter**. The Table fills it down, and "
+                      "the column is already formatted as a percentage.\n"
                       "3. Select **A1:A8**, then **Ctrl+click** (Mac: **⌘+click**) **C1:D8**, and choose **Insert → Insert "
                       "Combo Chart → Clustered Column – Line on Secondary Axis**.\n"
                       "4. Double-click the secondary axis and set **Minimum** `0` and **Maximum** `1`. Optionally set the "
@@ -770,8 +814,10 @@ def build() -> Lesson:
              explanation=f"{b5} denials are fewer ({b5_row['Claims']} claims against {swapped_row['Claims']} for {swapped}) "
                          f"but larger: about ${avg_claim[b5]:,.0f} per claim against ${avg_claim[swapped]:,.0f}. That's "
                          "why the director asked for dollars. A count Pareto ranks the work queue by volume, and a dollar "
-                         "Pareto ranks it by money at risk. Showing both charts side by side, with the same colors and "
-                         "order, lets the committee see the difference at a glance. Cross-check: `" + fb5 + "`"),
+                         "Pareto ranks it by money at risk. Put the two charts side by side, at the same size, so the "
+                         "committee sees the swap at a glance. Cross-check (COUNTIF(range,\">\"&range) gives each "
+                         "reason's rank minus 1, so MATCH finds the reason whose dollar rank beats its claim rank. In "
+                         "Excel 2019 or earlier, confirm it with Ctrl + Shift + Enter): `" + fb5 + "`"),
     ]
 
     # ------------------------------------------------------------------ customize: Makeover, sparkline cells, Chart Key
@@ -791,6 +837,8 @@ def build() -> Lesson:
     def _custom(wb, lesson, selftest):
         title_font = Font(bold=True, size=14, color=NAVY)
         note_font = Font(italic=True, color="595959")
+        assert lesson.tasks[12].answer_cell == "D18", "Task 13's explanation quotes =Practice!$D$18"
+        wb.loaded_theme = _office_2013_theme()
 
         def no_delete(chart, *axes):
             for ax in axes or (chart.x_axis, chart.y_axis):
@@ -838,7 +886,7 @@ def build() -> Lesson:
         ws["A1"] = "🔑 Chart Key — Lesson 3.5"
         ws["A1"].font = Font(bold=True, size=16, color="7B2C2C")
         ws["A2"] = ("Reference versions of every chart in the lesson. Helper tables on the left feed the charts that need "
-                    "sorted or pre-binned data. Your colors, sizes, and fonts can differ; compare the shape and the numbers.")
+                    "sorted or pre-binned data. Your colors, sizes, and fonts can differ, so compare the shapes and the numbers.")
         ws["A2"].font = note_font
         ws.column_dimensions["A"].width = 30
         for letter in "BCDEF":
@@ -968,7 +1016,9 @@ def build() -> Lesson:
                                     [[b, n] for b, n in hist_bins], [None, "0"])
         c = BarChart()
         c.type = "col"
-        c.title = f"Most stays last 2–5 days; {t6} run past {HIST_OVER} days"
+        mid = sum(n for b, n in hist_bins if b in ("(2, 3]", "(3, 4]", "(4, 5]"))
+        assert mid > SAMPLE_N / 2, "the chart title claims most stays last 2-5 days"
+        c.title = f"Most stays last 2–5 days, and {t6} run past {HIST_OVER} days"
         c.add_data(Reference(ws, min_col=2, min_row=first, max_row=last), titles_from_data=True)
         c.set_categories(Reference(ws, min_col=1, min_row=first + 1, max_row=last))
         c.gapWidth = 6

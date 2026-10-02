@@ -217,7 +217,7 @@ def build() -> Lesson:
          # would otherwise print task 2's solution formula on a visible sheet)
         {"Step": 3, "Column": "PatientName", "ProblemFound": "Two layouts (Last, First and First Last), stray spaces, ALL CAPS and lowercase"},
         {"Step": 4, "Column": "Phone", "ProblemFound": "Six layouts, some with a +1 country code, and some blanks"},
-        {"Step": 5, "Column": "MRN", "ProblemFound": "Leading zeros lost on some rows; MRN- prefix on others"},
+        {"Step": 5, "Column": "MRN", "ProblemFound": "Leading zeros lost on some rows, and an MRN- prefix on others"},
         {"Step": 6, "Column": "DOB", "ProblemFound": "Dates stored as text in five layouts"},
         {"Step": 7, "Column": "Insurance", "ProblemFound": "Many spellings of 7 payers, some with trailing spaces"},
         {"Step": 8, "Column": "CityStateZip", "ProblemFound": "ZIP+4 mixed with 5-digit ZIPs"},
@@ -435,7 +435,7 @@ def build() -> Lesson:
                          "had extra spaces. Comparing lengths tests all 650 rows at once: the comparison gives TRUE/FALSE for "
                          "each row, the double minus turns those into 1/0, and SUMPRODUCT adds them. You can't see a trailing "
                          "space by looking at a cell, so a count like this is how you find out a problem exists before you fix "
-                         f"it. (In Microsoft 365, =SUM(--(LEN(…)<>LEN(TRIM(…)))) works too.)"),
+                         f"it. In Microsoft 365, `=SUM(--(LEN(…)<>LEN(TRIM(…))))` works too."),
         # ---------------------------------------------------------------- standardize a category with a formula
         Task(f"On the Clean sheet, fill the yellow SexClean column ({cl.col('SexClean')}) with a single capital letter, F or M. "
              f"The raw Sex column has {len(sex_spellings)} spellings, including Female, MALE, lowercase f, and values with a "
@@ -446,8 +446,8 @@ def build() -> Lesson:
              fill=fill("SexClean", sex_formula),
              live=f'=SUMPRODUCT(--EXACT(UPPER(LEFT(TRIM({R("Sex")}),1)),"F"))',
              hint="TRIM first, then take the first letter, then capitalize it",
-             explanation="Every spelling starts with the right letter once the stray space is gone, so the fix is TRIM → LEFT(…,1) "
-                         "→ UPPER. The order matters: LEFT(\" F\",1) is a space. The check uses EXACT because COUNTIF ignores "
+             explanation="Every spelling starts with the right letter once the stray space is gone, so the fix is TRIM, then "
+                         "`LEFT(…,1)`, then UPPER. The order matters: `LEFT(\" F\",1)` is a space. The check uses EXACT because COUNTIF ignores "
                          "case and would count a lowercase f as F. This shortcut works only because each value is identified by its "
                          "first letter. Medicare and Medicaid share a first letter, so Insurance needs a mapping table instead "
                          "(task 8)."),
@@ -501,7 +501,7 @@ def build() -> Lesson:
              fill={"range": f"CensusExport!{ce.col('Facility')}{ce.first_row}:{ce.col('Unit')}{ce.last_row}",
                    "values": [v for pair in filled for v in pair]},
              live=False,
-             hint="Go To Special selects only the blanks; Ctrl + Enter fills them all with one relative formula",
+             hint="Go To Special selects only the blanks, and Ctrl + Enter fills them all with one relative formula",
              explanation=f"After Go To Special, Excel has selected only the {n_blank_cells} empty cells, and the formula you type "
                          "goes into all of them at once. Because the reference is relative, each blank points to the cell "
                          "directly above it, and that cell either holds the label or points further up. The unit name "
@@ -535,7 +535,7 @@ def build() -> Lesson:
                          "(the first number, the last number, the last five characters), and on 45501-8106 those give different "
                          "answers. The ZIP+4 example leaves only \"the first number\". If the +4 survives, the distinct count "
                          f"jumps to {distinct_zip_raw}. Flash Fill writes typed-in values, not formulas, so it won't update when "
-                         "next month's export arrives. In Lesson 2.2 you did the same job with TEXTAFTER. The formula is the "
+                         "next month's export arrives. The Lesson 2.2 bonus did the same job with TEXTAFTER. The formula is the "
                          "repeatable choice, and Flash Fill is the fast one for a one-off."),
         # ---------------------------------------------------------------- SUBSTITUTE phones
         Task(f"Fill the yellow PhoneClean column ({cl.col('PhoneClean')}) with each phone as exactly 10 digits and nothing else, "
@@ -549,10 +549,11 @@ def build() -> Lesson:
              live=f"=SUMPRODUCT((LEN({raw_phone})=10)*ISNUMBER(--{raw_phone}))",
              hint="Nest one SUBSTITUTE per unwanted character, then keep the RIGHT 10 characters",
              explanation=f"Each SUBSTITUTE deletes one kind of character: parentheses, dashes, dots, and spaces. That leaves "
-                         f"5554767432 for most rows, but +15555973811 for the {n_plus1} numbers with a country code, so RIGHT(…,10) "
-                         f"keeps the last ten digits, which is always the U.S. number. A blank phone stays empty, and the "
-                         f"{n_phone_blank} blanks are why the count is {n_phone10}, not 650. Keep phones as text: they are "
-                         "identifiers, not quantities. In Microsoft 365, =RIGHT(REGEXREPLACE(E2,\"[^0-9]\",\"\"),10) removes "
+                         f"5554767432 for most rows, but +15555973811 for the {n_plus1} numbers with a country code, so "
+                         "`RIGHT(…,10)` keeps the last ten digits, which is always the U.S. number. A blank phone needs no "
+                         "special handling, because SUBSTITUTE and RIGHT on an empty cell return an empty result. The "
+                         f"{n_phone_blank} blanks are why the count is {n_phone10}, not {n}. Keep phones as text, because they are "
+                         "identifiers, not quantities. In Microsoft 365, `=RIGHT(REGEXREPLACE(E2,\"[^0-9]\",\"\"),10)` removes "
                          "every non-digit in one step."),
         # ---------------------------------------------------------------- MRN: numbers stored as text, leading zeros
         Task(f"Fill the yellow MRNClean column ({cl.col('MRNClean')}) with every MRN as 8-digit text: 05927600, not "
@@ -567,8 +568,8 @@ def build() -> Lesson:
              hint="Remove the prefix with SUBSTITUTE, make it a number with VALUE, then pad it back with TEXT(…,\"00000000\")",
              explanation=f"Two problems hide in this column. {mrn_prefix} rows carry an MRN- prefix, which SUBSTITUTE removes. "
                          f"{mrn_short} rows lost their leading zeros somewhere upstream, because a system treated the MRN as a "
-                         "number. VALUE turns the remaining text into a number, and TEXT(…,\"00000000\") writes it back as text "
-                         "with exactly 8 digits, adding the zeros it needs. =RIGHT(\"0000000\"&SUBSTITUTE(I2,\"MRN-\",\"\"),8) "
+                         "number. VALUE turns the remaining text into a number, and `TEXT(…,\"00000000\")` writes it back as text "
+                         "with exactly 8 digits, adding the zeros it needs. `=RIGHT(\"0000000\"&SUBSTITUTE(I2,\"MRN-\",\"\"),8)` "
                          f"does the same without VALUE. The result: {n} rows but only {distinct_mrn} patients, so "
                          f"{n - distinct_mrn} rows are duplicates."),
         # ---------------------------------------------------------------- mapping table
@@ -584,14 +585,14 @@ def build() -> Lesson:
              live=f'=SUMPRODUCT(--(XLOOKUP(TRIM({R("Insurance")}),{map_var},{map_id},"UNMAPPED")="PY02"))',
              hint="XLOOKUP the TRIMmed Insurance value in tblPayerMap, and use XLOOKUP's if_not_found argument for UNMAPPED",
              explanation=f"A mapping table turns a messy category into a standard code with one lookup, and it documents your "
-                         "decisions where everyone can see them, such as Uninsured → PY07 Self-Pay. XLOOKUP ignores case, so the "
+                         "decisions where everyone can see them, such as the rule that Uninsured means PY07 (Self-Pay). XLOOKUP ignores case, so the "
                          "map needs only one row per spelling, not one per capitalization. It does not ignore spaces, so TRIM "
                          f"comes first. Without TRIM, the {n_py02 - n_py02_untrimmed} rows typed \"Silverline Medicare "
                          "Advantage \" with a trailing space come back UNMAPPED. The \"UNMAPPED\" result makes new spellings "
                          "easy to find next month: filter for it, add the spelling as a new row of the map, and every formula picks it "
-                         "up. The Table references (tblPayerMap[Variant]) grow with the map. A fixed range such as "
-                         f"{map_var} works today but would miss a row added below it. Without XLOOKUP: "
-                         "=IFNA(VLOOKUP(TRIM(H2),tblPayerMap,2,FALSE),\"UNMAPPED\")."),
+                         "up. The Table references (`tblPayerMap[Variant]`) grow with the map. A fixed range such as "
+                         f"`{map_var}` works today but would miss a row added below it. Without XLOOKUP, use "
+                         "`=IFNA(VLOOKUP(TRIM(H2),tblPayerMap,2,FALSE),\"UNMAPPED\")`."),
         # ---------------------------------------------------------------- Text to Columns
         Task(f"Switch to LabFeed: {len(feed)} STAT results from a lab interface, each crammed into one cell as "
              f"MRN|TestCode|Result|Units|CollectedDateTime. Split A1:A{lf.last_row} into five columns with Data → Text to "
@@ -619,8 +620,8 @@ def build() -> Lesson:
                          "split and run it again."),
         # ---------------------------------------------------------------- names: two layouts
         Task(f"Fill the yellow NameClean column ({cl.col('NameClean')}) with every name as First Last in Proper Case, with "
-             f"single spaces: \"Haddad, Jonathan\" → Jonathan Haddad, \"  Alexander ,  Gary \" → Gary Alexander, and "
-             f"\"Amber White\" stays Amber White. {no_comma} rows are already First Last (no comma). The gray cell warns if "
+             f"single spaces. For example, `\"Haddad, Jonathan\"` becomes Jonathan Haddad, `\"  Alexander ,  Gary \"` becomes "
+             f"Gary Alexander, and `\"Amber White\"` stays Amber White. {no_comma} rows are already First Last (no comma). The gray cell warns if "
              f"any name still has extra spaces or is ALL CAPS or all lowercase. Otherwise it counts distinct names.",
              answer=distinct_names, title="NameClean column (distinct names)",
              solution=name_formula,
@@ -630,17 +631,17 @@ def build() -> Lesson:
              fill=fill("NameClean", name_formula),
              live=False,   # LibreOffice mis-evaluates the array form of this formula; the self-test covers it
              hint="IF(ISNUMBER(FIND(\",\",B2)), flip the two parts, just TRIM), then wrap everything in PROPER",
-             explanation=f"FIND(\",\",B2) returns a position when there is a comma and #VALUE! when there isn't, so "
-                         "ISNUMBER(FIND(…)) tells the two layouts apart. For Last, First rows, MID takes everything after the "
+             explanation=f"`FIND(\",\",B2)` returns a position when there is a comma and #VALUE! when there isn't, so "
+                         "`ISNUMBER(FIND(…))` tells the two layouts apart. For Last, First rows, MID takes everything after the "
                          "comma (the first name) and LEFT takes everything before it (the last name). TRIM each piece before "
                          "joining, because the spaces sit around the comma. PROPER on the outside fixes the case of both "
-                         f"layouts at once. Two checks on the result. First, the flip matters: =PROPER(TRIM(B2)) alone gives "
+                         f"layouts at once. Two checks on the result. First, the flip matters: `=PROPER(TRIM(B2))` alone gives "
                          f"{distinct_names_trim_only} distinct names, and deleting the comma without flipping still gives "
                          f"{distinct_names_noflip}, because the same patient then appears as both \"Amber White\" (row "
                          f"{row_of(PAIR[0])}) and \"White Amber\" (row {row_of(PAIR[1])}). Second, the count is {distinct_names}, "
                          f"not {distinct_mrn}, because "
                          f"{len(name_twins)} names belong to two different patients ({', '.join(name_twins)}). That's why "
-                         "you dedupe on MRN, never on name. PROPER also turns McDonald into Mcdonald, so fix known exceptions "
+                         "you deduplicate on MRN, never on name. PROPER also turns McDonald into Mcdonald, so fix known exceptions "
                          "by hand and note them in the cleaning log."),
         # ---------------------------------------------------------------- text dates
         Task(f"Fill the yellow DOBClean column ({cl.col('DOBClean')}) with real dates. DOB is text in five layouts: "
@@ -659,7 +660,7 @@ def build() -> Lesson:
                          "pieces. ISO dates have a dash in position 5. In 03-Apr-1957 the dash is in position 3, and the month comes "
                          f"from where Apr sits in \"{MONTHS}\" (position 10, and (10+2)/3 = 4). Everything else is month/day/year "
                          "with a / or . after the month. If your Windows or Mac region is United States, the much shorter "
-                         "=DATEVALUE(SUBSTITUTE(C2,\".\",\"/\")) gives identical results, because U.S. settings read the ISO "
+                         "`=DATEVALUE(SUBSTITUTE(C2,\".\",\"/\"))` gives identical results, because U.S. settings read the ISO "
                          "and 03-Apr-1957 layouts and read slashes month first. In a day-first region it reads "
                          "08/06/1989 as 8 June and fails on 3/22/1961, and in a language whose month names differ from English "
                          "it can fail on 03-Apr-1957 too. The day-13 test catches a swap: a month number is "
@@ -674,22 +675,23 @@ def build() -> Lesson:
              summary=f'=IF({sex_log_cell}="","",{sex_log_cell})',
              fill={"range": f"{sex_log_cell}:{sex_log_cell.split('!')[1]}", "formula": f"=SUMPRODUCT(--NOT(EXACT({C('Sex')},{C('SexClean')})))"},
              live=f'=SUMPRODUCT(--NOT(EXACT({R("Sex")},UPPER(LEFT(TRIM({R("Sex")}),1)))))',
-             hint="EXACT compares case-sensitively; NOT flips it; SUMPRODUCT(--…) counts",
+             hint="EXACT compares case-sensitively, NOT flips TRUE and FALSE, and SUMPRODUCT(--…) counts the TRUEs",
              explanation=f"A cleaning log records what you changed and how much, so the next person (or you, next month) can "
                          f"repeat it and audit it. \"Rows changed\" is the most useful number in it: here {sex_changed} of {n} "
-                         f"rows changed and {n - sex_changed} were already F or M. EXACT matters again: with =, \"f\" equals "
-                         "\"F\" and those rows would look unchanged. A count that is suspiciously high or low is often the first "
-                         "sign that a cleaning formula is wrong."),
+                         f"rows changed and {n - sex_changed} were already F or M. EXACT matters again, because with `=` the "
+                         "values \"f\" and \"F\" count as equal and those rows would look unchanged. A count that is "
+                         "suspiciously high or low is often the first sign that a cleaning formula is wrong."),
     ]
 
     # ------------------------------------------------------------------ bonus: master patient index
     L.bonus_title = "Bonus: Build the master patient list for the EHR migration"
     L.bonus_scenario = (
         "Bluestone is moving to a new EHR, and the vendor needs a master patient load file with exactly one row per patient. "
-        "The rule from Patient Access is: keep each patient's most recent registration (latest RegisteredOn). Work on the Clean "
+        "The rule from Patient Access is: keep each patient's most recent registration (latest RegisteredOn). Fill the Clean "
         "sheet's last two yellow columns (RegisteredClean and Keep), using your MRNClean and PhoneClean columns from the "
-        "practice tasks, then answer on the Bonus sheet. RegisteredOn has two "
-        "layouts: 2015-11-06 18:33:00 (24-hour clock) and 05/30/2022 05:42 PM (12-hour clock).")
+        "practice tasks. RegisteredOn has two "
+        "layouts: 2015-11-06 18:33:00 (24-hour clock) and 05/30/2022 05:42 PM (12-hour clock). If you want helper columns, "
+        "put them on the Clean sheet in column V or further right, outside the Table.")
     L.bonus = [
         Task(f"Fill the yellow RegisteredClean column ({cl.col('RegisteredClean')}) with real date-times. Make sure 05:42 PM "
              f"becomes 17:42. The gray cell checks every row, then counts registrations made at 5:00 PM or later (the evening "
@@ -701,12 +703,13 @@ def build() -> Lesson:
              fill=fill("RegisteredClean", reg_formula),
              live=f"=SUMPRODUCT(--(HOUR({raw_reg_times})>=17))",
              hint="In both layouts the time starts at character 12, and TIMEVALUE understands both 18:33:00 and 05:42 PM. "
-                  "Build the date part with DATE",
-             explanation="Both layouts put the time at character 12, so TIMEVALUE(MID(J2,12,8)) reads \"18:33:00\" and "
+                  "Build the date part with DATE, then add the time to it",
+             explanation="Both layouts put the time at character 12, so `TIMEVALUE(MID(J2,12,8))` reads \"18:33:00\" and "
                          "\"05:42 PM\" alike, and AM/PM is handled for you. The date part differs, so the IF builds it with DATE "
-                         "from the right pieces. A date-time is just date + time (a whole number plus a fraction of a day). "
+                         "from the right pieces. In the ISO layout the day is `MID(J2,9,2)`, not `RIGHT(J2,2)`, because the time "
+                         "follows it. A date-time is just date + time (a whole number plus a fraction of a day). "
                          f"If PM were ignored, the evening count would drop to {evening_if_pm_ignored}. With U.S. regional "
-                         "settings, =--J2 (or =VALUE(J2)) converts both layouts in one step."),
+                         "settings, `=--J2` (or `=VALUE(J2)`) converts both layouts in one step."),
         Task(f"Fill the yellow Keep column ({cl.col('Keep')}) with TRUE on exactly one row per patient (MRNClean): the row "
              f"with that patient's latest RegisteredClean. If the latest time appears on two identical rows, keep only the "
              f"first of them. Every other row is FALSE. The gray cell counts the TRUEs.",
@@ -715,18 +718,20 @@ def build() -> Lesson:
              summary=f'=IF(COUNTA({C("Keep")})=0,"",COUNTIF({C("Keep")},TRUE))',
              fill=fill("Keep", keep_formula),
              live=f"=ROWS(UNIQUE({raw_mrn_text}))",
-             hint="MAXIFS finds the patient's latest time. A COUNTIFS over an expanding range ($Q$2:Q2) breaks ties",
+             hint="MAXIFS (Lesson 2.5) finds the patient's latest time. A COUNTIFS over an expanding range "
+                  "(`$Q$2:Q2`) breaks ties",
              explanation="The first test, RegisteredClean = MAXIFS(all RegisteredClean, all MRNClean, this MRN), is TRUE on the "
                          "patient's latest row. Exact copies share that time, so the second test counts how many rows so far "
-                         "(the range $Q$2:Q2 grows as the formula goes down) have this MRN and this time. It equals 1 only on "
+                         "(the range `$Q$2:Q2` grows as the formula goes down) have this MRN and this time. It equals 1 only on "
                          f"the first of them. The total must equal the {distinct_mrn} distinct MRNs from practice task 7, which "
-                         "is a good cross-check. Avoid comparing date-times with \">\"&R2 inside COUNTIFS: that turns the "
-                         "time into text with 15 digits and can miss by a rounding error."),
+                         "is a good cross-check. Avoid comparing date-times with `\">\"&R2` inside COUNTIFS, because that turns "
+                         "the time into text with 15 digits and can miss by a rounding error."),
         Task(f"Which RegisteredOn did you keep for MRN {KEEP_MRN}? Enter it as a date and time.",
              answer=kept_reg, fmt="mm/dd/yyyy hh:mm", title=f"Registration kept for MRN {KEEP_MRN}",
              solution=f'=MAXIFS({C("RegisteredClean")},{C("MRNClean")},"{KEEP_MRN}",{C("Keep")},TRUE)',
              live=(f'=MAX(IF({raw_mrn_text}="{KEEP_MRN}",{raw_reg_times}))'),
-             hint="MAXIFS (or XLOOKUP) with two conditions: this MRN, and Keep = TRUE",
+             hint="MAXIFS with two conditions: MRNClean is this MRN, and Keep is TRUE. Or filter Clean on those two "
+                  "columns and read RegisteredClean",
              explanation=f"This patient has three rows. Two of them say {by_rid[raw[groups[KEEP_MRN][0]]['RecordID']]['MRN']} (the "
                          f"MRN lost its leading zero) with the time {first_reg:%H:%M}, and the third says {KEEP_MRN} with "
                          f"{raw[next(i for i in groups[KEEP_MRN] if keep[i])]['RegisteredOn']}. You only find all three after "
@@ -739,27 +744,29 @@ def build() -> Lesson:
                        f"<>ROW({C('MRNClean')})-{F - 1}))"),
              live=False,
              hint="A row is a patient's first occurrence when MATCH(its MRN, the MRN column, 0) returns its own position. "
-                  "Or add a helper column with COUNTIF($Q$2:Q2,Q2)=1",
-             explanation="MATCH(MRN, MRN column, 0) returns the position of the first row with that MRN. ROW(…)-1 is each "
+                  "Or add a helper column with `=COUNTIF($Q$2:Q2,Q2)=1`",
+             explanation="MATCH(MRN, MRN column, 0) returns the position of the first row with that MRN. `ROW(…)-1` is each "
                          "row's own position in the column (row 2 is position 1). Where they differ, the row is a repeat. "
                          "Multiplying by Keep counts kept rows that are repeats. "
                          f"For these {not_first} patients a newer registration sits further down the file. To make Remove "
                          "Duplicates keep the newest row, sort by RegisteredClean (newest to oldest) first, then remove "
                          "duplicates on MRNClean: the first row it meets is then the newest."),
-        Task("Survivorship check: \"keep the latest row\" can throw away good data. How many kept rows have an empty "
-             "PhoneClean even though another registration for the same patient has a phone number?",
+        Task("The rule \"keep the latest row\" decides which registration survives into the master list, and it can throw "
+             "away good data. How many kept rows have an empty PhoneClean even though another registration for the same "
+             "patient has a phone number?",
              answer=lost_phone, title="Kept rows that lose a phone number",
              solution=(f'=SUMPRODUCT({C("Keep")}*({C("PhoneClean")}="")'
                        f'*(COUNTIFS({C("MRNClean")},{C("MRNClean")},{C("PhoneClean")},"?*")>0))'),
              live=False,
-             hint="For each row, COUNTIFS(MRN column, this MRN, PhoneClean column, \"?*\") counts that patient's rows "
+             hint="For each row, COUNTIFS(MRN column, this MRN, PhoneClean column, `\"?*\"`) counts that patient's rows "
                   "that have a phone",
              explanation="When its criteria argument is a range instead of a single value, COUNTIFS returns one count per row: "
-                         "how many rows share this row's MRN and have a phone. \"?*\" means at least one character, which works "
-                         "because PhoneClean is text. Multiply by Keep and by an empty PhoneClean "
+                         "how many rows share this row's MRN and have a phone. The criteria `\"?*\"` means at least one "
+                         "character, which works because PhoneClean is text. Multiply by Keep and by an empty PhoneClean "
                          f"to find the {lost_phone} patients who would arrive in the new EHR with no phone, although an older "
-                         "registration has one. Real MPI loads use survivorship rules for this: take each field from the most "
-                         "recent row that has it filled in, not every field from the most recent row."),
+                         "registration has one. Real master patient index (MPI) loads prevent this with **survivorship rules**, "
+                         "which decide field by field which value survives. A common rule takes each field from the most "
+                         "recent row that has it filled in, instead of taking every field from the most recent row."),
     ]
 
     # ------------------------------------------------------------------ workbook polish
@@ -767,6 +774,24 @@ def build() -> Lesson:
 
     @L.customize
     def _polish(wb, lesson, selftest):
+        # Some prompts and hints use Markdown code spans so GitHub keeps doubled spaces and doesn't read "?*" as emphasis or
+        # "$Q$2" as math. The library writes prompts and hints to the workbook verbatim (only explanations are de-Markdowned),
+        # so strip the backticks here: prompt and hint columns on Practice/Bonus, prompt column on the two key sheets.
+        for sheet, last_col in ((lesson.practice_sheet, 3), (lesson.bonus_sheet, 3), (lesson.key_sheet, 2),
+                                (lesson.bonus_key_sheet, 2)):
+            for row in wb[sheet].iter_rows(min_row=5, min_col=2, max_col=last_col):
+                for c in row:
+                    if isinstance(c.value, str) and "`" in c.value:
+                        c.value = c.value.replace("`", "")
+        # The key's "Sample solution" column also gets the Markdown step lists of the tool tasks (3, 4, 5, 9) verbatim.
+        # Strip the bold/italic markers and backticks there, but never touch formula solutions (their * means multiply)
+        # or the text inside code spans.
+        for sheet in (lesson.key_sheet, lesson.bonus_key_sheet):
+            for row in wb[sheet].iter_rows(min_row=5, min_col=4, max_col=4):
+                c = row[0]
+                if isinstance(c.value, str) and not c.value.startswith("=") and ("**" in c.value or "`" in c.value):
+                    parts = c.value.split("`")
+                    c.value = "".join(p if i % 2 else p.replace("**", "").replace("*", "") for i, p in enumerate(parts))
         # CleaningLog: learner cells in yellow; wrap long text
         lg_ws = wb["CleaningLog"]
         for r in range(lg.first_row, lg.last_row + 1):
