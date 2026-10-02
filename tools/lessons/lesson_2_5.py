@@ -299,7 +299,8 @@ def build() -> Lesson:
                          f"{int(data.excel_serial(oldest_pending))}, format it as a date."),
         Task(f"On the Payer Mix sheet, fill the yellow grid {PM_C0}{PM_FIRST}:{PM_C1}{PM_LAST} with ONE COUNTIFS formula: the "
              f"number of encounters for the payer in column A and the encounter type in row {PM_HDR}. Type it in "
-             f"{PM_C0}{PM_FIRST}, then copy it across and down. The gray cell adds up your grid.",
+             f"{PM_C0}{PM_FIRST}, then copy it across and down. Type the data ranges as cell addresses with $ signs instead "
+             "of selecting Table columns (guide section 11 explains why). The gray cell adds up your grid.",
              answer=grid_total, title="Payer mix grid filled with one formula",
              solution=grid_formula,
              summary=f'=IF(COUNT({pm_rng})=0,"",SUM({pm_rng}))',
@@ -391,8 +392,9 @@ def build() -> Lesson:
     L.bonus = [
         Task(f"On the Claims sheet, fill the yellow DaysToPay column ({clm.col('DaysToPay')}{c_first}:"
              f"{clm.col('DaysToPay')}{c_last}) with PaidDate − SubmitDate, or an empty text string (\"\") when PaidDate is "
-             "blank. Use one formula copied down. The gray cell averages your column across all claim types. (Keep full "
-             "precision. The check accepts 2 decimal places.)",
+             f"blank. Type one formula in {clm.col('DaysToPay')}{c_first}. Claims is a Table, so Excel fills it down the whole "
+             "column for you. If you click cells instead of typing their addresses, Excel writes [@PaidDate], which means "
+             "the PaidDate on the same row. The gray cell averages your column across all claim types.",
              answer=avg_dtp, fmt="0.00", title="DaysToPay helper column",
              solution=dtp_fill,
              summary=f'=IF(COUNT({dtp_rng})=0,"",AVERAGE({dtp_rng}))',
@@ -400,8 +402,9 @@ def build() -> Lesson:
              live=(f'=(SUM({C("PaidDate")})-SUMIFS({C("SubmitDate")},{C("PaidDate")},"<>"))'
                    f'/COUNT({C("PaidDate")})'),
              hint="IF(PaidDate=\"\", \"\", PaidDate − SubmitDate)",
-             explanation=f"No COUNTIFS can subtract two columns row by row, so a **helper column** does the subtraction first. "
-                         f"Then AVERAGEIFS can average it by payer. Without the IF, an unpaid claim computes 0 − SubmitDate, "
+             explanation=f"The -IFS functions can only test and average columns that already exist. None of them can subtract "
+                         f"two columns row by row, so a **helper column** does the subtraction first, and then AVERAGEIFS can "
+                         f"average it by payer. Without the IF, an unpaid claim computes 0 − SubmitDate, "
                          f"a large negative number of days that wrecks every average. The empty text \"\" is "
                          f"skipped by AVERAGE and AVERAGEIFS. The key's live formula shows a no-helper version: the average of "
                          f"the differences is (sum of PaidDates − sum of their SubmitDates) ÷ the number of paid claims."),
@@ -416,7 +419,8 @@ def build() -> Lesson:
              summary=f'=IF(COUNTA({rate_rng})=0,"",MAX({rate_rng}))',
              fill={"range": rate_rng, "formula": sc_rate},
              live="=" + rate_formula(worst),
-             hint="Adjudicated: \"<>Pending\". Denied: SUM(COUNTIFS(…,{\"Denied\",\"Appealed\"})). Guard: IF(B5=0,\"n/a\",…)",
+             hint="Column B: \"<>Pending\". Column C: the OR pattern from guide section 4. Column D: test column B for 0 "
+                  "before you divide",
              explanation=f"Column B uses `\"<>Pending\"` to count every decision. Column C needs OR logic (Denied or Appealed), "
                          f"so it wraps COUNTIFS with an array constant in SUM. `$A{SC_FIRST}` keeps each formula reading its own "
                          f"payer as you copy down. Workers' Compensation had no inpatient claims, so its row divides 0 by 0. "
@@ -431,7 +435,8 @@ def build() -> Lesson:
                          f"{stats[runner]['rate']:.1%}, and traditional Medicare is at {stats['Medicare']['rate']:.1%}. A formula "
                          f"can find the name for you too: `=INDEX(A{SC_FIRST}:A{SC_LAST},MATCH(MAX(D{SC_FIRST}:D{SC_LAST}),"
                          f"D{SC_FIRST}:D{SC_LAST},0))` on the Scorecard sheet. Lesson 2.6 teaches INDEX and MATCH."),
-        Task("Dollars at risk: what is the total BilledAmount of that payer's inpatient claims that are Denied or Appealed?",
+        Task("Dollars at risk: for the payer you named in task B3, what is the total BilledAmount of its inpatient claims "
+             "that are Denied or Appealed?",
              answer=worst_at_risk, fmt="#,##0.00",
              solution=(f'=SUM(SUMIFS({C("BilledAmount")},{C("PayerName")},"{worst}",{C("EncounterType")},"Inpatient",'
                        f'{C("ClaimStatus")},{{"Denied","Appealed"}}))'),
@@ -440,7 +445,7 @@ def build() -> Lesson:
                          f"About {worst_at_risk / 1e6:.1f} million dollars of inpatient charges are tied up in denials with this "
                          "one payer, which is the number that gets a contract meeting's attention."),
         Task("Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer "
-             "has none). How many more days, on average, does the payer from B3 take to pay an inpatient claim than "
+             "has none). How many more days, on average, does the payer you named in task B3 take to pay an inpatient claim than "
              "Medicare does? Subtract the full-precision averages (point at the cells instead of retyping the 1-decimal "
              "values that column E displays), then round the difference to 1 decimal place.",
              answer=dtp_gap, fmt="0.0", tol=0.0001, title="How much slower the worst payer pays",
@@ -451,7 +456,8 @@ def build() -> Lesson:
                          f"IFERROR turns Workers' Compensation's #DIV/0! into n/a. Here IFERROR is the right guard, because "
                          f"AVERAGEIFS has no separate denominator you could test. {worst} averages "
                          f"{stats[worst]['dtp']:.2f} days and Medicare {stats['Medicare']['dtp']:.2f}, so "
-                         f"`=ROUND(E{row_of[worst]}-E{row_of['Medicare']},1)` on the Scorecard gives the same {dtp_gap}. "
+                         f"`=ROUND({SC}!E{row_of[worst]}-{SC}!E{row_of['Medicare']},1)` in the answer cell gives the same "
+                         f"{dtp_gap}. "
                          f"Compared with traditional Medicare, {worst} denies about four times as often *and* takes about "
                          "two weeks longer to pay."),
     ]
@@ -460,6 +466,8 @@ def build() -> Lesson:
         "Encounters and Claims are Excel Tables. If you select a whole Table column while writing a formula, Excel may write "
         "it as tblEncounters[EncounterType] instead of Encounters!C2:C2725. Both give the same result.",
         f"{unbilled} encounters from 2025 had not been billed by 12/31/2025, so the Claims sheet has {len(claim_rows):,} rows.",
+        "Practice task 12 is filled on the Payer Mix sheet, and the bonus scorecard on the Scorecard sheet. Their gray "
+        "cells are pre-filled totals and checks.",
     ]
     L.sheet_order = ["Start Here", "Practice", "Encounters", "Claims", "Payer Mix", "Bonus", SC, "Answer Key", "Bonus Key"]
 
@@ -520,7 +528,8 @@ def build() -> Lesson:
         titled(ws, "Payer mix · 2025 encounters by payer and encounter type",
                f"Fill the yellow grid {PM_C0}{PM_FIRST}:{PM_C1}{PM_LAST} with ONE COUNTIFS formula typed in {PM_C0}{PM_FIRST} "
                "(practice task 12), then copy it across and down. Each cell counts the Encounters rows whose PayerName matches "
-               f"column A and whose EncounterType matches row {PM_HDR}.",
+               f"column A and whose EncounterType matches row {PM_HDR}. Type the data ranges as cell addresses with $ signs, "
+               "not as Table references.",
                "Gray cells are already filled in. Column F totals your row, and column G counts the payer's encounters with "
                "COUNTIF, so F and G match when a row is right.", cols=3 + len(TYPES), width=105)
         header(ws, PM_HDR, ["PayerName ↓   EncounterType →"] + TYPES + ["Row total", "COUNTIF check"])

@@ -291,8 +291,9 @@ def build() -> Lesson:
     L.practice_intro = (f"Tasks use three data sheets. Stays holds {len(stays)} inpatient stays (rows {sf}–{sl}), ED holds "
                         f"{len(ed)} visits (rows {ef}–{el}), and Meds holds {len(meds)} medication orders (rows {mf}–{ml}). "
                         f"Reference a column's data rows, like {J}, rather than a whole column like J:J, because the header "
-                        "text in row 1 breaks the row-by-row math in SUMPRODUCT. When a task asks you to round, round with a "
-                        "function so the stored value matches, not just the display.")
+                        "text in row 1 breaks the row-by-row math in SUMPRODUCT. Structured references such as "
+                        "tblStays[TotalCharges] work too. When a task asks you to round, round with a function so the stored "
+                        "value matches, not just the display.")
 
     L.tasks = [
         Task("What is the most common ESI triage level among the ED visits?",
@@ -321,19 +322,20 @@ def build() -> Lesson:
                          f"${sd_100:,}. STDEV.S treats the stays as a sample of an ongoing process, which is the usual choice. "
                          f"STDEV.P gives ${ch_sdp:,.2f}, which rounds to ${int(round(ch_sdp, -2)):,}, so the check tells the two "
                          "apart."),
-        Task("ED leaders review the three longest ED stays each period for boarding delays. They report each stay in whole "
-             "hours and count any started hour as a full hour. Find the 3rd-longest EDLOSMin on the ED sheet, convert it to "
-             "hours, and round it up to a whole number of hours with ROUNDUP.",
+        Task("ED leaders review the three longest ED visits for boarding delays, where an admitted patient waits in the ED "
+             "for an inpatient bed. They report each visit's length of stay in whole hours and count any started hour as a "
+             "full hour. Find the 3rd-longest EDLOSMin on the ED sheet, convert it to hours, and round it up to a whole "
+             "number of hours with ROUNDUP.",
              answer=third_longest_h_up,
              solution=f"=ROUNDUP(LARGE({er('EDLOSMin')},3)/60,0)",
-             hint="LARGE(array, k) finds the stay. Divide by 60, then ROUNDUP(…, 0)",
-             explanation=f"LARGE returns the k-th largest value, so `LARGE(range,1)` is the same as MAX. The three longest stays "
-                         f"were {edlos_desc[0]:,}, {edlos_desc[1]:,}, and {edlos_desc[2]:,} minutes. The 3rd is "
+             hint="LARGE(array, k) finds the visit. Divide by 60, then ROUNDUP(…, 0)",
+             explanation=f"LARGE returns the k-th largest value, so `LARGE(range,1)` is the same as MAX. The three longest visits "
+                         f"lasted {edlos_desc[0]:,}, {edlos_desc[1]:,}, and {edlos_desc[2]:,} minutes. The 3rd is "
                          f"{third_longest:,} ÷ 60 = {third_longest_hrs:.2f} hours, and ROUNDUP turns the started hour into a "
                          f"full one, giving {third_longest_h_up}. `ROUND` and `ROUNDDOWN` both give {third_longest_h_round} "
-                         "here, which would under-report the stay because the rule counts every started hour. "
-                         f"`=CEILING.MATH(LARGE(…,3)/60)` gives the same {third_longest_h_up}. Change k to 2 or 1 to list "
-                         "the other two stays."),
+                         "here, which would under-report the visit because the rule counts every started hour. "
+                         f"`=CEILING.MATH(LARGE(…,3)/60)` gives the same {third_longest_h_up}. Change k to 2 or 1 to see "
+                         "the other two visits."),
         Task("The charge-capture team audits the cheapest stays, because an unusually low charge often means some charges "
              "were never posted. What is the 3rd-lowest TotalCharges?",
              answer=third_lowest, fmt="#,##0.00",
@@ -383,8 +385,9 @@ def build() -> Lesson:
                          f"every other order's price. Divide by `SUM({mr('DosesDispensed')})` to get the average cost per dose, "
                          f"${med_cost / med_doses:,.2f}."),
         Task(f"Fill the yellow AgeBand column on the Stays sheet with each stay's 10-year age band using FLOOR.MATH, so "
-             f"age 78 becomes 70 and age 80 becomes 80. Start in {sty.cell('AgeBand', 0, sheet=False)}. The gray cell counts "
-             f"the stays in the {band}–{band + 9} band.",
+             f"age 78 becomes 70 and age 80 becomes 80. Type the formula in {sty.cell('AgeBand', 0, sheet=False)}. Stays is "
+             "an Excel Table, so Excel fills the formula down the whole column for you. If it doesn't, double-click the "
+             f"fill handle. The gray cell counts the stays in the {band}–{band + 9} band.",
              answer=band_n, title=f"AgeBand column with FLOOR.MATH (stays aged {band}–{band + 9})",
              solution=f"=FLOOR.MATH({sty.col('Age')}{sf},10)",
              summary=f'=IF(COUNT(Stays!${sty.col("AgeBand")}${sf}:${sty.col("AgeBand")}${sl})=0,"",'
@@ -397,29 +400,6 @@ def build() -> Lesson:
                          f"the {band} band. `ROUND(E2,-1)` would be wrong, because it sends ages 75–84 to 80 and gives "
                          f"{band_round_n} instead of {band_n}. `=INT(E2/10)*10`, `=TRUNC(E2,-1)`, and `=ROUNDDOWN(E2,-1)` all work "
                          f"too. In the Table you may see `=FLOOR.MATH([@Age],10)`. The most common band is the {band_top}s."),
-        Task(f"The ED status board rounds each visit's length of stay to the nearest {BOARD_ROUND_MIN} minutes and shows it as "
-             f"hours and minutes, like \"6 h 45 min\". What does it show for visit {b['EDVisitID']} (ED row {b_row}, "
-             f"EDLOSMin = {b_min})? Build the text with one formula that refers to the EDLOSMin cell.",
-             answer=b_text, accept=b_accept, check="text",
-             solution=(f'=INT(MROUND(ED!{edd.col("EDLOSMin")}{b_row},{BOARD_ROUND_MIN})/60)&" h "&'
-                       f'MOD(MROUND(ED!{edd.col("EDLOSMin")}{b_row},{BOARD_ROUND_MIN}),60)&" min"'),
-             hint="MROUND to 15 first. Then INT(minutes/60) gives hours and MOD(minutes,60) gives the minutes left over. Join with &",
-             explanation=f"`MROUND({b_min},{BOARD_ROUND_MIN})` returns {b_round}, because {b_min} is closer to {b_round} than to "
-                         f"{b_round - BOARD_ROUND_MIN}. Then `INT({b_round}/60)` is {hh} whole hours and `MOD({b_round},60)` is the "
-                         f"{mm} minutes left over. The & operator joins the pieces into \"{b_text}\". Without the rounding the board "
-                         f"would show \"{b_raw_text}\". `TRUNC` or `ROUNDDOWN(…,0)` can replace INT here because the minutes are "
-                         "positive."),
-        Task(f"Case managers call a stay \"on target\" when its LOSDays is within {ON_TARGET_DAYS} day of its ExpectedLOS in "
-             f"either direction (a difference of {ON_TARGET_DAYS}.0 day or less, longer or shorter). How many of the "
-             f"{len(stays)} stays were on target? Use one formula.",
-             answer=on_target,
-             solution=f"=SUMPRODUCT(--(ABS({sr('LOSDays')}-{sr('ExpectedLOS')})<={ON_TARGET_DAYS}))",
-             hint="ABS makes −0.9 and +0.9 the same distance. Count TRUE results with SUMPRODUCT(--(…)) from Lesson 2.1",
-             explanation="Subtracting the two columns gives each stay's variance, which is negative when the stay was shorter than "
-                         "expected. ABS turns every variance into a distance, the comparison turns each distance into TRUE or "
-                         "FALSE, `--` turns those into 1s and 0s, and SUMPRODUCT adds them. Without ABS, every stay that ended "
-                         f"early would count as on target, and you'd get {no_abs}. A helper column of `=ABS(I2-H2)` counted with "
-                         f"`COUNTIF(range,\"<=1\")` gives the same {on_target}."),
         Task(f"Order {v['MedOrderID']} (Meds row {v_row}) is vancomycin {VANC_DOSE_MG:,} mg every 12 hours, with "
              f"{v_doses} doses dispensed. Assume the IV room mixes every dose from {VANC_VIAL_MG} mg single-dose vials and "
              "throws away whatever is left in an opened vial. How many vials did this order use?",
@@ -434,6 +414,30 @@ def build() -> Lesson:
                          "leftover drug carries over to the next dose, which a single-dose vial doesn't allow. "
                          f"`=ROUNDUP({VANC_DOSE_MG}/{VANC_VIAL_MG},0)*Meds!{med.col('DosesDispensed')}{v_row}` also works. The order wasted {v_waste:,} mg in "
                          "partly used vials."),
+        Task(f"Case managers call a stay \"on target\" when its LOSDays is within {ON_TARGET_DAYS} day of its ExpectedLOS in "
+             f"either direction (a difference of {ON_TARGET_DAYS}.0 day or less, longer or shorter). How many of the "
+             f"{len(stays)} stays were on target? Use one formula.",
+             answer=on_target,
+             solution=f"=SUMPRODUCT(--(ABS({sr('LOSDays')}-{sr('ExpectedLOS')})<={ON_TARGET_DAYS}))",
+             hint="ABS makes −0.9 and +0.9 the same distance. Count TRUE results with SUMPRODUCT(--(…)) from Lesson 2.1",
+             explanation="Subtracting the two columns gives each stay's difference from expected, which is negative when the stay "
+                         "was shorter than expected. ABS turns every difference into a distance, the comparison turns each "
+                         "distance into TRUE or FALSE, `--` turns those into 1s and 0s, and SUMPRODUCT adds them. Without ABS, "
+                         "every stay that ended "
+                         f"early would count as on target, and you'd get {no_abs}. A helper column of `=ABS(I2-H2)` counted with "
+                         f"`COUNTIF(range,\"<=1\")` gives the same {on_target}."),
+        Task(f"The ED status board rounds each visit's length of stay to the nearest {BOARD_ROUND_MIN} minutes and shows it as "
+             f"hours and minutes, like \"6 h 45 min\". What does it show for visit {b['EDVisitID']} (ED row {b_row}, "
+             f"EDLOSMin = {b_min})? Build the text with one formula that refers to the EDLOSMin cell.",
+             answer=b_text, accept=b_accept, check="text",
+             solution=(f'=INT(MROUND(ED!{edd.col("EDLOSMin")}{b_row},{BOARD_ROUND_MIN})/60)&" h "&'
+                       f'MOD(MROUND(ED!{edd.col("EDLOSMin")}{b_row},{BOARD_ROUND_MIN}),60)&" min"'),
+             hint="MROUND to 15 first. Then INT(minutes/60) gives hours and MOD(minutes,60) gives the minutes left over. Join with &",
+             explanation=f"`MROUND({b_min},{BOARD_ROUND_MIN})` returns {b_round}, because {b_min} is closer to {b_round} than to "
+                         f"{b_round - BOARD_ROUND_MIN}. Then `INT({b_round}/60)` is {hh} whole hours and `MOD({b_round},60)` is the "
+                         f"{mm} minutes left over. The & operator joins the pieces into \"{b_text}\". Without the rounding the board "
+                         f"would show \"{b_raw_text}\". `TRUNC` or `ROUNDDOWN(…,0)` can replace INT here because the minutes are "
+                         "positive."),
     ]
 
     # ------------------------------------------------------------------ bonus

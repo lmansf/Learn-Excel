@@ -187,7 +187,7 @@ def build() -> Lesson:
     dxs = L.add_table_sheet(
         "Diagnoses", diagnoses, table="tblDiagnoses",
         columns=["DxCode", "DxDescription", "DxCategory", "ChronicCondition", "ExpectedLOS"],
-        formats={"ExpectedLOS": "0.0"}, widths={"DxDescription": 62},
+        formats={"ExpectedLOS": "0.0"}, widths={"DxDescription": 75},
     )
     pys = L.add_table_sheet(
         "Payers", payer_rows, table="tblPayers",
@@ -206,7 +206,7 @@ def build() -> Lesson:
     bs = L.add_table_sheet(
         "Budget", budget_rows, table="tblBudget",
         columns=["DeptID", "DeptName", "FacilityID"] + CATS,
-        formats={c: "#,##0" for c in CATS}, widths={c: 15 for c in CATS},
+        formats={c: "#,##0" for c in CATS}, widths={c: max(15, len(c) + 4) for c in CATS},  # room for the filter button
     )
     bts = L.add_table_sheet("BMITiers", bmi_rows, table="tblBMITiers", columns=["MinBMI", "Category", "BMIRange"],
                             formats={"MinBMI": "0.0"}, widths={"Category": 18, "BMIRange": 20})
@@ -287,10 +287,13 @@ def build() -> Lesson:
     ref_fill = (f'=XLOOKUP({rs.col("MRN")}{rs.first_row},{R(ps, "MRN")},{R(ps, "PatientID")},"{NOT_FOUND}")')
 
     L.practice_intro = (
-        "The Encounters sheet stores IDs only. Every answer comes from looking an ID up in another sheet. "
+        "The Encounters sheet stores IDs only, so every answer comes from looking an ID up in another sheet. "
         "Write each answer as a formula. Your answers sit on this Practice sheet, so a reference to a data cell needs its "
         "sheet name, such as Encounters!B9. Click the cell on the data sheet and Excel writes the sheet name for you. "
-        "Lock lookup ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy.")
+        "Tasks 5, 7, and 13 are different: you type the formula on a data sheet and copy it down the column, and the gray "
+        "cell here reads your column. Lock the lookup table's ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you "
+        "copy. If Excel writes a Table reference such as tblPayers[PayerName] instead, keep it, because a Table reference "
+        "never slides when you copy it down.")
 
     L.tasks = [
         Task(f"Encounter {t1['EncounterID']} is on row {erow(t1['EncounterID'])} of the Encounters sheet. Use VLOOKUP with its "
@@ -407,7 +410,8 @@ def build() -> Lesson:
                          "format the cell as a date. `=MAXIFS(…)` (Lesson 2.5) gives the same date, but only the lookup can return "
                          "other columns from that row, like its EncounterID or diagnosis."),
         Task(f"The Referrals sheet lists {len(referrals)} referrals received in December. Fill its yellow PatientID column by "
-             f"looking up each MRN in the Patients sheet (start in {pid_col}{rs.first_row}). Patients who aren't on the panel "
+             f"looking up each MRN in the Patients sheet (start in {pid_col}{rs.first_row} and copy down to row {rs.last_row}). "
+             f"Patients who aren't on the panel "
              f"yet must show the text {NOT_FOUND} instead of #N/A. The gray cell counts the {NOT_FOUND} rows.",
              answer=a13, title="Referral PatientID column (count of Not found)",
              hint="XLOOKUP's 4th argument (if_not_found), or wrap the lookup in IFNA(…, \"Not found\")",
@@ -427,7 +431,7 @@ def build() -> Lesson:
     pa = pts_by_id[ea["PatientID"]]
     pr = prov[ea["AttendingProviderID"]]
     ca = claims_by_enc[CARD_A]
-    card_rows = [  # (label, formula for column B (Card A); column C is the same formula copied right)
+    card_rows = [  # (label, formula for column B (Card 1); column C is the same formula copied right)
         ("PatientID", f'=XLOOKUP(B$5,{R(es, "EncounterID")},{R(es, "PatientID")},"{NOT_FOUND}")'),
         ("Attending ProviderID", f'=XLOOKUP(B$5,{R(es, "EncounterID")},{R(es, "AttendingProviderID")},"{NOT_FOUND}")'),
         ("Patient name (First Last)",
@@ -468,7 +472,7 @@ def build() -> Lesson:
     assert naive_age != card_a["Age at admission (years)"]      # the YEAR-minus-YEAR trap is real for this patient
     card_b_count = len(card_rows)                                 # every output row must say Not found
     card_table = "\n".join(
-        ["| Row | Field | Card A (" + CARD_A + ") | Card B (" + CARD_B + ") |", "|:-:|---|---|---|"]
+        ["| Row | Field | Card 1 (" + CARD_A + ") | Card 2 (" + CARD_B + ") |", "|:-:|---|---|---|"]
         + [f"| {card_row[k]} | {k} | {v} | {NOT_FOUND} |" for k, v in card_a.items()])
 
     def card_task(label, prompt, answer, hint, explanation, live, fmt=None):
@@ -477,7 +481,7 @@ def build() -> Lesson:
                     solution=card_formula[label],
                     summary=f'=IF(Card!B{r}="","",Card!B{r})',
                     fill={"range": f"Card!B{r}:C{r}", "formula": card_formula[label]},
-                    live=live, title=f"Card A · {label}")
+                    live=live, title=f"Card 1 · {label}")
 
     pid_of_a = f'XLOOKUP("{CARD_A}",{R(es, "EncounterID")},{R(es, "PatientID")})'
     prv_of_a = f'XLOOKUP("{CARD_A}",{R(es, "EncounterID")},{R(es, "AttendingProviderID")})'
@@ -485,24 +489,27 @@ def build() -> Lesson:
     L.bonus_scenario = (
         "Dr. Nguyen's care manager answers the same questions all day: who is this encounter's patient, how old were they, "
         "what were they treated for, who was the attending, who pays, and where does the claim stand? Build a reusable "
-        "lookup card on the Card sheet. Each column takes one EncounterID in row 5 and returns ten facts below it. "
-        "Rows 6 and 7 are helper cells (PatientID and Attending ProviderID) that the other rows can reuse. Write every "
-        "formula in column B, then copy B6:B15 to C6:C15. "
-        f"Card A holds {CARD_A}. Card B holds {CARD_B}, an ID copied from a handwritten note, and every row of Card B must "
-        f"show {NOT_FOUND} instead of an error. Keep both IDs in place while you check your answers. The gray cells on the "
-        "Bonus sheet read your card.")
+        "lookup card on the Card sheet. Each card is one column: it takes an EncounterID in row 5 and returns ten facts in "
+        "rows 6 to 15. Rows 6 and 7 are helper cells (PatientID and Attending ProviderID) that the other rows reuse. "
+        f"Card 1 (column B) holds {CARD_A}. Card 2 (column C) holds {CARD_B}, an ID copied from a handwritten note, and "
+        f"every row of Card 2 must show {NOT_FOUND} instead of an error. "
+        "Write every formula in column B, then copy B6:B15 and paste it into C6:C15. Refer to the ID as B$5, with no $ before "
+        "the B, so it becomes C$5 in column C. The $ before the 5 keeps it on row 5 if you copy a formula down to start the "
+        "next row. Use Copy (Ctrl + C, Mac: ⌘ + C) and Paste (Ctrl + V, Mac: ⌘ + V) rather than dragging the fill handle, "
+        "because dragging to the right shifts Table references such as tblEncounters[PatientID] to the next Table column. "
+        "Keep both IDs in place while you check your answers. The gray cells on the Bonus sheet read your card.")
     L.bonus = [
         card_task("Patient name (First Last)",
-                  f"Card A ({CARD_A}): what does your Patient name row (Card!B8) show? Format: First Last.",
+                  f"Card 1 ({CARD_A}): what does your Patient name row (Card!B8) show? Format: First Last.",
                   card_a["Patient name (First Last)"],
-                  "Chain two lookups: EncounterID → PatientID (row 6), then PatientID → names. Join with &\" \"&",
-                  "Row 6 does the first hop (EncounterID → PatientID) once, and every patient row reuses it. Chaining through a "
+                  "Chain two lookups: first EncounterID to PatientID (row 6), then PatientID to the names. Join them with &\" \"&",
+                  "Row 6 does the first hop, from EncounterID to PatientID, once, and every patient row reuses it. Chaining through a "
                   "helper cell keeps each formula short and lets you check each hop on its own. The IF in front returns "
-                  f"{NOT_FOUND} when row 6 already says so, which keeps Card B clean.",
+                  f"{NOT_FOUND} when row 6 already says so, which keeps Card 2 clean.",
                   live=f'=XLOOKUP({pid_of_a},{R(ps, "PatientID")},{R(ps, "FirstName")})&" "&'
                        f'XLOOKUP({pid_of_a},{R(ps, "PatientID")},{R(ps, "LastName")})'),
         card_task("Age at admission (years)",
-                  f"Card A: how old was the patient, in completed years, on the encounter's AdmitDate (Card!B9)?",
+                  f"Card 1: how old was the patient, in completed years, on the encounter's AdmitDate (Card!B9)?",
                   card_a["Age at admission (years)"],
                   "Look up DOB and AdmitDate, then DATEDIF(…, …, \"Y\") from Lesson 2.3",
                   f"DATEDIF with \"Y\" counts completed years. The patient was born on {pa['DOB']:%m/%d/%Y} and admitted on "
@@ -513,7 +520,7 @@ def build() -> Lesson:
                   live=f'=DATEDIF(XLOOKUP({pid_of_a},{R(ps, "PatientID")},{R(ps, "DOB")}),'
                        f'XLOOKUP("{CARD_A}",{R(es, "EncounterID")},{R(es, "AdmitDate")}),"Y")'),
         card_task("Attending (First Last, Credential)",
-                  f"Card A: what does your Attending row (Card!B12) show? Format: First Last, Credential "
+                  f"Card 1: what does your Attending row (Card!B12) show? Format: First Last, Credential "
                   f"(for example, Isabella Nguyen, MD).",
                   card_a["Attending (First Last, Credential)"],
                   "Use the Attending ProviderID helper in row 7, three lookups, and & to join them",
@@ -525,7 +532,7 @@ def build() -> Lesson:
                        f'XLOOKUP({prv_of_a},{R(prs, "ProviderID")},{R(prs, "LastName")})&", "&'
                        f'XLOOKUP({prv_of_a},{R(prs, "ProviderID")},{R(prs, "Credential")})'),
         card_task("Claim status",
-                  f"Card A: what is the claim status (Card!B15)? Claims are matched by EncounterID, which is column B of the "
+                  f"Card 1: what is the claim status (Card!B15)? Claims are matched by EncounterID, which is column B of the "
                   f"Claims sheet.",
                   card_a["Claim status"],
                   "XLOOKUP can search any column. VLOOKUP would need its table to start at column B",
@@ -534,9 +541,9 @@ def build() -> Lesson:
                   f"`=VLOOKUP(B$5,Claims!$B$2:$H${cls.last_row},6,FALSE)`. This claim was {ca['ClaimStatus'].lower()}"
                   + (f" ({ca['DenialReason']})" if ca["DenialReason"] else "") + ", so it goes on the care manager's follow-up list.",
                   live=f'=XLOOKUP("{CARD_A}",{R(cls, "EncounterID")},{R(cls, "ClaimStatus")})'),
-        Task(f"Card B ({CARD_B}): how many of the ten output rows (Card!C6:C15) show exactly {NOT_FOUND}? "
-             "All ten should. If any shows #N/A or #VALUE!, fix that row's formula in column B and copy it right again.",
-             answer=card_b_count, title=f"Card B · rows showing {NOT_FOUND}",
+        Task(f"Card 2 ({CARD_B}): how many of the ten output rows (Card!C6:C15) show exactly {NOT_FOUND}? "
+             "All ten should. If any shows #N/A or #VALUE!, fix that row's formula in column B and copy it to column C again.",
+             answer=card_b_count, title=f"Card 2 · rows showing {NOT_FOUND}",
              hint="Give every lookup an if_not_found, and let IF skip calculations (like DATEDIF) when the helper cell says Not found",
              solution=card_formula["PatientID"],
              summary=f'=IF(COUNTA(Card!C{CARD_FIRST}:C{CARD_FIRST + 9})=0,"",COUNTIF(Card!C{CARD_FIRST}:C{CARD_FIRST + 9},"{NOT_FOUND}"))',
@@ -563,7 +570,10 @@ def build() -> Lesson:
         "Encounters is sorted by AdmitDate, oldest first. Patients holds only Dr. Nguyen's panel (185 patients), so a patient "
         "who isn't on the panel won't be found there. That's intentional (task 13).",
         "MRN is stored as 8-character TEXT on purpose (leading zeros matter). The green triangles in that column are Excel's "
-        "'number stored as text' warning; leave them as they are.",
+        "'number stored as text' warning. Leave them as they are.",
+        "Every data sheet is an Excel Table. When you drag over a data sheet's column while typing a formula, Excel may "
+        "write a Table reference such as tblPatients[LastName] instead of Patients!D2:D186. Both give the same result "
+        "(Lesson 3.1 covers Tables).",
         "BMI = 703 × WeightLb ÷ HeightIn², rounded to 1 decimal place. Age is the patient's age in completed years on 12/31/2025.",
         "The Card sheet is for the bonus challenge.",
     ]
@@ -576,14 +586,16 @@ def build() -> Lesson:
         ws.sheet_properties.tabColor = "BF9000"
         ws["A1"] = "Encounter lookup card"
         ws["A1"].font = Font(bold=True, size=16, color=NAVY)
-        ws["A2"] = ("Type one formula in each yellow cell of column B (B6:B15), then copy B6:B15 to C6:C15. Don't put a $ in front "
-                    "of the B when you refer to B5, so the reference becomes C5 when you copy right. Every Card B cell must show "
-                    "Not found. The gray cells on the Bonus sheet check your card.")
+        ws["A2"] = ("Type one formula in each yellow cell of column B (B6:B15) and refer to the ID as B$5. Then copy B6:B15 "
+                    "(Ctrl + C, Mac: ⌘ + C) and paste it into C6:C15 (Ctrl + V, Mac: ⌘ + V). B$5 becomes C$5, and Copy and "
+                    "Paste keeps Table references such as tblEncounters[PatientID] on the same column (dragging the fill "
+                    "handle to the right would shift them). Every Card 2 cell must show Not found. The gray cells on the "
+                    "Bonus sheet check your card.")
         ws["A2"].alignment = Alignment(wrap_text=True, vertical="top")
         ws["A2"].font = Font(italic=True, color="404040")
         ws.merge_cells("A2:D2")
-        ws.row_dimensions[2].height = 34
-        for j, h in enumerate(["Field", "Card A", "Card B", "Where it comes from"], 1):
+        ws.row_dimensions[2].height = 48
+        for j, h in enumerate(["Field", "Card 1", "Card 2", "Where it comes from"], 1):
             c = ws.cell(row=4, column=j, value=h)
             c.font = Font(bold=True, color="FFFFFF")
             c.fill = HEADER_FILL
@@ -597,7 +609,7 @@ def build() -> Lesson:
             c.font = Font(bold=True, color="1F4E79")
             c.fill = id_fill
             c.border = BOX
-        ws["D5"] = "Input: keep these two IDs while you check the bonus"
+        ws["D5"] = "Input: keep both IDs while you check the bonus"
         sources = {
             "PatientID": "Encounters (helper cell)", "Attending ProviderID": "Encounters (helper cell)",
             "Patient name (First Last)": "Patients, via row 6", "Age at admission (years)": "Patients DOB + Encounters AdmitDate",
@@ -613,11 +625,13 @@ def build() -> Lesson:
                 c.fill = INPUT_FILL
                 c.border = INPUT_BORDER
                 c.alignment = Alignment(horizontal="left")
+                if label == "Age at admission (years)":
+                    c.number_format = "0"      # so Excel doesn't auto-apply the DOB's date format to the age
             d = ws.cell(row=r, column=4, value=sources[label])
             d.font = Font(italic=True, color="7F7F7F")
             d.border = BOX
         ws.row_dimensions[5].height = 18
-        for col, wdt in zip("ABCD", (34, 60, 30, 46)):
+        for col, wdt in zip("ABCD", (34, 66, 34, 46)):   # B fits the longest Card 1 value (the diagnosis)
             ws.column_dimensions[col].width = wdt
         ws.freeze_panes = "B6"
         ws.page_setup.orientation = "landscape"
@@ -625,7 +639,7 @@ def build() -> Lesson:
         ws.page_setup.fitToHeight = 0
         ws.sheet_properties.pageSetUpPr.fitToPage = True
         if selftest:
-            # The self-test fills only the rows the bonus tasks read; the other rows feed them (and Card B's count),
+            # The self-test fills only the rows the bonus tasks read; the other rows feed them (and Card 2's count),
             # so write the whole card here first. The task fills then rewrite their own rows with the same formulas.
             for label, f in card_rows:
                 r = card_row[label]

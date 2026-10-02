@@ -29,7 +29,9 @@ The examples use the lesson workbook, so open it and try each formula as you rea
 | **Payer Mix** | The grid you fill in practice task 12 |
 | **Scorecard** | The bonus scorecard |
 
-A few columns need a definition:
+A few columns need a definition. The data dictionary describes every column of
+[`encounters.csv`](../../data/README.md#encounterscsv) and [`claims.csv`](../../data/README.md#claimscsv), the files these sheets
+are built from.
 
 - **EncounterType** is Inpatient (an admitted stay), Observation (a short hospital stay that isn't an admission), Emergency (an
   emergency department visit that didn't become a stay), or Outpatient (a clinic visit at the Bluestone Outpatient Pavilion).
@@ -41,17 +43,19 @@ A few columns need a definition:
   hasn't decided yet). **DenialReason** is blank on claims that went through cleanly, and **PaidDate** is blank until money arrives.
 
 > 💡 **Tip:** The formulas below are written as you'd type them on the sheet that holds the data. Try them in an empty column at
-> least one column away from the Table, such as column R on the Encounters sheet or column N on the Claims sheet. A formula typed in
-> the column right next to a Table becomes a new Table column. On any other sheet, such as Practice, put the sheet name in front of
-> each range: `Encounters!C2:C2725`.
-
-> 📋 **Tables:** Encounters and Claims are Excel Tables. If you select a whole Table column while you build a formula, Excel writes a
-> structured reference such as `tblEncounters[EncounterType]` instead of `Encounters!C2:C2725`. Both point at the same cells and give
-> the same result. Lesson 3.1 covers structured references.
+> least one column away from the Table, such as column T on the Encounters sheet or column N on the Claims sheet, because a formula
+> typed in the column right next to a Table becomes a new Table column. A few examples read an input from column R of the Encounters
+> sheet, such as a threshold in R2. On any other sheet, such as Practice, put the sheet name in front of each range:
+> `Encounters!C2:C2725`.
 
 You don't have to drag across 2,724 rows. While you're typing a formula, click the first data cell (for example C2), then press
 **Ctrl + Shift + ↓** (Mac: **⌘ + Shift + ↓**), and Excel extends the reference down to the last filled cell. In a column with gaps,
 such as LOSDays, the jump stops at the first blank cell, so type the range there instead.
+
+> 📋 **Tables:** Encounters and Claims are Excel Tables. When you select a whole Table column while you build a formula, for example
+> with the shortcut above, Excel writes a **structured reference** such as `tblEncounters[EncounterType]` instead of
+> `Encounters!C2:C2725`. Both point at the same cells and give the same result in a single formula. They behave differently when you
+> fill a formula to the right, which matters for the summary grid in section 11. Lesson 3.1 covers structured references.
 
 ### 1. COUNTIF: count the rows that meet one condition
 
@@ -99,7 +103,8 @@ LOSDays cells, because a blank cell isn't a zero.
 **Blanks.** Readmit30 is blank for every encounter that isn't an Inpatient stay, so `""` counts the 2,036 other encounters and `"<>"`
 counts the 688 stays that have a Y or an N. On the Claims sheet, `=COUNTIF(J2:J2667,"")` counts the 2,257 claims with no
 DenialReason and `=COUNTIF(J2:J2667,"<>")` counts the 409 that have one. The `""` criterion also counts cells whose formula returns an
-empty text string (`""`), which matters when you build helper columns in the bonus.
+empty text string (`""`), such as the unpaid rows of the helper column you build in the bonus. `"<>"` counts those cells too, because
+a cell that holds a formula isn't empty. To count only the cells that hold a number, use COUNT.
 
 **Cell references and functions.** To compare against a value that lives in a cell, write the operator in quotes and join the
 reference to it with `&`:
@@ -218,6 +223,17 @@ On the Claims sheet, SUMIFS compares what was billed with what was collected. `=
 returns 4,692,944.96 billed, and `=SUMIFS(H2:H2667,C2:C2667,"Keystone Health Partners")` returns 1,747,255.43 paid. Insurers pay a
 contracted rate rather than the full charge, so collections run far below charges.
 
+**OR logic works the same way.** Give SUMIFS an array constant and wrap it in SUM, just as you did with COUNTIFS in section 4. This
+totals the charges of the 103 inpatient stays for pneumonia or COVID-19:
+
+```
+=SUM(SUMIFS(O2:O2725,C2:C2725,"Inpatient",J2:J2725,{"J18.9","U07.1"}))     → 2,330,562.31
+```
+
+Don't wrap AVERAGEIFS this way. `SUM(AVERAGEIFS(…,{"J18.9","U07.1"}))` adds two averages together (44,373.17), and even
+`AVERAGE(AVERAGEIFS(…))` gives an average of averages (22,186.58), which section 6 explains is usually wrong. For the true average
+of the combined group, divide the total by the count: `SUM(SUMIFS(…))/SUM(COUNTIFS(…))` returns 22,626.82.
+
 > ⚠️ **SUMIF quietly resizes sum_range.** SUMIF uses only the top-left cell of sum_range, then takes a block the same size as range.
 > `=SUMIF(C2:C2725,"Inpatient",O5:O10)` doesn't return an error. It adds cells from O5:O2728, three rows out of step with the
 > EncounterType it tested, and returns 7,813,006.39 with no warning. SUMIFS would have returned #VALUE!, which is one more reason to
@@ -318,8 +334,8 @@ such as "Heart failure, unspecified" can pay less than a specific one. Add a con
 > match `"4*"`. To test a number, use a numeric range such as `">=4000"` and `"<5000"`.
 
 > ⚠️ **Wildcards work in criteria, not in `=` comparisons.** `=K2="*sepsis*"` compares K2 with the exact text \*sepsis\*,
-> asterisks included, so it returns FALSE. Wildcards work in COUNTIF(S), SUMIF(S), AVERAGEIF(S), MAXIFS, MINIFS, and the lookup functions in
-> Lesson 2.6.
+> asterisks included, so it returns FALSE. Wildcards work in COUNTIF(S), SUMIF(S), AVERAGEIF(S), MAXIFS, MINIFS, SEARCH (Lesson 2.2),
+> and the lookup functions in Lesson 2.6.
 
 ### 9. Date criteria
 
@@ -446,6 +462,13 @@ move when I copy down?* Here's what one wrong $ does:
 | `A5` instead of `$A5` | Column C reads B5, a count, as its month, so it shows only 0s |
 | Data ranges without $ signs | The ranges drift to other columns and rows, so most cells show 0 or a count that's slightly off |
 
+> ⚠️ **Type the data ranges as addresses, not Table references.** If you build the formula by selecting whole Table columns, the
+> ranges appear as structured references such as `tblEncounters[FacilityName]`, which have no $ signs to lock. Copy and paste leaves
+> them alone, but filling to the right with the fill handle shifts each one to the next Table column. `tblEncounters[FacilityName]`
+> becomes `tblEncounters[DeptName]`, and the copied columns fill with 0s. Type the ranges as addresses such as
+> `Encounters!$D$2:$D$2725`, or fill the grid with copy and paste. (Lesson 3.1 shows how to lock a Table column with
+> `tblEncounters[[FacilityName]:[FacilityName]]`.)
+
 Check a finished grid three ways:
 
 1. **Grand total.** Add up the whole grid and compare it with one count of the whole population. This grid should add up to
@@ -525,7 +548,7 @@ The Encounters sheet holds rows 2–2725 and the Claims sheet holds rows 2–266
 | 9 | How many encounters at Bluestone Memorial Hospital were hospital stays, meaning EncounterType is Inpatient OR Observation? | COUNTIFS joins conditions with AND. For OR, add two counts together |
 | 10 | What was the highest TotalCharges for an encounter whose DxDescription contains the word sepsis? | MAXIFS(max_range, criteria_range1, criteria1, …). "Contains" needs an asterisk on both sides |
 | 11 | Collections wants the oldest claim still waiting on an insurance company. What is the earliest SubmitDate among claims with ClaimStatus = Pending and a PayerName other than Self-Pay? Enter it as a date. | MINIFS works on dates too, and "<>" means not equal to |
-| 12 | On the Payer Mix sheet, fill the yellow grid B5:E12 with ONE COUNTIFS formula: the number of encounters for the payer in column A and the encounter type in row 4. Type it in B5, then copy it across and down. The gray cell adds up your grid. | Lock the data ranges fully. For each label, lock only the part (row or column) that must stay put |
+| 12 | On the Payer Mix sheet, fill the yellow grid B5:E12 with ONE COUNTIFS formula: the number of encounters for the payer in column A and the encounter type in row 4. Type it in B5, then copy it across and down. Type the data ranges as cell addresses with $ signs instead of selecting Table columns (guide section 11 explains why). The gray cell adds up your grid. | Lock the data ranges fully. For each label, lock only the part (row or column) that must stay put |
 | 13 | What was the 30-day readmission rate for the Cardiovascular service line? Divide the Cardiovascular Inpatient stays with Readmit30 = Y by all Cardiovascular Inpatient stays. Enter it as a percentage. | Rate = COUNTIFS(numerator) / COUNTIFS(denominator). Same filters, plus one more on top |
 <!-- END GENERATED: practice -->
 
@@ -664,11 +687,11 @@ Bluestone's revenue cycle director is preparing for contract talks and wants a 2
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** On the Claims sheet, fill the yellow DaysToPay column (L2:L2667) with PaidDate − SubmitDate, or an empty text string ("") when PaidDate is blank. Use one formula copied down. The gray cell averages your column across all claim types. (Keep full precision. The check accepts 2 decimal places.) *(Hint: IF(PaidDate="", "", PaidDate − SubmitDate))*
-- **B2.** On the Scorecard sheet, fill columns B (adjudicated inpatient claims), C (denied inpatient claims), and D (denial rate) for all 8 payers, one formula per column copied down. A payer with no adjudicated inpatient claims must show n/a in column D instead of #DIV/0!. The gray cell shows the highest rate in your column D. (If it shows #DIV/0!, a row still needs the guard.) *(Hint: Adjudicated: "<>Pending". Denied: SUM(COUNTIFS(…,{"Denied","Appealed"})). Guard: IF(B5=0,"n/a",…))*
+- **B1.** On the Claims sheet, fill the yellow DaysToPay column (L2:L2667) with PaidDate − SubmitDate, or an empty text string ("") when PaidDate is blank. Type one formula in L2. Claims is a Table, so Excel fills it down the whole column for you. If you click cells instead of typing their addresses, Excel writes [@PaidDate], which means the PaidDate on the same row. The gray cell averages your column across all claim types. *(Hint: IF(PaidDate="", "", PaidDate − SubmitDate))*
+- **B2.** On the Scorecard sheet, fill columns B (adjudicated inpatient claims), C (denied inpatient claims), and D (denial rate) for all 8 payers, one formula per column copied down. A payer with no adjudicated inpatient claims must show n/a in column D instead of #DIV/0!. The gray cell shows the highest rate in your column D. (If it shows #DIV/0!, a row still needs the guard.) *(Hint: Column B: "<>Pending". Column C: the OR pattern from guide section 4. Column D: test column B for 0 before you divide)*
 - **B3.** Which payer has the highest inpatient denial rate? Type its PayerName. *(Hint: Compare the rates in column D)*
-- **B4.** Dollars at risk: what is the total BilledAmount of that payer's inpatient claims that are Denied or Appealed? *(Hint: The same OR trick works with SUMIFS)*
-- **B5.** Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer has none). How many more days, on average, does the payer from B3 take to pay an inpatient claim than Medicare does? Subtract the full-precision averages (point at the cells instead of retyping the 1-decimal values that column E displays), then round the difference to 1 decimal place. *(Hint: AVERAGEIFS on your DaysToPay column, wrapped in IFERROR for the payer with no claims)*
+- **B4.** Dollars at risk: for the payer you named in task B3, what is the total BilledAmount of its inpatient claims that are Denied or Appealed? *(Hint: The same OR trick works with SUMIFS)*
+- **B5.** Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer has none). How many more days, on average, does the payer you named in task B3 take to pay an inpatient claim than Medicare does? Subtract the full-precision averages (point at the cells instead of retyping the 1-decimal values that column E displays), then round the difference to 1 decimal place. *(Hint: AVERAGEIFS on your DaysToPay column, wrapped in IFERROR for the payer with no claims)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -680,7 +703,7 @@ Work on the **Bonus** sheet of the workbook.
 - **Answer:** 26.97
 - **Solution:** `=IF(K2="","",K2-F2)`
 
-No COUNTIFS can subtract two columns row by row, so a **helper column** does the subtraction first. Then AVERAGEIFS can average it by payer. Without the IF, an unpaid claim computes 0 − SubmitDate, a large negative number of days that wrecks every average. The empty text "" is skipped by AVERAGE and AVERAGEIFS. The key's live formula shows a no-helper version: the average of the differences is (sum of PaidDates − sum of their SubmitDates) ÷ the number of paid claims.
+The -IFS functions can only test and average columns that already exist. None of them can subtract two columns row by row, so a **helper column** does the subtraction first, and then AVERAGEIFS can average it by payer. Without the IF, an unpaid claim computes 0 − SubmitDate, a large negative number of days that wrecks every average. The empty text "" is skipped by AVERAGE and AVERAGEIFS. The key's live formula shows a no-helper version: the average of the differences is (sum of PaidDates − sum of their SubmitDates) ÷ the number of paid claims.
 
 **B2. Denial rates (with a divide-by-zero guard)**
 
@@ -727,7 +750,7 @@ SUMIFS with the array constant returns two totals (Denied and Appealed), and SUM
 ```
 
 
-E5 is `=IFERROR(AVERAGEIFS(Claims!$L$2:$L$2667,Claims!$C$2:$C$2667,$A5,Claims!$D$2:$D$2667,"Inpatient"),"n/a")`, copied down. AVERAGEIFS skips the "" cells of unpaid claims, and IFERROR turns Workers' Compensation's #DIV/0! into n/a. Here IFERROR is the right guard, because AVERAGEIFS has no separate denominator you could test. Silverline Medicare Advantage averages 28.95 days and Medicare 14.82, so `=ROUND(E6-E5,1)` on the Scorecard gives the same 14.1. Compared with traditional Medicare, Silverline Medicare Advantage denies about four times as often *and* takes about two weeks longer to pay.
+E5 is `=IFERROR(AVERAGEIFS(Claims!$L$2:$L$2667,Claims!$C$2:$C$2667,$A5,Claims!$D$2:$D$2667,"Inpatient"),"n/a")`, copied down. AVERAGEIFS skips the "" cells of unpaid claims, and IFERROR turns Workers' Compensation's #DIV/0! into n/a. Here IFERROR is the right guard, because AVERAGEIFS has no separate denominator you could test. Silverline Medicare Advantage averages 28.95 days and Medicare 14.82, so `=ROUND(Scorecard!E6-Scorecard!E5,1)` in the answer cell gives the same 14.1. Compared with traditional Medicare, Silverline Medicare Advantage denies about four times as often *and* takes about two weeks longer to pay.
 
 </details>
 <!-- END GENERATED: bonus-answers -->
