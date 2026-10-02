@@ -294,6 +294,22 @@ def build() -> Lesson:
         b4_why = (f"{b4_carry_in} stays admitted before December were discharged in December, and {b4_still_in} "
                   "December admissions were still in the hospital at midnight on 12/31.")
 
+    # B5 readmission rate with index stays dated by DISCHARGE (USERELATIONSHIP around a ratio measure), Q3 2025.
+    # Q3 is the latest quarter whose 30-day windows end inside the data (Sep 30 + 30 days = Oct 30, 2025).
+    def ip_rate(rows):
+        return sum(r["Readmit30"] for r in rows) / len(rows), sum(r["Readmit30"] for r in rows), len(rows)
+
+    def q3(d: date) -> bool:
+        return date(2025, 7, 1) <= d <= date(2025, 9, 30)
+
+    b5, b5_readmits, b5_n = ip_rate([r for r in fact_enc if is_type(r, "Inpatient") and q3(r["DischargeDate"])])
+    b5_admit_based, _, _ = ip_rate([r for r in fact_enc if is_type(r, "Inpatient") and q3(r["AdmitDate"])])
+    assert round(b5, 3) != round(b5_admit_based, 3), "B5 must distinguish discharge dating from admit dating"
+    b5_dec, _, _ = ip_rate([r for r in fact_enc if is_type(r, "Inpatient") and r["DischargeDate"] >= date(2025, 12, 1)])
+    b5_rest = [ip_rate([r for r in fact_enc if is_type(r, "Inpatient") and r["DischargeDate"].year == 2025
+                        and r["DischargeDate"].month == m])[0] for m in range(1, 12)]
+    assert b5_dec < min(b5_rest), "December's truncated follow-up window should show as the lowest month"
+
     # ================================================================== live cross-check formulas (worksheet only)
     E, C = "FactEncounters", "FactClaims"
     ADM = f"{E}[AdmitDate]"
@@ -327,6 +343,8 @@ def build() -> Lesson:
     x_b3 = (f'=LET(n,COUNTIFS({E}[AttendingProviderID],DimProvider[ProviderID],{TYPE},"Inpatient",{Y25}),'
             f'INDEX(DimProvider[ProviderName],MATCH(MAX(n),n,0)))')
     x_b4 = f'=COUNTIFS({TYPE},"Inpatient",{_dr(E + "[DischargeDate]", date(2025, 12, 1), date(2025, 12, 31))})'
+    DQ3 = _dr(E + "[DischargeDate]", date(2025, 7, 1), date(2025, 9, 30))
+    x_b5 = f'=SUMIFS({E}[Readmit30],{TYPE},"Inpatient",{DQ3})/COUNTIFS({TYPE},"Inpatient",{DQ3})'
 
     # ================================================================== tasks
     L.practice_intro = (
@@ -484,7 +502,7 @@ def build() -> Lesson:
              "their primary diagnosis in DimDiagnosis. Use FILTER over FactEncounters and RELATED. How many inpatient stays at "
              "Cedar Ridge Medical Center in 2025 ran longer than expected?",
              answer=t9, live=x_t9, solution_lang="dax", title="Cedar Ridge stays over expected LOS, 2025",
-             hint="FILTER(FactEncounters, … && FactEncounters[LOSDays] > RELATED(DimDiagnosis[ExpectedLOS]))",
+             hint="COUNTROWS(FILTER(FactEncounters, test1 && test2)). Inside FILTER, RELATED can read the diagnosis row",
              solution=dax("Stays Over Expected :=",
                           "COUNTROWS(",
                           "    FILTER(",
@@ -500,7 +518,9 @@ def build() -> Lesson:
                  "FactEncounters row visible in the cell (Cedar Ridge, 2025) and keeps the rows where the test is TRUE. "
                  "Because FILTER works one row at a time (a **row context**), RELATED can follow that row's relationship to "
                  f"DimDiagnosis and fetch its ExpectedLOS. {t9} of Cedar Ridge's {len(cr_ip)} inpatient stays in 2025 ran "
-                 "long. The calculated-column alternative is in Guide section 10.")),
+                 "long. The calculated-column route from Guide section 10 gives the same count: flag each stay with "
+                 "IF(… > RELATED(DimDiagnosis[ExpectedLOS]), 1, 0) and SUM the flag. The FILTER measure needs no stored "
+                 "column.")),
         Task("Expected reimbursement: create Expected Allowed = the sum, row by row, of FactEncounters[TotalCharges] × the "
              "payer's AvgAllowedPctOfCharges from DimPayer. Use SUMX and RELATED. What is Expected Allowed for Bluestone "
              "Memorial Hospital in 2025? Enter it rounded to the nearest dollar.",
@@ -539,8 +559,9 @@ def build() -> Lesson:
                  f"different question from AVERAGE(TotalCharges), which averages per encounter ({t11_per_encounter:,.0f} "
                  "here). Always decide what one unit of the average is: an encounter, a patient, or a month.")),
         Task("Create Charges YTD = Total Charges accumulated from January 1 to the last date in the current filter context, "
-             "using TOTALYTD and DimDate[Date]. Put DimDate[Year] and DimDate[MonthName] in Rows and filter Bluestone "
-             "Outpatient Pavilion. What does Charges YTD show for September 2025? Enter it rounded to the nearest dollar.",
+             "using TOTALYTD and DimDate[Date]. Put DimDate[Year] and DimDate[MonthName] in Rows and DimFacility[FacilityName] "
+             "= Bluestone Outpatient Pavilion in Filters. What does Charges YTD show for September 2025? Enter it rounded to "
+             "the nearest dollar.",
              answer=t12, fmt="#,##0", tol=0.5, live=x_t12, solution_lang="dax", title="Charges YTD at September 2025, Outpatient Pavilion",
              hint="TOTALYTD(expression, DimDate[Date])",
              solution=dax("Charges YTD := TOTALYTD([Total Charges], DimDate[Date])",
@@ -553,7 +574,8 @@ def build() -> Lesson:
                  "alphabetically (Apr, Aug, Dec…), set Sort by Column to MonthNum in Power Pivot.")),
         Task("Create ED Visits LY = ED Visits for the same period one year earlier (SAMEPERIODLASTYEAR) and ED YoY % = (ED "
              "Visits − ED Visits LY) ÷ ED Visits LY. What is the year-over-year change in ED visits at Bluestone Memorial "
-             "Hospital for 2025 compared with 2024? Enter it as a percentage with 1 decimal place (negative if visits fell).",
+             "Hospital for 2025 compared with 2024? Put DimDate[Year] in Rows and DimFacility[FacilityName] = Bluestone "
+             "Memorial Hospital in Filters. Enter it as a percentage with 1 decimal place (negative if visits fell).",
              answer=t13, fmt="0.0%", live=x_t13, solution_lang="dax", title="ED visits YoY %, Bluestone Memorial, 2025 vs 2024",
              hint="CALCULATE([ED Visits], SAMEPERIODLASTYEAR(DimDate[Date]))",
              solution=dax("ED Visits LY := CALCULATE([ED Visits], SAMEPERIODLASTYEAR(DimDate[Date]))",
@@ -573,8 +595,9 @@ def build() -> Lesson:
     L.bonus_scenario = (
         "The Chief Medical Officer wants a one-page December 2025 briefing built from the Data Model, so that next month it "
         "refreshes instead of being rebuilt. It needs a rolling ED trend, a same-month comparison for the smallest hospital, "
-        "the busiest inpatient attending, and discharges counted by discharge date. Use your measures from the practice "
-        "tasks and add new ones as needed. ED visits are encounters with EncounterType = Emergency.")
+        "the busiest inpatient attending, discharges counted by discharge date, and a readmission rate dated the way quality "
+        "teams date it. Use your measures from the practice tasks and add new ones as needed. ED visits are encounters with "
+        "EncounterType = Emergency.")
     L.bonus = [
         Task("Create ED Visits 3M Avg = the average monthly ED visits over the three months ending with the last date in the "
              "current filter context (use DATESINPERIOD). What does it show for December 2025, system-wide? Enter it to 1 "
@@ -644,20 +667,42 @@ def build() -> Lesson:
                  f"In the same row, Inpatient Stays shows {b4_admits} admissions and IP Discharges shows {b4}. {b4_why} "
                  "If the inactive relationship doesn't exist in your model, "
                  "USERELATIONSHIP returns an error, so create it first (see the Model Map).")),
+        Task("Quality reports date each inpatient stay by its discharge, because the 30-day readmission window starts at "
+             "discharge. Create Readmission Rate (Disch) = your Readmission Rate measure from Task 7, evaluated through the "
+             "inactive DischargeDate relationship. What is the system's readmission rate for inpatient stays discharged in "
+             "Q3 2025, the latest quarter whose 30-day windows are complete? Enter it as a percentage with 1 decimal place.",
+             answer=b5, fmt="0.0%", live=x_b5, solution_lang="dax", title="Readmission rate by discharge date, Q3 2025",
+             hint="You don't need to rebuild the ratio. CALCULATE changes the context for every measure inside it",
+             solution=dax("Readmission Rate (Disch) :=",
+                          "CALCULATE(",
+                          "    [Readmission Rate],",
+                          "    USERELATIONSHIP(FactEncounters[DischargeDate], DimDate[Date])",
+                          ")",
+                          "-- PivotTable: DimDate[Year], DimDate[Quarter] in Rows"),
+             explanation=(
+                 "CALCULATE switches to the DischargeDate relationship before it evaluates [Readmission Rate], and the switch "
+                 "carries into every measure that rate uses. Both the numerator ([Readmissions]) and the denominator "
+                 f"([Inpatient Stays]) therefore count stays discharged in Q3: {b5_readmits} readmissions out of {b5_n} "
+                 f"discharges. Dated by admission, the same quarter shows {b5_admit_based:.1%}, so forgetting the relationship "
+                 "gives a close but wrong number. To see why the briefing uses Q3, add DimDate[MonthName] to Rows: December "
+                 f"2025 drops to {b5_dec:.1%}. A stay discharged on December 20 has a 30-day window that runs past the end of "
+                 "the data, so its readmission can't appear yet. Report readmissions only for periods whose follow-up window "
+                 "has closed.")),
     ]
 
     # ================================================================== start notes & model map
     L.start_notes = [
-        "You need Excel for Windows (Microsoft 365, or Excel 2016 or later) with the Power Pivot add-in turned on: File → "
-        "Options → Add-ins → Manage: COM Add-ins → Go… → tick Microsoft Power Pivot for Excel. Excel for Mac and Excel for "
-        "the web can't create a Data Model, relationships, or measures, so on those you can read the guide and the answer "
-        "key but not build the model.",
+        "You need Excel for Windows with Power Pivot (Microsoft 365, Excel 2019 or later, or an edition of Excel 2013/2016 "
+        "that includes it, such as Office Professional Plus). Turn the add-in on once: File → Options → Add-ins → Manage: "
+        "COM Add-ins → Go… → tick Microsoft Power Pivot for Excel. Excel for Mac and Excel for the web can't create a Data "
+        "Model, relationships, or measures, so on those you can read the guide and the answer key but not build the model.",
         "The Model Map sheet lists the nine tables, their keys, and the ten relationships to create (nine active, one "
         "inactive).",
         "Each answer is a number (or a name) that you read from a Data Model PivotTable and type into the yellow cell. You "
         "can also link to the PivotTable cell, which writes a GETPIVOTDATA formula, or use CUBEVALUE (Guide section 15).",
         "The hidden Answer Key has a worksheet formula next to each answer that recomputes it from the same tables without "
-        "the Data Model, so you can compare DAX filter context with COUNTIFS and SUMIFS criteria.",
+        "the Data Model, so you can compare DAX filter context with COUNTIFS and SUMIFS criteria. A few of those formulas "
+        "use XLOOKUP, LET, UNIQUE, or FILTER, so Excel 2019 and earlier show #NAME? there. The answers themselves are fine.",
         "The workbook is large (about 44,000 fact rows). Adding the tables to the Data Model makes the file bigger again, "
         "so save it after you build the model.",
     ]
@@ -677,15 +722,17 @@ def build() -> Lesson:
     ]
     assert len(tables_info) == 9
     rels = [
-        ("FactEncounters[AdmitDate]", "DimDate[Date]", "Active", "Dates encounters (\"in 2025\", months, YTD, last year)"),
-        ("FactEncounters[DischargeDate]", "DimDate[Date]", "Inactive", "Discharges by discharge date (USERELATIONSHIP, bonus B4)"),
+        ("FactEncounters[AdmitDate]", "DimDate[Date]", "Active",
+         "Year, quarter, and month of admission (every \"in 2025\", YTD, and last-year measure)"),
+        ("FactEncounters[DischargeDate]", "DimDate[Date]", "Inactive",
+         "Year, quarter, and month of discharge, only inside USERELATIONSHIP (bonus B4–B5)"),
         ("FactEncounters[FacilityID]", "DimFacility[FacilityID]", "Active", "Facility names, types, beds"),
         ("FactEncounters[DeptID]", "DimDepartment[DeptID]", "Active", "Department names and service lines"),
         ("FactEncounters[AttendingProviderID]", "DimProvider[ProviderID]", "Active", "Attending provider names and specialties"),
         ("FactEncounters[PatientID]", "DimPatient[PatientID]", "Active", "Age group, sex, city, language"),
         ("FactEncounters[PayerID]", "DimPayer[PayerID]", "Active", "Payer names, payer types, allowed %"),
         ("FactEncounters[PrimaryDxCode]", "DimDiagnosis[DxCode]", "Active", "Diagnosis descriptions, categories, expected LOS"),
-        ("FactClaims[ServiceDate]", "DimDate[Date]", "Active", "Dates claims"),
+        ("FactClaims[ServiceDate]", "DimDate[Date]", "Active", "Year, quarter, and month of the claim's service date"),
         ("FactClaims[PayerID]", "DimPayer[PayerID]", "Active", "Payer attributes for claims"),
     ]
 
@@ -740,6 +787,8 @@ def build() -> Lesson:
             if act == "Inactive":
                 for j in range(1, 6):
                     ws.cell(row=r, column=j).font = Font(italic=True, color="7F7F7F")
+            if len(why) > 52:  # column E is 52 characters wide: give wrapped descriptions two lines
+                ws.row_dimensions[r].height = 30
         r += 2
         tips = [
             "Do not relate FactClaims to FactEncounters. Two fact tables share dimensions instead (DimDate and DimPayer here).",
@@ -753,10 +802,9 @@ def build() -> Lesson:
         ws.cell(row=r, column=1, value="Notes").font = Font(bold=True, size=13, color=NAVY)
         for tip in tips:
             r += 1
-            ws.cell(row=r, column=1, value="•").alignment = Alignment(horizontal="right", vertical="top")
-            c = ws.cell(row=r, column=2, value=tip)
+            c = ws.cell(row=r, column=1, value="•  " + tip)
             c.alignment = WRAP_TOP
-            ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=5)
+            ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=5)
             ws.row_dimensions[r].height = 30
         for col, w in zip("ABCDE", (18, 36, 30, 12, 52)):
             ws.column_dimensions[col].width = w
@@ -769,10 +817,17 @@ def build() -> Lesson:
         note = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column compares "
                 "against. Column D is the DAX (or the steps) that produces it in a Data Model PivotTable. Column E is NOT the "
                 "DAX: it is a worksheet formula over the same tables (COUNTIFS, SUMIFS, SUMPRODUCT, XLOOKUP, UNIQUE) that "
-                "recomputes the answer without the Data Model. Click a cell in column E to read it.")
+                "recomputes the answer without the Data Model. Click a cell in column E to read it. Formulas that use "
+                "XLOOKUP, LET, UNIQUE, or FILTER need Microsoft 365 or Excel 2021+; older versions show #NAME? there.")
         for name in (lesson.key_sheet, lesson.bonus_key_sheet):
             if name in wb.sheetnames:
                 wb[name]["A2"] = note
                 wb[name].row_dimensions[2].height = 48
+        # Task 1's build steps are Markdown in the README; show them without ** markers in the key cell.
+        key = wb[lesson.key_sheet]
+        for row in range(5, 5 + len(lesson.tasks)):
+            t = next((t for t in lesson.tasks if t.number == str(key.cell(row=row, column=1).value)), None)
+            if t is not None and t.lang not in ("dax", "excel") and t.solution and "**" in t.solution:
+                key.cell(row=row, column=4).value = t.solution.replace("**", "")
 
     return L

@@ -412,7 +412,9 @@ def build() -> Lesson:
         f"Cedar Ridge in rows {ced_first}–{sl}. Bins (A{bins.first_row}:A{bins.last_row}) holds the LOS histogram bins. "
         f"EDWaits holds Q4 2025 ED visits sorted by hospital. EDDaily holds one row per day from 01/01/2024 (row {df_}) to "
         f"12/31/2025 (row {dl_}), with 2025 starting in row {r25a}. Monthly holds Jan 2024 (row {mf}) to Dec 2025 (row {ml}). "
-        "Answer with formulas where you can. Where a task says the ToolPak, a worksheet formula gives the same number."
+        "Answer with formulas where you can. Where a task says the ToolPak, a worksheet formula gives the same number. "
+        "Each yellow cell holds one number, so wrap FREQUENCY or LINEST in INDEX there. Otherwise they spill into the "
+        "cells below."
     )
 
     # practice row of each task (title row, two intro rows, score row, header row, then tasks)
@@ -433,7 +435,7 @@ def build() -> Lesson:
                          f"changes. `SKEW` will. The output's Kurtosis row ({los_kurt:.2f}) is `KURT`. A positive value means "
                          "heavier tails than a bell curve."),
         Task(f"Build a histogram of LOSDays (all 400 stays) using the bins on the Bins sheet, with the Histogram tool or "
-             f"FREQUENCY. How many stays fall in the bin labeled {HIST_BIN}?",
+             f"FREQUENCY. How many stays fall in the bin labeled {HIST_BIN}? Enter that one count.",
              answer=hist_n,
              solution=f"=INDEX(FREQUENCY({LOSr},{BINr}),{bi + 1})",
              hint="A bin's number is its upper limit. Which LOS values does that bin collect?",
@@ -479,8 +481,8 @@ def build() -> Lesson:
                          f"`=INTERCEPT({LOSr},{AGEr})+SLOPE({LOSr},{AGEr})*{PRED_AGE}` give the same result. The older "
                          "`FORECAST` function does too."),
         Task("Is the age effect from Task 5 real, or could it be chance? Run Regression (Data Analysis) with LOSDays as the Y "
-             "range and Age as the X range, or use LINEST. What p-value does it report for the Age coefficient? Enter it to "
-             "4 decimal places.",
+             "range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it "
+             "report for the Age coefficient? Enter it to 4 decimal places.",
              answer=p_age, fmt="0.0000", tol=0.00006,
              solution=(f"=LET(fit,{linest},tstat,INDEX(fit,1,1)/INDEX(fit,2,1),"
                        f"T.DIST.2T(ABS(tstat),INDEX(fit,4,2)))"),
@@ -561,13 +563,13 @@ def build() -> Lesson:
                          "seasonal index or FORECAST.ETS (see the guide) handles that. `=TREND(…,…,25)` gives the same "
                          "number as FORECAST.LINEAR."),
         Task(f"Build an individuals (I) chart for Memorial's daily arrivals with 2024 as the baseline (EDDaily rows "
-             f"{r24a}–{r24b}). The moving ranges are the absolute day-to-day changes, sigma = average moving range ÷ "
-             f"{D2}, and UCL = mean + 3 × sigma. What is the UCL? Enter it to 2 decimal places.",
+             f"{r24a}–{r24b}). The moving ranges are the absolute day-to-day changes, σ̂ = average moving range ÷ "
+             f"{D2}, and UCL = mean + 3 × σ̂. What is the UCL? Enter it to 2 decimal places.",
              answer=base["ucl"], fmt="0.00",
              solution=f"={ucl_f}",
              hint="Average |today − yesterday| over 2024, divide by 1.128, triple it, add the mean",
              explanation=f"2024 averaged {base['mean']:.3f} arrivals a day. The {base['n_mr']} moving ranges average "
-                         f"{base['mrbar']:.3f}, so sigma = {base['mrbar']:.3f} ÷ {D2} = {base['sigma']:.3f} and UCL = "
+                         f"{base['mrbar']:.3f}, so σ̂ = {base['mrbar']:.3f} ÷ {D2} = {base['sigma']:.3f} and UCL = "
                          f"{base['mean']:.3f} + 3 × {base['sigma']:.3f} = {base['ucl']:.2f}. The LCL is "
                          f"{base['lcl']:.2f}. Many references write this as mean ± 2.66 × MR̄, which is the same thing, because "
                          f"3 ÷ {D2} ≈ 2.66. A helper column of `=ABS(C3-C2)` filled down and averaged works too. The moving "
@@ -637,7 +639,8 @@ def build() -> Lesson:
         f"January 2024 to December 2025 (Monthly sheet, rows {mf}–{ml}). For each month, n = IndexStays (inpatient discharges "
         "of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total "
         "index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of "
-        "this sheet, so later parts can refer to it. Helper columns to the right of the Monthly table make this much easier."
+        "this sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much "
+        "easier. Put them in empty columns to the right of the Monthly table."
     )
     L.bonus = [
         Task("What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal places.",
@@ -662,8 +665,8 @@ def build() -> Lesson:
              answer=len(outside),
              solution=f"=SUMPRODUCT(--({out_test}))",
              live=f"=SUMPRODUCT(--({out_test_live}))",
-             hint="Compare each month's rate with its own limits. Helper columns for the rate, UCL, LCL, and a TRUE/FALSE "
-                  "flag, then COUNTIF the flags, works. So does one SUMPRODUCT",
+             hint="Compare each month's rate with its own limits. Add helper columns for the rate, UCL, LCL, and a "
+                  "TRUE/FALSE flag, then COUNTIF the flags. One SUMPRODUCT also works",
              explanation="Only one month signals, and it falls below its LCL. No month is above its UCL. "
                          "`ABS(rate − p̄) > 3σ` catches both directions in one test because "
                          "every LCL here is above zero. When n is small, p̄ − 3σ can go negative and the LCL is set to 0, so "

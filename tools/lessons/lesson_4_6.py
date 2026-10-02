@@ -329,7 +329,9 @@ def build() -> Lesson:
         f"The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). "
         f"They start at {SEL_FAC} and {month_label}. Write every formula with SelFacility and SelMonth, never typed-in "
         f"names or dates, and keep that selection while you check your answers. (Change it afterwards and watch your "
-        f"formulas follow.) Tasks 1–9 go in the yellow cells below. Tasks 10–13 have you build on other sheets.")
+        f"formulas follow.) Tasks 1–9 are formulas you type in the yellow cells below. Tasks 10 and 11 are built on "
+        f"the Dashboard and Calc sheets, and their gray cells fill in from your work. For tasks 12 and 13, build "
+        f"PivotTables on a new Pivots sheet and type the number they show.")
 
     occ_now_f = f"{f_sel('PatientDays')}/{f_sel('BedDays')}"
     occ_prev_f = f"{f_sel('PatientDays', 'EDATE(SelMonth,-1)')}/{f_sel('BedDays', 'EDATE(SelMonth,-1)')}"
@@ -371,6 +373,14 @@ def build() -> Lesson:
                          "habit, because the same formula keeps working when the selection covers several rows (a "
                          "quarter, or all hospitals). There, SUMIFS on LWBSRate would add percentages together, which "
                          "is meaningless."),
+        Task("System-wide LWBS % for the selected month: all three hospitals combined, ignoring the facility selector. "
+             "Divide total LWBS by total ED visits instead of averaging the three hospitals' rates. Enter it as a percentage.",
+             answer=t7, fmt="0.00%", solution=f"={f_sys('LWBS')}/{f_sys('EDVisits')}",
+             hint="Drop the Facility criterion from both SUMIFS",
+             explanation=f"{tot('LWBS', SEL_MONTH)} ÷ {tot('EDVisits', SEL_MONTH)} = {t7:.2%}. Averaging the three "
+                         f"hospital rates gives {t7_avg:.2%}, because a simple average gives the small hospitals the "
+                         "same weight as Bluestone Memorial, which sees several times as many patients. Rates roll up as "
+                         "total numerator ÷ total denominator. That's why tblKPI stores the components."),
         Task("LWBS variance to target: the selected LWBS % minus the LWBS % target from tblTargets. Look the target "
              "up with a formula instead of typing 2%. Enter the result as a percentage. A positive result means the hospital "
              "is above (worse than) this lower-is-better target.",
@@ -395,6 +405,15 @@ def build() -> Lesson:
                          f"{SEL_MONTH.strftime('%b %Y')}, but it lands a day late whenever a February 29 falls in between: "
                          f"{_mdy(date(2025, 1, 1))} − 365 days is {_mdy(date(2025, 1, 1) - timedelta(days=365))}, which "
                          f"matches no row, while EDATE returns {_mdy(date(2024, 1, 1))}."),
+        Task("Rolling 3-month ED visits for the selected facility: the selected month plus the two months before it "
+             "(Sep–Nov 2025 for the default selection). Use one SUMIFS with a date window, not OFFSET.",
+             answer=t9, solution=rolling_f,
+             hint='Two criteria on the Month column: ">="&EDATE(SelMonth,-2) and "<="&SelMonth',
+             explanation="Joining an operator to a date (\">=\"&EDATE(SelMonth,-2)) turns the date into criteria text "
+                         "that SUMIFS understands. A common older pattern is SUM(OFFSET(…)). OFFSET is volatile, so Excel "
+                         "recalculates it after every edit anywhere in the workbook, and dozens of them make a dashboard "
+                         "sluggish. SUMIFS recalculates only when its inputs change, and it doesn't depend on the table "
+                         "being sorted."),
         Task("Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays) with the previous "
              "month's. Return ▲ with UNICHAR(9650) if it rose, ▼ with UNICHAR(9660) if it fell, or ▬ with "
              "UNICHAR(9644) if it didn't change.",
@@ -411,8 +430,8 @@ def build() -> Lesson:
              "the target and the Direction of \"Median door-to-provider\" from tblTargets, so the same pattern works for "
              "any KPI. A median isn't additive, so look up the hospital's MedianDTP value instead of adding it up.",
              answer=t6, solution=status_f,
-             hint="LET + XLOOKUP(1, (tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth), tblKPI[MedianDTP]); "
-                  "then IF on the direction",
+             hint="LET + XLOOKUP(1, (tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth), tblKPI[MedianDTP]). "
+                  "Then IF on the direction",
              explanation=f"The median is {dtp_sel:.1f} minutes against a target of "
                          f"{TARGET_BY_KPI['Median door-to-provider'][5]} or less, so it's off target, even if only "
                          "barely. XLOOKUP(1, (condition)*(condition), …) finds the one row where both conditions are "
@@ -420,14 +439,6 @@ def build() -> Lesson:
                          "at or below the target, and higher-is-better KPIs pass at or above it. Binary statuses hide "
                          "near misses like this one, which is why many dashboards add an amber band (for example, within "
                          "10% of target)."),
-        Task("System-wide LWBS % for the selected month: all three hospitals combined, ignoring the facility selector. "
-             "Divide total LWBS by total ED visits instead of averaging the three hospitals' rates. Enter it as a percentage.",
-             answer=t7, fmt="0.00%", solution=f"={f_sys('LWBS')}/{f_sys('EDVisits')}",
-             hint="Drop the Facility criterion from both SUMIFS",
-             explanation=f"{tot('LWBS', SEL_MONTH)} ÷ {tot('EDVisits', SEL_MONTH)} = {t7:.2%}. Averaging the three "
-                         f"hospital rates gives {t7_avg:.2%}, because a simple average gives the small hospitals the "
-                         "same weight as Bluestone Memorial, which sees several times as many patients. Rates roll up as "
-                         "total numerator ÷ total denominator. That's why tblKPI stores the components."),
         Task("System-wide median door-to-provider, in minutes, for the selected month. Medians can't be added or "
              "averaged across hospitals, so compute it from the visit-level table: the MEDIAN of DoorToProviderMin for "
              "every tblEDWaits visit whose ArrivalDateTime falls in the selected month. Keep one decimal place.",
@@ -439,15 +450,6 @@ def build() -> Lesson:
                          "(>= first day, < first day of next month), which catches every arrival time on the last day "
                          "of the month. In Excel 2019 or earlier, use =AGGREGATE(17,6,values/(condition),2) instead, "
                          "where function 17 is QUARTILE.INC and quartile 2 is the median."),
-        Task("Rolling 3-month ED visits for the selected facility: the selected month plus the two months before it "
-             "(Sep–Nov 2025 for the default selection). Use one SUMIFS with a date window, not OFFSET.",
-             answer=t9, solution=rolling_f,
-             hint='Two criteria on the Month column: ">="&EDATE(SelMonth,-2) and "<="&SelMonth',
-             explanation="Joining an operator to a date (\">=\"&EDATE(SelMonth,-2)) turns the date into criteria text "
-                         "that SUMIFS understands. A common older pattern is SUM(OFFSET(…)). OFFSET is volatile, so Excel "
-                         "recalculates it after every edit anywhere in the workbook, and dozens of them make a dashboard "
-                         "sluggish. SUMIFS recalculates only when its inputs change, and it doesn't depend on the table "
-                         "being sorted."),
         Task("Insert a Form Controls combo box on the Dashboard. In Format Control, set its Input range to "
              "Lists!$A$2:$A$5 and its Cell link to Calc!$C$12. Then choose Ashby Falls Community Hospital in the combo "
              "box. The gray cell shows the number your combo box writes to the cell link.",
@@ -558,10 +560,14 @@ def build() -> Lesson:
         "4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.\n"
         "5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one "
         "landscape page when printed.\n\n"
-        "The hidden Dashboard Key sheet is a finished reference build. Compare your numbers with it when you're done.")
+        "Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a "
+        "finished reference build, so compare your numbers with it when you're done.")
 
     readmit_card = ('=SUMIFS(tblKPI[Readmits],tblKPI[Facility],FacCrit,tblKPI[Month],BoardMonth)'
                     '/SUMIFS(tblKPI[IndexStays],tblKPI[Facility],FacCrit,tblKPI[Month],BoardMonth)')
+    board_median = ("=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],\n"
+                    "  (tblEDWaits[ArrivalDateTime]>=BoardMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(BoardMonth,1))\n"
+                    "  *((tblEDWaits[Facility]=BoardFacility)+(BoardFacility=\"All facilities\"))))")
     b_date = f"DATE({B_MONTH.year},{B_MONTH.month},1)"
     b2_live = (f"=LET(m,{b_date},"
                "lwbs,SUMIFS(tblKPI[LWBS],tblKPI[Month],m)/SUMIFS(tblKPI[EDVisits],tblKPI[Month],m),"
@@ -606,6 +612,9 @@ def build() -> Lesson:
              solution=("Give each card a numeric status cell, for example for LWBS:\n\n"
                        "```\n=IF(ISNUMBER(val),--IF(dir=\"Lower is better\",val<=tgt,val>=tgt),\"\")\n```\n\n"
                        "Then the scorecard is `=SUM(statuses)&\" of \"&COUNT(statuses)&\" KPIs on target\"`.\n\n"
+                       "The median card can't use FacCrit, because FILTER doesn't understand the `*` wildcard. Test "
+                       "the facility with OR logic instead:\n\n"
+                       f"```\n{board_median}\n```\n\n"
                        "The system values for this month:\n\n"
                        "| KPI | Value | Target | Status |\n|---|---|---|---|\n" + sys_lines),
              explanation=f"{b2} of 7. The median door-to-provider must come from tblEDWaits, because the three hospital "
@@ -650,6 +659,9 @@ def build() -> Lesson:
         f"The Dashboard sheet's yellow selectors are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). "
         f"They start at {SEL_FAC} and {month_label}. Tasks 1–9 and 11 are checked against that selection, so set it back "
         "if you've been exploring.",
+        "The other sheets are the dashboard's layers. Dashboard is the practice canvas, with the selectors and a "
+        "finished example card. Calc is the model layer, where you work on tasks 10 and 11. Lists holds the dropdown "
+        "sources. Board is a blank canvas for the bonus.",
         "Needs Microsoft 365 or Excel 2021+ for XLOOKUP, LET, and FILTER. The guide shows alternatives for older "
         "versions. Form Controls (task 10) need Excel for Windows or Mac, not Excel for the web.",
         "Dashboard Key (hidden) is a finished reference dashboard set to the bonus selection. It's protected without a "

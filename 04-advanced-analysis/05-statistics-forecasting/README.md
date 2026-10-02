@@ -87,6 +87,8 @@ The tools you'll use here:
 Every tool's dialog works the same way:
 
 - Fill in **Input Range** with a cell range such as `Stays!$G$1:$G$401`. Click in the box and drag over the cells to fill it in.
+  A range typed without a sheet name, such as `$G$1:$G$401`, refers to the sheet that was active when you opened the tool, so
+  start each tool from the sheet that holds the data.
 - Tick **Labels in first row** when your range includes the header, so the output uses the column name.
 - **Output options** are an Output Range on the current sheet, a **New Worksheet Ply** (a new sheet), or a New Workbook. A new
   sheet is safest, because the tool overwrites whatever is already in the output range.
@@ -96,9 +98,8 @@ Every tool's dialog works the same way:
 A **distribution** is the pattern of values a measure takes: where most values sit, how spread out they are, and whether a long
 tail stretches to one side. Lesson 2.4 built these numbers one function at a time. The ToolPak builds them all at once.
 
-1. Select **Data → Data Analysis → Descriptive Statistics → OK**.
-2. Set **Input Range** to `$G$1:$G$401` on the Stays sheet (TotalCharges), **Grouped By** *Columns*, and tick **Labels in first
-   row**.
+1. Select the **Stays** sheet, then select **Data → Data Analysis → Descriptive Statistics → OK**.
+2. Set **Input Range** to `$G$1:$G$401` (TotalCharges), **Grouped By** to *Columns*, and tick **Labels in first row**.
 3. Choose **New Worksheet Ply**.
 4. Tick **Summary statistics** and **Confidence Level for Mean** (leave it at 95%). Optionally tick **Kth Largest** and **Kth
    Smallest**.
@@ -143,7 +144,7 @@ Three rows are new since Lesson 2.4:
 A **histogram** shows a distribution by sorting values into **bins**, which are consecutive ranges of equal or chosen width, and
 counting the values in each bin. You have three ways to build one.
 
-**FREQUENCY.** This function counts values into bins in one formula:
+**FREQUENCY.** You met this function in Lesson 4.2. It counts values into bins in one formula:
 
 ```
 =FREQUENCY(data_array, bins_array)
@@ -185,7 +186,8 @@ Range empty, Excel picks evenly spaced bins between the minimum and maximum, whi
 > the same sheet as the data, or start the tool while the *bins* sheet is active. For Task 2, select the Bins sheet, open the tool,
 > type `Stays!$F$2:$F$401` as the Input Range and `$A$4:$A$10` as the Bin Range, and leave **Labels** unticked.
 
-**The Histogram chart (Excel 2016 and later).** Select the data column, then **Insert → Insert Statistic Chart → Histogram**.
+**The Histogram chart (Excel 2016 and later).** Lesson 3.5 built this chart. Select the data column, then **Insert → Insert
+Statistic Chart → Histogram**.
 Excel chooses the bins itself. To control them, right-click the horizontal axis, select **Format Axis** (**Ctrl + 1**, Mac:
 **⌘ + 1**), and set:
 
@@ -221,8 +223,8 @@ Q3 with the median inside it, and marks values beyond the IQR fences from Lesson
 
 ### 5. Relationships: scatter plots and correlation
 
-A **scatter plot** puts one measure on each axis and draws a dot for every row. Select two columns and choose **Insert → Insert
-Scatter (X, Y) or Bubble Chart → Scatter**. Excel puts the left column on the horizontal (x) axis, so arrange the columns with the
+A **scatter plot** (the scatter chart from Lesson 3.5) puts one measure on each axis and draws a dot for every row. Select two
+columns and choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**. Excel puts the left column on the horizontal (x) axis, so arrange the columns with the
 explanatory measure first.
 
 The **correlation coefficient**, written **r**, measures how closely the dots follow a straight line. It runs from −1 to +1:
@@ -305,10 +307,10 @@ Read it like this. Each additional ED visit in a month goes with about 0.37 more
 bring about 266 discharges, give or take roughly 22 (the STEYX). The intercept, 40.9, is the line's value at zero ED visits.
 No month comes anywhere near zero ED visits, so the intercept is just where the line crosses the axis, not a real-world quantity.
 
-To see the same line on a chart, build the scatter plot (x = EDVisits, y = InpatientDischarges), select **Chart Elements** (the
-**+** button) **→ Trendline → More Options** (Mac: **Chart Design → Add Chart Element → Trendline → More Trendline Options**), and
-tick **Display Equation on chart** and **Display R-squared value on chart**.
-The chart shows `y = 0.3746x + 40.911` and `R² = 0.5654`, the same numbers SLOPE, INTERCEPT, and RSQ return.
+To see the same line on a chart, add a linear trendline as in Lesson 3.5. Build the scatter plot (x = EDVisits,
+y = InpatientDischarges), select **Chart Elements** (the **+** button) **→ Trendline → More Options** (Mac: **Chart Design → Add
+Chart Element → Trendline → More Trendline Options**), and tick **Display Equation on chart** and **Display R-squared value on
+chart**. The chart shows `y = 0.3746x + 40.911` and `R² = 0.5654`, the same numbers SLOPE, INTERCEPT, and RSQ return.
 
 > ⚠️ **Don't extrapolate.** The line was fit on months with 403 to 631 ED visits. A prediction for 1,000 visits assumes the
 > straight line keeps going, and nothing in the data shows that it does.
@@ -320,9 +322,9 @@ The chart shows `y = 0.3746x + 40.911` and `R² = 0.5654`, the same numbers SLOP
 A slope calculated from a sample is an estimate. A different sample would give a slightly different slope, so the question is
 whether the true slope could plausibly be zero. Regression output answers it.
 
-**The Regression tool.** Select **Data → Data Analysis → Regression**. Set **Input Y Range** to `$E$1:$E$25` and **Input X
-Range** to `$C$1:$C$25` on the Monthly sheet, tick **Labels**, choose **New Worksheet Ply**, and optionally tick **Residuals** and
-**Residual Plots**. The output has three blocks:
+**The Regression tool.** Select the **Monthly** sheet, then select **Data → Data Analysis → Regression**. Set **Input Y Range** to
+`$E$1:$E$25` (InpatientDischarges) and **Input X Range** to `$C$1:$C$25` (EDVisits), tick **Labels**, choose **New Worksheet
+Ply**, and optionally tick **Residuals** and **Residual Plots**. The output has three blocks:
 
 **Regression Statistics**
 
@@ -711,7 +713,8 @@ UCL = mean + 3 × σ̂        (the same as mean + 2.66 × MR̄)
 LCL = mean − 3 × σ̂        (set to 0 if it's negative and the measure can't go below 0)
 ```
 
-The constant 1.128, called d₂, converts the average range of two consecutive points into a standard deviation. 3 ÷ 1.128 ≈ 2.66,
+**MR̄** (say "MR-bar") is the average moving range, and **σ̂** (say "sigma-hat") is the estimated standard deviation of the
+short-term noise. The constant 1.128, called d₂, converts the average range of two consecutive points into a standard deviation. 3 ÷ 1.128 ≈ 2.66,
 which is why many references write the limits as mean ± 2.66 × MR̄.
 
 **Worked example: Cedar Ridge daily arrivals, 2024 baseline** (EDDaily column E, rows 2–367).
@@ -746,20 +749,21 @@ used rules. Exact run lengths vary between references, so pick one set and use i
 
 **Build the chart.** Excel has no control-chart type, so you build one from a line chart:
 
-1. Put the center line, UCL, and LCL in three cells, say M2, M3, and M4. Then, one blank column away from the Table, add CL, UCL,
-   and LCL columns that point at those cells with absolute references (`=$M$2`, `=$M$3`, `=$M$4`), so every row shows the same
-   value.
+1. On the EDDaily sheet, put the center line, UCL, and LCL in three cells, say M2, M3, and M4. Then, one blank column away from
+   the Table, add CL, UCL, and LCL columns that point at those cells with absolute references (`=$M$2`, `=$M$3`, `=$M$4`), so
+   every row shows the same value.
 2. Select the dates, the values, and the three limit columns, holding **Ctrl** (Mac: **⌘**) to add non-adjacent ranges. Select
    **Insert → Insert Line or Area Chart → Line**.
 3. Format the limit series as dashed red lines and the center line as a solid gray line, without markers.
-4. To mark signals, add a column such as `=IF(E368>$M$3,E368,NA())` and chart it as markers only. NA() returns #N/A, which a line
-   chart doesn't plot, so only the signal points appear.
+4. To mark the 2025 signals, type `=IF(E368>$M$3,E368,NA())` in row 368 of one more column, fill it down to row 732, and chart
+   it as markers only. NA() returns #N/A, which a line chart doesn't plot, so only the signal points appear.
 
 ### 14. p-charts for rates
 
 A **p-chart** monitors a proportion, such as the share of ED patients who leave without being seen. Each period's rate is a count
 of events (x) divided by a denominator (n), and the denominator changes from month to month. A rate from a small month is less
-reliable than a rate from a big one, so each period gets its **own** limits:
+reliable than a rate from a big one, so each period gets its **own** limits around one shared center line, **p̄** (say
+"p-bar"):
 
 ```
 p̄    = total events ÷ total denominator          (not the average of the monthly rates)
@@ -772,10 +776,10 @@ Small months get wide limits and big months get narrow ones, so the limit lines 
 
 **Worked example: the system-wide LWBS rate** (Monthly sheet, LWBS in column D and EDVisits in column C).
 
-1. Center line: `=SUM(Monthly!D2:D25)/SUM(Monthly!C2:C25)` gives 237 ÷ 12,292 = **1.93%**. Put it in a cell, say M2, and refer to
-   it with `$M$2`.
-2. In three helper columns, calculate each month's rate `=D2/C2`, its UCL `=$M$2+3*SQRT($M$2*(1-$M$2)/C2)`, and its LCL
-   `=MAX(0,$M$2-3*SQRT($M$2*(1-$M$2)/C2))`. If you type them in columns H, I, and J, right next to the Table, the Table grows to
+1. Center line: `=SUM(Monthly!D2:D25)/SUM(Monthly!C2:C25)` gives 237 ÷ 12,292 = **1.93%**. Put it in a cell well clear of the
+   Table, say P2, and refer to it with `$P$2`. That leaves columns K to O free for the bonus.
+2. In three helper columns, calculate each month's rate `=D2/C2`, its UCL `=$P$2+3*SQRT($P$2*(1-$P$2)/C2)`, and its LCL
+   `=MAX(0,$P$2-3*SQRT($P$2*(1-$P$2)/C2))`. If you type them in columns H, I, and J, right next to the Table, the Table grows to
    include them and Excel fills each formula down to row 25 for you. That's what you want here, because every row needs the
    formula. If I and J still hold your seasonal-index work from section 11, clear them first.
 3. Flag any month where the rate is above its UCL or below its LCL, and count the flags.
@@ -830,22 +834,22 @@ in the yellow cell, as a formula wherever possible. Where a task mentions a Tool
 enter the matching worksheet formula so the answer stays live. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Stays (rows 2–401) holds the 400 sampled inpatient stays: Bluestone Memorial in rows 2–201 and Cedar Ridge in rows 202–401. Bins (A4:A10) holds the LOS histogram bins. EDWaits holds Q4 2025 ED visits sorted by hospital. EDDaily holds one row per day from 01/01/2024 (row 2) to 12/31/2025 (row 732), with 2025 starting in row 368. Monthly holds Jan 2024 (row 2) to Dec 2025 (row 25). Answer with formulas where you can. Where a task says the ToolPak, a worksheet formula gives the same number.
+Stays (rows 2–401) holds the 400 sampled inpatient stays: Bluestone Memorial in rows 2–201 and Cedar Ridge in rows 202–401. Bins (A4:A10) holds the LOS histogram bins. EDWaits holds Q4 2025 ED visits sorted by hospital. EDDaily holds one row per day from 01/01/2024 (row 2) to 12/31/2025 (row 732), with 2025 starting in row 368. Monthly holds Jan 2024 (row 2) to Dec 2025 (row 25). Answer with formulas where you can. Where a task says the ToolPak, a worksheet formula gives the same number. Each yellow cell holds one number, so wrap FREQUENCY or LINEST in INDEX there. Otherwise they spill into the cells below.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Run Data Analysis → Descriptive Statistics on LOSDays for all 400 stays (tick Summary statistics). What Skewness does the output report? Enter it to 2 decimal places, or use the worksheet function that calculates it. | The ToolPak's Skewness row is the SKEW function |
-| 2 | Build a histogram of LOSDays (all 400 stays) using the bins on the Bins sheet, with the Histogram tool or FREQUENCY. How many stays fall in the bin labeled 6? | A bin's number is its upper limit. Which LOS values does that bin collect? |
+| 2 | Build a histogram of LOSDays (all 400 stays) using the bins on the Bins sheet, with the Histogram tool or FREQUENCY. How many stays fall in the bin labeled 6? Enter that one count. | A bin's number is its upper limit. Which LOS values does that bin collect? |
 | 3 | How strongly is a patient's age related to length of stay? Calculate the correlation coefficient between Age and LOSDays for all 400 stays, to 3 decimal places. | CORREL(array1, array2) |
 | 4 | Finance wants to know how much a day of stay adds to the bill. Fit a straight line that predicts TotalCharges from LOSDays (all 400 stays). What is the slope, in dollars per day? Enter it to 2 decimal places. | SLOPE(known_y's, known_x's). The thing you predict goes first |
 | 5 | Using the straight line that predicts LOSDays from Age (all 400 stays), what LOS does it predict for an 80-year-old patient? Enter days to 2 decimal places. | FORECAST.LINEAR(x, known_y's, known_x's), or INTERCEPT + SLOPE × 80 |
-| 6 | Is the age effect from Task 5 real, or could it be chance? Run Regression (Data Analysis) with LOSDays as the Y range and Age as the X range, or use LINEST. What p-value does it report for the Age coefficient? Enter it to 4 decimal places. | t Stat = coefficient ÷ its standard error. T.DIST.2T turns t into a two-tailed p-value |
+| 6 | Is the age effect from Task 5 real, or could it be chance? Run Regression (Data Analysis) with LOSDays as the Y range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it report for the Age coefficient? Enter it to 4 decimal places. | t Stat = coefficient ÷ its standard error. T.DIST.2T turns t into a two-tailed p-value |
 | 7 | Finance would rather quote a range than a single number. For the TotalCharges-on-LOSDays line from Task 4, what is the lower end of the 95% confidence interval for the slope? It's the "Lower 95%" value the Regression tool reports for LOSDays. Enter dollars per day to 2 decimal places. | slope − t × (standard error of the slope), where t = T.INV.2T(0.05, residual df) |
 | 8 | Do Bluestone Memorial and Cedar Ridge differ in average LOS? Run a two-tailed t-test that does not assume equal variances, comparing Memorial's LOSDays (rows 2–201) with Cedar Ridge's (rows 202–401). Enter the p-value to 3 decimal places. | T.TEST(array1, array2, tails, type). Type 3 = two-sample, unequal variance |
 | 9 | Estimate Ashby Falls' true average door-to-provider time with a 95% confidence interval, using its Q4 2025 visits (EDWaits rows 1158–1383). What is the interval's half-width (the ± margin), in minutes to 2 decimal places? Blank cells are patients who left without being seen. | CONFIDENCE.T(alpha, standard_dev, size). Alpha for 95% is 0.05 |
 | 10 | A trailing 7-day moving average smooths out the weekday pattern. What was the 7-day moving average of Memorial's daily arrivals on 02/25/2025 (that day and the 6 days before it)? Enter it to 2 decimal places. | 02/25/2025 is EDDaily row 423. Average 7 rows ending there |
 | 11 | Fit a linear trend to the 24 monthly EDVisits values, using MonthNum (1–24) as x. What does it forecast for month 25 (January 2026)? Enter it to 1 decimal place. | FORECAST.LINEAR(x, known_y's, known_x's) |
-| 12 | Build an individuals (I) chart for Memorial's daily arrivals with 2024 as the baseline (EDDaily rows 2–367). The moving ranges are the absolute day-to-day changes, sigma = average moving range ÷ 1.128, and UCL = mean + 3 × sigma. What is the UCL? Enter it to 2 decimal places. | Average \|today − yesterday\| over 2024, divide by 1.128, triple it, add the mean |
+| 12 | Build an individuals (I) chart for Memorial's daily arrivals with 2024 as the baseline (EDDaily rows 2–367). The moving ranges are the absolute day-to-day changes, σ̂ = average moving range ÷ 1.128, and UCL = mean + 3 × σ̂. What is the UCL? Enter it to 2 decimal places. | Average \|today − yesterday\| over 2024, divide by 1.128, triple it, add the mean |
 | 13 | Monitor 2025 against the 2024 limits. On how many days in 2025 (EDDaily rows 368–732) did Memorial's arrivals exceed the UCL from Task 12? | COUNTIF with ">"& your Task 12 cell (D17) |
 <!-- END GENERATED: practice -->
 
@@ -955,7 +959,7 @@ The trend line is almost flat (slope -0.16 visits a month, R² = 0.0003), so the
 ```
 
 
-2024 averaged 11.773 arrivals a day. The 365 moving ranges average 4.148, so sigma = 4.148 ÷ 1.128 = 3.677 and UCL = 11.773 + 3 × 3.677 = 22.80. The LCL is 0.74. Many references write this as mean ± 2.66 × MR̄, which is the same thing, because 3 ÷ 1.128 ≈ 2.66. A helper column of `=ABS(C3-C2)` filled down and averaged works too. The moving range measures short-term, day-to-day noise, so a slow seasonal swing doesn't widen the limits the way STDEV.S does (it would put the UCL at 23.35).
+2024 averaged 11.773 arrivals a day. The 365 moving ranges average 4.148, so σ̂ = 4.148 ÷ 1.128 = 3.677 and UCL = 11.773 + 3 × 3.677 = 22.80. The LCL is 0.74. Many references write this as mean ± 2.66 × MR̄, which is the same thing, because 3 ÷ 1.128 ≈ 2.66. A helper column of `=ABS(C3-C2)` filled down and averaged works too. The moving range measures short-term, day-to-day noise, so a slow seasonal swing doesn't widen the limits the way STDEV.S does (it would put the UCL at 23.35).
 
 **13. Monitor 2025 against the 2024 limits. On how many days in 2025 (EDDaily rows 368–732)…**
 
@@ -970,13 +974,13 @@ The trend line is almost flat (slope -0.16 visits a month, R² = 0.0003), so the
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The quality committee wants a p-chart of Bluestone's system-wide 30-day readmission rate by discharge month, January 2024 to December 2025 (Monthly sheet, rows 2–25). For each month, n = IndexStays (inpatient discharges of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it. Helper columns to the right of the Monthly table make this much easier.
+The quality committee wants a p-chart of Bluestone's system-wide 30-day readmission rate by discharge month, January 2024 to December 2025 (Monthly sheet, rows 2–25). For each month, n = IndexStays (inpatient discharges of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much easier. Put them in empty columns to the right of the Monthly table.
 
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal places. *(Hint: Total readmissions ÷ total index stays. Don't average the 24 monthly rates)*
 - **B2.** September 2024 had the fewest index stays (177). What is its upper control limit? Enter it as a percentage to 2 decimal places. *(Hint: p̄ + 3 × SQRT(p̄ × (1 − p̄) / n), with this month's n)*
-- **B3.** How many of the 24 months fall outside their control limits (above the UCL or below the LCL)? *(Hint: Compare each month's rate with its own limits. Helper columns for the rate, UCL, LCL, and a TRUE/FALSE flag, then COUNTIF the flags, works. So does one SUMPRODUCT)*
+- **B3.** How many of the 24 months fall outside their control limits (above the UCL or below the LCL)? *(Hint: Compare each month's rate with its own limits. Add helper columns for the rate, UCL, LCL, and a TRUE/FALSE flag, then COUNTIF the flags. One SUMPRODUCT also works)*
 - **B4.** Which month is it? Enter its MonthStart date. *(Hint: Read it off your helper columns, or XLOOKUP(TRUE, your test, the MonthStart column))*
 - **B5.** Drop December 2025 and recompute p̄ from the other 23 months (rows 2–24). The highest remaining month is February 2025 (row 15). How many standard errors above the new center line is it? Calculate z = (rate − p̄) ÷ √(p̄ × (1 − p̄) ÷ n) and enter it to 2 decimal places. *(Hint: LET(p, new p̄, n, that month's IndexStays, (rate − p) / SQRT(p*(1−p)/n)))*
 <!-- END GENERATED: bonus -->

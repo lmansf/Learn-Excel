@@ -1,7 +1,7 @@
 # Lesson 4.6 · Building Interactive Dashboards
 
 > **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.6-dashboards.xlsx`](4.6-dashboards.xlsx)
-> **Data:** Monthly KPIs for Bluestone Health's three hospitals, Jan 2024 – Dec 2025 (72 hospital-months), every ED visit's door-to-provider time, and a KPI dictionary with targets and owners.
+> **Data:** Monthly KPIs for Bluestone Health's three hospitals, Jan 2024 – Dec 2025 (72 hospital-months), every ED visit's door-to-provider time, and a KPI dictionary with targets and owners. The monthly numbers are built from [`ed_visits.csv`](../../data/README.md#ed_visitscsv), [`encounters.csv`](../../data/README.md#encounterscsv), [`daily_census.csv`](../../data/README.md#daily_censuscsv), [`patient_satisfaction.csv`](../../data/README.md#patient_satisfactioncsv), and [`claims.csv`](../../data/README.md#claimscsv) in the [data dictionary](../../data/README.md).
 
 Every month, Bluestone Health's leaders ask the same questions. Are ED patients waiting too long? Will there be a bed for
 the next admission? Are payers denying more claims? An analyst can answer each one with a fresh report, or build a
@@ -181,7 +181,9 @@ A median depends on every individual value, so a roll-up median has to come from
 
 ### 5. Selectors: dropdowns, names, and combo boxes
 
-A **selector** is the cell or control that every formula on the dashboard reads. Excel offers several kinds:
+Excel offers several kinds of selector. [Lesson 3.2](../../03-data-analysis/02-data-validation-conditional-formatting/README.md)
+taught dropdowns, and [Lesson 3.4](../../03-data-analysis/04-pivottables/README.md) taught slicers and timelines. This table
+compares them as dashboard controls:
 
 | Selector | How you add it | What formulas can read | Strengths | Watch out for |
 |---|---|---|---|---|
@@ -193,7 +195,8 @@ A **selector** is the cell or control that every formula on the dashboard reads.
 
 For formula-driven cards, use dropdowns or combo boxes. Use slicers and timelines with PivotTables (section 9).
 
-**Build a dropdown selector:**
+**Build a dropdown selector.** Dashboard!C4 and C5 are already set up this way. You'll repeat these steps for the bonus
+dashboard.
 
 1. Put the choices in a list on a helper sheet. On **Lists**, A2:A5 holds *All facilities* and the three hospital names, and
    C2:C25 holds 24 month-start dates formatted as *mmm yyyy*.
@@ -237,8 +240,8 @@ position back into text with `INDEX`, as Calc!C13 does:
 ```
 
 > 📋 Form Controls are a desktop feature. Excel for the web doesn't support them, so use data-validation dropdowns if your
-> dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the
-> Insert menu), because they're Windows-only and often blocked by security settings.
+> dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the Insert menu), because they're
+> Windows-only and often blocked by security settings.
 
 ### 6. Selector-driven formulas
 
@@ -257,6 +260,7 @@ everything a dashboard needs:
 | "All facilities" | `IF(SelFacility="All facilities","*",SelFacility)` as the Facility criterion |
 | An average over detail rows | `=AVERAGEIFS(tblEDWaits[DoorToProviderMin],tblEDWaits[Facility],SelFacility, …date window…)` |
 | A median across hospitals or months | `=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin], conditions))` |
+| "All facilities" inside FILTER | `((tblEDWaits[Facility]=SelFacility)+(SelFacility="All facilities"))` as the facility condition |
 | Missing or immature data | Wrap the formula in `IFERROR(…,"n/a")` |
 
 **SUMIFS is the workhorse.** With both selectors as criteria it returns exactly one hospital-month, because `tblKPI` has
@@ -278,8 +282,9 @@ whenever a February 29 is in between. Joining an operator to a date, as in `">="
 criteria text that SUMIFS understands.
 
 **Looking up a non-additive value.** For one hospital-month you can read MedianDTP directly. `XLOOKUP(1, (A=x)*(B=y), C)`
-finds the row where both conditions are TRUE, because TRUE × TRUE = 1 (Lesson 4.2). Don't SUMIFS a rate or median column.
-It happens to work for one row, but it silently adds the values together as soon as the selection covers several rows.
+finds the row where both conditions are TRUE, because TRUE × TRUE = 1
+([Lesson 4.2](../02-advanced-formulas-let-lambda/README.md)). Don't SUMIFS a rate or median column. It happens to work for
+one row, but it silently adds the values together as soon as the selection covers several rows.
 
 **AVERAGEIFS belongs on detail rows.** `AVERAGEIFS` takes the same criteria as SUMIFS and returns the mean of the matching
 cells, so it's the right tool for a mean wait over the visits in `tblEDWaits`. Pointed at a rate column it goes wrong:
@@ -303,11 +308,27 @@ The date test is a **half-open window**: on or after the first day of the month,
 month. ArrivalDateTime includes a time, so a test of `<=` the last day of the month would miss every arrival after midnight
 on that day. To limit the median to one hospital as well, multiply in a third condition: `*(tblEDWaits[Facility]=SelFacility)`.
 
+**"All facilities" inside FILTER.** FILTER compares values exactly and doesn't understand wildcards, so the `"*"` trick
+from SUMIFS matches no rows here, and FILTER returns `#CALC!` because it has nothing to return. Write the facility test
+with OR logic instead ([Lesson 4.1](../01-dynamic-arrays/README.md)). A row should pass if its facility matches the
+selector, or if the selector says *All facilities*. Adding the two tests does exactly that, because TRUE + FALSE = 1 and
+FALSE + FALSE = 0:
+
+```
+=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],
+               (tblEDWaits[ArrivalDateTime]>=SelMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(SelMonth,1))
+               *((tblEDWaits[Facility]=SelFacility)+(SelFacility="All facilities"))))
+```
+
+With a hospital selected, only that hospital's visits pass. With *All facilities* selected, the second test is TRUE for
+every row, so every visit in the month passes. The bonus needs this version, because its median card has to work both
+ways.
+
 > 📋 **Older versions.** FILTER, XLOOKUP, and LET need Microsoft 365 or Excel 2021 or later. In Excel 2010–2019, use
 > `=AGGREGATE(17,6,values/(conditions),2)` for a conditional median (function 17 is QUARTILE.INC, quartile 2 is the median,
 > and option 6 skips the `#DIV/0!` errors that the division creates for rows that don't match), and INDEX/MATCH for lookups.
 > A multi-condition lookup such as `=INDEX(tblKPI[MedianDTP],MATCH(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),0))`
-> must be confirmed with **Ctrl + Shift + Enter** (Mac: **⌃ + Shift + Return**) in those versions.
+> must be confirmed with **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**) in those versions.
 
 **Name the pieces with LET.** Card formulas get long because the same SUMIFS appears more than once. `LET` names each piece
 once and then uses the names:
@@ -357,6 +378,10 @@ Read the direction from the KPI dictionary instead of writing a different formul
 =IF(IF(direction="Lower is better", value<=target, value>=target), "On target", "Off target")
 ```
 
+Look `target` and `direction` up by the KPI's name, for example `XLOOKUP("LWBS %",tblTargets[KPI],tblTargets[Direction])`.
+The name must match the KPI column exactly. Because every card reads the same dictionary, one edit to `tblTargets` updates
+every card that uses it. `LET` keeps the formula readable: name the value, the target, and the direction, then write the IF.
+
 For a **scorecard** (a line such as "6 of 7 KPIs on target"), return a number instead of text. `--IF(…)` turns TRUE and
 FALSE into 1 and 0, so `=SUM(statuses)` counts the KPIs on target and `=COUNT(statuses)` counts those with data. A status of
 `""` for missing data is skipped by both.
@@ -391,11 +416,13 @@ three. The example card on the Dashboard sheet uses the first row of this table:
 The negative section shows the value without a minus sign, so −0.034 appears as ▼ 3.4%. `[Color10]` is a darker, more
 readable green than `[Green]`.
 
-**Color the status with conditional formatting**, not by hand. Select the status cell, choose **Home → Conditional
-Formatting → New Rule → Use a formula to determine which cells to format**, and enter a rule such as `=LEFT($F$10,1)="✔"`
-with a green fill. Add a second rule for ✘ with a red fill. To color a value cell by direction instead, use the
-direction-aware test as the rule: `=IF($R11="Lower is better",$O11<=$Q11,$O11>=$Q11)`. (Both rules come from the hidden
-Dashboard Key: F10 is its LWBS status cell, and row 11 of its model area holds the LWBS value, target, and direction.)
+**Color the status with conditional formatting**
+([Lesson 3.2](../../03-data-analysis/02-data-validation-conditional-formatting/README.md)), not by hand. Select the status cell,
+choose **Home → Conditional Formatting → New Rule → Use a formula to determine which cells to format**, and enter a rule
+such as `=LEFT($F$10,1)="✔"` with a green fill. Add a second rule for ✘ with a red fill. To color a value cell by
+direction instead, use the direction-aware test as the rule: `=IF($R11="Lower is better",$O11<=$Q11,$O11>=$Q11)`. (Both
+rules come from the hidden Dashboard Key: F10 is its LWBS status cell, and row 11 of its model area holds the LWBS
+value, target, and direction.)
 
 > ⚠️ **Color has to mean the same thing everywhere.** Red means "off target, act". Don't color volumes (more ED visits isn't
 > bad), and don't color an arrow red just because it points down, because a falling LWBS % is good news.
@@ -417,13 +444,13 @@ selectors. When a selector changes, the formulas recalculate and the chart redra
 1. Choose a block of rows for the window, such as 12 rows for "the last 12 months".
 2. In the month column, return the oldest month in the first row, then step forward one month per row. A counter does this
    with one formula copied down: `ROWS(B$17:B17)` returns 1 in the first row, 2 in the next, and so on, because only the
-   second reference moves as you copy (Lesson 1.5). So `=EDATE(SelMonth,ROWS(B$17:B17)-12)` runs from 11 months back to
-   SelMonth itself.
+   second reference moves as you copy ([Lesson 1.5](../../01-foundations/05-cell-references/README.md)). So
+   `=EDATE(SelMonth,ROWS(B$17:B17)-12)` runs from 11 months back to SelMonth itself.
 3. In the value column, use the selector-driven SUMIFS with that row's month as the Month criterion.
 
-In Microsoft 365, `=EDATE(SelMonth,SEQUENCE(12,1,-11))` spills all 12 months from one cell (Lesson 4.1). A chart built from a
-spill keeps a fixed range, so if a spill can change size, chart it through a defined name that refers to the spill, such as
-`=Calc!$B$17#`.
+In Microsoft 365, `=EDATE(SelMonth,SEQUENCE(12,1,-11))` spills all 12 months from one cell
+([Lesson 4.1](../01-dynamic-arrays/README.md)). A chart built from a spill keeps a fixed range, so if a spill can change
+size, chart it through a defined name that refers to the spill, such as `=Calc!$B$17#`.
 
 **Insert and place the chart:**
 
@@ -433,7 +460,8 @@ spill keeps a fixed range, so if a spill can change size, chart it through a def
    still plots the months as a second line, right-click the chart → **Select Data** and fix the axis labels there.
 3. Cut the chart (**Ctrl + X**, Mac: **⌘ + X**) and paste it on the dashboard. A moved chart still points at the model sheet.
 
-**Make the title dynamic.** Build the title text in a cell, for example
+**Make the title dynamic**, the same way as in [Lesson 3.5](../../03-data-analysis/05-charts-visualization/README.md).
+Build the title text in a cell, for example
 `="ED visits, 12 months to "&TEXT(SelMonth,"mmm yyyy")&" · "&SelFacility`. Then click the chart title, type `=` in the
 formula bar, click that cell, and press **Enter**. Now the title follows the selectors too. Both charts on the hidden
 Dashboard Key work this way: their titles point at cells O19 and O20 of its model area.
@@ -442,8 +470,9 @@ Dashboard Key work this way: their titles point at cells O19 and O20 of its mode
 `NA()` instead: `=IF(COUNTIFS(tblKPI[Facility],SelFacility,tblKPI[Month],B17)=0,NA(),SUMIFS(…))`. Excel doesn't plot `#N/A`
 points, so the line simply starts later.
 
-**Add a target line.** Add a column to the block that repeats the target in every row (for example `=$Q$11`) and include it
-in the chart as a second series. Format it as a thin dashed line, and readers see the misses without reading a number.
+**Add a target line.** Add a column to the block that repeats the target in every row and include it in the chart as a
+second series. The Dashboard Key's LWBS chart does this with `=$Q$11`, its LWBS target cell. Format the target series as a
+thin dashed line, and readers see the misses without reading a number.
 
 **Choose the right chart for each question:**
 
@@ -458,14 +487,14 @@ in the chart as a second series. Format it as a thin dashed line, and readers se
 **Leave out chartjunk:** 3-D effects, gradients, heavy gridlines, a legend for a single series, and axis labels with more
 decimals than the data deserves. Every mark on the chart should help answer the question.
 
-**Sparklines** are tiny charts inside one cell, ideal next to a KPI card. Select the destination cell, choose **Insert →
-Sparklines → Line**, set the **Data Range** to the 12 values, and click **OK**. Use **Sparkline → Show → High Point** or
-**Markers** to emphasize the points that matter.
+**Sparklines** ([Lesson 3.5](../../03-data-analysis/05-charts-visualization/README.md)) are tiny charts inside one cell,
+ideal next to a KPI card. Select the destination cell, choose **Insert → Sparklines → Line**, set the **Data Range** to the
+12 values, and click **OK**. Use **Sparkline → Show → High Point** or **Markers** to emphasize the points that matter.
 
 ### 9. Slicers and timelines across several PivotTables
 
-PivotTables (Lesson 3.4) are a fast way to put summaries on a dashboard, and slicers make them interactive. This table helps
-you choose between formulas and pivots:
+PivotTables ([Lesson 3.4](../../03-data-analysis/04-pivottables/README.md)) are a fast way to put summaries on a
+dashboard, and slicers make them interactive. This table helps you choose between formulas and pivots:
 
 | | Formula cards (SUMIFS, XLOOKUP) | PivotTables with slicers |
 |---|---|---|
@@ -615,6 +644,10 @@ was built in four steps:
 4. **Trend.** C10 holds `=IFERROR(B8/C9-1,"n/a")` with the custom format `"▲ "0.0%;"▼ "0.0%;"▬ "0.0%`, so it shows
    **▲ 3.4%** while the cell still holds a number (0.0345).
 
+> 📋 [Lesson 1.3](../../01-foundations/03-formatting-cells/README.md) advised against merged cells because they break
+> sorting, filtering, and copying. Nobody sorts or filters a dashboard's display cells, so merging a card's title and big
+> number is a common exception. **Center Across Selection** gives the same look without merging.
+
 The card has no target and no color, because discharges are a volume: more isn't better or worse. Now change the Facility
 selector to Bluestone Memorial Hospital and the Month to Jan 2025. All three numbers change, and the arrow may flip, without
 anyone touching a formula. That's the whole idea of an interactive dashboard. Set the selectors back to Cedar Ridge Medical
@@ -653,19 +686,19 @@ yellow cells. Tasks 10–13 have you build a combo box, a chart block, and conne
 green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). They start at Cedar Ridge Medical Center and Nov 2025. Write every formula with SelFacility and SelMonth, never typed-in names or dates, and keep that selection while you check your answers. (Change it afterwards and watch your formulas follow.) Tasks 1–9 go in the yellow cells below. Tasks 10–13 have you build on other sheets.
+The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). They start at Cedar Ridge Medical Center and Nov 2025. Write every formula with SelFacility and SelMonth, never typed-in names or dates, and keep that selection while you check your answers. (Change it afterwards and watch your formulas follow.) Tasks 1–9 are formulas you type in the yellow cells below. Tasks 10 and 11 are built on the Dashboard and Calc sheets, and their gray cells fill in from your work. For tasks 12 and 13, build PivotTables on a new Pivots sheet and type the number they show.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Write a formula that returns the number of ED visits for the selected facility and month (the EDVisits column of tblKPI). | SUMIFS with two criteria: Facility = SelFacility and Month = SelMonth |
 | 2 | Return the LWBS % (left without being seen) for the selection. Build it from its components, LWBS ÷ EDVisits, instead of reading the LWBSRate column. Enter it as a percentage. | One SUMIFS for the numerator divided by one SUMIFS for the denominator |
-| 3 | LWBS variance to target: the selected LWBS % minus the LWBS % target from tblTargets. Look the target up with a formula instead of typing 2%. Enter the result as a percentage. A positive result means the hospital is above (worse than) this lower-is-better target. | XLOOKUP("LWBS %", tblTargets[KPI], tblTargets[Target]) |
-| 4 | ED visits change versus the same month last year: this year ÷ last year − 1. Find last year's month with EDATE so the formula works for any selected month. Enter it as a percentage. | EDATE(SelMonth,-12) is the same month one year earlier |
-| 5 | Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays) with the previous month's. Return ▲ with UNICHAR(9650) if it rose, ▼ with UNICHAR(9660) if it fell, or ▬ with UNICHAR(9644) if it didn't change. | LET(cur, …, prev, …, IF(cur>prev, UNICHAR(9650), …)). EDATE(SelMonth,-1) is the previous month |
-| 6 | Status cell for median door-to-provider: return the text On target or Off target for the selection. Read the target and the Direction of "Median door-to-provider" from tblTargets, so the same pattern works for any KPI. A median isn't additive, so look up the hospital's MedianDTP value instead of adding it up. | LET + XLOOKUP(1, (tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth), tblKPI[MedianDTP]); then IF on the direction |
-| 7 | System-wide LWBS % for the selected month: all three hospitals combined, ignoring the facility selector. Divide total LWBS by total ED visits instead of averaging the three hospitals' rates. Enter it as a percentage. | Drop the Facility criterion from both SUMIFS |
-| 8 | System-wide median door-to-provider, in minutes, for the selected month. Medians can't be added or averaged across hospitals, so compute it from the visit-level table: the MEDIAN of DoorToProviderMin for every tblEDWaits visit whose ArrivalDateTime falls in the selected month. Keep one decimal place. | MEDIAN(FILTER(…)) with ArrivalDateTime >= SelMonth and < EDATE(SelMonth,1) |
-| 9 | Rolling 3-month ED visits for the selected facility: the selected month plus the two months before it (Sep–Nov 2025 for the default selection). Use one SUMIFS with a date window, not OFFSET. | Two criteria on the Month column: ">="&EDATE(SelMonth,-2) and "<="&SelMonth |
+| 3 | System-wide LWBS % for the selected month: all three hospitals combined, ignoring the facility selector. Divide total LWBS by total ED visits instead of averaging the three hospitals' rates. Enter it as a percentage. | Drop the Facility criterion from both SUMIFS |
+| 4 | LWBS variance to target: the selected LWBS % minus the LWBS % target from tblTargets. Look the target up with a formula instead of typing 2%. Enter the result as a percentage. A positive result means the hospital is above (worse than) this lower-is-better target. | XLOOKUP("LWBS %", tblTargets[KPI], tblTargets[Target]) |
+| 5 | ED visits change versus the same month last year: this year ÷ last year − 1. Find last year's month with EDATE so the formula works for any selected month. Enter it as a percentage. | EDATE(SelMonth,-12) is the same month one year earlier |
+| 6 | Rolling 3-month ED visits for the selected facility: the selected month plus the two months before it (Sep–Nov 2025 for the default selection). Use one SUMIFS with a date window, not OFFSET. | Two criteria on the Month column: ">="&EDATE(SelMonth,-2) and "<="&SelMonth |
+| 7 | Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays) with the previous month's. Return ▲ with UNICHAR(9650) if it rose, ▼ with UNICHAR(9660) if it fell, or ▬ with UNICHAR(9644) if it didn't change. | LET(cur, …, prev, …, IF(cur>prev, UNICHAR(9650), …)). EDATE(SelMonth,-1) is the previous month |
+| 8 | Status cell for median door-to-provider: return the text On target or Off target for the selection. Read the target and the Direction of "Median door-to-provider" from tblTargets, so the same pattern works for any KPI. A median isn't additive, so look up the hospital's MedianDTP value instead of adding it up. | LET + XLOOKUP(1, (tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth), tblKPI[MedianDTP]). Then IF on the direction |
+| 9 | System-wide median door-to-provider, in minutes, for the selected month. Medians can't be added or averaged across hospitals, so compute it from the visit-level table: the MEDIAN of DoorToProviderMin for every tblEDWaits visit whose ArrivalDateTime falls in the selected month. Keep one decimal place. | MEDIAN(FILTER(…)) with ArrivalDateTime >= SelMonth and < EDATE(SelMonth,1) |
 | 10 | Insert a Form Controls combo box on the Dashboard. In Format Control, set its Input range to Lists!$A$2:$A$5 and its Cell link to Calc!$C$12. Then choose Ashby Falls Community Hospital in the combo box. The gray cell shows the number your combo box writes to the cell link. | Developer → Insert → Combo Box (Form Control), then right-click it → Format Control → Control tab |
 | 11 | On the Calc sheet, fill the yellow 12-month trend block. In B17:B28, return the 12 months ending at SelMonth, oldest first (use EDATE). In C17:C28, return ED visits for SelFacility in each of those months. Then select B16:C28, insert a line chart, and move it to the Dashboard. The gray cell totals your block: the trailing-12-month ED visits. | EDATE(SelMonth,-11) is the oldest month. A counter such as ROWS(B$17:B17) lets one formula step forward as you copy it down |
 | 12 | Insert a new sheet named Pivots. Build PivotTable 1 from tblKPI with Month in Rows and Sum of EDVisits in Values. Insert a Facility slicer and a Month timeline for it. Select Ashby Falls Community Hospital in the slicer, and select 2025 Q3 in the timeline (switch it to QUARTERS). What is PivotTable 1's grand total? | PivotTable Analyze → Insert Slicer, and PivotTable Analyze → Insert Timeline |
@@ -701,55 +734,7 @@ tblKPI has exactly one row per hospital per month, so SUMIFS with both criteria 
 
 3 of 80 patients left before a provider saw them. For one hospital-month this matches the LWBSRate column. The components version is still the better habit, because the same formula keeps working when the selection covers several rows (a quarter, or all hospitals). There, SUMIFS on LWBSRate would add percentages together, which is meaningless.
 
-**3. LWBS variance to target: the selected LWBS % minus the LWBS % target from tblTargets.…**
-
-- **Answer:** 1.75%
-- **Solution:**
-
-```
-=SUMIFS(tblKPI[LWBS],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)-XLOOKUP("LWBS %",tblTargets[KPI],tblTargets[Target])
-```
-
-
-3.75% − 2.00% = +1.75%. Strictly, that's +1.75 percentage points: the gap between two rates. (The relative variance, actual ÷ target − 1, would be +87.5%.) Keeping targets in a table and looking them up means one edit to tblTargets updates every card that uses the target. On a real card this cell would subtract the target cell from the value cell.
-
-**4. ED visits change versus the same month last year: this year ÷ last year − 1. Find last…**
-
-- **Answer:** -7.0%
-- **Solution:**
-
-```
-=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-12))-1
-```
-
-
-80 visits this year against 86 in Nov 2024. Comparing with the same month last year removes seasonality, which a month-over-month change can't do: an ED's November differs from its October for seasonal reasons alone. EDATE moves a date by whole months and keeps it on the first of the month, so it matches the Month column for every selection. Subtracting 365 days happens to work for Nov 2025, but it lands a day late whenever a February 29 falls in between: 1/1/2025 − 365 days is 1/2/2024, which matches no row, while EDATE returns 1/1/2024.
-
-**5. Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays)…**
-
-- **Answer:** ▲
-- **Solution:**
-
-```
-=LET(cur,SUMIFS(tblKPI[PatientDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[BedDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth),prev,SUMIFS(tblKPI[PatientDays],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-1))/SUMIFS(tblKPI[BedDays],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-1)),IF(cur>prev,UNICHAR(9650),IF(cur<prev,UNICHAR(9660),UNICHAR(9644))))
-```
-
-
-Occupancy went from 81.5% in Oct 2025 to 84.7%. LET names the two rates once, so the IF reads like a sentence instead of repeating four SUMIFS. A formula-made arrow is ordinary text, so you can color it with conditional formatting. On a dashboard, rising occupancy deserves amber or red as it approaches the ceiling, even though the arrow itself only says which way it moved.
-
-**6. Status cell for median door-to-provider: return the text On target or Off target for…**
-
-- **Answer:** Off target
-- **Solution:**
-
-```
-=LET(val,XLOOKUP(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),tblKPI[MedianDTP]),tgt,XLOOKUP("Median door-to-provider",tblTargets[KPI],tblTargets[Target]),dir,XLOOKUP("Median door-to-provider",tblTargets[KPI],tblTargets[Direction]),IF(IF(dir="Lower is better",val<=tgt,val>=tgt),"On target","Off target"))
-```
-
-
-The median is 31.0 minutes against a target of 30 or less, so it's off target, even if only barely. XLOOKUP(1, (condition)*(condition), …) finds the one row where both conditions are TRUE (TRUE×TRUE = 1). The inner IF flips the comparison by direction: lower-is-better KPIs pass at or below the target, and higher-is-better KPIs pass at or above it. Binary statuses hide near misses like this one, which is why many dashboards add an amber band (for example, within 10% of target).
-
-**7. System-wide LWBS % for the selected month: all three hospitals combined, ignoring the…**
+**3. System-wide LWBS % for the selected month: all three hospitals combined, ignoring the…**
 
 - **Answer:** 1.53%
 - **Solution:**
@@ -761,19 +746,31 @@ The median is 31.0 minutes against a target of 30 or less, so it's off target, e
 
 8 ÷ 522 = 1.53%. Averaging the three hospital rates gives 1.71%, because a simple average gives the small hospitals the same weight as Bluestone Memorial, which sees several times as many patients. Rates roll up as total numerator ÷ total denominator. That's why tblKPI stores the components.
 
-**8. System-wide median door-to-provider, in minutes, for the selected month. Medians can't…**
+**4. LWBS variance to target: the selected LWBS % minus the LWBS % target from tblTargets.…**
 
-- **Answer:** 33.5
+- **Answer:** 1.75%
 - **Solution:**
 
 ```
-=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],(tblEDWaits[ArrivalDateTime]>=SelMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(SelMonth,1))))
+=SUMIFS(tblKPI[LWBS],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)-XLOOKUP("LWBS %",tblTargets[KPI],tblTargets[Target])
 ```
 
 
-The true system median is 33.5 minutes. Averaging the three hospital medians gives 34.5, which is not the median of anything. A median depends on every individual value, so it can only be computed from the detail rows. The date test uses a half-open window (>= first day, < first day of next month), which catches every arrival time on the last day of the month. In Excel 2019 or earlier, use =AGGREGATE(17,6,values/(condition),2) instead, where function 17 is QUARTILE.INC and quartile 2 is the median.
+3.75% − 2.00% = +1.75%. Strictly, that's +1.75 percentage points: the gap between two rates. (The relative variance, actual ÷ target − 1, would be +87.5%.) Keeping targets in a table and looking them up means one edit to tblTargets updates every card that uses the target. On a real card this cell would subtract the target cell from the value cell.
 
-**9. Rolling 3-month ED visits for the selected facility: the selected month plus the two…**
+**5. ED visits change versus the same month last year: this year ÷ last year − 1. Find last…**
+
+- **Answer:** -7.0%
+- **Solution:**
+
+```
+=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[EDVisits],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-12))-1
+```
+
+
+80 visits this year against 86 in Nov 2024. Comparing with the same month last year removes seasonality, which a month-over-month change can't do: an ED's November differs from its October for seasonal reasons alone. EDATE moves a date by whole months and keeps it on the first of the month, so it matches the Month column for every selection. Subtracting 365 days happens to work for Nov 2025, but it lands a day late whenever a February 29 falls in between: 1/1/2025 − 365 days is 1/2/2024, which matches no row, while EDATE returns 1/1/2024.
+
+**6. Rolling 3-month ED visits for the selected facility: the selected month plus the two…**
 
 - **Answer:** 221
 - **Solution:**
@@ -784,6 +781,42 @@ The true system median is 33.5 minutes. Averaging the three hospital medians giv
 
 
 Joining an operator to a date (">="&EDATE(SelMonth,-2)) turns the date into criteria text that SUMIFS understands. A common older pattern is SUM(OFFSET(…)). OFFSET is volatile, so Excel recalculates it after every edit anywhere in the workbook, and dozens of them make a dashboard sluggish. SUMIFS recalculates only when its inputs change, and it doesn't depend on the table being sorted.
+
+**7. Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays)…**
+
+- **Answer:** ▲
+- **Solution:**
+
+```
+=LET(cur,SUMIFS(tblKPI[PatientDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth)/SUMIFS(tblKPI[BedDays],tblKPI[Facility],SelFacility,tblKPI[Month],SelMonth),prev,SUMIFS(tblKPI[PatientDays],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-1))/SUMIFS(tblKPI[BedDays],tblKPI[Facility],SelFacility,tblKPI[Month],EDATE(SelMonth,-1)),IF(cur>prev,UNICHAR(9650),IF(cur<prev,UNICHAR(9660),UNICHAR(9644))))
+```
+
+
+Occupancy went from 81.5% in Oct 2025 to 84.7%. LET names the two rates once, so the IF reads like a sentence instead of repeating four SUMIFS. A formula-made arrow is ordinary text, so you can color it with conditional formatting. On a dashboard, rising occupancy deserves amber or red as it approaches the ceiling, even though the arrow itself only says which way it moved.
+
+**8. Status cell for median door-to-provider: return the text On target or Off target for…**
+
+- **Answer:** Off target
+- **Solution:**
+
+```
+=LET(val,XLOOKUP(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),tblKPI[MedianDTP]),tgt,XLOOKUP("Median door-to-provider",tblTargets[KPI],tblTargets[Target]),dir,XLOOKUP("Median door-to-provider",tblTargets[KPI],tblTargets[Direction]),IF(IF(dir="Lower is better",val<=tgt,val>=tgt),"On target","Off target"))
+```
+
+
+The median is 31.0 minutes against a target of 30 or less, so it's off target, even if only barely. XLOOKUP(1, (condition)*(condition), …) finds the one row where both conditions are TRUE (TRUE×TRUE = 1). The inner IF flips the comparison by direction: lower-is-better KPIs pass at or below the target, and higher-is-better KPIs pass at or above it. Binary statuses hide near misses like this one, which is why many dashboards add an amber band (for example, within 10% of target).
+
+**9. System-wide median door-to-provider, in minutes, for the selected month. Medians can't…**
+
+- **Answer:** 33.5
+- **Solution:**
+
+```
+=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],(tblEDWaits[ArrivalDateTime]>=SelMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(SelMonth,1))))
+```
+
+
+The true system median is 33.5 minutes. Averaging the three hospital medians gives 34.5, which is not the median of anything. A median depends on every individual value, so it can only be computed from the detail rows. The date test uses a half-open window (>= first day, < first day of next month), which catches every arrival time on the last day of the month. In Excel 2019 or earlier, use =AGGREGATE(17,6,values/(condition),2) instead, where function 17 is QUARTILE.INC and quartile 2 is the median.
 
 **10. Combo box cell link**
 
@@ -862,7 +895,7 @@ Each month the COO presents one page to the board's Quality & Operations Committ
 4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.
 5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one landscape page when printed.
 
-The hidden Dashboard Key sheet is a finished reference build. Compare your numbers with it when you're done.
+Then use your finished Board dashboard to answer B1–B4 on the Bonus sheet. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
 
 Work on the **Bonus** sheet of the workbook.
 
@@ -903,6 +936,14 @@ Give each card a numeric status cell, for example for LWBS:
 ```
 
 Then the scorecard is `=SUM(statuses)&" of "&COUNT(statuses)&" KPIs on target"`.
+
+The median card can't use FacCrit, because FILTER doesn't understand the `*` wildcard. Test the facility with OR logic instead:
+
+```
+=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin],
+  (tblEDWaits[ArrivalDateTime]>=BoardMonth)*(tblEDWaits[ArrivalDateTime]<EDATE(BoardMonth,1))
+  *((tblEDWaits[Facility]=BoardFacility)+(BoardFacility="All facilities"))))
+```
 
 The system values for this month:
 

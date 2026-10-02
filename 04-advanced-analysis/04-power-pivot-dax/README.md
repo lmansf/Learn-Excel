@@ -1,7 +1,7 @@
 # Lesson 4.4 · Data Model, Power Pivot & DAX
 
 > **Level:** Advanced · **Time:** about 75 minutes · **Workbook:** [`4.4-power-pivot-dax.xlsx`](4.4-power-pivot-dax.xlsx)
-> **Data:** A star schema of the whole Bluestone Health System for 2024–2025: every encounter (21,857 rows) and every claim (21,857 rows) as fact tables, plus dimension tables for dates, facilities, departments, providers, patients, payers, and diagnoses.
+> **Data:** A star schema of the whole Bluestone Health System for 2024–2025: every encounter (21,857 rows) and every claim (21,857 rows) as fact tables, plus dimension tables for dates, facilities, departments, providers, patients, payers, and diagnoses. The columns come from [`encounters.csv`](../../data/README.md#encounterscsv), [`claims.csv`](../../data/README.md#claimscsv), and the reference files in the [data dictionary](../../data/README.md).
 
 The CFO asks for charges by facility, the revenue-cycle director asks for denial rates by payer type, and the quality
 director asks for readmission rates by age group, all from the same monthly report. Those answers live in different
@@ -21,9 +21,10 @@ here carries straight over.
 
 ## 📖 Guide
 
-> 📋 **You need Excel for Windows** (Microsoft 365, or Excel 2016 or later) for this lesson. Excel for Mac and Excel for the
-> web can't create a Data Model, relationships, or measures. If you're on a Mac, read the guide and the answer key, and
-> build the model later on a Windows PC, a Windows virtual machine, or a cloud PC. Section 17 has the full version notes.
+> 📋 **You need Excel for Windows with Power Pivot** for this lesson: Microsoft 365, Excel 2019 or later, or an edition of
+> Excel 2013 or 2016 that includes it (such as Office Professional Plus). Excel for Mac and Excel for the web can't create
+> a Data Model, relationships, or measures. If you're on a Mac, read the guide and the answer key, and build the model
+> later on a Windows PC, a Windows virtual machine, or a cloud PC. Section 17 has the full version notes.
 
 ### 1. Why a Data Model?
 
@@ -75,7 +76,7 @@ flowchart LR
     FE[["FactEncounters · one row per encounter"]]
     FC[["FactClaims · one row per claim"]]
     DimDate -- "Date → AdmitDate" --> FE
-    DimDate -. "Date → DischargeDate (inactive)" .-> FE
+    DimDate -.->|"Date → DischargeDate (inactive)"| FE
     DimFacility -- FacilityID --> FE
     DimDepartment -- DeptID --> FE
     DimProvider -- "ProviderID → AttendingProviderID" --> FE
@@ -280,8 +281,9 @@ but they have limits:
 > 💡 **Tip:** Data Model PivotTables offer **Distinct Count** under Value Field Settings → Summarize Values By. Classic
 > PivotTables don't. It's the quickest way to count unique patients.
 
-Data Model PivotTables don't support calculated fields, and most of the Group command's options aren't available. Measures
-replace calculated fields, and columns in the dimension tables (DimDate[Quarter], DimPatient[AgeGroup]) replace grouping.
+Data Model PivotTables don't support the calculated fields from Lesson 3.4, and most of the Group command's options aren't
+available. Measures replace calculated fields, and columns in the dimension tables (DimDate[Quarter], DimPatient[AgeGroup])
+replace grouping.
 
 > ⚠️ **The relationship check.** If a PivotTable shows the **same number in every row**, and the field list says
 > *Relationships between tables may be needed*, the table in Rows isn't related to the table in Values. The measure can't
@@ -313,8 +315,9 @@ Encounters := COUNTROWS(FactEncounters)
 Avg Charge := DIVIDE([Total Charges], [Encounters])
 ```
 
-In the Measure dialog, type the part before `:=` in **Measure name** and the rest after the `=` in **Formula**. Lines that
-start with `--` in the answer key are notes about the PivotTable layout, so don't type them into a measure.
+To use one of these lines in the Measure dialog, type the part before `:=` in **Measure name**. The **Formula** box already
+starts with `=`, so type the part after `:=` right after that equals sign. Lines that start with `--` in the answer key are
+notes about the PivotTable layout, so don't type them into a measure.
 
 | DAX syntax | Meaning |
 |---|---|
@@ -358,8 +361,8 @@ shows:
 
 Encounters and Total Charges add up down the column. Patients doesn't: the facility rows sum to 6,026, but the grand total
 is 3,576. A patient seen at Bluestone Memorial and at the Outpatient Pavilion counts once in each row and once in the total.
-The total is right. A measure **recalculates** the grand total from the underlying rows in the total's filter context. It
-never adds up the cells above it, which is why rates and distinct counts total correctly in DAX.
+The total is right. A measure **recalculates** the grand total from all the rows that the total covers. It never adds up
+the cells above it, which is why rates and distinct counts total correctly in DAX.
 
 > 💡 **Tip:** Use DIVIDE for every ratio. DAX's `/` operator never returns #DIV/0!. A number divided by 0 or by a blank
 > returns **Infinity**, 0 ÷ 0 returns **NaN**, and the PivotTable shows those words in the cell. DIVIDE returns a blank
@@ -450,16 +453,19 @@ other way. In DimPatient, `=COUNTROWS(RELATEDTABLE(FactEncounters))` counts each
 relationship and a row context, so it works in calculated columns and inside iterators (section 11), but not on its own in
 a measure.
 
-Task 9 can be solved two ways. As a calculated column plus a simple measure:
+**Worked example: a flag column.** Case managers review the stays that ran at least twice as long as the benchmark for their
+diagnosis. A calculated column flags each one, and a simple measure adds up the flags:
 
 ```dax
--- calculated column in FactEncounters, renamed OverExpected
-=IF(FactEncounters[EncounterType] = "Inpatient" && FactEncounters[LOSDays] > RELATED(DimDiagnosis[ExpectedLOS]), 1, 0)
+-- calculated column in FactEncounters, renamed LongStay
+=IF(FactEncounters[EncounterType] = "Inpatient" && FactEncounters[LOSDays] >= 2 * RELATED(DimDiagnosis[ExpectedLOS]), 1, 0)
 
-Stays Over Expected := SUM(FactEncounters[OverExpected])
+Long Stays := SUM(FactEncounters[LongStay])
 ```
 
-Or as one measure with FILTER, which needs no stored column (that's the answer key's version).
+The `&&` joins the two tests, and RELATED fetches the benchmark from the encounter's own diagnosis row. Task 9 asks a
+similar question, but as one measure built with FILTER (section 9), which gives the same kind of count without storing a
+column.
 
 | | Calculated column | Measure |
 |---|---|---|
@@ -468,7 +474,7 @@ Or as one measure with FILTER, which needs no stored column (that's the answer k
 | Context | Row context (the current row) | Filter context (the cell's filters) |
 | Can go in Rows, Columns, slicers | Yes | No |
 | Can go in Values | Yes (as an implicit SUM, COUNT…) | Yes |
-| Typical use | Categories and flags: LOS Band, AgeGroup, OverExpected | Totals, counts, rates, comparisons |
+| Typical use | Categories and flags: LOS Band, AgeGroup, LongStay | Totals, counts, rates, comparisons |
 
 > 💡 **Tip:** If you want to slice by it, make a column. If you want to aggregate it, make a measure. Avoid copying
 > dimension attributes into facts with RELATED (such as a PayerType column in FactEncounters). The relationship already lets
@@ -552,6 +558,11 @@ or to a rolling window. All of them take the date table's Date column.
 | `DATEADD(DimDate[Date], n, interval)` | Shifted by n DAY, MONTH, QUARTER, or YEAR (negative = back) | `CALCULATE([ED Visits], DATEADD(DimDate[Date], -1, MONTH))` |
 | `DATESINPERIOD(DimDate[Date], date, n, interval)` | A window of n intervals that starts on *date*, or ends on it when n is negative | `DATESINPERIOD(DimDate[Date], MAX(DimDate[Date]), -3, MONTH)` |
 
+The functions that return dates (DATESYTD, SAMEPERIODLASTYEAR, DATEADD, DATESINPERIOD) go inside CALCULATE as filter
+arguments, and CALCULATE's first argument can be a measure or any other expression. `MAX(DimDate[Date])` returns the last
+date in the cell's filter context: 3/31/2025 in the March 2025 row, 12/31/2025 in the 2025 row. That makes it the usual
+anchor for a rolling window that should end with the cell's own period.
+
 **Worked example: year to date.** Ashby Falls Community Hospital, 2025, with DimDate[Year] and DimDate[MonthName] in Rows:
 
 | Month | Total Charges | Charges YTD |
@@ -599,8 +610,9 @@ CALCULATE(
 
 **USERELATIONSHIP** activates the inactive DischargeDate relationship for this calculation only, and the AdmitDate
 relationship is ignored while it runs. In 2024, 2,727 inpatient stays were admitted but 2,681 were discharged, because 46 stays
-admitted in late December 2024 went home in January 2025. The relationship must already exist in the model, so create it
-(dashed) before you use USERELATIONSHIP.
+admitted in late December 2024 went home in January 2025. The switch also applies inside every measure that CALCULATE
+evaluates, which is why IP Discharges can reuse [Inpatient Stays] without rewriting it. The relationship must already exist
+in the model, so create it (dashed) before you use USERELATIONSHIP.
 
 ### 14. KPIs
 
@@ -708,19 +720,20 @@ Start by building the model (Guide sections 3–5): add all nine tables to the D
 | 6 | FactClaims shares DimDate and DimPayer with FactEncounters. Create Claims (rows of FactClaims), Denied Claims (claims whose ClaimStatus is Denied or Appealed, because an appealed claim was denied first), and Denial Rate = Denied Claims ÷ Claims, using DIVIDE. What is the denial rate for DimPayer[PayerType] = Medicare Advantage in 2025? Enter it as a percentage with 1 decimal place. | Two conditions on the same column can be joined with \|\| inside CALCULATE |
 | 7 | Create Inpatient Stays = Encounters for EncounterType = Inpatient (build it on your Encounters measure), and Readmission Rate = the sum of FactEncounters[Readmit30] ÷ Inpatient Stays. What is the readmission rate for inpatient stays billed to the payer named Medicare (DimPayer[PayerName]) in 2025? Enter it as a percentage with 1 decimal place. | A measure can use another measure: CALCULATE([Encounters], …) |
 | 8 | Create ED Visits = Encounters for EncounterType = Emergency, and % of System ED = ED Visits ÷ ED Visits with every DimFacility filter removed. In a PivotTable with DimFacility[FacilityName] in Rows and DimDate[Year] = 2025, what share of the system's ED visits did Ashby Falls Community Hospital handle? Enter it as a percentage with 1 decimal place. | CALCULATE([ED Visits], ALL(DimFacility)), or REMOVEFILTERS(DimFacility) in Microsoft 365 |
-| 9 | Create Stays Over Expected = the number of Inpatient encounters whose LOSDays is greater than the ExpectedLOS of their primary diagnosis in DimDiagnosis. Use FILTER over FactEncounters and RELATED. How many inpatient stays at Cedar Ridge Medical Center in 2025 ran longer than expected? | FILTER(FactEncounters, … && FactEncounters[LOSDays] > RELATED(DimDiagnosis[ExpectedLOS])) |
+| 9 | Create Stays Over Expected = the number of Inpatient encounters whose LOSDays is greater than the ExpectedLOS of their primary diagnosis in DimDiagnosis. Use FILTER over FactEncounters and RELATED. How many inpatient stays at Cedar Ridge Medical Center in 2025 ran longer than expected? | COUNTROWS(FILTER(FactEncounters, test1 && test2)). Inside FILTER, RELATED can read the diagnosis row |
 | 10 | Expected reimbursement: create Expected Allowed = the sum, row by row, of FactEncounters[TotalCharges] × the payer's AvgAllowedPctOfCharges from DimPayer. Use SUMX and RELATED. What is Expected Allowed for Bluestone Memorial Hospital in 2025? Enter it rounded to the nearest dollar. | SUMX(table, expression evaluated on each row) |
 | 11 | Create Avg Charges per Patient = the average, over the patients in the current filter context, of each patient's Total Charges. Use AVERAGEX over VALUES(FactEncounters[PatientID]) with your Total Charges measure. What is it for patients in DimPatient[AgeGroup] = 75+ in 2025? Enter it rounded to the nearest dollar. | AVERAGEX(VALUES(…), [Total Charges]) |
-| 12 | Create Charges YTD = Total Charges accumulated from January 1 to the last date in the current filter context, using TOTALYTD and DimDate[Date]. Put DimDate[Year] and DimDate[MonthName] in Rows and filter Bluestone Outpatient Pavilion. What does Charges YTD show for September 2025? Enter it rounded to the nearest dollar. | TOTALYTD(expression, DimDate[Date]) |
-| 13 | Create ED Visits LY = ED Visits for the same period one year earlier (SAMEPERIODLASTYEAR) and ED YoY % = (ED Visits − ED Visits LY) ÷ ED Visits LY. What is the year-over-year change in ED visits at Bluestone Memorial Hospital for 2025 compared with 2024? Enter it as a percentage with 1 decimal place (negative if visits fell). | CALCULATE([ED Visits], SAMEPERIODLASTYEAR(DimDate[Date])) |
+| 12 | Create Charges YTD = Total Charges accumulated from January 1 to the last date in the current filter context, using TOTALYTD and DimDate[Date]. Put DimDate[Year] and DimDate[MonthName] in Rows and DimFacility[FacilityName] = Bluestone Outpatient Pavilion in Filters. What does Charges YTD show for September 2025? Enter it rounded to the nearest dollar. | TOTALYTD(expression, DimDate[Date]) |
+| 13 | Create ED Visits LY = ED Visits for the same period one year earlier (SAMEPERIODLASTYEAR) and ED YoY % = (ED Visits − ED Visits LY) ÷ ED Visits LY. What is the year-over-year change in ED visits at Bluestone Memorial Hospital for 2025 compared with 2024? Put DimDate[Year] in Rows and DimFacility[FacilityName] = Bluestone Memorial Hospital in Filters. Enter it as a percentage with 1 decimal place (negative if visits fell). | CALCULATE([ED Visits], SAMEPERIODLASTYEAR(DimDate[Date])) |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
 
 The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…**). Column D shows the DAX for each
 task. Column E holds a worksheet formula (COUNTIFS, SUMIFS, SUMPRODUCT, XLOOKUP) that recomputes the same answer from the
-same tables without the Data Model, which is a good way to see that each PivotTable filter is just a criterion. The same
-answers are below, collapsed so you don't see them by accident.
+same tables without the Data Model, which is a good way to see that each PivotTable filter is just a criterion. A few of
+those formulas use XLOOKUP, LET, UNIQUE, or FILTER, so Excel 2019 and earlier show #NAME? in those cells, but column C
+still holds the answer. The same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -868,7 +881,7 @@ COUNTROWS(
 ```
 
 
-This condition compares a column in the fact table with a column in a dimension table, row by row. A simple CALCULATE filter can't do that, because it tests one column against fixed values. FILTER walks through every FactEncounters row visible in the cell (Cedar Ridge, 2025) and keeps the rows where the test is TRUE. Because FILTER works one row at a time (a **row context**), RELATED can follow that row's relationship to DimDiagnosis and fetch its ExpectedLOS. 229 of Cedar Ridge's 408 inpatient stays in 2025 ran long. The calculated-column alternative is in Guide section 10.
+This condition compares a column in the fact table with a column in a dimension table, row by row. A simple CALCULATE filter can't do that, because it tests one column against fixed values. FILTER walks through every FactEncounters row visible in the cell (Cedar Ridge, 2025) and keeps the rows where the test is TRUE. Because FILTER works one row at a time (a **row context**), RELATED can follow that row's relationship to DimDiagnosis and fetch its ExpectedLOS. 229 of Cedar Ridge's 408 inpatient stays in 2025 ran long. The calculated-column route from Guide section 10 gives the same count: flag each stay with IF(… > RELATED(DimDiagnosis[ExpectedLOS]), 1, 0) and SUM the flag. The FILTER measure needs no stored column.
 
 **10. Expected Allowed (SUMX), Bluestone Memorial, 2025**
 
@@ -937,7 +950,7 @@ In the 2025 row, SAMEPERIODLASTYEAR shifts the year's dates back one year, so ED
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The Chief Medical Officer wants a one-page December 2025 briefing built from the Data Model, so that next month it refreshes instead of being rebuilt. It needs a rolling ED trend, a same-month comparison for the smallest hospital, the busiest inpatient attending, and discharges counted by discharge date. Use your measures from the practice tasks and add new ones as needed. ED visits are encounters with EncounterType = Emergency.
+The Chief Medical Officer wants a one-page December 2025 briefing built from the Data Model, so that next month it refreshes instead of being rebuilt. It needs a rolling ED trend, a same-month comparison for the smallest hospital, the busiest inpatient attending, discharges counted by discharge date, and a readmission rate dated the way quality teams date it. Use your measures from the practice tasks and add new ones as needed. ED visits are encounters with EncounterType = Emergency.
 
 Work on the **Bonus** sheet of the workbook.
 
@@ -945,6 +958,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B2.** Ashby Falls Community Hospital: what is the percentage change in ED visits for December 2025 compared with December 2024? Enter it as a percentage with 1 decimal place (negative if visits fell). *(Hint: Your ED YoY % measure from Task 13 works at month level too)*
 - **B3.** Create Provider Rank = the rank of each attending provider by Inpatient Stays (1 = most stays), using RANKX over ALL(DimProvider[ProviderName]) and returning a blank on the Grand Total row. With DimProvider[ProviderName] in Rows and DimDate[Year] = 2025, which provider is ranked 1? Enter the name exactly as it appears in DimProvider[ProviderName]. *(Hint: RANKX(ALL(…), [measure]) ranks against every provider. HASONEVALUE is TRUE only on a single-provider row)*
 - **B4.** The briefing must count inpatient discharges by discharge date, not admit date. Create IP Discharges = Inpatient Stays evaluated through the inactive relationship FactEncounters[DischargeDate] → DimDate[Date]. How many inpatient discharges did the system have in December 2025? *(Hint: USERELATIONSHIP(many-side column, one-side column) goes inside CALCULATE as a filter argument)*
+- **B5.** Quality reports date each inpatient stay by its discharge, because the 30-day readmission window starts at discharge. Create Readmission Rate (Disch) = your Readmission Rate measure from Task 7, evaluated through the inactive DischargeDate relationship. What is the system's readmission rate for inpatient stays discharged in Q3 2025, the latest quarter whose 30-day windows are complete? Enter it as a percentage with 1 decimal place. *(Hint: You don't need to rebuild the ratio. CALCULATE changes the context for every measure inside it)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -1016,6 +1030,23 @@ CALCULATE(
 
 
 Only one relationship between two tables can be active, so the DischargeDate relationship is inactive (a dashed line in Diagram View) and normally does nothing. USERELATIONSHIP switches it on for this one calculation, so the December 2025 filter from DimDate now selects stays that were discharged in December. In the same row, Inpatient Stays shows 268 admissions and IP Discharges shows 310. The difference is the 42 stays admitted before December and discharged in December. All 268 December admissions in this extract went home by 12/31. In a live system, some December admissions would still be in the hospital at midnight on 12/31, which would pull the two numbers apart the other way. If the inactive relationship doesn't exist in your model, USERELATIONSHIP returns an error, so create it first (see the Model Map).
+
+**B5. Readmission rate by discharge date, Q3 2025**
+
+- **Answer:** 13.2%
+- **Solution:**
+
+```dax
+Readmission Rate (Disch) :=
+CALCULATE(
+    [Readmission Rate],
+    USERELATIONSHIP(FactEncounters[DischargeDate], DimDate[Date])
+)
+-- PivotTable: DimDate[Year], DimDate[Quarter] in Rows
+```
+
+
+CALCULATE switches to the DischargeDate relationship before it evaluates [Readmission Rate], and the switch carries into every measure that rate uses. Both the numerator ([Readmissions]) and the denominator ([Inpatient Stays]) therefore count stays discharged in Q3: 83 readmissions out of 627 discharges. Dated by admission, the same quarter shows 13.0%, so forgetting the relationship gives a close but wrong number. To see why the briefing uses Q3, add DimDate[MonthName] to Rows: December 2025 drops to 7.4%. A stay discharged on December 20 has a 30-day window that runs past the end of the data, so its readmission can't appear yet. Report readmissions only for periods whose follow-up window has closed.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

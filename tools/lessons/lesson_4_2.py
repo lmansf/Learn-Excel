@@ -464,7 +464,7 @@ def build() -> Lesson:
         for i, s in enumerate(steps):
             c = ws.cell(row=9 + i, column=2, value=s)
             c.alignment = Alignment(wrap_text=True, vertical="top")
-            ws.row_dimensions[9 + i].height = 15 * max(1, -(-len(s) // 100))
+            ws.row_dimensions[9 + i].height = 15 * max(1, -(-len(s) // 120))
         for r in (3, 4, 6, 7, 9):
             ws.cell(row=r, column=1).font = Font(bold=True)
             ws.cell(row=r, column=1).alignment = Alignment(vertical="top")

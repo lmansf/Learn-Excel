@@ -33,10 +33,12 @@ from collections import Counter, defaultdict
 from datetime import date, datetime
 from decimal import Decimal
 
+from copy import copy
+
 from openpyxl.styles import Alignment, Font, PatternFill
 
 from xlcourse import Lesson, Task, data
-from xlcourse.lesson import NAVY
+from xlcourse.lesson import NAVY, _estimate_lines
 
 CODE = "4.3"
 AS_OF = date(2025, 12, 31)
@@ -371,6 +373,14 @@ def _zip(files: dict[str, str]) -> bytes:
     return buf.getvalue()
 
 
+def _print_fit(ws):
+    """Landscape, one page wide, so long lines aren't cut off when the sheet is printed or saved as PDF."""
+    ws.page_setup.orientation = "landscape"
+    ws.page_setup.fitToWidth = 1
+    ws.page_setup.fitToHeight = 0
+    ws.sheet_properties.pageSetUpPr.fitToPage = True
+
+
 def _m_file(title: str, body: str) -> str:
     return f"// Lesson 4.3 · {title}\n// SPOILER: reference solution. Try the task first.\n\n{body}\n"
 
@@ -541,10 +551,10 @@ def build() -> Lesson:
                              "Tip: copy the folder to a short path such as C:\\PQ\\data (Mac: /Users/you/PQ/data)."])
     map_rows = [{"DenialReason": k, "RevCycleStage": s, "OwnerTeam": t} for k, s, t in DENIAL_MAP]
     L.add_table_sheet("DenialMap", map_rows, table="tblDenialMap", columns=["DenialReason", "RevCycleStage", "OwnerTeam"],
-                      widths={"DenialReason": 28, "RevCycleStage": 16, "OwnerTeam": 22}, start_row=4,
-                      notes=["Denial reason → owner team (maintained by hand by the Revenue Integrity team)",
+                      widths={"DenialReason": 30, "RevCycleStage": 16, "OwnerTeam": 30}, start_row=4,
+                      notes=["Denial reason → owner team (typed by hand)",
                              "Load this Table into Power Query with Data → From Table/Range (task 9).",
-                             "Each denial reason should appear once. OwnerTeam is the department that fixes that kind of denial."])
+                             "Each reason should appear once. OwnerTeam is the team that works that kind of denial."])
 
     L.sheet_order = ["Start Here", "Practice", "Data Files", "DenialMap", "Starter M", "Bonus", "Answer Key", "Bonus Key"]
     L.start_notes = [
@@ -565,10 +575,7 @@ def build() -> Lesson:
             longest = max(-(-len(str(row[0].value or "")) // 55), -(-len(str(row[2].value or "")) // 85))
             ws.row_dimensions[row[0].row].height = 15 * max(2, longest) + 2
         ws.column_dimensions["C"].width = 80
-        ws.page_setup.orientation = "landscape"
-        ws.page_setup.fitToWidth = 1
-        ws.page_setup.fitToHeight = 0
-        ws.sheet_properties.pageSetUpPr.fitToPage = True
+        _print_fit(ws)
 
     @L.customize
     def starter_sheet(wb, lesson, selftest):
@@ -576,11 +583,11 @@ def build() -> Lesson:
         ws.sheet_properties.tabColor = "7030A0"
         ws["A1"] = "Task 11 · Starter M code for the AgedPending query"
         ws["A1"].font = Font(bold=True, size=14, color=NAVY)
-        ws["A2"] = ("Select A4:A{0}, copy (Ctrl + C, Mac: ⌘ + C), then paste into Home → Advanced Editor of a new Blank Query, "
-                    "replacing everything there. The same code is in starter/AgedPending.m.").format(3 + len(M_AGED_STARTER.splitlines()))
-        ws["A2"].font = Font(italic=True, color="595959")
-        ws["A2"].alignment = Alignment(wrap_text=True, vertical="top")
-        ws.row_dimensions[2].height = 32
+        ws["A2"] = ("Select A4:A{0}, copy (Ctrl + C, Mac: ⌘ + C), then paste into Home → Advanced Editor of a new Blank "
+                    "Query.").format(3 + len(M_AGED_STARTER.splitlines()))
+        ws["A3"] = "Replace everything that was in the Advanced Editor window. The same code is in starter/AgedPending.m."
+        for cell in (ws["A2"], ws["A3"]):
+            cell.font = Font(italic=True, color="595959")
         code_fill = PatternFill("solid", fgColor="F2F2F2")
         for i, line in enumerate(M_AGED_STARTER.splitlines(), 4):
             c = ws.cell(row=i, column=1, value=line)
@@ -590,11 +597,61 @@ def build() -> Lesson:
             if line.startswith("="):
                 c._style.quotePrefix = 1
         ws.column_dimensions["A"].width = 135
+        _print_fit(ws)
+
+    @L.customize
+    def sheet_polish(wb, lesson, selftest):
+        _print_fit(wb["DenialMap"])
+
+        # Start Here: the library lists only the data sheets ("Data Files: Data: 6 rows"), which says little here.
+        ws = wb["Start Here"]
+        hdr = next(r for r in range(1, ws.max_row + 1) if ws.cell(row=r, column=2).value == "Sheets in this workbook")
+        old = {ws.cell(row=r, column=2).value: ws.cell(row=r, column=3).value for r in range(hdr + 1, ws.max_row + 1)}
+        label_style, text_style = copy(ws.cell(row=hdr + 1, column=2)._style), copy(ws.cell(row=hdr + 1, column=3)._style)
+        entries = [
+            ("Practice", f"{len(lesson.tasks)} tasks. Build each query in Power Query, then type its result in the yellow cell."),
+            ("Data Files", "What each CSV file in the lesson's data folder contains. Power Query reads those files from disk."),
+            ("DenialMap", "Excel Table 'tblDenialMap': each denial reason and the team that works it. The Revenue Integrity "
+                          "team types it by hand (task 9)."),
+            ("Starter M", "The M code you paste into a blank query for task 11 (also in starter/AgedPending.m)."),
+            ("Bonus", "A refreshable denial dashboard, then a January 2026 file and one click of Refresh All."),
+            ("About the data", old["About the data"]),
+            ("Disclaimer", old["Disclaimer"]),
+        ]
+        for r in range(hdr + 1, ws.max_row + 1):
+            for col in (2, 3):
+                ws.cell(row=r, column=col).value = None
+        for i, (label, text) in enumerate(entries):
+            r = hdr + 1 + i
+            a, b = ws.cell(row=r, column=2, value=label), ws.cell(row=r, column=3, value=text)
+            a._style, b._style = copy(label_style), copy(text_style)
+            ws.row_dimensions[r].height = 15 * _estimate_lines(text, 100) + 3
+
+        # Answer keys: there are no live formulas in this lesson, and long M code needs a wider column.
+        for name in ("Answer Key", "Bonus Key"):
+            ks = wb[name]
+            ks["A2"] = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column "
+                        "compares against. Column D is the M code (or the steps) that produces it. Long code is cut off "
+                        "in its cell, so click the cell and read it in the formula bar, or open the matching .m file in "
+                        "the lesson's solutions folder. Column E is blank because Power Query results can't be "
+                        "recalculated by a cell formula.")
+            ks.row_dimensions[2].height = 47
+            ks.column_dimensions["D"].width = 90
+            ks.column_dimensions["E"].width = 8
+            for r in range(5, ks.max_row + 1):
+                sol = ks.cell(row=r, column=4).value
+                if not sol:
+                    continue
+                code_lines = sum(-(-max(len(line), 1) // 90) for line in str(sol).splitlines())
+                other = max(_estimate_lines(ks.cell(row=r, column=2).value, 55),
+                            _estimate_lines(ks.cell(row=r, column=6).value, 60))
+                ks.row_dimensions[r].height = min(409, max(30, 13 * code_lines + 6, 15 * other + 6))
 
     # ------------------------------------------------------------------ tasks
     L.practice_intro = (
         "Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks "
-        "in order because later tasks reuse earlier queries. Type each result in the yellow cell as a plain number or text. "
+        "in order because later tasks reuse earlier queries. Name each query as the task says, because later tasks and the "
+        "answer key use those names. Type each result in the yellow cell as a plain number or text. "
         "From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, "
         "or work on a Mac, your code shows your full folder path in its place.")
     L.tasks = [
@@ -609,7 +666,8 @@ def build() -> Lesson:
                          "preview, so read the total from the Queries & Connections pane (or from the loaded Table) after "
                          "**Close & Load**."),
         Task("Import claims_2025_11.csv and claims_2025_12.csv as two more queries. Then, in the Power Query Editor, stack "
-             "them with Home → Append Queries → Append Queries as New. How many rows does the appended query return?",
+             "them with Home → Append Queries → Append Queries as New, and name the new query Claims_NovDec. How many rows "
+             "does it return?",
              answer=n_novdec, solution=M_APPEND, solution_lang="m", live=False,
              hint="Append stacks rows, and columns line up by name",
              title="Append two monthly files",
@@ -626,17 +684,18 @@ def build() -> Lesson:
                          "on each one through the helper function *Transform File*, and appends the results. It also adds a "
                          "**Source.Name** column with each row's file name, which is handy for tracing a row back to its "
                          "export. Next month you drop a new file into the folder and click Refresh, with no new query needed."),
-        Task("What is the total PaidAmount across all 2025 claims in your Claims query? Check that PaidAmount has the "
-             "Decimal Number type (1.2 icon), then enter the total to the cent.",
+        Task("Check that PaidAmount in Claims has the Decimal Number type (1.2 icon). Then reference Claims in a new query "
+             "named PaidTotal and total its PaidAmount column. What is the total PaidAmount across all 2025 claims? Enter "
+             "it to the cent.",
              answer=total_paid, fmt="#,##0.00", solution=M_TOTAL_PAID, solution_lang="m", live=False,
-             hint="Reference Claims, then Transform → Statistics → Sum on PaidAmount",
+             hint="Select PaidAmount, then Transform → Statistics → Sum",
              title="Total PaidAmount in Claims",
              explanation="**Reference** creates a new query whose source is the output of Claims, so you can summarize "
                          "without changing Claims itself. **Statistics → Sum** turns the query into a single number "
                          "(`List.Sum`). Never add that step to Claims, because every query built on Claims would then receive a "
                          "number instead of a table. If PaidAmount were still Text (ABC icon), Sum would be grayed out."),
-        Task("Reference Claims, keep only rows whose ClaimStatus is Denied, and use Home → Group By on DenialReason with "
-             "the operation Count Rows. How many denied claims list Authorization Required as the reason?",
+        Task("Reference Claims in a new query named DenialsByReason, keep only rows whose ClaimStatus is Denied, and use "
+             "Home → Group By on DenialReason with the operation Count Rows. How many denied claims list Authorization Required as the reason?",
              answer=auth_count, solution=M_DENIALS_BASIC, solution_lang="m", live=False,
              hint="Filter first, then Group By (Basic)",
              title="Group denied claims by reason",
@@ -653,8 +712,8 @@ def build() -> Lesson:
                          f"most denials, but {top_avg_reason} denials average about ${float(top_avg):,.0f} of billed charges "
                          "each, the highest of any reason. Volume and dollars tell different stories, which is why denial "
                          "reports show both counts and amounts."),
-        Task("Import payers.csv as a query named Payers. Then reference Claims, merge it with Payers on PayerID (Join Kind: "
-             "Left Outer), expand only PayerType, and group by PayerType with Sum of PaidAmount. What was the total "
+        Task("Import payers.csv as a query named Payers. Then reference Claims in a new query named PaidByPayerType, merge it "
+             "with Payers on PayerID (Join Kind: Left Outer), expand only PayerType, and group by PayerType with Sum of PaidAmount. What was the total "
              "PaidAmount for the Commercial payer type? Enter it to the cent.",
              answer=commercial_paid, fmt="#,##0.00", solution=f"{M_PAYERS}\n\n{M_PAID_BY_TYPE}", solution_lang="m", live=False,
              hint="Home → Merge Queries, then the expand button (two arrows) in the new column's header",
@@ -664,17 +723,18 @@ def build() -> Lesson:
                          f"combines {n_commercial_payers} different payers, so you can't answer this by PayerID alone. You need the PayerType "
                          "from the lookup table and then a Group By. Uncheck *Use original column name as prefix* when you "
                          "expand, or the column is named Payers.PayerType."),
-        Task("Reference Claims and add a custom column DaysToSubmit that holds the number of days from ServiceDate to "
-             "SubmitDate. How many 2025 claims took MORE than 30 days to submit?",
+        Task("Reference Claims in a new query named SubmitLag and add a custom column DaysToSubmit that holds the number "
+             "of days from ServiceDate to SubmitDate, with the Whole Number type. How many 2025 claims took MORE than 30 "
+             "days to submit?",
              answer=late_submits, solution=M_SUBMIT_LAG, solution_lang="m", live=False,
-             hint="Add Column → Custom Column, then Duration.Days of the date difference",
+             hint="Duration.Days turns a date difference into days. Then Number Filters → Greater Than, and count the rows",
              title="Custom column: days from service to submission",
              explanation="Subtracting one date from another in M gives a **duration**, not a number. `Duration.Days` "
                          "turns it into whole days. You can also build it without typing: select SubmitDate, Ctrl-click "
                          "ServiceDate, then Add Column → Date → Subtract Days (the order you click sets which date comes "
                          "first). Claims billed more than 30 days after service delay cash and risk timely-filing denials."),
-        Task("Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range and name the query DenialMap. Reference Claims, keep the Denied rows, "
-             "merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim "
+        Task("Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range and name the query DenialMap. Reference Claims in a new query named "
+             "DenialsByOwner, keep the Denied rows, merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim "
              "found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied "
              "BilledAmount owned by Patient Access? Enter it to the cent.",
              answer=pa_billed, fmt="#,##0.00", solution=M_DENIAL_MAP, solution_lang="m", live=False,
@@ -687,7 +747,7 @@ def build() -> Lesson:
                          "sheet and refreshing works too.) Always check a merge by filtering the new column for null."),
         Task("Import encounters_2025.csv (one row per encounter discharged in 2025) as a query named Encounters2025. Use "
              "Merge Queries as New with Encounters2025 on top, Claims below, EncounterID in both, and Join Kind Left Anti. "
-             "How many 2025 encounters have no claim in the 2025 claim files?",
+             "Name the new query Unbilled. How many 2025 encounters have no claim in the 2025 claim files?",
              answer=n_unbilled, solution=f"{M_ENCOUNTERS}\n\n{M_UNBILLED}", solution_lang="m", live=False,
              hint="Left Anti = rows only in the first (top) table",
              title="Left Anti merge: encounters with no claim",
@@ -695,7 +755,7 @@ def build() -> Lesson:
                          "second. It's the fastest way to answer \"what's missing?\" questions. These encounters were "
                          "discharged but not yet billed (hospitals call this *discharged not final billed*, or DNFB), "
                          f"and together they carry ${float(_money(e['TotalCharges'] for e in unbilled)):,.2f} of charges. "
-                         "Name the query Unbilled, because the bonus refreshes it."),
+                         "The bonus refreshes this list after the January 2026 claims arrive."),
         Task("Create a blank query (Data → Get Data → From Other Sources → Blank Query), name it AgedPending, open Home → "
              "Advanced Editor, and replace its contents with the starter code on the Starter M sheet (also in "
              "starter/AgedPending.m). It lists Pending claims more than 60 days old as of 12/31/2025. Read the code, change "
@@ -722,10 +782,10 @@ def build() -> Lesson:
                          "so a future file with extra month columns still unpivots correctly."),
         Task("In Budget2025, split Department (for example '6130 - Intensive Care Unit') into CostCenter and DeptName with "
              "Transform → Split Column → By Delimiter, using ' - ' (space, hyphen, space) at the left-most delimiter. "
-             "What was the Q1 2025 (Jan–Mar) Actual Salaries & Wages for all three departments named Intensive Care Unit "
-             "combined? Enter whole dollars.",
+             "Then reference Budget2025 in a new query named ICU_Q1_Salaries. What was the Q1 2025 (Jan–Mar) Actual Salaries "
+             "& Wages for all three departments named Intensive Care Unit combined? Enter whole dollars.",
              answer=icu_q1, solution=M_ICU, solution_lang="m", live=False,
-             hint="Filter DeptName, Category, Measure, and Month, then Group By or Sum",
+             hint="Filter DeptName, Category, Measure, and Month, then Transform → Statistics → Sum on Amount (or Group By)",
              title="Split a column, then filter and sum (ICU Q1 salaries)",
              explanation="Splitting at ' - ' (with the spaces) separates the cost center from the name without breaking "
                          "names that contain a plain hyphen, such as *Medical-Surgical*. After the split, all three hospitals' "
@@ -746,17 +806,18 @@ def build() -> Lesson:
              "group by BOTH PayerType and DenialReason with Count Rows and Sum of BilledAmount. What is the denied BilledAmount "
              "for Government + Authorization Required? Enter it to the cent.",
              answer=dash_before[combo], fmt="#,##0.00", solution=M_DASHBOARD, solution_lang="m", live=False,
-             hint="Ctrl-click two columns in the Group By dialog (Advanced)",
+             hint="Select PayerType and DenialReason before you click Group By, or use Add grouping in the Advanced dialog",
              title="DenialDashboard by PayerType × DenialReason",
              explanation=f"Grouping by two columns gives one row per combination ({len(dash_before)} rows here). "
                          "Government + Authorization Required is the largest pool of denied dollars, so authorization work "
                          "for Government-insured patients (Medicare and State Medicaid in this data) is where the "
                          "revenue-cycle team should start."),
-        Task("Build DenialRateByPayerType from ALL claims: reference Claims, merge Payers for PayerType, add a conditional "
-             "column IsDenied (1 if ClaimStatus is Denied, otherwise 0), then group by PayerType with Count Rows and Sum of "
-             "IsDenied. Which payer type has the highest denial rate (denied claims ÷ all claims)?",
+        Task("Build a query named DenialRateByPayerType from ALL claims: reference Claims, merge Payers for PayerType, and "
+             "add a conditional column IsDenied (1 if ClaimStatus is Denied, otherwise 0). Group by PayerType with two "
+             "aggregations: AllClaims (Count Rows) and Denied (Sum of IsDenied). Which payer type has the highest denial "
+             "rate (denied claims ÷ all claims)?",
              answer=top_rate_type, solution=M_RATE, solution_lang="m", live=False,
-             hint="Add Column → Conditional Column, then a custom column Denied / AllClaims",
+             hint="After the Group By step, add a custom column DenialRate = [Denied] / [AllClaims] and sort it",
              title="Denial rate by payer type",
              explanation="A rate needs two counts per group: all claims (Count Rows) and denied claims. Summing a 1/0 flag "
                          "counts the rows where the condition is true, the same trick as SUMPRODUCT with booleans. "
@@ -767,7 +828,7 @@ def build() -> Lesson:
              answer=rate_before[top_rate_type], fmt="0.0%", live=False,
              solution=("Use the DenialRateByPayerType query from B2 and read the DenialRate value on the "
                        f"{top_rate_type} row. The Percentage type displays it as a percentage."),
-             hint="Format the DenialRate column as Percentage",
+             hint="Click the type icon in the DenialRate header and choose Percentage",
              title="Highest denial rate (value)",
              explanation=f"{top_rate_type}: {rate_top * 100:.1f}% of its claims were denied. Typing "
                          f"{rate_top * 100:.1f} or {rate_top * 100:.1f}% both pass the check."),
