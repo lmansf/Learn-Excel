@@ -1,7 +1,7 @@
 # Lesson 6.1 · Capstone: Hospital Performance Review
 
 > **Level:** Expert · **Time:** about 180 minutes · **Workbook:** [`6.1-hospital-performance-review.xlsx`](6.1-hospital-performance-review.xlsx)
-> **Data:** Bluestone Health System, 2025: 11,196 encounters discharged in 2025 and their 11,196 claims, 6,217 ED arrivals, 987 patient-experience survey rows (including a duplicated batch), 6,570 days of unit census, and the Facilities, Departments, Diagnoses, and Payers lookup tables.
+> **Data:** Bluestone Health System, 2025: 11,196 encounters discharged in 2025 and their 11,196 claims, 6,217 ED arrivals, 987 patient-experience survey rows (including a duplicated batch), 6,570 unit-days of census, and the Facilities, Departments, Diagnoses, and Payers lookup tables.
 
 Every January, a hospital's leaders ask the same question in a dozen forms: *how did we do last year?* The Chief Medical
 Officer wants to know whether care was safe and efficient. The Chief Financial Officer wants to know whether the hospital
@@ -81,7 +81,7 @@ You may use any tool from the course. Each one has strengths in this project:
 | **Data Model and DAX** (4.4) | Measures across related tables without lookup columns | Building the model needs Excel for Windows |
 | **VBA** (5.1–5.5) | The one-click refresh, the audit log, PDF export | Needs an .xlsm file and desktop Excel. Not available in Excel for the web |
 
-> 💡 **Tip:** Agree the definitions with whoever asked the question *before* you present numbers. "Readmission rate"
+> 💡 **Tip:** Agree on the definitions with whoever asked the question *before* you present numbers. "Readmission rate"
 > without a definition invites a debate about the definition instead of a discussion about patients.
 
 ### 3. The data: nine tables and how they connect
@@ -121,8 +121,9 @@ Each fact table is filtered to 2025 by **one** date, and the choice matters. Enc
 a 16.20-day sepsis stay. ED_Visits uses the arrival time, Surveys the patient's discharge date, and Census the calendar
 day.
 
-Formulas in this lesson use plain cell ranges such as `Encounters!D2:D11197`, so you need the column letters. Yellow
-headers are the empty helper columns you fill.
+Formulas in this lesson use plain cell ranges such as `Encounters!D2:D11197`, so you need the column letters. The empty
+helper columns you fill have yellow headers in the workbook and appear in bold below. The
+[data dictionary](../../data/README.md) explains every column and code.
 
 | Sheet | Columns |
 |---|---|
@@ -160,7 +161,7 @@ These quick checks take a minute and catch most extract problems:
 | Rows in Encounters | `=ROWS(Encounters!A2:A11197)` | 11,196 | Should equal Claims rows, because every encounter has one claim |
 | Claims with no matching encounter | `=SUM(--ISNA(XMATCH(Claims!B2:B11197,Encounters!A2:A11197)))` | 0 | Every claim joins to an encounter (referential integrity) |
 | ED arrivals with no provider time | `=COUNTBLANK(ED_Visits!E2:E6218)` | 100 | These are the LWBS patients. Exclude them from waiting-time medians |
-| Earliest admission | `=MIN(Encounters!F2:F11197)` | 12/16/2024 12:06 | Stays that started in 2024 are included, by design |
+| Earliest admission | `=MIN(Encounters!F2:F11197)`, formatted as a date and time | 12/16/2024 12:06 | Stays that started in 2024 are included, by design |
 | Duplicate survey rows | `=ROWS(Surveys!A2:A988)-ROWS(UNIQUE(Surveys!A2:A988))` | (task 1) | Anything above 0 means some SurveyIDs appear more than once |
 
 XMATCH and UNIQUE need Microsoft 365 or Excel 2021+. In older versions, use
@@ -203,6 +204,9 @@ the time as a fraction, so subtracting two date-times gives a duration in days.
 
 Type the formula in the first row and press **Enter**. The Table fills the whole column, and Excel may rewrite it as
 `=[@DischargeDateTime]-[@AdmitDateTime]`. That's the same formula in structured-reference form.
+
+To add a helper column of your own, type its header in the first empty column to the right of the Table, such as P1 on
+Encounters. The Table grows to include the new column (Lesson 3.1), and a formula typed in P2 fills down the same way.
 
 > ⚠️ When you subtract two date-times, Excel sometimes gives the result a date format, so 3.36 days appears as
 > *01/03/1900 08:38*. The value is right. Select the column and press **Ctrl + Shift + ~** (Mac: **Control + Shift + ~**)
@@ -373,7 +377,7 @@ times are reported as medians. Add a second condition by multiplying, as in `(ED
 |---|---|
 | Microsoft 365, Excel 2021 or later | Press **Enter** |
 | Excel 2019 or earlier | Press **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**) so Excel treats it as an array formula |
-| Any version since 2010, without array entry | `=AGGREGATE(17,6,(E2:E6218-D2:D6218)*1440/((C2:C6218="F01")*(E2:E6218<>"")),2)` on the ED_Visits sheet. Function 17 is QUARTILE.INC, quartile 2 is the median, and option 6 ignores the #DIV/0! errors that the division creates on excluded rows |
+| Excel 2010 or later (Mac: 2011 or later), without array entry | `=AGGREGATE(17,6,(E2:E6218-D2:D6218)*1440/((C2:C6218="F01")*(E2:E6218<>"")),2)` on the ED_Visits sheet. Function 17 is QUARTILE.INC, quartile 2 is the median, and option 6 ignores the #DIV/0! errors that the division creates on excluded rows |
 
 If you filled the DoorToProviderMin helper column, `=MEDIAN(IF(ED_Visits!C2:C6218="F01",ED_Visits!J2:J6218))` works
 too, because MEDIAN also ignores the "" text on LWBS rows.
@@ -393,7 +397,16 @@ There are three good routes:
 | **One formula** | LET + UNIQUE + COUNTIFS + XLOOKUP(MAX(…)) | Microsoft 365, and you're comfortable with Lesson 4.2 |
 
 The **average of a 1/0 flag is a rate**. If ReadmitFlag is 1 for a readmission and 0 otherwise, its average over index
-stays is the readmission rate. That's how a PivotTable computes rates (Lesson 3.4).
+stays is the readmission rate. That's how a PivotTable computes rates (Lesson 3.4). For the PivotTable route on
+Encounters, add two helper columns. The double minus turns TRUE and FALSE into 1 and 0 (Lesson 2.1).
+
+| Helper column | Row 2 formula | 1 means |
+|---|---|---|
+| **IndexStay** | `=--AND(C2="Inpatient",G2<DATE(2025,12,1),I2<>"Expired")` | The stay meets the index-stay definition |
+| **ReadmitFlag** | `=--(L2="Y")` | The patient was readmitted within 30 days |
+
+Then insert a PivotTable from `tblEncounters`, put IndexStay in **Filters** and pick 1, put the group in **Rows**, and put
+ReadmitFlag in **Values** summarized by **Average**. Format the values as a percentage.
 
 **Worked example:** which payer has the largest share of its 2025 claims still Pending? On a new sheet:
 
@@ -477,10 +490,11 @@ The finance rows are system-wide, because Claims has no FacilityID column, so pu
 The Goal column tells one formula which direction is good:
 
 ```
-H9:  =IF(G9="≤",IF(D9<=F9,"Met","Missed"),IF(D9>=F9,"Met","Missed"))
+H9:  =IF(D9="","",IF(G9="≤",IF(D9<=F9,"Met","Missed"),IF(D9>=F9,"Met","Missed")))
 ```
 
-Copy it to every row that has a goal. Conditional formatting (Lesson 3.2) colors Met green and Missed red. To change the
+The outer IF leaves the status blank until the card has a value. Without it, an empty card counts as 0, and 0 is
+below every "≤" target, so the row would show Met. Copy the formula to every row that has a goal. Conditional formatting (Lesson 3.2) colors Met green and Missed red. To change the
 colors, select H8:H19 and choose **Home → Conditional Formatting → Manage Rules**.
 
 #### 7.3 Add a chart
@@ -495,12 +509,14 @@ Column** chart from **Insert → Charts** (Lesson 3.5). Follow three rules:
 
 #### 7.4 Finish and share
 
-1. Hide gridlines (**View → Gridlines**) so the page reads as a report.
+1. Delete the build notes under the KPI table. The Dashboard already hides gridlines. On any sheet you add for
+   readers, clear **View → Gridlines** so the page reads as a report.
 2. Lock everything except the selector and the refresh time. Select C4, hold **Ctrl** (Mac: **⌘**) and click H2, press
    **Ctrl + 1** (Mac: **⌘ + 1**), and on the **Protection** tab clear **Locked**. Then choose **Review → Protect Sheet**.
    H2 must stay unlocked because your macro writes to it, and a macro can't write to a locked cell on a protected sheet.
 3. Fit the page: **Page Layout → Orientation → Landscape**, then set **Width** to *1 page* in the **Scale to Fit**
-   group. On either platform, **File → Page Setup → Fit to 1 page wide** does the same.
+   group. The **Page Setup** dialog does the same with **Fit to 1 page wide**. Open it from the small arrow in the corner
+   of the **Scale to Fit** group (Windows) or with **File → Page Setup** (Mac).
 4. Export: **File → Export → Create PDF/XPS** (Mac: **File → Save As → PDF**), or let your macro do it (section 8).
 
 ### 8. Automate the refresh with a macro
@@ -636,13 +652,14 @@ Use this rubric to review your own work, or to have a colleague review it.
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | HCAHPS top-box is a little higher than the key | Duplicate surveys still in | Task 1 first, then recount |
-| Readmission rate a point or more too low | December discharges included, or Expired stays left in | Use `"<"&DATE(2025,12,1)` and `"<>Expired"` |
+| Readmission rate too low | December discharges included, or Expired stays left in | Use `"<"&DATE(2025,12,1)` and `"<>Expired"` |
 | LOSDays shows dates such as 01/16/1900 | The column picked up a date format | Format it as Number |
-| Median door-to-provider far too low | Blank ProviderSeenDateTime rows included | Add `(E2:E6218<>"")` to the IF condition |
+| Median door-to-provider a minute or so too low, or an average that's negative | Blank ProviderSeenDateTime rows included, so each LWBS visit becomes a huge negative wait | Add `(E2:E6218<>"")` to the IF condition |
 | Denial rate too low | Appealed claims left out, or Pending claims in the denominator | Count Denied *and* Appealed, and divide by claims that aren't Pending |
 | O/E index shows #DIV/0! | The ExpectedLOS column is empty, or holds text | Fill it with XLOOKUP and check that the values are numbers |
 | A dashboard card doesn't change with the selector | A typed FacilityID instead of `$C$5` | Replace the typed ID |
 | Macro error 9, *Subscript out of range* | A sheet name in the code doesn't match the workbook | Check the spelling, for example `ED_Visits` with an underscore |
+| Task 12 stays red after you fix the macro | The check reads row 2 of RefreshLog, which still holds an earlier test run | Delete the RefreshLog sheet and run the macro again. It recreates the sheet |
 | The summary sentence check stays red | Extra spaces, different punctuation, or a missing TEXT | Compare it character by character with the template in task 13 |
 
 ## 🧪 Hands-on practice
@@ -660,15 +677,15 @@ The tasks follow the work plan in the lesson guide: 1–2 prepare the data, 3–
 | 2 | Data prep · calculated column. In the yellow LOSDays column of Encounters (M2:M11197), calculate DischargeDateTime − AdmitDateTime for every row, in days with decimals. The gray cell then shows the system ALOS: the average LOSDays of the Inpatient rows. | Subtracting two date-times gives days. Keep the column formatted as a number, not a date |
 | 3 | Throughput. What was the median door-to-provider time, in minutes, for 2025 ED arrivals at Cedar Ridge Medical Center (FacilityID F03)? Door-to-provider = ProviderSeenDateTime − ArrivalDateTime. Leave out visits with no ProviderSeenDateTime. | MEDIAN(IF(…)) with × 1440, or fill the DoorToProviderMin helper column first |
 | 4 | Utilization. What was the combined 2025 occupancy of the three Intensive Care Units (the units whose UnitType is Critical Care on the Departments sheet)? Occupancy = total MidnightCensus ÷ total StaffedBeds over all their days. Enter it as a percentage to 1 decimal place. | Find the three DeptIDs first. SUMIFS ÷ SUMIFS, or add UnitType to Census with XLOOKUP |
-| 5 | Experience. Using the de-duplicated Surveys sheet from task 1, what was the system's HCAHPS top-box %: surveys with an OverallRating of 9 or 10 ÷ all surveys? Enter it as a percentage to 1 decimal place. | COUNTIF(…,">=9") ÷ COUNT(…). Did task 1 first? |
+| 5 | Experience. Using the de-duplicated Surveys sheet from task 1, what was the system's HCAHPS top-box %: surveys with an OverallRating of 9 or 10 ÷ all surveys? Enter it as a percentage to 1 decimal place. | COUNTIF(…,">=9") ÷ COUNT(…). Do task 1 first |
 | 6 | Quality. What was the 30-day readmission rate at Bluestone Memorial Hospital (F01)? Index stays are Inpatient encounters at F01 discharged January 1 – November 30, 2025 whose DischargeDisposition is not Expired. The rate is index stays with Readmit30 = Y ÷ index stays. Enter it as a percentage to 1 decimal place. | COUNTIFS ÷ COUNTIFS with the same conditions. Discharge date-times include a time of day |
 | 7 | Quality · join. First fill the yellow ExpectedLOS column of Encounters (N2:N11197) by looking up each row's PrimaryDxCode on the Diagnoses sheet. Then calculate the O/E LOS index for Cedar Ridge Medical Center (F03): total LOSDays ÷ total ExpectedLOS over its Inpatient stays. Enter it to 3 decimal places. | XLOOKUP into Diagnoses for the column, then SUMIFS ÷ SUMIFS. Ratio of totals, not an average of ratios |
 | 8 | Quality · join. Fill the yellow ServiceLine column of Encounters with each row's ServiceLine from the Departments sheet (match on DeptID). Then, using the task 6 index-stay definition for all three hospitals together, which service line has the highest 30-day readmission rate? Type its name. | A small summary table (COUNTIFS ÷ COUNTIFS per service line) or a PivotTable on a helper flag column |
 | 9 | Finance. What was the claim denial rate? Count claims whose ClaimStatus is Denied or Appealed, and divide by adjudicated claims (every claim except Pending). Enter it as a percentage to 1 decimal place. | COUNTIF with an array constant for the two statuses, and "<>Pending" for the denominator |
 | 10 | Finance. What was the net collection rate: total PaidAmount ÷ total AllowedAmount over adjudicated claims (ClaimStatus is not Pending)? Enter it as a percentage to 1 decimal place. | SUMIFS ÷ SUMIFS with the same "<>Pending" condition |
-| 11 | Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name chosen in C4 into its FacilityID. Then make the LWBS % card (D10) a formula driven by C5: ED visits with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. The gray cell reads D10. | XLOOKUP the name on Facilities. Then COUNTIFS(…,$C$5,…,"LWBS") ÷ COUNTIF(…,$C$5) |
-| 12 | Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after duplicates are removed. The gray cell adds B2:E2. | Guide section 8.2 lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp) |
-| 13 | Deliverable · executive summary. Build this sentence with ONE formula so it updates whenever the data changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the task 9 denial rate. The top reason is the DenialReason that appears most often among Denied or Appealed claims, and the second % is its share of those claims. Format both with TEXT(…,"0.0%"). | TEXT(x,"0.0%") and &. For the top reason, a small COUNTIFS table plus INDEX/MATCH/MAX, or LET + UNIQUE |
+| 11 | Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name chosen in C4 into its FacilityID. Then make the LWBS % card (D10) a formula driven by C5: ED visits with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. The gray answer cell here shows Dashboard!D10. | XLOOKUP the name on Facilities. Then COUNTIFS(…,$C$5,…,"LWBS") ÷ COUNTIF(…,$C$5) |
+| 12 | Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after duplicates are removed. The gray cell adds B2:E2. If a test run logged wrong counts, delete the RefreshLog sheet and run the macro again. | Guide section 8.2 lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp) |
+| 13 | Deliverable · executive summary. In the yellow cell, write a formula that builds this sentence, so it updates whenever the data changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the task 9 denial rate. The top reason is the DenialReason that appears most often among Denied or Appealed claims, and the second % is its share of those claims. Format both percentages with TEXT(…,"0.0%"). The formula may refer to helper cells, such as a small table of denials by reason. | TEXT(x,"0.0%") and &. For the top reason, a small COUNTIFS table plus INDEX/MATCH/MAX, or LET + UNIQUE |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -686,14 +703,14 @@ Dashboard** sheet shows a finished dashboard. The same answers are below, collap
 - **Answer:** 917
 - **Solution:** `=COUNTA(Surveys!A2:A988)`
 
-Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → Remove Duplicates**), leave every column ticked, and click OK. Excel reports 70 duplicate values removed and 917 unique values remaining, so `=COUNTA(Surveys!A2:A988)` now returns 917. Removing duplicates matters because the 70 repeated October surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* deleting anything, `=ROWS(UNIQUE(Surveys!A2:A988))` gives the same answer in Microsoft 365.
+Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → Remove Duplicates**, which is **Table → Remove Duplicates** on a Mac), leave every column ticked, and click OK. Excel reports 70 duplicate values removed and 917 unique values remaining, so `=COUNTA(Surveys!A2:A988)` now returns 917. Removing duplicates matters because the 70 repeated October surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* deleting anything, `=ROWS(UNIQUE(Surveys!A2:A988))` gives the same answer in Microsoft 365.
 
 **2. LOSDays column → system ALOS**
 
 - **Answer:** 4.68
 - **Solution:** `=G2-F2`
 
-Excel stores a date-time as days since 1900 with the time as a fraction, so `=G2-F2` is the stay in days (3.36 days = 3 days and about 8½ hours). Because the data is an Excel Table, the formula fills the whole column, and Excel may show it as `=[@DischargeDateTime]-[@AdmitDateTime]`. If the results look like dates (01/03/1900 08:38), the column picked up a date format, so set it back to Number. The gray cell's AVERAGEIFS keeps only the Inpatient rows. The key's live formula gets the same ALOS without a helper column, because the sum of (discharge − admit) equals the sum of discharges minus the sum of admits.
+Excel stores a date-time as days since 1900 with the time as a fraction, so `=G2-F2` is the stay in days (3.36 days = 3 days, 8 hours, and 38 minutes). Because the data is an Excel Table, the formula fills the whole column, and Excel may show it as `=[@DischargeDateTime]-[@AdmitDateTime]`. If the results look like dates (01/03/1900 08:38), the column picked up a date format, so set it back to Number. The gray cell's AVERAGEIFS keeps only the Inpatient rows. The key's live formula gets the same ALOS without a helper column, because the sum of (discharge − admit) equals the sum of discharges minus the sum of admits.
 
 **3. Median door-to-provider minutes, Cedar Ridge (F03)**
 
@@ -724,7 +741,7 @@ The Critical Care units are D130, D230, D330. With an array constant, `SUMIFS(�
 - **Answer:** 45.9%
 - **Solution:** `=COUNTIF(Surveys!L2:L988,">=9")/COUNT(Surveys!L2:L988)`
 
-**Top box** means the best possible answers, 9 or 10 on the 0–10 overall rating. COUNT counts the numeric ratings, so empty rows left at the bottom of the table don't change the denominator. With the duplicates still in, you get 46.3% instead of 45.9%, because the October surveys are counted twice. The key's live formula de-duplicates inside the formula: `UNIQUE` on the whole table returns each distinct row once, and `INDEX(u,0,12)` takes its 12th column (OverallRating).
+**Top box** means the best possible answers, 9 or 10 on the 0–10 overall rating. COUNT counts only numeric ratings, so the empty cells that Remove Duplicates leaves below the data (rows 919–988) don't change the denominator. With the duplicates still in, you get 46.3% instead of 45.9%, because the October surveys are counted twice. The key's live formula de-duplicates inside the formula: `UNIQUE` on the whole table returns each distinct row once, and `INDEX(u,0,12)` takes its 12th column (OverallRating).
 
 **6. 30-day readmission rate, Bluestone Memorial (F01)**
 
@@ -762,7 +779,7 @@ In N2 type `=XLOOKUP(H2,Diagnoses!$A$2:$A$52,Diagnoses!$D$2:$D$52)` (or `=INDEX(
 5. In D2, `=IF(B2=0,"",C2/B2)` and copy down. Sort by D (largest first), or use `=INDEX(A2:A13,MATCH(MAX(D2:D13),D2:D13,0))`.
 
 
-Critical Care (19.9% of 166 index stays) edges out Cardiovascular (19.5% of 308). If you counted December discharges or Expired stays, Cardiovascular comes out on top instead, which shows why the definition must be fixed before anyone ranks anything. A **PivotTable** works too: add a helper column such as `IndexStay` (1 when the stay meets the definition) and `Readmit` (1 when Readmit30 = Y), filter IndexStay = 1, put ServiceLine in Rows and Average of Readmit in Values. In an executive summary, say that the top two are within half a point and that Critical Care has fewer stays, so its rate is less certain. Don't present it as the clear outlier.
+Critical Care (19.9% of 166 index stays) edges out Cardiovascular (19.5% of 308). If you leave Expired stays in the population, Cardiovascular comes out on top instead (19.0% against 18.3%), which shows why the definition must be fixed before anyone ranks anything. Adding December discharges keeps Critical Care first but shrinks its lead to 19.0% against 18.8%. A **PivotTable** works too: add two helper columns, `IndexStay` (1 when the stay meets the definition) and `ReadmitFlag` (1 when Readmit30 = Y), as guide section 6.5 shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of ReadmitFlag in Values. In an executive summary, say that the top two are within half a point and that Critical Care has fewer stays, so its rate is less certain. Don't present it as the clear outlier.
 
 **9. Denial rate (adjudicated claims)**
 
@@ -818,7 +835,7 @@ Public Sub RefreshReview()
 
     ' 1. Refresh queries and PivotTables, then wait for background queries
     ThisWorkbook.RefreshAll
-    On Error Resume Next                      ' older versions lack the next method
+    On Error Resume Next                      ' a failed wait must not stop the review
     Application.CalculateUntilAsyncQueriesDone
     On Error GoTo Fail
 
@@ -875,7 +892,7 @@ Expected: 11,196 + 6,217 + 11,196 + 917 = 29,526. The full module, with the Data
 ```
 
 
-Expected text: **Denial rate 11.5%; top reason Authorization Required (34.6% of denials)**. In practice you would link to cells you already built: `="Denial rate "&TEXT(Practice!D14,"0.0%")&"; top reason "&G2&" ("&TEXT(H2,"0.0%")&" of denials)"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table. The one-formula version above uses **LET** to name each step: it filters the reasons of denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid ones, makes Coding Error the top reason, because partial payments carry reasons too. Among real denials, Authorization Required (395 claims) leads Medical Necessity. Text built with TEXT and & refreshes with the data, so the summary never quotes a stale number.
+Expected text: **Denial rate 11.5%; top reason Authorization Required (34.6% of denials)**. The simplest route links to cells you already built: `="Denial rate "&TEXT(Practice!D14,"0.0%")&"; top reason "&G2&" ("&TEXT(H2,"0.0%")&" of denials)"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table (guide section 6.5), and D14 is your task 9 answer. The one-formula version above needs no helper cells. It uses **LET** to name each step: it filters the reasons of denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid ones, makes Coding Error the top reason, because partial payments carry reasons too. Among real denials, Authorization Required (395 claims) leads Medical Necessity. Text built with TEXT and & refreshes with the data, so the summary never quotes a stale number.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -890,7 +907,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B1.** Which hospital has the highest O/E LOS index (total LOSDays ÷ total ExpectedLOS over its Inpatient stays)? Type its FacilityName. *(Hint: Repeat task 7's SUMIFS ÷ SUMIFS for F01, F02, and F03 and compare)*
 - **B2.** At that hospital, how many bed-days separate actual from benchmark? Total LOSDays − total ExpectedLOS over its Inpatient stays, to 1 decimal place. This is the gap that closes if its O/E index falls to exactly 1.00. *(Hint: SUMIFS − SUMIFS on the two helper columns)*
 - **B3.** Short stays can't give days back to long ones, so the improvement target is the excess days. For each of that hospital's Inpatient stays, take MAX(0, LOSDays − ExpectedLOS), and add them up. Enter the total to 1 decimal place. *(Hint: An ExcessDays helper column with MAX(0, …), then SUMIFS. Or SUM(IF(…)) in one formula)*
-- **B4.** Convert the excess days into staffed beds: excess days ÷ 365, because one bed open all year provides 365 bed-days. Enter it to 2 decimal places. *(Hint: Divide the previous answer by 365 (you can reference its cell))*
+- **B4.** Convert the excess days into staffed beds: excess days ÷ 365, because one bed open all year provides 365 bed-days. Enter it to 2 decimal places. *(Hint: Divide the previous answer by 365. You can reference its cell)*
 - **B5.** Where should the hospital start? Which primary diagnosis accounts for the most excess days (the MAX(0, …) method) at that hospital? Type its DxDescription exactly as it appears on the Diagnoses sheet. *(Hint: PivotTable of the helper column by PrimaryDxCode, sorted descending)*
 <!-- END GENERATED: bonus -->
 

@@ -29,7 +29,7 @@ Public Sub RefreshReview()
 
     ' 1. Refresh queries and PivotTables, then wait for background queries
     ThisWorkbook.RefreshAll
-    On Error Resume Next                      ' older versions lack the next method
+    On Error Resume Next                      ' a failed wait must not stop the review
     Application.CalculateUntilAsyncQueriesDone
     On Error GoTo Fail
 

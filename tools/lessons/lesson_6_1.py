@@ -122,7 +122,7 @@ Public Sub RefreshReview()
 
     ' 1. Refresh queries and PivotTables, then wait for background queries
     ThisWorkbook.RefreshAll
-    On Error Resume Next                      ' older versions lack the next method
+    On Error Resume Next                      ' a failed wait must not stop the review
     Application.CalculateUntilAsyncQueriesDone
     On Error GoTo Fail
 
@@ -179,7 +179,8 @@ Public Sub RefreshReview()
 
     ' STEP 1 (your code): refresh every query and PivotTable in this workbook (one line).
     '         Then wait for background queries with Application.CalculateUntilAsyncQueriesDone
-    '         (wrap that line in On Error Resume Next / On Error GoTo Fail: older versions lack it).
+    '         (wrap that line in On Error Resume Next / On Error GoTo Fail so a failed wait
+    '         doesn't stop the macro).
 
     ' STEP 2 (your code): count the Surveys data rows with DataRowCount("Surveys") into surveysBefore,
     '         remove duplicate rows (SurveyID, column 1, is the key; the sheet has a header row),
@@ -204,6 +205,41 @@ Fail:
     Resume Done
 End Sub
 """
+
+# The full Sub is too tall for one Answer Key cell (Excel caps a row at 409 points), so the key shows only the lines the
+# learner writes for STEP 1-5. The README answer key and solutions/ hold the complete module.
+VBA_KEY_STEPS = """' STEP 1
+ThisWorkbook.RefreshAll
+On Error Resume Next
+Application.CalculateUntilAsyncQueriesDone
+On Error GoTo Fail
+' STEP 2
+surveysBefore = DataRowCount("Surveys")
+With ThisWorkbook.Worksheets("Surveys")
+  .Range("A1").CurrentRegion.RemoveDuplicates _
+    Columns:=1, Header:=xlYes
+End With
+surveysAfter = DataRowCount("Surveys")
+' STEP 3
+Application.Calculation = xlCalculationAutomatic
+Application.CalculateFull
+' STEP 4
+Set wsLog = LogSheet()
+With wsLog
+  r = .Cells(.Rows.Count, "A").End(xlUp).Row + 1
+  .Cells(r, "A").Value = Now
+  .Cells(r, "B").Value = DataRowCount("Encounters")
+  .Cells(r, "C").Value = DataRowCount("ED_Visits")
+  .Cells(r, "D").Value = DataRowCount("Claims")
+  .Cells(r, "E").Value = surveysAfter
+  .Cells(r, "F").Value = surveysBefore - surveysAfter
+End With
+' STEP 5
+With ThisWorkbook.Worksheets("Dashboard")
+  .Range("H2").Value = Now
+  .Activate
+End With
+' Full module: solutions/RefreshReview_Solution.bas"""
 
 VBA_SOLUTION = VBA_HEADER.format(kind="SOLUTION (spoiler): try starter/RefreshReview_Starter.bas first.") \
     + VBA_SOLUTION_SUB + VBA_HELPERS
@@ -264,8 +300,8 @@ def build() -> Lesson:
             "Deliver a dashboard, an automated refresh macro, and an executive summary",
         ],
         data_note="Bluestone Health System, 2025: 11,196 encounters discharged in 2025 and their 11,196 claims, "
-                  "6,217 ED arrivals, 987 patient-experience survey rows (including a duplicated batch), 6,570 days of "
-                  "unit census, and the Facilities, Departments, Diagnoses, and Payers lookup tables.",
+                  "6,217 ED arrivals, 987 patient-experience survey rows (including a duplicated batch), 6,570 unit-days "
+                  "of census, and the Facilities, Departments, Diagnoses, and Payers lookup tables.",
     )
 
     # ------------------------------------------------------------------ source data (2025 slices)
@@ -406,6 +442,21 @@ def build() -> Lesson:
     sl_rates = sorted(((sl_y[s] / sl_n[s], s) for s in sl_n), reverse=True)
     top_sl, second_sl = sl_rates[0][1], sl_rates[1][1]
 
+    def sl_ranking(keep):
+        """Service-line readmission rates, highest first, for an alternative (wrong) population."""
+        n, y = Counter(), Counter()
+        for e in enc:
+            if keep(e):
+                s = dep[e["DeptID"]]["ServiceLine"]
+                n[s] += 1
+                y[s] += e["Readmit30"] == "Y"
+        return sorted(((y[s] / n[s], s) for s in n), reverse=True)
+
+    # Leaving Expired stays in flips the ranking; adding December discharges does not (it only narrows the lead).
+    sl_with_expired = sl_ranking(lambda e: e["EncounterType"] == "Inpatient" and e["DischargeDateTime"] < READMIT_CUTOFF)
+    sl_with_dec = sl_ranking(lambda e: e["EncounterType"] == "Inpatient" and e["DischargeDisposition"] != "Expired")
+    assert sl_with_expired[0][1] == second_sl and sl_with_dec[0][1] == top_sl
+
     adjudicated = [c for c in claims if c["ClaimStatus"] != "Pending"]
     denied = [c for c in adjudicated if c["ClaimStatus"] in ("Denied", "Appealed")]
     denial_rate = len(denied) / len(adjudicated)
@@ -490,7 +541,7 @@ def build() -> Lesson:
              live=f'=ROWS(UNIQUE(FILTER({svA},{svA}<>"")))',
              hint="Data → Remove Duplicates, then COUNTA the SurveyID column",
              explanation=f"Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → "
-                         f"Remove Duplicates**), leave every column ticked, and click OK. Excel reports {n_dups} duplicate "
+                         f"Remove Duplicates**, which is **Table → Remove Duplicates** on a Mac), leave every column ticked, and click OK. Excel reports {n_dups} duplicate "
                          f"values removed and {n_unique_surveys} unique values remaining, so `=COUNTA(Surveys!A2:A{ss.last_row})` "
                          f"now returns {n_unique_surveys}. Removing duplicates matters because the {n_dups} repeated October "
                          f"surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* "
@@ -508,7 +559,7 @@ def build() -> Lesson:
              hint="Subtracting two date-times gives days. Keep the column formatted as a number, not a date",
              explanation=f"Excel stores a date-time as days since 1900 with the time as a fraction, so "
                          f"`={es.col('DischargeDateTime')}{first}-{es.col('AdmitDateTime')}{first}` is the stay in days "
-                         "(3.36 days = 3 days and about 8½ hours). Because the data is an Excel Table, the formula fills "
+                         "(3.36 days = 3 days, 8 hours, and 38 minutes). Because the data is an Excel Table, the formula fills "
                          "the whole column, and Excel may show it as `=[@DischargeDateTime]-[@AdmitDateTime]`. If the "
                          "results look like dates (01/03/1900 08:38), the column picked up a date format, so set it back "
                          "to Number. The gray cell's AVERAGEIFS keeps only the Inpatient rows. The key's live formula "
@@ -552,10 +603,10 @@ def build() -> Lesson:
              solution=f'=COUNTIF({svL},">=9")/COUNT({svL})',
              live=(f"=LET(u,UNIQUE({svAll}),id,INDEX(u,0,1),ok,ISTEXT(id)*(id<>\"\"),"
                    f"SUM(ok*(INDEX(u,0,{ss.headers.index('OverallRating') + 1})>=9))/SUM(ok))"),
-             hint="COUNTIF(…,\">=9\") ÷ COUNT(…). Did task 1 first?",
+             hint="COUNTIF(…,\">=9\") ÷ COUNT(…). Do task 1 first",
              explanation=f"**Top box** means the best possible answers, 9 or 10 on the 0–10 overall rating. COUNT counts "
-                         f"the numeric ratings, so empty rows left at the bottom of the table don't change the "
-                         f"denominator. With the duplicates still in, you get {_pct(topbox_with_dups)} instead of "
+                         f"only numeric ratings, so the empty cells that Remove Duplicates leaves below the data "
+                         f"(rows {ss.first_row + n_unique_surveys}–{ss.last_row}) don't change the denominator. With the duplicates still in, you get {_pct(topbox_with_dups)} instead of "
                          f"{_pct(topbox)}, because the October surveys are counted twice. The key's live formula de-duplicates "
                          "inside the formula: `UNIQUE` on the whole table returns each distinct row once, and `INDEX(u,0,12)` "
                          "takes its 12th column (OverallRating)."),
@@ -592,8 +643,8 @@ def build() -> Lesson:
                          "the index when a code without a benchmark appears. **O/E** means observed ÷ expected. Summing both sides first "
                          "weights every stay by its length. An average of each stay's own ratio would let a 0.4-day stay "
                          "with a 2-day benchmark count as much as a 20-day sepsis stay. Cedar Ridge's patients stay about "
-                         "25% longer than the benchmark predicts for their diagnoses. Bluestone Memorial's index is "
-                         f"{oe_f01:.3f}, so at two decimals the two hospitals look identical. The third decimal tells them "
+                         f"{(oe_f03 - 1) * 100:.0f}% longer than the benchmark predicts for their diagnoses. Bluestone "
+                         f"Memorial's index is {oe_f01:.3f}, so at two decimals the two hospitals look identical. The third decimal tells them "
                          "apart, but a difference that small isn't worth a headline. The key's live formula needs no "
                          "helper columns: COUNTIFS counts F03's stays for each of the 51 codes, and SUMPRODUCT multiplies "
                          "those counts by each code's ExpectedLOS."),
@@ -613,11 +664,15 @@ def build() -> Lesson:
              live=sl_live,
              hint="A small summary table (COUNTIFS ÷ COUNTIFS per service line) or a PivotTable on a helper flag column",
              explanation=f"{top_sl} ({_pct(sl_rates[0][0])} of {sl_n[top_sl]} index stays) edges out {second_sl} "
-                         f"({_pct(sl_rates[1][0])} of {sl_n[second_sl]}). If you counted December discharges or Expired "
-                         f"stays, {second_sl} comes out on top instead, which shows why the definition must be fixed "
-                         "before anyone ranks anything. A **PivotTable** works too: add a helper column such as "
-                         "`IndexStay` (1 when the stay meets the definition) and `Readmit` (1 when Readmit30 = Y), filter "
-                         "IndexStay = 1, put ServiceLine in Rows and Average of Readmit in Values. In an executive summary, "
+                         f"({_pct(sl_rates[1][0])} of {sl_n[second_sl]}). If you leave Expired stays in the population, "
+                         f"{second_sl} comes out on top instead ({_pct(sl_with_expired[0][0])} against "
+                         f"{_pct(dict((s, r) for r, s in sl_with_expired)[top_sl])}), which shows why the definition must "
+                         "be fixed before anyone ranks anything. Adding December discharges keeps "
+                         f"{top_sl} first but shrinks its lead to {_pct(sl_with_dec[0][0])} against "
+                         f"{_pct(dict((s, r) for r, s in sl_with_dec)[second_sl])}. A **PivotTable** works too: add two helper columns, "
+                         "`IndexStay` (1 when the stay meets the definition) and `ReadmitFlag` (1 when Readmit30 = Y), as "
+                         "guide section 6.5 shows. Then filter IndexStay = 1, put ServiceLine in Rows, and put Average of "
+                         "ReadmitFlag in Values. In an executive summary, "
                          f"say that the top two are within half a point and that {top_sl} has fewer stays, so its rate is "
                          "less certain. Don't present it as the clear outlier."),
         # ---------------------------------------------------------------- 9 · finance: denial rate
@@ -647,7 +702,7 @@ def build() -> Lesson:
         Task(f"Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name "
              f"chosen in C4 into its FacilityID. Then make the LWBS % card ({LWBS_CELL}) a formula driven by C5: ED visits "
              "with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. "
-             f"The gray cell reads {LWBS_CELL}.",
+             f"The gray answer cell here shows Dashboard!{LWBS_CELL}.",
              answer=lwbs_f02, fmt="0.0%", title="Dashboard: LWBS % card for Ashby Falls (F02)",
              solution=(f"1. Dashboard!C5: `{dash_c5}`\n"
                        f"2. Dashboard!{LWBS_CELL}: `{lwbs_card}`\n"
@@ -665,7 +720,8 @@ def build() -> Lesson:
         Task("Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, "
              "save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the "
              "first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after "
-             "duplicates are removed. The gray cell adds B2:E2.",
+             "duplicates are removed. The gray cell adds B2:E2. If a test run logged wrong counts, delete the "
+             "RefreshLog sheet and run the macro again.",
              answer=log_total, title="RefreshReview audit log (row counts B2:E2)",
              solution=VBA_SOLUTION_SUB.strip("\n"), solution_lang="vba",
              summary=f'=IFERROR(IF(COUNT({ind("B2:E2")})=0,"",SUM({ind("B2:E2")})),"")',
@@ -680,17 +736,19 @@ def build() -> Lesson:
                          "none (F2 = 0) but still logs the right counts. If E2 is too high, RemoveDuplicates didn't "
                          "run. If every count is one too low or high, check the `- 1` for the header row."),
         # ---------------------------------------------------------------- 13 · deliverable: executive summary sentence
-        Task("Deliverable · executive summary. Build this sentence with ONE formula so it updates whenever the data "
-             "changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the task 9 denial rate. The "
-             "top reason is the DenialReason that appears most often among Denied or Appealed claims, and the second % "
-             "is its share of those claims. Format both with TEXT(…,\"0.0%\").",
+        Task("Deliverable · executive summary. In the yellow cell, write a formula that builds this sentence, so it "
+             "updates whenever the data changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the "
+             "task 9 denial rate. The top reason is the DenialReason that appears most often among Denied or Appealed "
+             "claims, and the second % is its share of those claims. Format both percentages with TEXT(…,\"0.0%\"). "
+             "The formula may refer to helper cells, such as a small table of denials by reason.",
              answer=sentence, title="Executive-summary sentence",
              solution=sentence_formula,
              hint="TEXT(x,\"0.0%\") and &. For the top reason, a small COUNTIFS table plus INDEX/MATCH/MAX, or LET + UNIQUE",
-             explanation=f"Expected text: **{sentence}**. In practice you would link to cells you already built: "
+             explanation=f"Expected text: **{sentence}**. The simplest route links to cells you already built: "
                          "`=\"Denial rate \"&TEXT(Practice!D14,\"0.0%\")&\"; top reason \"&G2&\" (\"&TEXT(H2,\"0.0%\")&\" "
-                         "of denials)\"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table. "
-                         "The one-formula version above uses **LET** to name each step: it filters the reasons of "
+                         "of denials)\"`, where G2 and H2 hold the top reason and its share from a small COUNTIFS table "
+                         "(guide section 6.5), and D14 is your task 9 answer. "
+                         "The one-formula version above needs no helper cells. It uses **LET** to name each step: it filters the reasons of "
                          "denied claims, lists each reason once with UNIQUE, counts each with COUNTIFS, and picks the "
                          "largest. Watch the population. Counting DenialReason on *every* claim, including Partially Paid "
                          f"ones, makes {any_reason.most_common(1)[0][0]} the top reason, because partial payments carry "
@@ -755,7 +813,7 @@ def build() -> Lesson:
              answer=beds, fmt="0.00", title="Equivalent staffed beds",
              solution=f"={excess_sum}/365",
              live=f"={raw_excess}/365",
-             hint="Divide the previous answer by 365 (you can reference its cell)",
+             hint="Divide the previous answer by 365. You can reference its cell",
              explanation=f"About {beds:.1f} beds at a {fac[worst]['LicensedBeds']}-bed hospital. That's modest for one "
                          f"site, but the same method across all three hospitals gives {system_excess:,.1f} excess days, "
                          f"or {system_excess / 365:.1f} beds, which is a whole small unit. Planners often divide by "
@@ -805,6 +863,11 @@ def build() -> Lesson:
         _brief_sheet(wb)
         _dashboard_sheet(wb, lesson, reference=False, rg=ranges)
         _dashboard_sheet(wb, lesson, reference=True, rg=ranges)
+        # The full RefreshReview Sub doesn't fit in one key cell, so show just the STEP code there.
+        key_row = int(lesson.tasks[11].key_cell.rsplit("$", 1)[1])
+        kc = wb["Answer Key"].cell(row=key_row, column=4)
+        kc.value = VBA_KEY_STEPS
+        kc.font = Font(name="Consolas", size=9)
         for name in ("Brief", "Dashboard", "Reference Dashboard"):          # print / PDF: one page wide, landscape
             ws = wb[name]
             ws.page_setup.orientation = "landscape"
@@ -994,14 +1057,20 @@ def _dashboard_sheet(wb, lesson, reference: bool, rg: dict):
             "How to build it (lesson guide, section 7):",
             "1. C5: look up the FacilityID of the hospital in C4. Every 'Selected hospital' formula refers to $C$5.",
             "2. Fill D8:E19. Use the Brief sheet's definitions. Finance rows are system-wide, so D and E match there.",
-            "3. Status: =IF(G9=\"≤\",IF(D9<=F9,\"Met\",\"Missed\"),IF(D9>=F9,\"Met\",\"Missed\")) and copy it to the rows "
-            "that have a goal. The green/red formatting is already set up.",
+            "3. Status: =IF(D9=\"\",\"\",IF(G9=\"≤\",IF(D9<=F9,\"Met\",\"Missed\"),IF(D9>=F9,\"Met\",\"Missed\"))) and copy it "
+            "to the rows that have a goal. The green/red formatting is already set up.",
             "4. Add at least one chart below (for example O/E or readmission rate by hospital) and a 'Refreshed' time "
-            "in H2 from your macro. Then Page Layout → Fit to 1 page and print or export to PDF.",
+            "in H2 from your macro. Then set Page Layout → Scale to Fit → Width to 1 page and print or export to PDF.",
+            "5. Delete these build notes before you print or share the dashboard.",
         ]
         for k, line in enumerate(tips):
-            c = ws.cell(row=r + k, column=2, value=line)
+            # Wrap each note inside B:H so it can't run off to the right and shrink the printed page.
+            rr = r + k
+            ws.merge_cells(start_row=rr, start_column=2, end_row=rr, end_column=8)
+            c = ws.cell(row=rr, column=2, value=line)
             c.font = Font(bold=k == 0, italic=k > 0, color="404040")
+            c.alignment = WRAP
+            ws.row_dimensions[rr].height = 15 * max(1, -(-len(line) // 120)) + 2
         return
 
     # ---- reference: comparison table + charts

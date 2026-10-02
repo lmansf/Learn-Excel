@@ -29,7 +29,8 @@ Public Sub RefreshReview()
 
     ' STEP 1 (your code): refresh every query and PivotTable in this workbook (one line).
     '         Then wait for background queries with Application.CalculateUntilAsyncQueriesDone
-    '         (wrap that line in On Error Resume Next / On Error GoTo Fail: older versions lack it).
+    '         (wrap that line in On Error Resume Next / On Error GoTo Fail so a failed wait
+    '         doesn't stop the macro).
 
     ' STEP 2 (your code): count the Surveys data rows with DataRowCount("Surveys") into surveysBefore,
     '         remove duplicate rows (SurveyID, column 1, is the key; the sheet has a header row),

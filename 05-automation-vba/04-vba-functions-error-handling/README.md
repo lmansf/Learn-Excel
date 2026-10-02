@@ -133,10 +133,10 @@ cell runs your new code.
 > ⚠️ Pass every input as an argument. A function that reads `Range("ReportDate")` inside its code won't update when
 > ReportDate changes, because Excel doesn't know the function depends on that cell.
 
-> 💡 **Tip:** To debug a UDF, click a line inside it and press **F9** (or choose **Debug → Toggle
-> Breakpoint**, which also works on a Mac) to set a breakpoint. Then select a cell that uses the function and re-enter it (F2, then Enter; Mac: ⌃ + U, then
-> Return). The VBE stops at the breakpoint, and you can step with F8 as in Lesson 5.2.
-> Remove the breakpoint when you're done, or every recalculation will stop there.
+> 💡 **Tip:** To debug a UDF, click a line inside it and press **F9** (Mac: **Debug → Toggle Breakpoint**) to set a
+> breakpoint. Then select a cell that uses the function and re-enter it (F2, then Enter; Mac: ⌃ + U, then Return). The
+> VBE stops at the breakpoint, and you step through with F8 (Mac: **Debug → Step Into**) as in Lesson 5.2. Remove the
+> breakpoint when you're done, or every recalculation stops there.
 
 > 📋 **Version note:** UDFs run in Excel for Windows and Excel for Mac. Excel for the web, iPad, and iPhone can't run
 > VBA, so UDF cells can't recalculate there. If you need a reusable formula that works everywhere, a named LAMBDA
@@ -349,9 +349,9 @@ argument `As Range` and loop over its cells with `For Each`, as in Lesson 5.2. A
 | `IsEmpty(cell.Value)` | is blank |
 | `IsError(cell.Value)` | shows an error value such as #VALUE! or #N/A |
 
-This function averages the numbers in a range and skips everything else. Excel's AVERAGE returns an error as soon as one
-cell in its range holds one, so after task 4 `=AVGNUMBERS(tblEncounters[LOSDays])` gives the average length of stay of
-the valid rows. (`AGGREGATE(1,6,range)` does the same job without a macro.)
+This function averages the numbers in a range and skips everything else. Excel's AVERAGE returns an error if any cell in
+its range shows an error, so after task 4 `=AVGNUMBERS(tblEncounters[LOSDays])` gives the average length of stay of the
+valid rows. (`AGGREGATE(1,6,range)` does the same job without a macro.)
 
 ```vba
 ' =AVGNUMBERS(range): the average of the numbers in range. Blanks, text, and
@@ -374,9 +374,10 @@ End Function
 
 Because `values` is declared `As Range`, a formula that passes a typed number instead, such as `=AVGNUMBERS(5)`, gets
 #VALUE! from Excel before your code runs. To try ESINAME or AVGNUMBERS, paste it into HealthUDFs, because both call the
-starter's Private helpers, and a Private procedure can only be called from its own module. To compare text without caring
-about case, use
-`StrComp(a, b, vbTextCompare) = 0` (Lesson 5.3) or compare `UCase(a)` with `UCase(b)` (Lesson 5.2).
+starter's Private helpers, and a Private procedure can only be called from its own module.
+
+To compare text without caring about case, use `StrComp(a, b, vbTextCompare) = 0` (Lesson 5.3) or compare `UCase(a)`
+with `UCase(b)` (Lesson 5.2).
 
 > ⚠️ Test `IsError` before you compare or convert a value. `cell.Value = "Denied"` and `CStr(cell.Value)` both raise a
 > Type mismatch error when the cell holds an error value, and inside a UDF that turns the whole result into #VALUE!.
@@ -1211,6 +1212,10 @@ Work on the **Bonus** sheet of the workbook.
 - **B4.** How many claim rows did your macro skip because BilledAmount or PaidAmount was not a number? (The gray cell reads the number next to 'Rows skipped'.) *(Hint: A blank cell read into an array is Empty, and VarType(Empty) is vbEmpty)*
 - **B5.** Test the error handling. (1) Rename the Claims sheet to Claims_old and run BuildPayerSummary: you should get your friendly message, not a run-time error. (2) Rename it back. (3) Temporarily change the header text in the Claims sheet's BilledAmount cell (E1) to Billed and run the macro again: the Fail handler should report the missing column, and Formulas → Calculation Options should still show Automatic afterwards. (4) Put the header back and run the macro once more. *(Hint: Check before you change settings, and clean up in one place)*
 <!-- END GENERATED: bonus -->
+
+The reference solutions are in [`solutions/PayerSummary_Solution.bas`](solutions/PayerSummary_Solution.bas) (Windows,
+Scripting.Dictionary) and [`solutions/PayerSummaryMac_Solution.bas`](solutions/PayerSummaryMac_Solution.bas) (Mac,
+Collections only, and it also runs on Windows). Both are spoilers.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
