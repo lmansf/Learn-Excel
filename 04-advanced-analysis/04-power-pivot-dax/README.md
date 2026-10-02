@@ -353,11 +353,11 @@ shows:
 
 | FacilityName | Encounters | Total Charges | Patients |
 |---|--:|--:|--:|
-| Ashby Falls Community Hospital | 948 | $12,966,081 | 550 |
-| Bluestone Memorial Hospital | 5,041 | $76,147,377 | 2,562 |
-| Bluestone Outpatient Pavilion | 3,680 | $4,394,223 | 2,307 |
-| Cedar Ridge Medical Center | 1,043 | $15,312,607 | 607 |
-| **Grand Total** | **10,712** | **$108,820,288** | **3,576** |
+| Ashby Falls Community Hospital | 948 | \$12,966,081 | 550 |
+| Bluestone Memorial Hospital | 5,041 | \$76,147,377 | 2,562 |
+| Bluestone Outpatient Pavilion | 3,680 | \$4,394,223 | 2,307 |
+| Cedar Ridge Medical Center | 1,043 | \$15,312,607 | 607 |
+| **Grand Total** | **10,712** | **\$108,820,288** | **3,576** |
 
 Encounters and Total Charges add up down the column. Patients doesn't: the facility rows sum to 6,026, but the grand total
 is 3,576. A patient seen at Bluestone Memorial and at the Outpatient Pavilion counts once in each row and once in the total.

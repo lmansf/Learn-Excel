@@ -3,7 +3,7 @@
 > **Level:** Beginner → Intermediate · **Time:** about 50 minutes · **Workbook:** [`2.4-math-statistical-functions.xlsx`](2.4-math-statistical-functions.xlsx)
 > **Data:** All 573 inpatient stays discharged from Bluestone Memorial Hospital in Q4 2025 (October–December), with age, length of stay, expected length of stay, and charges. All 785 emergency department visits at Bluestone Memorial in November–December 2025, with wait and length-of-stay minutes. The 388 medication orders written for that quarter's Medical-Surgical 5 East stays.
 
-A draft board report says Bluestone Memorial's average inpatient charge last quarter was $32,042. That figure is correct, and
+A draft board report says Bluestone Memorial's average inpatient charge last quarter was \$32,042. That figure is correct, and
 it's also misleading, because about two out of three stays were charged less than that. Hospitals run on numbers like this one: average
 length of stay, the 90th-percentile ED wait, the cost of a pharmacy order, the number of vials to pull for a dose. Each one needs
 the right function. Pharmacy can't open half a vial, so it has to round up. A typical patient's experience is better told by the
@@ -49,7 +49,7 @@ minutes from ED arrival to departure. On the Meds sheet, **DosesDispensed** is t
 ```
 
 All three take the same two arguments. **num_digits** says where to round. Positive values count decimal places, zero rounds to a
-whole number, and negative values round to the left of the decimal point. Stays row 6 is a stay charged $83,723.83:
+whole number, and negative values round to the left of the decimal point. Stays row 6 is a stay charged \$83,723.83:
 
 | num_digits | Rounds to | `=ROUND(J6, num_digits)` |
 |:-:|---|---|
@@ -59,8 +59,8 @@ whole number, and negative values round to the left of the decimal point. Stays 
 | -2 | hundreds | 83,700 |
 | -3 | thousands | 84,000 |
 
-Negative num_digits is how you produce the rounded figures in a board report ("about $84,000"). `ROUND(x,-3)/1000` gives
-84 for a column headed "$ thousands."
+Negative num_digits is how you produce the rounded figures in a board report ("about \$84,000"). `ROUND(x,-3)/1000` gives
+84 for a column headed "\$ thousands."
 
 ROUND goes to the **nearest** value. ROUNDUP and ROUNDDOWN ignore the next digit and always go one way:
 
@@ -261,7 +261,7 @@ SUMPRODUCT multiplies matching rows of two or more ranges and adds up the produc
   the whole result into #VALUE!, so use the data rows (`H2:H389`), not the whole column.
 - A comparison can act as a filter. On the Stays sheet, `(I2:I574>10)` is TRUE or FALSE for each stay. Multiplying it by the
   charges turns TRUE into 1 and FALSE into 0, so each charge is either kept (× 1) or zeroed out (× 0). Then SUMPRODUCT adds what's
-  left: `=SUMPRODUCT((I2:I574>10)*J2:J574)` returns $2,000,462.07, the total charges for stays longer than 10 days. Lesson 2.5
+  left: `=SUMPRODUCT((I2:I574>10)*J2:J574)` returns \$2,000,462.07, the total charges for stays longer than 10 days. Lesson 2.5
   does the same job with SUMIF.
 - To get a **weighted average**, divide by the sum of the weights: `=SUMPRODUCT(weights, values)/SUM(weights)`. For example, the
   average cost per dose dispensed weights each order's UnitCost by its DosesDispensed.
@@ -282,8 +282,8 @@ Formatting and rounding look alike but do different things (Lesson 1.3):
 | `AVERAGE(I2:I574)` formatted to 1 decimal | Shows 4.7, stores 4.71553… | `=ROUND(AVERAGE(I2:I574),1)` shows and stores 4.7 |
 | Later formulas use | The full stored value | The rounded value |
 
-That difference explains the classic complaint that "the totals don't add up." Split a $100.00 supply charge evenly across three
-cost centers and each cell shows $33.33, yet their total shows $100.00, not the $99.99 that the visible cells add up to. Neither is
+That difference explains the classic complaint that "the totals don't add up." Split a \$100.00 supply charge evenly across three
+cost centers and each cell shows \$33.33, yet their total shows \$100.00, not the \$99.99 that the visible cells add up to. Neither is
 wrong. Decide which you need: round each piece with ROUND (and then put the leftover cent somewhere on purpose), or keep full
 precision and accept that the displayed pieces may not add up exactly.
 
@@ -443,7 +443,7 @@ can skip errors: `=AGGREGATE(16,6,G2:G786,0.9)` is the 90th percentile ignoring 
 ```
 
 **RANK.EQ** finds where a value stands. Leave out `order` (or use 0) to rank the largest value as 1. Set `order` to 1 to rank
-the smallest value as 1 instead. Stays row 2 (ENC118816) was charged $32,556.40:
+the smallest value as 1 instead. Stays row 2 (ENC118816) was charged \$32,556.40:
 
 | Formula | Result | Meaning |
 |---|:-:|---|
@@ -559,7 +559,7 @@ Tasks use three data sheets. Stays holds 573 inpatient stays (rows 2–574), ED 
 |:-:|------|------|
 | 1 | What is the most common ESI triage level among the ED visits? | MODE.SNGL |
 | 2 | How much higher is the mean (average) TotalCharges per stay than the median TotalCharges? Enter the difference in dollars, to the cent. | AVERAGE(…) − MEDIAN(…) |
-| 3 | What is the sample standard deviation of TotalCharges, rounded to the nearest $100 with ROUND? | STDEV.S, then ROUND with a negative num_digits |
+| 3 | What is the sample standard deviation of TotalCharges, rounded to the nearest \$100 with ROUND? | STDEV.S, then ROUND with a negative num_digits |
 | 4 | ED leaders review the three longest ED visits for boarding delays, where an admitted patient waits in the ED for an inpatient bed. They report each visit's length of stay in whole hours and count any started hour as a full hour. Find the 3rd-longest EDLOSMin on the ED sheet, convert it to hours, and round it up to a whole number of hours with ROUNDUP. | LARGE(array, k) finds the visit. Divide by 60, then ROUNDUP(…, 0) |
 | 5 | The charge-capture team audits the cheapest stays, because an unusually low charge often means some charges were never posted. What is the 3rd-lowest TotalCharges? | SMALL is LARGE's mirror image |
 | 6 | Encounter ENC119052 (Stays row 70) stayed 10 days. Rank its LOSDays among all 573 stays with RANK.EQ, where the longest stay is rank 1. | RANK.EQ(number, ref). Leaving out order ranks the largest value as 1 |
@@ -593,14 +593,14 @@ MODE.SNGL returns the value that occurs most often: level 3 appears 328 times ou
 - **Answer:** 8,076.03
 - **Solution:** `=AVERAGE(Stays!J2:J574)-MEDIAN(Stays!J2:J574)`
 
-The mean is $32,041.72 but the median is $23,965.69, so half of all stays were charged less than $23,966. In fact 375 of the 573 stays (65%) fall below the mean. A handful of very long, very expensive stays pull the mean up, while the median only cares about the middle value. When data is skewed like this, the median describes a typical stay better.
+The mean is \$32,041.72 but the median is \$23,965.69, so half of all stays were charged less than \$23,966. In fact 375 of the 573 stays (65%) fall below the mean. A handful of very long, very expensive stays pull the mean up, while the median only cares about the middle value. When data is skewed like this, the median describes a typical stay better.
 
-**3. What is the sample standard deviation of TotalCharges, rounded to the nearest $100…**
+**3. What is the sample standard deviation of TotalCharges, rounded to the nearest \$100…**
 
 - **Answer:** 24,100
 - **Solution:** `=ROUND(STDEV.S(Stays!J2:J574),-2)`
 
-STDEV.S returns $24,056.39. A num_digits of -2 rounds to the hundreds place, giving $24,100. STDEV.S treats the stays as a sample of an ongoing process, which is the usual choice. STDEV.P gives $24,035.39, which rounds to $24,000, so the check tells the two apart.
+STDEV.S returns \$24,056.39. A num_digits of -2 rounds to the hundreds place, giving \$24,100. STDEV.S treats the stays as a sample of an ongoing process, which is the usual choice. STDEV.P gives \$24,035.39, which rounds to \$24,000, so the check tells the two apart.
 
 **4. ED leaders review the three longest ED visits for boarding delays, where an admitted…**
 
@@ -621,7 +621,7 @@ SMALL(array, k) returns the k-th smallest value, so `SMALL(range,1)` equals MIN.
 - **Answer:** 28
 - **Solution:** `=RANK.EQ(Stays!I70,Stays!I2:I574)`
 
-27 stays were longer than 10 days, so this one ranks 28. The other 7 stays of exactly 10 days share rank 28, and the next rank used is 36. `RANK.AVG` returns 31.5 instead, which is the average of positions 28–35. If you copy a RANK formula down a column, lock the ref with $ (`$I$2:$I$574`) so it doesn't slide.
+27 stays were longer than 10 days, so this one ranks 28. The other 7 stays of exactly 10 days share rank 28, and the next rank used is 36. `RANK.AVG` returns 31.5 instead, which is the average of positions 28–35. If you copy a RANK formula down a column, lock the ref with \$ (`$I$2:$I$574`) so it doesn't slide.
 
 **7. Ninety percent of the patients who saw a provider waited at most how many minutes?…**
 
@@ -642,7 +642,7 @@ Q1 is 167 and Q3 is 322, so the middle half of ED visits lasted between 2 h 47 m
 - **Answer:** 9,252.38
 - **Solution:** `=SUMPRODUCT(Meds!H2:H389,Meds!I2:I389)`
 
-SUMPRODUCT multiplies the two columns row by row, then adds the 388 products. It gives the same result as a helper column of `=H2*I2` totaled with SUM. Multiplying two totals, as in `=SUM(H…)*SUM(I…)`, is wrong (it gives $3,108,585.48) because it pairs every order's doses with every other order's price. Divide by `SUM(Meds!H2:H389)` to get the average cost per dose, $3.08.
+SUMPRODUCT multiplies the two columns row by row, then adds the 388 products. It gives the same result as a helper column of `=H2*I2` totaled with SUM. Multiplying two totals, as in `=SUM(H…)*SUM(I…)`, is wrong (it gives \$3,108,585.48) because it pairs every order's doses with every other order's price. Divide by `SUM(Meds!H2:H389)` to get the average cost per dose, \$3.08.
 
 **10. AgeBand column with FLOOR.MATH (stays aged 80–89)**
 
@@ -678,14 +678,14 @@ Subtracting the two columns gives each stay's difference from expected, which is
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The CFO's draft board report says the average inpatient charge in Q4 was $32,042. A board member asks whether that number is typical and which stays are unusually expensive. Flag the high-charge outliers with two common rules, measure how much they matter, and find a more representative average. Use the TotalCharges column on the Stays sheet (Stays!J2:J574). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it.
+The CFO's draft board report says the average inpatient charge in Q4 was \$32,042. A board member asks whether that number is typical and which stays are unusually expensive. Flag the high-charge outliers with two common rules, measure how much they matter, and find a more representative average. Use the TotalCharges column on the Stays sheet (Stays!J2:J574). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it.
 
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Calculate the upper outlier fence with the IQR rule: Q3 + 1.5 × (Q3 − Q1), using QUARTILE.INC. Enter it in dollars, to the cent. *(Hint: Find Q1 and Q3 with QUARTILE.INC, then combine them)*
 - **B2.** How many stays have TotalCharges above the fence from B1? *(Hint: COUNTIF(range, ">"&cell) joins the operator to your B1 cell)*
 - **B3.** What share of all Q4 TotalCharges came from the stays above the fence? Enter it as a percentage with one decimal place. *(Hint: (range>D6) is TRUE or FALSE for each stay. Multiply it by the charges inside SUMPRODUCT, then divide by the total)*
-- **B4.** A second common rule flags any value more than 3 standard deviations above the mean. How many stays have TotalCharges above AVERAGE + 3 × STDEV.S? *(Hint: Build the threshold inside the criterion: ">"&(AVERAGE(…)+3*STDEV.S(…)))*
+- **B4.** A second common rule flags any value more than 3 standard deviations above the mean. How many stays have TotalCharges above AVERAGE + 3 × STDEV.S? (Hint: Build the threshold inside the criterion: ">"&(AVERAGE(…)+3*STDEV.S(…)))
 - **B5.** Calculate a 10% trimmed mean of TotalCharges with TRIMMEAN, which drops about 5% of stays from each end before averaging. Enter it in dollars, to the cent. *(Hint: TRIMMEAN(array, percent). The percent is the TOTAL share to drop)*
 <!-- END GENERATED: bonus -->
 
@@ -703,7 +703,7 @@ Work on the **Bonus** sheet of the workbook.
 ```
 
 
-Q1 is $16,511.45 and Q3 is $38,058.49, so the IQR is $21,547.04 and the fence is $38,058.49 + 1.5 × $21,547.04 = $70,379.05. The lower fence, Q1 − 1.5 × IQR, is −$15,809.11. That's below zero, so the rule can't flag any low outliers. Right-skewed data like charges usually has outliers on the high side only.
+Q1 is \$16,511.45 and Q3 is \$38,058.49, so the IQR is \$21,547.04 and the fence is \$38,058.49 + 1.5 × \$21,547.04 = \$70,379.05. The lower fence, Q1 − 1.5 × IQR, is −\$15,809.11. That's below zero, so the rule can't flag any low outliers. Right-skewed data like charges usually has outliers on the high side only.
 
 **B2. How many stays have TotalCharges above the fence from B1?**
 
@@ -724,14 +724,14 @@ Q1 is $16,511.45 and Q3 is $38,058.49, so the IQR is $21,547.04 and the fence is
 - **Answer:** 13
 - **Solution:** `=COUNTIF(Stays!J2:J574,">"&(AVERAGE(Stays!J2:J574)+3*STDEV.S(Stays!J2:J574)))`
 
-The threshold is $32,041.72 + 3 × $24,056.39 = $104,210.89, and only 13 stays exceed it, compared with 50 under the IQR rule. The outliers themselves inflate the mean and the standard deviation, which raises the bar they have to clear. This effect is called **masking**. The 3-SD rule assumes roughly symmetric data. Quartiles barely move when a few extreme values change, so the IQR rule is the better screen for skewed data like charges and length of stay.
+The threshold is \$32,041.72 + 3 × \$24,056.39 = \$104,210.89, and only 13 stays exceed it, compared with 50 under the IQR rule. The outliers themselves inflate the mean and the standard deviation, which raises the bar they have to clear. This effect is called **masking**. The 3-SD rule assumes roughly symmetric data. Quartiles barely move when a few extreme values change, so the IQR rule is the better screen for skewed data like charges and length of stay.
 
 **B5. Calculate a 10% trimmed mean of TotalCharges with TRIMMEAN, which drops about 5% of…**
 
 - **Answer:** 29,241.27
 - **Solution:** `=TRIMMEAN(Stays!J2:J574,0.1)`
 
-573 × 10% = 57.3 stays. TRIMMEAN rounds that down to an even number (56) and drops 28 from each end. The result, $29,241.27, sits between the median ($23,965.69) and the mean ($32,041.72). For the board, report the median as the typical stay and keep the mean for budgeting, because mean × number of stays = total charges. Then list the outlier stays separately so nobody mistakes them for the norm.
+573 × 10% = 57.3 stays. TRIMMEAN rounds that down to an even number (56) and drops 28 from each end. The result, \$29,241.27, sits between the median (\$23,965.69) and the mean (\$32,041.72). For the board, report the median as the typical stay and keep the mean for budgeting, because mean × number of stays = total charges. Then list the outlier stays separately so nobody mistakes them for the norm.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

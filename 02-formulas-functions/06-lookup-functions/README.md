@@ -381,8 +381,8 @@ XLOOKUP uses wildcards only when match_mode is 2:
 =XLOOKUP("*sepsis*",Diagnoses!$B$2:$B$52,Diagnoses!$A$2:$A$52,,2)      → A41.9
 ```
 
-MATCH with match_type 0, and VLOOKUP with FALSE, accept wildcards automatically. `=INDEX(Diagnoses!$A$2:$A$52,
-MATCH("*sepsis*",Diagnoses!$B$2:$B$52,0))` also returns A41.9. Lookups ignore upper and lower case, with or without wildcards,
+MATCH with match_type 0, and VLOOKUP with FALSE, accept wildcards automatically. `=INDEX(Diagnoses!\$A\$2:\$A\$52,
+MATCH("*sepsis*",Diagnoses!\$B\$2:\$B\$52,0))` also returns A41.9. Lookups ignore upper and lower case, with or without wildcards,
 so "SEPSIS" finds the same row.
 
 > ⚠️ A wildcard lookup still returns only the **first** match. `"Type 2*"` matches two descriptions,
@@ -458,7 +458,7 @@ should *look* broken:
 
 XLOOKUP's if_not_found behaves like IFNA. It replaces only the "no match" result.
 
-> ⚠️ Choose a fallback that can't be mistaken for data. `""` looks like a blank field, and `0` looks like a real amount (a $0
+> ⚠️ Choose a fallback that can't be mistaken for data. `""` looks like a blank field, and `0` looks like a real amount (a \$0
 > charge, or a patient aged 0). Text such as `Not found` is unmistakable, and `COUNTIF(range,"Not found")` counts the misses.
 
 > 📋 **Version note:** IFNA needs Excel 2013 or later (Excel 2016 or later on a Mac). IFERROR works in Excel 2007 and later.
@@ -570,7 +570,7 @@ The readable version: *Christine Miller saw Dr. Nguyen in the Primary Care Clini
 Evergreen Mutual Insurance paid the claim.*
 
 Then sanity-check it. The visit was an Outpatient encounter in Dr. Nguyen's own clinic, so an internist as the attending and a
-small charge ($304.68) both make sense. If a lookup had returned a cardiac surgeon or a $90,000 charge, you'd recheck the ranges.
+small charge (\$304.68) both make sense. If a lookup had returned a cardiac surgeon or a \$90,000 charge, you'd recheck the ranges.
 
 ### 12. Quick reference
 
@@ -601,7 +601,7 @@ the yellow cell. The **Check** column turns green when you're right. Tasks 5, 7,
 and their gray cells summarize your work.
 
 <!-- BEGIN GENERATED: practice -->
-The Encounters sheet stores IDs only, so every answer comes from looking an ID up in another sheet. Write each answer as a formula. Your answers sit on this Practice sheet, so a reference to a data cell needs its sheet name, such as Encounters!B9. Click the cell on the data sheet and Excel writes the sheet name for you. Tasks 5, 7, and 13 are different: you type the formula on a data sheet and copy it down the column, and the gray cell here reads your column. Lock the lookup table's ranges with $ (F4, Mac: ⌘ + T) so they don't slide when you copy. If Excel writes a Table reference such as tblPayers[PayerName] instead, keep it, because a Table reference never slides when you copy it down.
+The Encounters sheet stores IDs only, so every answer comes from looking an ID up in another sheet. Write each answer as a formula. Your answers sit on this Practice sheet, so a reference to a data cell needs its sheet name, such as Encounters!B9. Click the cell on the data sheet and Excel writes the sheet name for you. Tasks 5, 7, and 13 are different: you type the formula on a data sheet and copy it down the column, and the gray cell here reads your column. Lock the lookup table's ranges with \$ (F4, Mac: ⌘ + T) so they don't slide when you copy. If Excel writes a Table reference such as tblPayers[PayerName] instead, keep it, because a Table reference never slides when you copy it down.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -609,7 +609,7 @@ The Encounters sheet stores IDs only, so every answer comes from looking an ID u
 | 2 | Encounter ENC111256 (Encounters row 20) was billed to payer PY02. Use VLOOKUP on the Payers sheet to return the payer's PayerType. | Count the columns of the Payers table to find PayerType's column number |
 | 3 | Encounter ENC113996 (Encounters row 150) has primary diagnosis code E11.65. Use XLOOKUP to return its description from the Diagnoses sheet. | XLOOKUP(lookup_value, lookup_array, return_array) |
 | 4 | Who attended encounter ENC112339 (Encounters row 73)? Use INDEX and MATCH with its AttendingProviderID to return the provider's Specialty from the Providers sheet. | INDEX(Specialty column, MATCH(id, ProviderID column, 0)) |
-| 5 | Fill the yellow PayerName column on the Encounters sheet with a lookup that returns each encounter's payer name (start in K2 and copy down to row 530). The gray cell counts how many encounters your column shows as exactly "Medicare". | Lock the Payers ranges with $ before you copy the formula down |
+| 5 | Fill the yellow PayerName column on the Encounters sheet with a lookup that returns each encounter's payer name (start in K2 and copy down to row 530). The gray cell counts how many encounters your column shows as exactly "Medicare". | Lock the Payers ranges with \$ before you copy the formula down |
 | 6 | Patient PT10395 is on Patients row 21, and the Age column shows 75. Use VLOOKUP with an approximate match (TRUE) on the AgeBands sheet to return the patient's age band. | An approximate match returns the band whose MinAge is the largest one that is ≤ the age |
 | 7 | Fill the yellow BMICategory column on the Patients sheet: look up each patient's BMI in the BMITiers table with an approximate match (start in L2 and copy down to row 186). The gray cell counts patients in any obesity class (BMI 30 or higher). | VLOOKUP(…, TRUE) or XLOOKUP with match_mode -1 (exact match or next smaller item) |
 | 8 | The lab's interface file sent a result for MRN 50339. It arrived as a number, so its leading zeros were dropped, but the Patients sheet stores MRNs as 8-character text. Return the PatientID for this MRN. (PatientID is to the left of MRN, so VLOOKUP can't do it.) | Rebuild the text MRN with TEXT(number,"00000000"), then use INDEX/MATCH or XLOOKUP |
@@ -662,7 +662,7 @@ MATCH finds the position of the ProviderID in the ProviderID column (the 0 means
 - **Answer:** 120
 - **Solution:** `=XLOOKUP(I2,Payers!$A$2:$A$9,Payers!$B$2:$B$9)`
 
-This is the everyday use of a lookup: adding a readable column to an ID-only extract. The $ signs keep the Payers ranges fixed while the lookup value (I2, then I3, …) moves down a row at a time. `=VLOOKUP(I2,Payers!$A$2:$F$9,2,FALSE)` works just as well. COUNTIF with "Medicare" counts exact matches only, so Silverline Medicare Advantage isn't included.
+This is the everyday use of a lookup: adding a readable column to an ID-only extract. The \$ signs keep the Payers ranges fixed while the lookup value (I2, then I3, …) moves down a row at a time. `=VLOOKUP(I2,Payers!$A$2:$F$9,2,FALSE)` works just as well. COUNTIF with "Medicare" counts exact matches only, so Silverline Medicare Advantage isn't included.
 
 **6. Patient PT10395 is on Patients row 21, and the Age column shows 75. Use VLOOKUP with…**
 
@@ -731,7 +731,7 @@ XLOOKUP's if_not_found argument replaces #N/A with your own text, but only when 
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-Dr. Nguyen's care manager answers the same questions all day: who is this encounter's patient, how old were they, what were they treated for, who was the attending, who pays, and where does the claim stand? Build a reusable lookup card on the Card sheet. Each card is one column: it takes an EncounterID in row 5 and returns ten facts in rows 6 to 15. Rows 6 and 7 are helper cells (PatientID and Attending ProviderID) that the other rows reuse. Card 1 (column B) holds ENC117295. Card 2 (column C) holds ENC119O88, an ID copied from a handwritten note, and every row of Card 2 must show Not found instead of an error. Write every formula in column B, then copy B6:B15 and paste it into C6:C15. Refer to the ID as B$5, with no $ before the B, so it becomes C$5 in column C. The $ before the 5 keeps it on row 5 if you copy a formula down to start the next row. Use Copy (Ctrl + C, Mac: ⌘ + C) and Paste (Ctrl + V, Mac: ⌘ + V) rather than dragging the fill handle, because dragging to the right shifts Table references such as tblEncounters[PatientID] to the next Table column. Keep both IDs in place while you check your answers. The gray cells on the Bonus sheet read your card.
+Dr. Nguyen's care manager answers the same questions all day: who is this encounter's patient, how old were they, what were they treated for, who was the attending, who pays, and where does the claim stand? Build a reusable lookup card on the Card sheet. Each card is one column: it takes an EncounterID in row 5 and returns ten facts in rows 6 to 15. Rows 6 and 7 are helper cells (PatientID and Attending ProviderID) that the other rows reuse. Card 1 (column B) holds ENC117295. Card 2 (column C) holds ENC119O88, an ID copied from a handwritten note, and every row of Card 2 must show Not found instead of an error. Write every formula in column B, then copy B6:B15 and paste it into C6:C15. Refer to the ID as B\$5, with no \$ before the B, so it becomes C\$5 in column C. The \$ before the 5 keeps it on row 5 if you copy a formula down to start the next row. Use Copy (Ctrl + C, Mac: ⌘ + C) and Paste (Ctrl + V, Mac: ⌘ + V) rather than dragging the fill handle, because dragging to the right shifts Table references such as tblEncounters[PatientID] to the next Table column. Keep both IDs in place while you check your answers. The gray cells on the Bonus sheet read your card.
 
 Work on the **Bonus** sheet of the workbook.
 

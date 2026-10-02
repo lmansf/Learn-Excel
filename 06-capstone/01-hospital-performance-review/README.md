@@ -624,7 +624,7 @@ It returns **ED patients who left without being seen: 1.6% (100 of 6,217 visits)
 | `"0.0%"` | 1.6% | | |
 | `"#,##0"` | | 6,217 | |
 | `"0.00"` | | | 1.26 |
-| `"$#,##0"` | | $6,217 | |
+| `"$#,##0"` | | \$6,217 | |
 
 Without TEXT, `="LWBS rate: "&A1` shows every stored digit, as in *LWBS rate: 0.0160849284220685*.
 
@@ -683,7 +683,7 @@ The tasks follow the work plan in the lesson guide: 1–2 prepare the data, 3–
 | 8 | Quality · join. Fill the yellow ServiceLine column of Encounters with each row's ServiceLine from the Departments sheet (match on DeptID). Then, using the task 6 index-stay definition for all three hospitals together, which service line has the highest 30-day readmission rate? Type its name. | A small summary table (COUNTIFS ÷ COUNTIFS per service line) or a PivotTable on a helper flag column |
 | 9 | Finance. What was the claim denial rate? Count claims whose ClaimStatus is Denied or Appealed, and divide by adjudicated claims (every claim except Pending). Enter it as a percentage to 1 decimal place. | COUNTIF with an array constant for the two statuses, and "<>Pending" for the denominator |
 | 10 | Finance. What was the net collection rate: total PaidAmount ÷ total AllowedAmount over adjudicated claims (ClaimStatus is not Pending)? Enter it as a percentage to 1 decimal place. | SUMIFS ÷ SUMIFS with the same "<>Pending" condition |
-| 11 | Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name chosen in C4 into its FacilityID. Then make the LWBS % card (D10) a formula driven by C5: ED visits with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. The gray answer cell here shows Dashboard!D10. | XLOOKUP the name on Facilities. Then COUNTIFS(…,$C$5,…,"LWBS") ÷ COUNTIF(…,$C$5) |
+| 11 | Deliverable · dashboard. On the Dashboard sheet, write a formula in C5 that turns the hospital name chosen in C4 into its FacilityID. Then make the LWBS % card (D10) a formula driven by C5: ED visits with EDDisposition = LWBS ÷ all ED visits at that facility. Choose Ashby Falls Community Hospital in C4. The gray answer cell here shows Dashboard!D10. | XLOOKUP the name on Facilities. Then COUNTIFS(…,\$C\$5,…,"LWBS") ÷ COUNTIF(…,\$C\$5) |
 | 12 | Deliverable · automation. Import starter/RefreshReview_Starter.bas into the VBE, write the code for its five STEP comments, save the workbook as .xlsm, and run RefreshReview. It creates a RefreshLog sheet whose row 2 records the first run: B2 = Encounters rows, C2 = ED_Visits rows, D2 = Claims rows, E2 = Surveys rows after duplicates are removed. The gray cell adds B2:E2. If a test run logged wrong counts, delete the RefreshLog sheet and run the macro again. | Guide section 8.2 lists the statements: RefreshAll, RemoveDuplicates, CalculateFull, End(xlUp) |
 | 13 | Deliverable · executive summary. In the yellow cell, write a formula that builds this sentence, so it updates whenever the data changes: Denial rate 0.0%; top reason Xxx (0.0% of denials). The first % is the task 9 denial rate. The top reason is the DenialReason that appears most often among Denied or Appealed claims, and the second % is its share of those claims. Format both percentages with TEXT(…,"0.0%"). The formula may refer to helper cells, such as a small table of denials by reason. | TEXT(x,"0.0%") and &. For the top reason, a small COUNTIFS table plus INDEX/MATCH/MAX, or LET + UNIQUE |
 <!-- END GENERATED: practice -->

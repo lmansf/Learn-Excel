@@ -287,7 +287,7 @@ End Function
 ```
 
 > ⚠️ `IsNumeric(Empty)` is True, so a test like `If IsNumeric(amount) Then total = total + amount` treats a blank
-> BilledAmount as $0 and counts the claim. That's the trap the bonus is built around.
+> BilledAmount as \$0 and counts the claim. That's the trap the bonus is built around.
 
 ### 6. Returning Excel errors with CVErr
 
@@ -806,7 +806,7 @@ Save the workbook as .xlsm and import the starter modules first (see the Start H
 | 4 | Write LOSDAYS(admitDateTime, dischargeDateTime): the number of midnights between admission and discharge, or #VALUE! when an input isn't a date or the discharge date-time is earlier than the admission date-time. Fill the yellow LOSDays column on the Encounters sheet. The gray cell adds up your column and skips error cells. What is the total? | CVErr(xlErrValue) for bad rows. DateDiff("d", …) counts midnights |
 | 5 | How many rows does your LOSDays column flag with #VALUE!? The gray cell counts them. (Each one is a data-entry error to send back to Health Information Management.) | Filter the LOSDays column to see the error rows |
 | 6 | Write DENIALRATE(statusRange, [statusToCount]): the share of non-blank cells in statusRange whose text equals statusToCount (ignoring case). statusToCount is Optional and defaults to "Denied". Return #DIV/0! if the range has no non-blank cells. In the yellow cell, call DENIALRATE on the ClaimStatus column of the Claims sheet and leave out the second argument. The cell is already formatted as a percentage. | Optional statusToCount As String = "Denied", then For Each cell In statusRange.Cells |
-| 7 | Snippet A on the Snippets sheet passes a $100 charge to AddFeeByVal and AddFeeByRef. What number does Debug.Print charge show? Predict first, then run it to check. | ByRef shares the caller's variable. What do parentheses around an argument do? |
+| 7 | Snippet A on the Snippets sheet passes a \$100 charge to AddFeeByVal and AddFeeByRef. What number does Debug.Print charge show? Predict first, then run it to check. | ByRef shares the caller's variable. What do parentheses around an argument do? |
 | 8 | Complete CountDenialReasons in starter/ClaimDictionaries.bas: add every non-blank DenialReason on the Claims sheet to a Collection, using the reason itself as the key, so each reason is kept once. The macro writes the Collection's Count to Output!B4, and the gray cell reads it. | col.Add Item:=reason, Key:=reason raises an error for a key it already has |
 | 9 | Complete CountDistinctPatients: add every PatientID on the Claims sheet to a Scripting.Dictionary (Mac: a Collection) once, then write the number of keys to Output!B5. How many different patients had a claim? | CreateObject("Scripting.Dictionary"), then .Exists and .Add |
 | 10 | Complete TopDeniedPayer: build one dictionary that maps PayerID → PayerName (from the Payers sheet) and another that counts the claims with ClaimStatus "Denied" for each PayerID (Mac: a Collection for the names, and SlotFor plus an array for the counts). Write the PayerName with the most denied claims to Output!B6 and its count to Output!B7. The gray cell reads B6. | d(key) = d(key) + 1 counts. Then loop over .Keys to find the largest |
@@ -1396,7 +1396,7 @@ Silverline has 20 denied claims out of 177 kept rows. One Silverline denial has 
 - **Answer:** 4,440,116.72
 - **Solution:** Read it from the TOTAL row, column E. Formula cross-check: `=SUMIFS(tblClaims[PaidAmount],tblClaims[BilledAmount],">=0")`
 
-The macro adds each payer's figures to running totals while it builds the output array, then writes the TOTAL row after sorting, so the sort can't move it. It covers 1,088 claims and $16,722,301.02 billed. Writing the TOTAL row before sorting is a classic bug: Range.Sort would treat it as a payer and sort it to the top.
+The macro adds each payer's figures to running totals while it builds the output array, then writes the TOTAL row after sorting, so the sort can't move it. It covers 1,088 claims and \$16,722,301.02 billed. Writing the TOTAL row before sorting is a classic bug: Range.Sort would treat it as a payer and sort it to the top.
 
 **B4. Rows skipped**
 

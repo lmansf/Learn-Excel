@@ -214,7 +214,7 @@ least once:
 |---|--:|---|
 | `=SUMIF(C2:C2725,"Inpatient",O2:O2725)` | 23,508,195.40 | Charges for all Inpatient stays |
 | `=SUMIFS(O2:O2725,D2:D2725,"Ashby Falls Community Hospital",C2:C2725,"Emergency")` | 302,329.95 | Emergency visit charges at Ashby Falls |
-| `=SUMIF(O2:O2725,">=100000")` | 2,417,401.18 | The 19 charges of $100,000 or more |
+| `=SUMIF(O2:O2725,">=100000")` | 2,417,401.18 | The 19 charges of \$100,000 or more |
 
 The last formula has no sum_range. When you leave it out, SUMIF adds the same cells it tested, which is handy when the condition is
 on the amounts themselves.
@@ -448,22 +448,22 @@ Then copy it across to D5 and down to row 16. Each reference has its own job:
 
 | Reference | What's locked | Why |
 |---|---|---|
-| `Encounters!$D$2:$D$2725` and the other data ranges | row and column | The data never moves. Without the $ signs, the ranges would slide right and down as you copy, and the counts would quietly go wrong. |
+| `Encounters!$D$2:$D$2725` and the other data ranges | row and column | The data never moves. Without the \$ signs, the ranges would slide right and down as you copy, and the counts would quietly go wrong. |
 | `B$4` | the row | Every cell reads the hospital name in row 4 of its own column. |
 | `$A5` | the column | Every cell reads the month in column A of its own row. |
 | `EDATE($A5,1)` | the column | The first day of the following month, which gives the "less than the next period" end from section 9. |
 
-To decide where each $ goes, ask the two questions from Lesson 1.5: *should this reference move when I copy across?* and *should it
-move when I copy down?* Here's what one wrong $ does:
+To decide where each \$ goes, ask the two questions from Lesson 1.5: *should this reference move when I copy across?* and *should it
+move when I copy down?* Here's what one wrong \$ does:
 
 | Mistake in B5 | What you see |
 |---|---|
 | `$B$4` instead of `B$4` | Every column repeats Bluestone Memorial's counts |
 | `A5` instead of `$A5` | Column C reads B5, a count, as its month, so it shows only 0s |
-| Data ranges without $ signs | The ranges drift to other columns and rows, so most cells show 0 or a count that's slightly off |
+| Data ranges without \$ signs | The ranges drift to other columns and rows, so most cells show 0 or a count that's slightly off |
 
 > ⚠️ **Type the data ranges as addresses, not Table references.** If you build the formula by selecting whole Table columns, the
-> ranges appear as structured references such as `tblEncounters[FacilityName]`, which have no $ signs to lock. Copy and paste leaves
+> ranges appear as structured references such as `tblEncounters[FacilityName]`, which have no \$ signs to lock. Copy and paste leaves
 > them alone, but filling to the right with the fill handle shifts each one to the next Table column. `tblEncounters[FacilityName]`
 > becomes `tblEncounters[DeptName]`, and the copied columns fill with 0s. Type the ranges as addresses such as
 > `Encounters!$D$2:$D$2725`, or fill the grid with copy and paste. (Lesson 3.1 shows how to lock a Table column with
@@ -519,7 +519,7 @@ Keyboard shortcuts for this lesson:
 
 | Action | Windows | Mac |
 |---|---|---|
-| Cycle a reference through the $ options | F4 | ⌘ + T |
+| Cycle a reference through the \$ options | F4 | ⌘ + T |
 | Extend a reference to the last filled row while typing a formula | Ctrl + Shift + ↓ | ⌘ + Shift + ↓ |
 | Enter the same formula in every selected cell | Ctrl + Enter | ⌘ + Return |
 | Fill down or fill right | Ctrl + D or Ctrl + R | ⌘ + D or ⌘ + R |
@@ -548,7 +548,7 @@ The Encounters sheet holds rows 2–2725 and the Claims sheet holds rows 2–266
 | 9 | How many encounters at Bluestone Memorial Hospital were hospital stays, meaning EncounterType is Inpatient OR Observation? | COUNTIFS joins conditions with AND. For OR, add two counts together |
 | 10 | What was the highest TotalCharges for an encounter whose DxDescription contains the word sepsis? | MAXIFS(max_range, criteria_range1, criteria1, …). "Contains" needs an asterisk on both sides |
 | 11 | Collections wants the oldest claim still waiting on an insurance company. What is the earliest SubmitDate among claims with ClaimStatus = Pending and a PayerName other than Self-Pay? Enter it as a date. | MINIFS works on dates too, and "<>" means not equal to |
-| 12 | On the Payer Mix sheet, fill the yellow grid B5:E12 with ONE COUNTIFS formula: the number of encounters for the payer in column A and the encounter type in row 4. Type it in B5, then copy it across and down. Type the data ranges as cell addresses with $ signs instead of selecting Table columns (guide section 11 explains why). The gray cell adds up your grid. | Lock the data ranges fully. For each label, lock only the part (row or column) that must stay put |
+| 12 | On the Payer Mix sheet, fill the yellow grid B5:E12 with ONE COUNTIFS formula: the number of encounters for the payer in column A and the encounter type in row 4. Type it in B5, then copy it across and down. Type the data ranges as cell addresses with \$ signs instead of selecting Table columns (guide section 11 explains why). The gray cell adds up your grid. | Lock the data ranges fully. For each label, lock only the part (row or column) that must stay put |
 | 13 | What was the 30-day readmission rate for the Cardiovascular service line? Divide the Cardiovascular Inpatient stays with Readmit30 = Y by all Cardiovascular Inpatient stays. Enter it as a percentage. | Rate = COUNTIFS(numerator) / COUNTIFS(denominator). Same filters, plus one more on top |
 <!-- END GENERATED: practice -->
 
@@ -663,7 +663,7 @@ Dates are numbers, so the smallest SubmitDate is the oldest. `"<>Self-Pay"` keep
 - **Answer:** 2,724
 - **Solution:** `=COUNTIFS(Encounters!$N$2:$N$2725,$A5,Encounters!$C$2:$C$2725,B$4)`
 
-The data ranges never move, so they get full $ signs. `$A5` lets the row change but always reads column A, and `B$4` lets the column change but always reads row 4. Every encounter has exactly one payer and one type, so a correct grid adds up to the number of rows on the Encounters sheet. Each row also matches the gray COUNTIF check in column G.
+The data ranges never move, so they get full \$ signs. `$A5` lets the row change but always reads column A, and `B$4` lets the column change but always reads row 4. Every encounter has exactly one payer and one type, so a correct grid adds up to the number of rows on the Encounters sheet. Each row also matches the gray COUNTIF check in column G.
 
 **13. Cardiovascular 30-day readmission rate**
 

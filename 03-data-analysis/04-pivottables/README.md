@@ -526,7 +526,7 @@ in Rows, Count of EncounterID in Values, top-left cell A3), clicking the Observa
 A plain reference such as `=B6` points at a *position*. After someone sorts, filters, or adds a field, B6 may hold a
 different number. GETPIVOTDATA points at a *meaning*, so it keeps finding the Observation count wherever it moves.
 
-- **Make it interactive:** replace a typed item with a cell reference, such as `=GETPIVOTDATA("EncounterID",$A$3,
+- **Make it interactive:** replace a typed item with a cell reference, such as `=GETPIVOTDATA("EncounterID",\$A\$3,
   "EncounterType",F2)`, where F2 holds a drop-down list of encounter types (Lesson 3.2).
 - **It needs a visible item:** if the item is filtered out, or its field isn't in the pivot, GETPIVOTDATA returns #REF!.
 
@@ -722,7 +722,7 @@ TotalCharges contains only numbers, so Excel sums it by default. The Filters are
 3. Read the EncounterID in the first row.
 
 
-Drilling down answers "which records make up this number?" The detail sheet holds 354 rows, exactly the stays in the total, and the top one is a 4-day stay for Non-ST elevation (NSTEMI) myocardial infarction with charges of $123,078.09. The detail sheet is a static copy: it doesn't update when the data changes, so delete it when you're done. Cross-check without a pivot: `=INDEX(tblEncounters[EncounterID],MATCH(MAXIFS(tblEncounters[TotalCharges],tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],"Cardiovascular"),tblEncounters[TotalCharges],0))`
+Drilling down answers "which records make up this number?" The detail sheet holds 354 rows, exactly the stays in the total, and the top one is a 4-day stay for Non-ST elevation (NSTEMI) myocardial infarction with charges of \$123,078.09. The detail sheet is a static copy: it doesn't update when the data changes, so delete it when you're done. Cross-check without a pivot: `=INDEX(tblEncounters[EncounterID],MATCH(MAXIFS(tblEncounters[TotalCharges],tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],"Cardiovascular"),tblEncounters[TotalCharges],0))`
 
 **4. Build a pivot of average ED charges by payer type: EncounterType = Emergency in…**
 
@@ -835,7 +835,7 @@ Buttons selected in one slicer combine with OR (Government or Medicare Advantage
 5. Read the Ashby Falls Community Hospital row.
 
 
-A calculated field adds up each field first and then applies the formula: Sum of TotalCharges ÷ Sum of LOSDays for the 369 Ashby Falls Community Hospital stays. That's charges per patient day. It is not the average of each stay's charges ÷ days. That would be $7,685.71, and its one same-day stay would return #DIV/0!. Excel labels the field *Sum of ChargesPerDay* even though it's a ratio. Cross-check without a pivot: `=SUMIFS(tblEncounters[TotalCharges],tblEncounters[EncounterType],"Inpatient",tblEncounters[FacilityName],"Ashby Falls Community Hospital")/SUMIFS(tblEncounters[LOSDays],tblEncounters[EncounterType],"Inpatient",tblEncounters[FacilityName],"Ashby Falls Community Hospital")`
+A calculated field adds up each field first and then applies the formula: Sum of TotalCharges ÷ Sum of LOSDays for the 369 Ashby Falls Community Hospital stays. That's charges per patient day. It is not the average of each stay's charges ÷ days. That would be \$7,685.71, and its one same-day stay would return #DIV/0!. Excel labels the field *Sum of ChargesPerDay* even though it's a ratio. Cross-check without a pivot: `=SUMIFS(tblEncounters[TotalCharges],tblEncounters[EncounterType],"Inpatient",tblEncounters[FacilityName],"Ashby Falls Community Hospital")/SUMIFS(tblEncounters[LOSDays],tblEncounters[EncounterType],"Inpatient",tblEncounters[FacilityName],"Ashby Falls Community Hospital")`
 
 **13. On a new sheet, build a pivot with FacilityName in Rows, EncounterType in Columns, and…**
 

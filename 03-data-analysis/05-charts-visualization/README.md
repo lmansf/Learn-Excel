@@ -317,7 +317,7 @@ Intercept** forces the line through a chosen value where X is 0.
 
 **Read the equation.** In y = mx + b, the **slope** (m) is the change in Y for each extra unit of X, and the **intercept** (b)
 is the predicted Y when X is 0. If a chart of supply cost against patient days showed y = 85x + 1,200, each extra patient day
-would add about $85 of supplies.
+would add about \$85 of supplies.
 
 **Read R².** **R²** (R-squared) runs from 0 to 1 and tells you how much of the variation in Y the line explains. Near 1, the
 points hug the line. Near 0, the points form a cloud and the line tells you little. A steep slope can look impressive while
@@ -464,7 +464,7 @@ instead (Lesson 2.6). Useful TEXT format codes for titles:
 | `"mmmm yyyy"` | January 2025 |
 | `"#,##0"` | 12,345 |
 | `"0.0%"` | 18.4% |
-| `"$#,##0"` | $12,345 |
+| `"$#,##0"` | \$12,345 |
 
 > 📋 TEXT's date codes follow the language of your Excel installation. These codes work in English versions. In some other
 > languages the year and day letters differ (German Excel uses `JJJJ` for the year, for example).
@@ -717,7 +717,7 @@ A histogram answers "how are the values distributed?" by counting values in equa
 5. Confirm in the yellow cell: `=SLOPE(Stays!E2:E301,Stays!D2:D301)`.
 
 
-A linear trendline is the least-squares line through the points, the same line that SLOPE and INTERCEPT calculate. Its slope says that each extra day adds about $4,922 in charges on average. R² is 0.31, so length of stay explains about 31% of the variation in charges. The rest comes from what happened during the stay, such as surgery, ICU days, and imaging. SLOPE takes the Y range first, which is easy to get backwards. Cross-check with a formula: `=SLOPE(tblStays[TotalCharges],tblStays[LOSDays])`
+A linear trendline is the least-squares line through the points, the same line that SLOPE and INTERCEPT calculate. Its slope says that each extra day adds about \$4,922 in charges on average. R² is 0.31, so length of stay explains about 31% of the variation in charges. The rest comes from what happened during the stay, such as surgery, ICU days, and imaging. SLOPE takes the Y range first, which is easy to get backwards. Cross-check with a formula: `=SLOPE(tblStays[TotalCharges],tblStays[LOSDays])`
 
 **8. Scatter + trendline: R² for age vs. length of stay**
 
@@ -769,7 +769,7 @@ Authorization Required (395 claims) and Medical Necessity (243) make up 638 of 1
 4. Find the longest bar in the **Decrease** color (the legend shows which color that is). Hover over it to read its Step name.
 
 
-A waterfall shows how a starting total becomes an ending total through a series of increases and decreases. 4 West budgeted a margin of $751,385 and earned $735,410. Revenue came in $366,593 under budget, the biggest drop, and salaries & wages saved $284,237, the biggest rise, so expense control offset most of the revenue shortfall. Without **Set as Total**, Excel treats the last row as one more increase and floats it on top of the running total. Cross-check with a formula: `=XLOOKUP(MIN(tblBudget[Amount]),tblBudget[Amount],tblBudget[Step])`
+A waterfall shows how a starting total becomes an ending total through a series of increases and decreases. 4 West budgeted a margin of \$751,385 and earned \$735,410. Revenue came in \$366,593 under budget, the biggest drop, and salaries & wages saved \$284,237, the biggest rise, so expense control offset most of the revenue shortfall. Without **Set as Total**, Excel treats the last row as one more increase and floats it on top of the running total. Cross-check with a formula: `=XLOOKUP(MIN(tblBudget[Amount]),tblBudget[Amount],tblBudget[Step])`
 
 **12. Sparklines: hospitals that ended higher than they started**
 
@@ -862,14 +862,14 @@ R² = 0.121. The trendline slopes upward (about 0.43 percentage points of LWBS p
 5. Find the first bar where the line reaches 80%.
 
 
-Cumulative shares by dollars: Authorization Required 36.1%, Medical Necessity 59.4%, Coding Error 76.3%, Missing Documentation 86.1%, Eligibility / Coverage 95.1%, Timely Filing 97.9%, Duplicate Claim 100.0%. The line first passes 80% at reason 4, so 4 of the 7 reasons hold 86.1% of the $13,906,332 at risk. The mixed reference `$C$2:C2` keeps its start fixed while its end moves down one row at a time (Lesson 1.5). Building a Pareto by hand takes longer than the built-in chart, but it works in every Excel version and lets you add an 80% reference line or label the cut-off. Cross-check (counts the reasons whose running share is still below 80%, then adds one): `=SUMPRODUCT(--(SUMIF(tblDenials[DeniedCharges],">="&tblDenials[DeniedCharges])<0.8*SUM(tblDenials[DeniedCharges])))+1`
+Cumulative shares by dollars: Authorization Required 36.1%, Medical Necessity 59.4%, Coding Error 76.3%, Missing Documentation 86.1%, Eligibility / Coverage 95.1%, Timely Filing 97.9%, Duplicate Claim 100.0%. The line first passes 80% at reason 4, so 4 of the 7 reasons hold 86.1% of the \$13,906,332 at risk. The mixed reference `$C$2:C2` keeps its start fixed while its end moves down one row at a time (Lesson 1.5). Building a Pareto by hand takes longer than the built-in chart, but it works in every Excel version and lets you add an 80% reference line or label the cut-off. Cross-check (counts the reasons whose running share is still below 80%, then adds one): `=SUMPRODUCT(--(SUMIF(tblDenials[DeniedCharges],">="&tblDenials[DeniedCharges])<0.8*SUM(tblDenials[DeniedCharges])))+1`
 
 **B5. Which reason climbs when you rank by dollars**
 
 - **Answer:** Missing Documentation
 - **Solution:** Read the bar order in both charts. By claims, Missing Documentation is number 5, and by denied charges it's number 4, so it swaps places with Eligibility / Coverage.
 
-Missing Documentation denials are fewer (97 claims against 125 for Eligibility / Coverage) but larger: about $14,026 per claim against $10,083. That's why the director asked for dollars. A count Pareto ranks the work queue by volume, and a dollar Pareto ranks it by money at risk. Put the two charts side by side, at the same size, so the committee sees the swap at a glance. Cross-check (COUNTIF(range,">"&range) gives each reason's rank minus 1, so MATCH finds the reason whose dollar rank beats its claim rank. In Excel 2019 or earlier, confirm it with Ctrl + Shift + Enter): `=INDEX(tblDenials[DenialReason],MATCH(1,--(COUNTIF(tblDenials[DeniedCharges],">"&tblDenials[DeniedCharges])<COUNTIF(tblDenials[Claims],">"&tblDenials[Claims])),0))`
+Missing Documentation denials are fewer (97 claims against 125 for Eligibility / Coverage) but larger: about \$14,026 per claim against \$10,083. That's why the director asked for dollars. A count Pareto ranks the work queue by volume, and a dollar Pareto ranks it by money at risk. Put the two charts side by side, at the same size, so the committee sees the swap at a glance. Cross-check (COUNTIF(range,">"&range) gives each reason's rank minus 1, so MATCH finds the reason whose dollar rank beats its claim rank. In Excel 2019 or earlier, confirm it with Ctrl + Shift + Enter): `=INDEX(tblDenials[DenialReason],MATCH(1,--(COUNTIF(tblDenials[DeniedCharges],">"&tblDenials[DeniedCharges])<COUNTIF(tblDenials[Claims],">"&tblDenials[Claims])),0))`
 
 </details>
 <!-- END GENERATED: bonus-answers -->

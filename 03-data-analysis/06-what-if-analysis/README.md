@@ -49,7 +49,7 @@ output cell. So the tools only work as well as the model's structure. Open the *
 
 | Section | Where | What's in it |
 |---|---|---|
-| **INPUTS** | Rows 5–39 | Volume and capacity, payer mix and $ per visit, staffing and pay, other costs. Every number is typed once, in blue. |
+| **INPUTS** | Rows 5–39 | Volume and capacity, payer mix and \$ per visit, staffing and pay, other costs. Every number is typed once, in blue. |
 | **CALCULATIONS** | Rows 41–56 | One formula per row, flowing from visits per month down to total operating expenses |
 | **OUTPUTS** | Rows 58–63 | Operating income and operating margin (you complete these), cost per visit, capacity |
 | **SENSITIVITY AREA** | F5:K32 | Empty frames where you build two Data Tables |
@@ -82,10 +82,10 @@ month. B43 averages the five payers' rates, weighted by their share of visits:
 =SUMPRODUCT(B14:B18, C14:C18)    → 0.251×87 + 0.166×88 + 0.149×66 + 0.376×142 + 0.058×120 = $106.63 per visit
 ```
 
-Net patient revenue is then 4,200 × $106.63 = $447,850 per month. Below that, wages, benefits, supplies, the billing fee,
+Net patient revenue is then 4,200 × \$106.63 = \$447,850 per month. Below that, wages, benefits, supplies, the billing fee,
 and three fixed cost lines add up to total operating expenses. The **Sources** sheet shows where each data-derived input
-came from. For example, the Commercial rate of $142 is the average allowed amount on the clinic's 2025 commercial and
-workers' comp claims, and the RN rate of $42.73 is the median hourly rate of Bluestone's active RNs.
+came from. For example, the Commercial rate of \$142 is the average allowed amount on the clinic's 2025 commercial and
+workers' comp claims, and the RN rate of \$42.73 is the median hourly rate of Bluestone's active RNs.
 
 **How to find a hard-coded number.** A **hard-coded number** is a constant typed inside a formula, such as the 21 in
 `=VisitsPerDay*21`. It gives the right answer today, so nothing looks wrong. But change ClinicDays to 22 and that formula
@@ -113,7 +113,7 @@ ignores you, along with every Data Table, scenario, and Goal Seek that depends o
 
 **Goal Seek** finds the value of one input that makes a formula cell equal a target you choose. It's the tool for
 break-even questions, where you know the answer you want and need the input that produces it. The **break-even point** is
-the input value at which operating income is exactly $0, so the clinic neither makes nor loses money.
+the input value at which operating income is exactly \$0, so the clinic neither makes nor loses money.
 
 The Goal Seek dialog has three boxes:
 
@@ -133,7 +133,7 @@ To run it:
 4. The **Goal Seek Status** box reports whether it found a solution, and the input cell already shows that solution. Click
    **OK** to keep the new input value, or **Cancel** to put the original value back.
 
-**Worked example: what volume earns $10,000 a month?** Click B59 (once you've completed it in task 1), open Goal Seek, and
+**Worked example: what volume earns \$10,000 a month?** Click B59 (once you've completed it in task 1), open Goal Seek, and
 set B59 to `10000` by changing `B8`. Goal Seek reports a solution, and B8 shows about **209.2** visits per day. Note the
 number, then click **Cancel** so the Model returns to 200.
 
@@ -278,19 +278,19 @@ values run across the top row, and the other input's values run down the left co
 31   220                ·        ·        ·        ·        ·
 ```
 
-Select F22:K31, open **Data Table**, set **Row input cell** to C17 (the Commercial $ per visit) and **Column input cell** to
+Select F22:K31, open **Data Table**, set **Row input cell** to C17 (the Commercial \$ per visit) and **Column input cell** to
 B8 (visits per day), and click **OK**. Each result cell shows `{=TABLE(C17,B8)}`. The first argument is always the row
 input and the second is always the column input.
 
 | Your input values run… | Put this input in… | Example |
 |---|---|---|
-| Across the top row | **Row input cell** | Commercial $ per visit (C17) |
+| Across the top row | **Row input cell** | Commercial \$ per visit (C17) |
 | Down the left column | **Column input cell** | Visits per day (B8) |
 
 > ⚠️ **Swapped input cells don't raise an error.** If you swap them, Excel fills the table with numbers that look fine and
-> are wrong. Sanity-check one result against the Model. The base case is 200 visits at $142, so the cell at 200 visits and
-> $140 should be a little below the Model's own operating income in B59, because commercial visits pay $2 less. With the
-> inputs swapped, that cell would show 140 visits a day at $200, which is a much bigger loss.
+> are wrong. Sanity-check one result against the Model. The base case is 200 visits at \$142, so the cell at 200 visits and
+> \$140 should be a little below the Model's own operating income in B59, because commercial visits pay \$2 less. With the
+> inputs swapped, that cell would show 140 visits a day at \$200, which is a much bigger loss.
 
 > ⚠️ **The input cell must be on the same sheet as the Data Table.** Otherwise Excel says *Input cell reference is not
 > valid*. That's why the Sensitivity area lives on the Model sheet. The table can show results from anywhere, but the input
@@ -456,7 +456,7 @@ A **shadow price** puts a dollar value on a rule. Non-binding constraints have a
 that isn't holding you back saves nothing.
 
 **Worked example: what does the 60% RN rule cost?** The Staffing sheet's column D shows the loaded cost of each FTE per month,
-meaning wages plus 26.7% benefits for 168 hours: $9,095.34 for an RN, $5,902.50 for an LPN, and $4,201.78 for a CNA. When the
+meaning wages plus 26.7% benefits for 168 hours: \$9,095.34 for an RN, \$5,902.50 for an LPN, and \$4,201.78 for a CNA. When the
 RN rule is binding, raising its right-hand side from 0 to 1 forces Solver to swap one LPN FTE for one RN FTE while keeping
 the licensed hours the same. So the rule's shadow price is
 
@@ -464,7 +464,7 @@ the licensed hours the same. So the rule's shadow price is
 $9,095.34 − $5,902.50 = $3,192.84 per month for each FTE moved from LPN to RN
 ```
 
-That's the kind of number a nurse manager can take to leadership: a stricter RN policy costs about $3,200 a month for each
+That's the kind of number a nurse manager can take to leadership: a stricter RN policy costs about \$3,200 a month for each
 LPN FTE it replaces. Task 13 asks you to read and explain the shadow price of a different constraint.
 
 **The Limits Report** shows how far each variable can move on its own while the other variables stay fixed and the
@@ -504,7 +504,7 @@ order, because later tasks build on the outputs you complete and the fix you mak
 the yellow cell, and the **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green only while the Model holds its base-case inputs (200 visits per day, Commercial $142, and so on). The same is true of any answer you type as a link to a Model cell, such as =Model!H11. After each Goal Seek run, click Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't feed the Model, so you can keep Solver's solutions there.
+Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green only while the Model holds its base-case inputs (200 visits per day, Commercial \$142, and so on). The same is true of any answer you type as a link to a Model cell, such as =Model!H11. After each Goal Seek run, click Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't feed the Model, so you can keep Solver's solutions there.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -512,10 +512,10 @@ Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model liv
 | 2 | Complete the yellow Operating margin cell (B60): operating income as a share of net patient revenue. What is the base-case operating margin? The cell is already formatted as a percentage. | Margin = income ÷ revenue |
 | 3 | Audit the model. One formula in the CALCULATIONS section (rows 42–56) has a number typed into it instead of a reference to its input cell. Type that cell's address (for example B99). Then fix the formula so it points to the input. Task 10 depends on the fix. | Show Formulas, or Trace Dependents on each input |
 | 4 | On the Model sheet, use Goal Seek to find the break-even volume: set Operating income (B59) to 0 by changing Visits per day (B8). How many visits per day does the clinic need? Round to 1 decimal place, then click Cancel to restore 200. | Data → What-If Analysis → Goal Seek |
-| 5 | The CFO is renegotiating commercial contracts. On the Model sheet, use Goal Seek to set Operating margin (B60) to 5% (type 0.05) by changing the Commercial $ per visit (C17). What commercial reimbursement per visit is needed? Round to the nearest dollar, then click Cancel to restore $142. | The Set cell must contain a formula, so use the margin cell |
+| 5 | The CFO is renegotiating commercial contracts. On the Model sheet, use Goal Seek to set Operating margin (B60) to 5% (type 0.05) by changing the Commercial \$ per visit (C17). What commercial reimbursement per visit is needed? Round to the nearest dollar, then click Cancel to restore \$142. | The Set cell must contain a formula, so use the margin cell |
 | 6 | Build the one-variable Data Table in Model!F8:H17: put =B59 in G8 and =B60 in H8, select F8:H17, and use Column input cell B8. What operating margin does your table show at 190 visits per day? Enter it as a percentage to 1 decimal place. | The visits run down a column, so use the Column input cell |
 | 7 | Look down the Operating income column of your one-variable table. What is the lowest visits-per-day value in the table at which the clinic makes a profit (operating income above 0)? | Read the table, or let MINIFS find it |
-| 8 | Build the two-variable Data Table: put =B59 in the corner cell F22, select F22:K31, and use Row input cell C17 (commercial $ across row 22) and Column input cell B8 (visits per day down column F). What operating income does the table show at 210 visits per day and $160 per commercial visit? Round to the nearest dollar. | Row input = the input whose values run across the top row |
+| 8 | Build the two-variable Data Table: put =B59 in the corner cell F22, select F22:K31, and use Row input cell C17 (commercial \$ across row 22) and Column input cell B8 (visits per day down column F). What operating income does the table show at 210 visits per day and \$160 per commercial visit? Round to the nearest dollar. | Row input = the input whose values run across the top row |
 | 9 | How many of the 45 combinations in your two-variable table (G23:K31) are profitable (operating income above 0)? Use a formula. | COUNTIF with ">0" |
 | 10 | Open Scenario Manager on the Model and add three scenarios that change B8, B16, B17 and B36. Base plan: visits per day 200, Medicaid share 14.9%, Commercial share 37.6%, billing fee 4.0%. Downside: visits per day 190, Medicaid share 17.9%, Commercial share 34.6%, billing fee 5.0%. Upside: visits per day 206, Medicaid share 12.9%, Commercial share 39.6%, billing fee 3.5%. Create a Scenario Summary with result cells B59 and B60. What is operating income in the Downside scenario? Round to the nearest dollar. | Data → What-If Analysis → Scenario Manager |
 | 11 | From the same Scenario Summary, what operating margin does the Upside scenario produce? Enter it as a percentage to 1 decimal place. | Same summary, different column |
@@ -538,7 +538,7 @@ and Solver tasks, the key's *Live result* column checks the answer with algebra 
 - **Answer:** -8,618.72
 - **Solution:** `=B44-B56`
 
-Operating income is revenue minus expenses, and both already exist as calculation rows (B44 and B56). Because those cells are named, `=NetRevenue-TotalExpenses` works too and reads better. The clinic loses about $8,619 a month in the base case. That's common for hospital-owned primary care, which is why the rest of the lesson asks what it would take to break even.
+Operating income is revenue minus expenses, and both already exist as calculation rows (B44 and B56). Because those cells are named, `=NetRevenue-TotalExpenses` works too and reads better. The clinic loses about \$8,619 a month in the base case. That's common for hospital-owned primary care, which is why the rest of the lesson asks what it would take to break even.
 
 **2. Operating margin (Model!B60)**
 
@@ -569,11 +569,11 @@ Today both versions return the same number, so nothing looks wrong. The trouble 
 3. Click **OK**. B8 shows 204.2 (the cell holds 204.2440…). Note it, then click **Cancel**.
 
 
-Each extra visit per day adds one visit on each of the 21 clinic days. Each of those visits brings in $96.71 after the billing fee, supplies, and vaccines (its **contribution margin**). Fixed costs are $414,783 a month, so break-even = $414,783 ÷ ($96.71 × 21) ≈ 204.2. That is 98% of the clinic's 208-visit daily capacity, so volume alone is a fragile fix. The live result in the key does this algebra, and Goal Seek reaches the same answer by trial and error.
+Each extra visit per day adds one visit on each of the 21 clinic days. Each of those visits brings in \$96.71 after the billing fee, supplies, and vaccines (its **contribution margin**). Fixed costs are \$414,783 a month, so break-even = \$414,783 ÷ (\$96.71 × 21) ≈ 204.2. That is 98% of the clinic's 208-visit daily capacity, so volume alone is a fragile fix. The live result in the key does this algebra, and Goal Seek reaches the same answer by trial and error.
 
 **5. Goal Seek: commercial rate for a 5% margin**
 
-- **Answer:** about $164 (Goal Seek shows 163.58)
+- **Answer:** about \$164 (Goal Seek shows 163.58)
 - **Solution:**
 
 1. On the Model sheet, choose **Data → What-If Analysis → Goal Seek**.
@@ -581,7 +581,7 @@ Each extra visit per day adds one visit on each of the 21 clinic days. Each of t
 3. Click **OK**, read C17, and click **Cancel**.
 
 
-Commercial plans would have to pay about $164 instead of $142, an increase of 15%. Only 37.6% of visits are commercial, so each extra commercial dollar moves the average reimbursement by just 37.6 cents. Margin is a ratio, so Goal Seek has to iterate here, and it stops when the margin is within its tolerance of 5%. That's why the check accepts a small range around the exact value.
+Commercial plans would have to pay about \$164 instead of \$142, an increase of 15%. Only 37.6% of visits are commercial, so each extra commercial dollar moves the average reimbursement by just 37.6 cents. Margin is a ratio, so Goal Seek has to iterate here, and it stops when the margin is within its tolerance of 5%. That's why the check accepts a small range around the exact value.
 
 **6. One-variable Data Table: margin at 190 visits/day**
 
@@ -597,19 +597,19 @@ The visits per day values run **down a column** (F9:F17), so B8 is the **column*
 
 The table jumps in steps of 5, so it brackets the break-even point instead of finding it: 200 visits loses money and 205 makes money, which agrees with Goal Seek's 204.2. Use a Data Table to see the whole curve, and Goal Seek to pin down the exact crossing. MINIFS needs Excel 2019 or later. In older versions, read the value off the table and type it.
 
-**8. Two-variable Data Table: 210 visits/day × $160**
+**8. Two-variable Data Table: 210 visits/day × \$160**
 
 - **Answer:** 40,342
 - **Solution:** `=Model!J29`
 
-A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand. The base case is 200 visits at $142 (−$8,619), so the cell at 200 visits and $140 should be about $3,032 lower, because the clinic's 1,579 commercial visits a month each pay $2 less, minus the 4% fee on those dollars. With swapped input cells that cell would show 140 visits a day at $200, a far bigger loss.
+A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand. The base case is 200 visits at \$142 (−\$8,619), so the cell at 200 visits and \$140 should be about \$3,032 lower, because the clinic's 1,579 commercial visits a month each pay \$2 less, minus the 4% fee on those dollars. With swapped input cells that cell would show 140 visits a day at \$200, a far bigger loss.
 
 **9. Two-variable Data Table: profitable combinations**
 
 - **Answer:** 24
 - **Solution:** `=COUNTIF(Model!G23:K31,">0")`
 
-Ordinary formulas can read a Data Table's results, so you can count them, chart them, or add conditional formatting. The profitable combinations sit in the bottom-right of the table, where volume and rate are both high. Reading down each column shows the trade-off the CFO cares about: at $130 per commercial visit the clinic first makes money at 215 visits a day, but at $170 it does at 185. A better contract lowers the volume the clinic needs to break even.
+Ordinary formulas can read a Data Table's results, so you can count them, chart them, or add conditional formatting. The profitable combinations sit in the bottom-right of the table, where volume and rate are both high. Reading down each column shows the trade-off the CFO cares about: at \$130 per commercial visit the clinic first makes money at 215 visits a day, but at \$170 it does at 185. A better contract lowers the volume the clinic needs to break even.
 
 **10. Scenario Manager: Downside operating income**
 
@@ -622,14 +622,14 @@ Ordinary formulas can read a Data Table's results, so you can count them, chart 
 4. Click **Summary…**, choose **Scenario summary**, set **Result cells** to `B59,B60`, and click **OK**. Read the Downside column on the new Scenario Summary sheet.
 
 
-Fewer visits, a shift from commercial to Medicaid, and a higher vendor fee all hit income at once. If you skipped the fix in task 3, the model ignores the 5% fee and you'd see −$37,660 instead. That's exactly the kind of silent error a hard-coded number causes. The summary sheet is a snapshot. It doesn't update when the model changes, so create it again after any edit.
+Fewer visits, a shift from commercial to Medicaid, and a higher vendor fee all hit income at once. If you skipped the fix in task 3, the model ignores the 5% fee and you'd see −\$37,660 instead. That's exactly the kind of silent error a hard-coded number causes. The summary sheet is a snapshot. It doesn't update when the model changes, so create it again after any edit.
 
 **11. Scenario Manager: Upside margin**
 
 - **Answer:** 2.6%
 - **Solution:** Read the Upside column of the OperatingMargin row on the Scenario Summary sheet.
 
-The Upside case brings the clinic to roughly 2.6%. It takes three things at once: 6 more visits a day, 2 points of payer mix shifted from Medicaid to Commercial, and a cheaper vendor contract (3.5%). Because B59 and B60 are named, the summary labels those rows OperatingIncome and OperatingMargin instead of $B$59 and $B$60.
+The Upside case brings the clinic to roughly 2.6%. It takes three things at once: 6 more visits a day, 2 points of payer mix shifted from Medicaid to Commercial, and a cheaper vendor contract (3.5%). Because B59 and B60 are named, the summary labels those rows OperatingIncome and OperatingMargin instead of \$B\$59 and \$B\$60.
 
 **12. Solver: lowest-cost staffing mix (FTEs)**
 
@@ -643,7 +643,7 @@ The Upside case brings the clinic to roughly 2.6%. It takes three things at once
 5. Choose **Keep Solver Solution**, click **OK**, and type the value of B31, rounded to the dollar, in the answer cell.
 
 
-Solver chooses 4.2 RN, 2.8 LPN and 8.0 CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs $96,798, so the plan saves about $8,457 a month. The key's live result rebuilds this optimum with algebra from the Staffing sheet's own cells.
+Solver chooses 4.2 RN, 2.8 LPN and 8.0 CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs \$96,798, so the plan saves about \$8,457 a month. The key's live result rebuilds this optimum with algebra from the Staffing sheet's own cells.
 
 **13. Solver Sensitivity Report: shadow price**
 
@@ -655,7 +655,7 @@ Solver chooses 4.2 RN, 2.8 LPN and 8.0 CNA FTEs. This answer makes sense: CNAs a
 3. On the new *Sensitivity Report 1* sheet, find the row for `$B$25` under *Constraints* and read **Shadow Price**.
 
 
-Requiring one more support hour raises the minimum cost by $25.01. That's one CNA hour at $19.74 plus 26.7% benefits, because the cheapest way to cover an hour that doesn't need a licensed nurse is a CNA hour. The live result in the key repeats that arithmetic. The licensed-hours constraint (B26) has a shadow price of only $21.53, even though licensed nurses cost more. An extra licensed hour costs 0.6 RN hours plus 0.4 LPN hours, but licensed hours also count toward the total, so it replaces a CNA hour that's no longer needed.
+Requiring one more support hour raises the minimum cost by \$25.01. That's one CNA hour at \$19.74 plus 26.7% benefits, because the cheapest way to cover an hour that doesn't need a licensed nurse is a CNA hour. The live result in the key repeats that arithmetic. The licensed-hours constraint (B26) has a shadow price of only \$21.53, even though licensed nurses cost more. An extra licensed hour costs 0.6 RN hours plus 0.4 LPN hours, but licensed hours also count toward the total, so it replaces a CNA hour that's no longer needed.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -689,7 +689,7 @@ Work on the **Bonus** sheet of the workbook.
 5. **Solve**, keep the solution, and read B31.
 
 
-With fractions allowed, the cheapest plan costs $107,302 (6.3 RN, 4.2 LPN, 6.0 CNA). Requiring whole people raises that to $112,488, so hiring whole people costs $5,186 a month more. Solver handles integer constraints by **branch and bound**, solving many LPs with tighter and tighter bounds. Its default Integer Optimality of 1% lets it stop at any plan within 1% of the best possible, so set it to 0 when the exact answer matters.
+With fractions allowed, the cheapest plan costs \$107,302 (6.3 RN, 4.2 LPN, 6.0 CNA). Requiring whole people raises that to \$112,488, so hiring whole people costs \$5,186 a month more. Solver handles integer constraints by **branch and bound**, solving many LPs with tighter and tighter bounds. Its default Integer Optimality of 1% lets it stop at any plan within 1% of the best possible, so set it to 0 when the exact answer matters.
 
 **B2. Integer plan: RNs**
 
@@ -703,7 +703,7 @@ With fractions allowed, the cheapest plan costs $107,302 (6.3 RN, 4.2 LPN, 6.0 C
 - **Answer:** 4
 - **Solution:** Read Staffing!B19 after Solver finishes.
 
-The fractional plan needs 10.5 licensed FTEs, and 11 whole people already cover that. A tempting shortcut is to round each fractional value up, which gives 7 RN, 5 LPN and 6 CNA. That plan hires one licensed person too many and costs $5,902 a month more. It also breaks the RN rule, because 7 of 12 licensed staff is only 58.3%. Rounding each variable separately can't see how the constraints interact, but Solver's integer search can.
+The fractional plan needs 10.5 licensed FTEs, and 11 whole people already cover that. A tempting shortcut is to round each fractional value up, which gives 7 RN, 5 LPN and 6 CNA. That plan hires one licensed person too many and costs \$5,902 a month more. It also breaks the RN rule, because 7 of 12 licensed staff is only 58.3%. Rounding each variable separately can't see how the constraints interact, but Solver's integer search can.
 
 **B4. Growth 2026 scenario: operating income**
 
@@ -717,7 +717,7 @@ The fractional plan needs 10.5 licensed FTEs, and 11 whole people already cover 
 5. **Summary…** with result cells `B59,B60`, or select Growth 2026, click **Show**, read B59, then **Show** Today to restore the base case.
 
 
-The growth plan turns a −$8,619 monthly loss into $2,624 (0.5% margin). The new APP costs $10,800 plus benefits, and the larger staff costs $15,690 more a month than today's. The extra 420 visits a month each contribute $96.71, which covers both. Growth 2026 changes only its five cells, so it inherits the payer mix and billing fee already on the Model. If Upside was the last scenario you showed, Growth 2026 would quietly use Upside's mix and fee, which is why you show Base plan first. Using scenarios instead of overwriting inputs also means one click (Show Today) puts the base case back for every other task.
+The growth plan turns a −\$8,619 monthly loss into \$2,624 (0.5% margin). The new APP costs \$10,800 plus benefits, and the larger staff costs \$15,690 more a month than today's. The extra 420 visits a month each contribute \$96.71, which covers both. Growth 2026 changes only its five cells, so it inherits the payer mix and billing fee already on the Model. If Upside was the last scenario you showed, Growth 2026 would quietly use Upside's mix and fee, which is why you show Base plan first. Using scenarios instead of overwriting inputs also means one click (Show Today) puts the base case back for every other task.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

@@ -26,7 +26,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import curriculum as CUR  # noqa: E402
-from xlcourse.lesson import CORRECT, ROOT, Lesson, Task  # noqa: E402
+from xlcourse.lesson import CORRECT, ROOT, Lesson, Task, md_escape_dollars  # noqa: E402
 from xlcourse.data import excel_serial  # noqa: E402
 
 MARK = "<!-- BEGIN GENERATED: {0} -->"
@@ -131,6 +131,8 @@ def expected_number(t: Task):
 
 def matches(t: Task, info: dict) -> bool:
     kind = t.kind()
+    if kind == "custom" and isinstance(t.answer, str):
+        kind = "text"
     if kind == "text":
         if info["kind"] != "text":
             return False
@@ -170,7 +172,7 @@ def verify(lesson: Lesson, path: Path) -> list[str]:
         cells.append((psheet, t.answer_cell))
         if t.live_cell:
             cells.append((ksheet, t.live_cell))
-    scan = [(lesson.practice_sheet, "A1:E200"), (lesson.key_sheet, "A1:F200")]
+    scan = [(lesson.practice_sheet, "A1:E200"), (lesson.key_sheet, "A1:F200")] + list(lesson.verify_scan)
     if lesson.bonus:
         scan += [(lesson.bonus_sheet, "A1:E200"), (lesson.bonus_key_sheet, "A1:F200")]
     with lo.office() as desk:
@@ -203,7 +205,12 @@ def verify(lesson: Lesson, path: Path) -> list[str]:
             else:
                 problems.append(f"[{t.number}] check cell is not blank in the pristine workbook: {fmt(chk)!r}")
         st = "—"
-        if t.self_test and kind != "manual" and (t.is_formula or t.fill or t.answer is not None) and not (t.summary and not t.fill):
+        summary_opt_in = t.self_test == "summary"
+        if t.summary and not t.fill and not summary_opt_in and kind != "manual":
+            warnings.append(f"[{t.number}] summary task has no fill, so the self-test can't check it (add fill=, or self_test='summary' "
+                            "if a customize hook simulates the work)")
+        if t.self_test and kind != "manual" and (t.is_formula or t.fill or t.answer is not None or summary_opt_in) \
+                and not (t.summary and not t.fill and not summary_opt_in):
             sinfo = selft["cells"][(psheet, t.check_cell)]
             if sinfo["text"] == CORRECT:
                 st = "OK"
@@ -225,6 +232,33 @@ def verify(lesson: Lesson, path: Path) -> list[str]:
     for p in problems:
         print("  PROBLEM:", p)
     return problems
+
+
+def lint_readme(path: Path, text: str) -> list[str]:
+    """Cheap checks for things that render badly or break on GitHub."""
+    out = []
+    if re.search(r"^\s*(?:[-*]\s*)?TODO:", text, re.M):
+        out.append("README still contains a TODO: placeholder")
+    in_fence = False
+    for n, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        bare = re.sub(r"`[^`]*`", "", line).replace("\\$", "")
+        # GitHub renders $...$ as math when the opening $ is followed by non-space and the closing $ preceded by non-space
+        if re.search(r"(?<!\\)\$(?=\S)[^$\n]*?(?<=[^\s\\])\$", bare):
+            out.append(f"line {n}: two '$' outside code may render as math on GitHub — wrap references in backticks or escape as \\$")
+    no_code = re.sub(r"```.*?```", "", text, flags=re.S)
+    no_code = re.sub(r"`[^`\n]*`", "", no_code)
+    for m in re.finditer(r"\]\(([^)\s]+)\)", no_code):
+        target = m.group(1).split("#")[0]
+        if not target or re.match(r"^[a-z]+:", target):
+            continue
+        if not (path.parent / target.replace("%20", " ")).exists():
+            out.append(f"broken relative link: {m.group(1)}")
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -263,8 +297,8 @@ def build_lesson(code: str, do_verify: bool = True) -> list[str]:
     size = path.stat().st_size / 1024
     print(f"Lesson {code}: wrote {path.relative_to(ROOT)} ({size:,.0f} KB), {len(lesson.tasks)} tasks + {len(lesson.bonus)} bonus")
     problems = []
-    if "TODO" in text:
-        print("  warning: README still contains TODO")
+    for w in lint_readme(readme, text):
+        print("  warning:", w)
     if do_verify:
         problems = verify(lesson, path)
         print(f"  verification: {'PASS' if not problems else f'{len(problems)} problem(s)'}  ({time.time() - t0:.1f}s)")
@@ -289,12 +323,12 @@ def refresh_course_readmes():
             mlines.append(f"| {l.code} | [{l.title}]({l.slug}/README.md) | {l.minutes} min | {objs} |")
         mlines += ["", "🏠 [Course home](../README.md)", ""]
         (ROOT / mod).mkdir(exist_ok=True)
-        (ROOT / mod / "README.md").write_text("\n".join(mlines), encoding="utf-8")
+        (ROOT / mod / "README.md").write_text(md_escape_dollars("\n".join(mlines)), encoding="utf-8")
     total = sum(l.minutes for l in CUR.LESSONS)
     lines.append(f"**{len(CUR.LESSONS)} lessons · about {total // 60} hours of guided practice.**")
     readme = ROOT / "README.md"
     text = readme.read_text(encoding="utf-8")
-    text = inject(text, {"syllabus": "\n".join(lines)}, strict=True)
+    text = inject(text, {"syllabus": md_escape_dollars("\n".join(lines))}, strict=True)
     readme.write_text(text, encoding="utf-8")
     print("refreshed README.md and module READMEs")
 

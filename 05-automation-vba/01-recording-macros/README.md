@@ -495,7 +495,7 @@ Tasks 1–6, 9 and 13 are quick checks: type your answer in the yellow cell. Tas
 | 9 | In the Record Macro dialog you typed an uppercase R in the Shortcut key box. Which key combination runs the macro on Windows? Type it like Ctrl+Alt+X. | An uppercase letter adds a key |
 | 10 | Add two more ways to run FormatCensusReport: (a) a button on the Census_Dec sheet labeled Build report, and (b) a button on the Quick Access Toolbar. Don't click them yet. | Right-click a shape → Assign Macro |
 | 11 | Go to Census_Dec and run your macro (Ctrl + Shift + R or your button). December has 31 days. The gray cell finds your TOTAL row and counts the daily rows above it. It should show all 31 days. | If it shows 30, your TOTAL row overwrote a day |
-| 12 | On Census_Dec, the gray cell reads the MidnightCensus total in your TOTAL row. It should equal December's patient days (all 31 days). | Did you anchor the first row with a $ when you typed the SUM? |
+| 12 | On Census_Dec, the gray cell reads the MidnightCensus total in your TOTAL row. It should equal December's patient days (all 31 days). | Did you anchor the first row with a \$ when you typed the SUM? |
 | 13 | Read this recorded line: ActiveCell.FormulaR1C1 = "=SUM(R[-31]C[-1]:R[-1]C[-1])". If it runs while H33 is the active cell, which range does the SUM add up? Type it like A1:A9. | Square brackets count from the formula's own cell: R for rows, C for columns |
 <!-- END GENERATED: practice -->
 
@@ -659,7 +659,7 @@ If you recorded the TOTAL steps with relative references off, the code says Rang
 - **Answer:** 863
 - **Solution:** The recorded formula `=SUM(R2C:R[-1]C)` becomes `=SUM(G$2:G32)` in row 33.
 
-The recorder stores formulas in R1C1 notation. With =SUM(D$2:D31) the $ makes the top row absolute (R2C) and the bottom row relative (R[-1]C, the row above), so the range grows with the month. With AutoSum or =SUM(D2:D31) the recorder stores =SUM(R[-30]C:R[-1]C), which always adds exactly 30 rows. On December that skips 12/01 and the total comes out low.
+The recorder stores formulas in R1C1 notation. With =SUM(D\$2:D31) the \$ makes the top row absolute (R2C) and the bottom row relative (R[-1]C, the row above), so the range grows with the month. With AutoSum or =SUM(D2:D31) the recorder stores =SUM(R[-30]C:R[-1]C), which always adds exactly 30 rows. On December that skips 12/01 and the total comes out low.
 
 **13. Read this recorded line: ActiveCell.FormulaR1C1 = "=SUM(R[-31]C[-1]:R[-1]C[-1])". If…**
 

@@ -61,18 +61,48 @@ MONEY_FMT = "#,##0.00"
 MONEY_HINTS = ("Amount", "Charges", "Cost", "Revenue", "Rate", "Paid", "Billed", "Allowed", "Responsibility")
 
 
+_PLAIN_SHEET = re.compile(r"[A-Za-z_][A-Za-z0-9_.]*")
+_CELLISH = re.compile(r"(?:[A-Za-z]{1,3}\d+|[Rr]\d*[Cc]\d*|[Rr]|[Cc]|TRUE|FALSE)", re.I)
+
+
+def qsheet(name: str) -> str:
+    """Quote a sheet name only when Excel needs quotes (spaces, punctuation, names that look like cells)."""
+    if _PLAIN_SHEET.fullmatch(name) and not _CELLISH.fullmatch(name):
+        return name
+    return quote_sheetname(name)
+
+
 def _sheet_ref(sheet: str, cell: str) -> str:
-    return f"{quote_sheetname(sheet)}!{cell}"
+    return f"{qsheet(sheet)}!{cell}"
 
 
-def _estimate_lines(text: str, width_chars: float) -> int:
+def _estimate_lines(text: str, width_chars: float, skip_blank: bool = False) -> int:
     if not text:
         return 1
     lines = 0
     for para in str(text).split("\n"):
+        if skip_blank and not para.strip():
+            lines += 0.5
+            continue
         lines += max(1, math.ceil(len(para) / max(width_chars, 1)))
-    return lines
+    return max(1, math.ceil(lines))
 
+
+estimate_lines = _estimate_lines
+
+
+def _set_text(cell, text: str):
+    """Write text that must stay text even if it starts with '=' (e.g. a hint showing a formula)."""
+    cell.value = text
+    if isinstance(text, str) and text.startswith(("=", "+", "-", "@")):
+        cell.data_type = "s"
+        if cell._style is None:
+            from openpyxl.styles.cell_style import StyleArray
+            cell._style = StyleArray()
+        cell._style.quotePrefix = 1
+
+
+_THREE_D = re.compile(r"(?:'[^'!]+:[^'!]+'|[A-Za-z0-9_.]+:[A-Za-z0-9_.]+)!")
 
 # ---------------------------------------------------------------------------
 # Tasks
@@ -127,6 +157,7 @@ class Task:
     answer_display: str | None = None
     solution_lang: str | None = None
     table: str | None = None  # table name for [@Col] references in fill formulas
+    key_solution: str | None = None  # text for the key's "Sample solution" cell (default: solution, Markdown stripped)
 
     # filled in during build
     number: str = field(default="", init=False)
@@ -203,16 +234,16 @@ class SheetData:
     def rng(self, header: str, absolute: bool = True, sheet: bool = True) -> str:
         c = self.col(header)
         r = f"${c}${self.first_row}:${c}${self.last_row}" if absolute else f"{c}{self.first_row}:{c}{self.last_row}"
-        return f"{quote_sheetname(self.name)}!{r}" if sheet else r
+        return f"{qsheet(self.name)}!{r}" if sheet else r
 
     def cell(self, header: str, i: int, sheet: bool = True) -> str:
         """Cell for the i-th data row (0-based)."""
         a = f"{self.col(header)}{self.first_row + i}"
-        return f"{quote_sheetname(self.name)}!{a}" if sheet else a
+        return f"{qsheet(self.name)}!{a}" if sheet else a
 
     def all_range(self, sheet: bool = True) -> str:
         r = f"$A${self.first_row}:${get_column_letter(len(self.headers))}${self.last_row}"
-        return f"{quote_sheetname(self.name)}!{r}" if sheet else r
+        return f"{qsheet(self.name)}!{r}" if sheet else r
 
     @property
     def n(self) -> int:
@@ -252,12 +283,21 @@ class Lesson:
         self.sheet_order: list[str] | None = None
         self.data_sheets: dict[str, SheetData] = {}
         self._dynamic: set[tuple[str, str]] = set()
+        # Optional overrides for the generic workbook text
+        self.practice_instructions: str | None = None   # the italic how-to line on the Practice sheet
+        self.bonus_instructions: str | None = None      # the italic how-to line on the Bonus sheet
+        self.practice_how: str | None = None            # Start Here step "2. Practice"
+        self.key_note: str | None = None                # subtitle on the Answer Key / Bonus Key sheets
+        self.bonus_where: str | None = None             # README bonus line (None = default, "" = omit)
+        self.sheet_notes: list[tuple[str, str]] = []    # extra (sheet, description) rows for Start Here
+        self.verify_scan: list[tuple[str, str]] = []    # extra (sheet, range) the verifier scans for error values
 
     # ------------------------------------------------------------------ data
     def add_table_sheet(self, name: str, rows: list[dict], columns: list | None = None, table: str | None = None,
                         formats: dict | None = None, widths: dict | None = None, extra_cols: list[str] | None = None,
                         style: str = "TableStyleMedium2", tab_color: str | None = None, start_row: int = 1,
-                        notes: list[str] | None = None, as_table: bool = True) -> SheetData:
+                        notes: list[str] | None = None, as_table: bool = True, freeze: bool = True,
+                        hidden: bool = False, hidden_cols: list[str] | None = None) -> SheetData:
         """Add a worksheet holding ``rows`` (list of dicts) as an Excel Table.
 
         columns     list of column names, or (source_key, header) tuples, to include (default: all keys).
@@ -266,6 +306,9 @@ class Lesson:
         extra_cols  Empty columns appended for the learner to fill (highlighted yellow header).
         start_row   Header row (use >1 to leave room for notes above the table).
         notes       Lines of text written above the table (requires start_row > len(notes)).
+        freeze      Freeze panes below the header row (default True).
+        hidden      Hide the whole sheet (learners unhide it).
+        hidden_cols Headers of columns to hide.
         Returns a SheetData helper with ranges/column letters for building formulas.
         """
         if columns is None:
@@ -276,7 +319,8 @@ class Lesson:
         sd = SheetData(name, headers, start_row + 1, start_row + max(len(rows), 1), tname)
         self._data_specs.append(dict(name=name, rows=rows, cols=cols, extra=list(extra_cols or []), table=tname,
                                      formats=formats or {}, widths=widths or {}, style=style, tab_color=tab_color,
-                                     start_row=start_row, notes=notes or [], sd=sd))
+                                     start_row=start_row, notes=notes or [], sd=sd, freeze=freeze, hidden=hidden,
+                                     hidden_cols=list(hidden_cols or [])))
         self.data_sheets[name] = sd
         return sd
 
@@ -289,6 +333,8 @@ class Lesson:
         """Write a formula the way Microsoft 365 would: as a dynamic-array formula (no implicit
         intersection), with _xlfn prefixes added. Use this for any formula you place in a custom hook."""
         f = to_file_formula(formula, table)
+        if dynamic and _THREE_D.search(f):
+            dynamic = False  # Excel rejects 3-D references (Jan:Mar!B2) inside array formulas
         if dynamic:
             ws[coord] = ArrayFormula(coord, f)
             self._dynamic.add((ws.title, coord))
@@ -396,22 +442,30 @@ class Lesson:
             tbl = Table(displayName=spec["table"], ref=ref)
             tbl.tableStyleInfo = TableStyleInfo(name=spec["style"], showRowStripes=True)
             ws.add_table(tbl)
-        ws.freeze_panes = ws.cell(row=sr + 1, column=1)
+        if spec.get("freeze", True):
+            ws.freeze_panes = ws.cell(row=sr + 1, column=1)
+        for h in spec.get("hidden_cols", []):
+            ws.column_dimensions[get_column_letter(headers.index(h) + 1)].hidden = True
+        if spec.get("hidden"):
+            ws.sheet_state = "hidden"
 
     def _write_tasks(self, ws, tasks: list[Task], key_sheet: str, title: str, intro: str, bonus: bool = False):
         ws.sheet_properties.tabColor = "BF9000" if bonus else "548235"
         ws["A1"] = title
         ws["A1"].font = Font(bold=True, size=16, color=NAVY)
         row = 2
+        intro = _plain(intro) if intro else intro
         intro_lines = [intro] if intro else []
-        intro_lines.append("Type a formula or value in each yellow cell. The Check column turns green when your answer matches. "
+        override = self.bonus_instructions if bonus else self.practice_instructions
+        intro_lines.append(override if override is not None else
+                           "Type a formula or value in each yellow cell. The Check column turns green when your answer matches. "
                            f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{key_sheet}'.")
         for line in intro_lines:
             ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=5)
             c = ws.cell(row=row, column=1, value=line)
             c.alignment = WRAP_TOP
             c.font = Font(italic=line != intro, color="404040", size=11)
-            ws.row_dimensions[row].height = 15 * _estimate_lines(line, 150) + 4
+            ws.row_dimensions[row].height = 15 * _estimate_lines(line, 165, skip_blank=True) + 4
             row += 1
         score_row = row
         row += 1
@@ -431,9 +485,11 @@ class Lesson:
             t._sheet = ws.title
             t.key_cell = _sheet_ref(key_sheet, f"$C${kr}")
             ws.cell(row=r, column=1, value=t.number).alignment = Alignment(horizontal="center", vertical="top")
-            p = ws.cell(row=r, column=2, value=t.prompt)
+            p = ws.cell(row=r, column=2)
+            _set_text(p, _plain(t.prompt))
             p.alignment = WRAP_TOP
-            h = ws.cell(row=r, column=3, value=t.hint or "")
+            h = ws.cell(row=r, column=3)
+            _set_text(h, _plain(t.hint or ""))
             h.alignment = WRAP_TOP
             h.font = Font(italic=True, color="7F7F7F")
             a = ws.cell(row=r, column=4)
@@ -442,6 +498,8 @@ class Lesson:
                 a = ws.cell(row=r, column=4)
                 a.fill = PREFILL_FILL
                 a.font = Font(italic=True, color="404040")
+            elif t.kind() == "manual":
+                a.border = BOX  # nothing to auto-check: no yellow input styling
             else:
                 a.fill = INPUT_FILL
                 a.border = INPUT_BORDER
@@ -452,7 +510,7 @@ class Lesson:
             ck.font = Font(bold=True)
             ck.alignment = Alignment(vertical="top")
             for col in range(1, 6):
-                ws.cell(row=r, column=col).border = INPUT_BORDER if (col == 4 and not t.summary) else BOX
+                ws.cell(row=r, column=col).border = INPUT_BORDER if (col == 4 and not t.summary and t.kind() != "manual") else BOX
             ws.row_dimensions[r].height = max(30, 15 * max(_estimate_lines(t.prompt, 78), _estimate_lines(t.hint, 40)) + 6)
         last = first + len(tasks) - 1
         auto = [t for t in tasks if t.kind() != "manual"]
@@ -498,8 +556,15 @@ class Lesson:
         ws.sheet_properties.tabColor = "C00000"
         ws["A1"] = "🔑 " + title
         ws["A1"].font = Font(bold=True, size=16, color="7B2C2C")
-        ws["A2"] = ("Spoiler alert — try every task before reading this sheet. Column C is the value the Check column compares "
-                    "against. Column D is a sample solution; column E is that same formula, live, proving it works.")
+        if self.key_note is not None:
+            note = self.key_note
+        elif any((t.live if isinstance(t.live, str) else (t.live and t.is_formula)) for t in tasks):
+            note = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column compares "
+                    "against. Column D is a sample solution, and column E recalculates a formula for it live, proving the answer.")
+        else:
+            note = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column compares "
+                    "against, and column D shows a sample solution (steps or code).")
+        ws["A2"] = note
         ws["A2"].font = Font(italic=True, color="595959")
         ws.merge_cells("A2:F2")
         ws["A2"].alignment = WRAP_TOP
@@ -512,7 +577,9 @@ class Lesson:
         for i, t in enumerate(tasks):
             r = 5 + i
             ws.cell(row=r, column=1, value=t.number).alignment = Alignment(horizontal="center", vertical="top")
-            ws.cell(row=r, column=2, value=t.prompt).alignment = WRAP_TOP
+            pc = ws.cell(row=r, column=2)
+            _set_text(pc, _plain(t.prompt))
+            pc.alignment = WRAP_TOP
             kv = t.key_value()
             c = ws.cell(row=r, column=3)
             if t.answer_display is not None and t.answer is None:
@@ -528,7 +595,9 @@ class Lesson:
             c.alignment = Alignment(vertical="top", wrap_text=True)
             c.font = Font(bold=True)
             s = ws.cell(row=r, column=4)
-            s.value = t.solution
+            sol_text = t.key_solution if t.key_solution is not None else (
+                t.solution if (t.is_formula or t.lang in ("vba", "m", "dax")) else _plain(t.solution))
+            s.value = sol_text
             s.data_type = "s"
             s.alignment = WRAP_TOP
             s.font = Font(name="Consolas", size=10)
@@ -544,7 +613,7 @@ class Lesson:
                     lc.number_format = DATETIME_FMT
                 elif isinstance(kv, date):
                     lc.number_format = DATE_FMT
-                lc.alignment = Alignment(vertical="top")
+                lc.alignment = Alignment(vertical="top", wrap_text=True)
                 t.live_cell = f"E{r}"
             else:
                 ws.cell(row=r, column=5, value="—").alignment = Alignment(horizontal="center", vertical="top")
@@ -553,8 +622,8 @@ class Lesson:
             for col in range(1, 7):
                 ws.cell(row=r, column=col).border = BOX
             ws.row_dimensions[r].height = min(409, max(30, 15 * max(_estimate_lines(t.prompt, 55), _estimate_lines(_plain(t.explanation), 60),
-                                                                     _estimate_lines(t.solution, 45)) + 6))
-        for col, wdt in zip("ABCDEF", (5, 55, 18, 48, 16, 62)):
+                                                                     _estimate_lines(sol_text, 45)) + 6))
+        for col, wdt in zip("ABCDEF", (5, 55, 18, 48, 18, 62)):
             ws.column_dimensions[col].width = wdt
         ws.freeze_panes = "A5"
 
@@ -597,8 +666,12 @@ class Lesson:
         r += 1
         section("How to use this workbook")
         line("1. Read the guide", f"The lesson guide (README) explains each skill with examples: {REPO_URL}/tree/main/{self.module_dir}/{self.slug}")
-        line("2. Practice", f"Go to the '{self.practice_sheet}' sheet. Type a formula or value into each yellow cell.")
-        line("3. Check yourself", "The Check column shows ✔ Correct (green) or ✘ Not yet (red). Tasks marked 'See key' are checked by comparing with the answer key.")
+        line("2. Practice", self.practice_how or f"Go to the '{self.practice_sheet}' sheet. Type a formula or value into each yellow cell.")
+        all_tasks = self.tasks + self.bonus
+        check_text = "The Check column shows ✔ Correct (green) or ✘ Not yet (red)."
+        if any(t.kind() == "manual" for t in all_tasks):
+            check_text += " Tasks marked 'See key' are checked by comparing your work with the answer key."
+        line("3. Check yourself", check_text)
         if self.bonus:
             line("4. Bonus", f"Finished? Try the harder '{self.bonus_sheet}' sheet.")
         line("5. Answers", f"The '{self.key_sheet}' and '{self.bonus_key_sheet}' sheets are hidden. Right-click any sheet tab → Unhide… → pick one → OK. (Try first!)")
@@ -607,13 +680,21 @@ class Lesson:
         r += 1
         section("Color legend")
         line("Yellow cell", "Your answer goes here.", fill=INPUT_FILL)
-        line("Gray cell", "Pre-filled summary formula — it reads the work you did on another sheet.", fill=PREFILL_FILL)
+        if any(t.summary for t in all_tasks):
+            line("Gray cell", "Pre-filled summary formula. It reads the work you did on another sheet, so don't type over it.",
+                 fill=PREFILL_FILL)
         line("✔ Correct", "Your answer matches the key.", fill=GOOD_FILL)
-        line("✘ Not yet", "Not matching yet — check the hint and try again.", fill=BAD_FILL)
+        line("✘ Not yet", "Not matching yet. Check the hint and try again.", fill=BAD_FILL)
         r += 1
         section("Sheets in this workbook")
         for spec in self._data_specs:
-            line(spec["name"], f"Data: {len(spec['rows']):,} rows" + (f" — Excel Table '{spec['table']}'" if spec["table"] else ""))
+            n = len(spec["rows"])
+            desc = f"Data: {n:,} row{'s' if n != 1 else ''}" + (f", in the Excel Table '{spec['table']}'" if spec["table"] else "")
+            if spec.get("hidden"):
+                desc += " (hidden — unhide it when a task asks)"
+            line(spec["name"], desc)
+        for name, desc in self.sheet_notes:
+            line(name, desc)
         if self.data_note:
             line("About the data", self.data_note)
         line("Disclaimer", "All people, places, and numbers are synthetic and fictional. Not clinical guidance.")
@@ -624,35 +705,45 @@ class Lesson:
             if not t.self_test or t.kind() == "manual":
                 continue
             ws = wb[t._sheet]
-            if t.fill:
-                sheet, rng = t.fill["range"].split("!")
-                sheet = sheet.strip("'")
-                target = wb[sheet]
-                block = target[rng.replace("$", "")]
-                if not isinstance(block, tuple):
-                    cells = [block]
-                else:
-                    cells = [c for row in block for c in (row if isinstance(row, tuple) else (row,))]
-                if "values" in t.fill:
-                    for c, v in zip(cells, t.fill["values"]):
-                        c.value = v
-                else:
-                    origin = cells[0].coordinate
-                    f0 = to_file_formula(t.fill["formula"], t.fill.get("table", t.table))
-                    for c in cells:
-                        fc = Translator(f0, origin=origin).translate_formula(c.coordinate) if c.coordinate != origin else f0
-                        if t.fill.get("array"):
-                            target[c.coordinate] = ArrayFormula(c.coordinate, fc)
-                            self._dynamic.add((target.title, c.coordinate))
-                        else:
-                            c.value = fc
-            elif t.summary:
+            fills = t.fill if isinstance(t.fill, list) else ([t.fill] if t.fill else [])
+            filled = set()
+            for fill in fills:
+                filled |= self._apply_fill(wb, t, fill)
+            if fills:
+                if not t.summary and t.is_formula and (ws.title, t.answer_cell) not in filled:
+                    self.set_formula(ws, t.answer_cell, t.solution, t.table)
+                continue
+            if t.summary:
                 continue
             elif t.is_formula:
                 self.set_formula(ws, t.answer_cell, t.solution, t.table)
             elif t.answer is not None:
                 v = t.key_value()
                 ws[t.answer_cell] = v
+
+    def _apply_fill(self, wb: Workbook, t: Task, fill: dict):
+        sheet, rng = fill["range"].rsplit("!", 1)
+        target = wb[sheet.strip("'")]
+        block = target[rng.replace("$", "")]
+        if not isinstance(block, tuple):
+            cells = [block]
+        else:
+            cells = [c for row in block for c in (row if isinstance(row, tuple) else (row,))]
+        done = {(target.title, c.coordinate) for c in cells}
+        if "values" in fill:
+            for c, v in zip(cells, fill["values"]):
+                c.value = v
+            return done
+        origin = cells[0].coordinate
+        f0 = to_file_formula(fill["formula"], fill.get("table", t.table))
+        for c in cells:
+            fc = Translator(f0, origin=origin).translate_formula(c.coordinate) if c.coordinate != origin else f0
+            if fill.get("array"):
+                target[c.coordinate] = ArrayFormula(c.coordinate, fc)
+                self._dynamic.add((target.title, c.coordinate))
+            else:
+                c.value = fc
+        return done
 
     def save(self, path: Path, selftest: bool = False) -> Path:
         wb = self.build_workbook(selftest=selftest)
@@ -674,13 +765,19 @@ class Lesson:
 
     # ------------------------------------------------------------------ README
     def readme_blocks(self, nav: str = "") -> dict[str, str]:
+        e = md_escape_dollars
         return {
-            "practice": _md_tasks(self.tasks, self.practice_intro),
-            "answers": _md_answers(self.tasks, "🔑 Show the answer key", "Try every task before opening this."),
-            "bonus": _md_bonus(self),
-            "bonus-answers": _md_answers(self.bonus, "🔑 Show the bonus solution", "Give it a real try first!") if self.bonus else "",
+            "practice": e(_md_tasks(self.tasks, self.practice_intro)),
+            "answers": e(_md_answers(self.tasks, "🔑 Show the answer key", "Try every task before opening this.")),
+            "bonus": e(_md_bonus(self)),
+            "bonus-answers": e(_md_answers(self.bonus, "🔑 Show the bonus solution", "Give it a real try first!")) if self.bonus else "",
             "nav": nav,
         }
+
+
+def fit_width(ws, landscape: bool = True):
+    """Public alias: print/PDF setup that fits all columns on one page width."""
+    _fit_width(ws, landscape)
 
 
 def _fit_width(ws, landscape: bool = True):
@@ -694,11 +791,21 @@ def _fit_width(ws, landscape: bool = True):
 # ---------------------------------------------------------------------------
 # Markdown helpers
 # ---------------------------------------------------------------------------
+_ITALIC = re.compile(r"(?<![\w*\\])\*(?=\S)([^*\n]+?)(?<=\S)\*(?![\w*])")
+_LINK = re.compile(r"\[([^\]]+)\]\((?:[^)\s]+)\)")
+
+
 def _plain(md: str) -> str:
-    """Strip a little Markdown for display inside Excel cells."""
+    """Strip Markdown for display inside Excel cells (code fences, bold, code spans, italics, links)."""
     s = re.sub(r"```[a-zA-Z]*\n?", "", md or "")
     s = s.replace("**", "").replace("`", "")
+    s = _ITALIC.sub(r"\1", s)
+    s = _LINK.sub(r"\1", s)
+    s = s.replace("\\*", "*").replace("\\$", "$").replace("\\|", "|")
     return s.strip()
+
+
+plain = _plain
 
 
 def fmt_value(v, fmt: str | None = None) -> str:
@@ -724,10 +831,29 @@ def fmt_value(v, fmt: str | None = None) -> str:
         if "." in f:
             dec = len(re.match(r"[0#,]*\.([0#]+)", f.replace("$", "")).group(1)) if re.match(r"[0#,]*\.([0#]+)", f.replace("$", "")) else 2
             return f"{v:,.{dec}f}"
+        if f in ("0", "General0", "@0"):
+            return f"{int(round(v))}"
+        if f and re.fullmatch(r"[#0,]+", f):
+            return f"{int(round(v)):,}"
         if isinstance(v, int) or float(v).is_integer():
             return f"{int(round(v)):,}"
         return f"{v:,.4f}".rstrip("0").rstrip(".")
     return str(v)
+
+
+def md_escape_dollars(md: str) -> str:
+    """Escape $ outside code so GitHub doesn't render $...$ as math. Leaves fenced blocks and `code` alone."""
+    out = []
+    for i, block in enumerate(re.split(r"(```.*?```)", md or "", flags=re.S)):
+        if i % 2:
+            out.append(block)
+            continue
+        parts = re.split(r"(`[^`\n]*`)", block)
+        for j, part in enumerate(parts):
+            if j % 2 == 0:
+                parts[j] = re.sub(r"(?<!\\)\$", r"\\$", part)
+        out.append("".join(parts))
+    return "".join(out)
 
 
 def _cell(s: str) -> str:
@@ -788,10 +914,15 @@ def _md_bonus(lesson: Lesson) -> str:
     lines = []
     if lesson.bonus_scenario:
         lines += [lesson.bonus_scenario, ""]
-    lines.append(f"Work on the **{lesson.bonus_sheet}** sheet of the workbook.")
-    lines.append("")
+    where = lesson.bonus_where if lesson.bonus_where is not None else f"Work on the **{lesson.bonus_sheet}** sheet of the workbook."
+    if where:
+        lines.append(where)
+        lines.append("")
     for t in lesson.bonus:
-        lines.append(f"- **{t.number}.** {t.prompt}" + (f" *(Hint: {t.hint})*" if t.hint else ""))
+        hint = ""
+        if t.hint:
+            hint = f" *(Hint: {t.hint})*" if "*" not in t.hint else f" (Hint: {t.hint})"
+        lines.append(f"- **{t.number}.** {t.prompt}" + hint)
     return "\n".join(lines)
 
 

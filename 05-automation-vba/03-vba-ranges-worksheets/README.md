@@ -859,7 +859,7 @@ CleanUp with the error's details in `Err`. Lesson 5.4 explains `On Error` fully.
 
 ### 16. Worked example: the high-charge list
 
-*Task: Finance wants a sheet that lists every 2025 encounter with charges of $100,000 or more, most expensive first. It must be
+*Task: Finance wants a sheet that lists every 2025 encounter with charges of \$100,000 or more, most expensive first. It must be
 rebuilt from scratch each time the macro runs.*
 
 Write the plan in plain words first: delete the old HighCharges sheet, add a new one, filter Encounters to TotalCharges of at
@@ -897,8 +897,8 @@ End Sub
    SheetExists, so finish SheetExists (task 7) first.
 2. Click inside the macro and press **F8** (Mac: **Debug → Step Into**) a few times. Watch Encounters filter and the new sheet
    fill, then press **F5** (Mac: **Run → Run Sub/UserForm**) to finish.
-3. The message reads *12 encounters of $100,000 or more.* All 12 are inpatient stays, and the top row is ENC113090, an Ashby
-   Falls stay with $185,019.66 in charges.
+3. The message reads *12 encounters of \$100,000 or more.* All 12 are inpatient stays, and the top row is ENC113090, an Ashby
+   Falls stay with \$185,019.66 in charges.
 4. Cross-check with a formula in an empty cell on the Output sheet: `=COUNTIF(Encounters!K2:K2001,">=100000")` returns 12.
    Don't type it on Encounters itself, because a cell next to the data becomes part of its CurrentRegion (section 5).
 5. Run the macro again. The old sheet is replaced rather than duplicated, and no prompt appears.
@@ -978,7 +978,7 @@ Save the workbook as .xlsm, then import starter/EncounterMacros.bas and starter/
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Snippet A: what address does the Immediate window show? Type it as printed (the $ signs are optional). | Offset moves the top-left corner, and Resize sets the size from that corner |
+| 1 | Snippet A: what address does the Immediate window show? Type it as printed (the \$ signs are optional). | Offset moves the top-left corner, and Resize sets the size from that corner |
 | 2 | Snippet B: what address does the Immediate window show? | CurrentRegion is the whole block around E50 (Go To Special → Current region shows it). The last two steps drop the header row |
 | 3 | Snippet C: line 1 prints 2001, the last row of column A. What number does line 2 print (the same idiom on column F, AdmitSource)? | Which encounter types leave AdmitSource blank? Look at the bottom of column F |
 | 4 | Snippet C: what number does line 3 print? | End(xlDown) works like Ctrl + ↓: it stops at the last filled cell before a gap |
@@ -1005,10 +1005,10 @@ workbook so its procedure names don't clash with yours. The answers are also bel
 
 **1. Snippet A: Offset and Resize**
 
-- **Answer:** $G$5:$G$9
-- **Solution:** `Range("C2").Offset(3, 4)` moves 3 rows down and 4 columns right, to **G5**. `Resize(5)` makes the range 5 rows tall from that corner and keeps its width of 1 column: **$G$5:$G$9**.
+- **Answer:** \$G\$5:\$G\$9
+- **Solution:** `Range("C2").Offset(3, 4)` moves 3 rows down and 4 columns right, to **G5**. `Resize(5)` makes the range 5 rows tall from that corner and keeps its width of 1 column: **\$G\$5:\$G\$9**.
 
-Offset never changes a range's size, and Resize never moves its top-left corner, so you can read a chain of them left to right. Leaving out Resize's second argument keeps the column count as it is. `.Address` returns absolute references ($G$5) unless you ask for `.Address(False, False)`.
+Offset never changes a range's size, and Resize never moves its top-left corner, so you can read a chain of them left to right. Leaving out Resize's second argument keeps the column count as it is. `.Address` returns absolute references (\$G\$5) unless you ask for `.Address(False, False)`.
 
 **2. Snippet B: the data-body idiom**
 
@@ -1096,7 +1096,7 @@ End Sub
 ```
 
 
-**Delete-and-recreate** makes a macro safe to rerun: without the delete, the second run stops at `wsSum.Name = "TypeSummary"` with run-time error 1004 (*That name is already taken*), because sheet names must be unique. `Worksheets.Add` returns the new sheet, so `Set wsSum = …` gives you a variable for it and you never need ActiveSheet. SheetExists compares with `vbTextCompare` because Excel sheet names ignore case. The finished sheet: Emergency 663 encounters / $1,753,021.67, Inpatient 539 encounters / $16,882,215.53, Observation 89 encounters / $702,704.46, Outpatient 709 encounters / $899,052.36. Inpatient stays are 27% of the encounters but 83% of the charges.
+**Delete-and-recreate** makes a macro safe to rerun: without the delete, the second run stops at `wsSum.Name = "TypeSummary"` with run-time error 1004 (*That name is already taken*), because sheet names must be unique. `Worksheets.Add` returns the new sheet, so `Set wsSum = …` gives you a variable for it and you never need ActiveSheet. SheetExists compares with `vbTextCompare` because Excel sheet names ignore case. The finished sheet: Emergency 663 encounters / \$1,753,021.67, Inpatient 539 encounters / \$16,882,215.53, Observation 89 encounters / \$702,704.46, Outpatient 709 encounters / \$899,052.36. Inpatient stays are 27% of the encounters but 83% of the charges.
 
 **8. SplitByFacility (data rows per facility sheet)**
 
@@ -1173,14 +1173,14 @@ End Sub
 ```
 
 
-`For Each ws In ThisWorkbook.Worksheets` visits every worksheet, including the hidden key sheets, so the `Like "F0#"` test (# means any one digit) picks out the facility sheets. `Header:=xlYes` keeps row 1 in place as a header. Leave it out and Range.Sort treats row 1 as data, so an ascending sort would bury the header among the rows. ENC112749 is Cedar Ridge's most expensive 2025 encounter in the sample ($167,509.41, inpatient).
+`For Each ws In ThisWorkbook.Worksheets` visits every worksheet, including the hidden key sheets, so the `Like "F0#"` test (# means any one digit) picks out the facility sheets. `Header:=xlYes` keeps row 1 in place as a header. Leave it out and Range.Sort treats row 1 as data, so an ascending sort would bury the header among the rows. ENC112749 is Cedar Ridge's most expensive 2025 encounter in the sample (\$167,509.41, inpatient).
 
 **10. SortAndReconcile: control total of charges**
 
 - **Answer:** 20,236,994.02
 - **Solution:** The second half of the loop in task 9's macro: `rowTotal = rowTotal + (lastR - 1)` and `chargeTotal = chargeTotal + Application.WorksheetFunction.Sum(ws.Range("K2:K" & lastR))`, then both are written to Output after `Next ws`.
 
-This is a **reconciliation**: the facility sheets together must hold exactly the 2,000 rows and $20,236,994.02 of the export (compare with `=SUM(Encounters!K2:K2001)`). If the totals differ, the split lost or duplicated rows, and you know before anyone reads the sheets. The same control-total habit applies to any macro that moves data around.
+This is a **reconciliation**: the facility sheets together must hold exactly the 2,000 rows and \$20,236,994.02 of the export (compare with `=SUM(Encounters!K2:K2001)`). If the totals differ, the split lost or duplicated rows, and you know before anyone reads the sheets. The same control-total habit applies to any macro that moves data around.
 
 **11. ExportFacility (F02 total read back from the saved file)**
 
@@ -1383,14 +1383,14 @@ If every month after January shows a bigger total than the one before, `total` w
 - **Answer:** 144,338.01
 - **Solution:** Sort the block that starts at the header row: `wsPk.Range("A6").CurrentRegion.Sort Key1:=wsPk.Range("K6"), Order1:=xlDescending, Header:=xlYes`.
 
-The template leaves row 5 empty on purpose. CurrentRegion stops at an empty row, so `Range("A6").CurrentRegion` is the header plus the data and never includes the labels in A2:B4. Without that empty row, the region would reach up to the title and labels in rows 1–4, and the sort would shuffle them in among the encounters. ENC120639 tops the 2025-11 packet at $144,338.01.
+The template leaves row 5 empty on purpose. CurrentRegion stops at an empty row, so `Range("A6").CurrentRegion` is the header plus the data and never includes the labels in A2:B4. Without that empty row, the region would reach up to the title and labels in rows 1–4, and the sort would shuffle them in among the encounters. ENC120639 tops the 2025-11 packet at \$144,338.01.
 
 **B4. Packet with the largest total charges**
 
 - **Answer:** 2025-11
 - **Solution:** Track a running maximum in the month loop. After each month, `If total > bestTotal Then` store `total` in `bestTotal` and `sheetName` in `bestName`. After `Next m`, write `bestName` to Output!B9.
 
-**2025-11**: $1,925,363.45 from 53 stays. The quietest month was 2025-06 ($868,931.28, 31 stays). Output!B9 is formatted as Text because Excel may read a value like 2025-01 written into a General cell as a date (January 2025). The check accepts either form. In the solution, the `On Error GoTo CleanUp` line sends any error to the cleanup block, which turns ScreenUpdating back on before reporting the problem.
+**2025-11**: \$1,925,363.45 from 53 stays. The quietest month was 2025-06 (\$868,931.28, 31 stays). Output!B9 is formatted as Text because Excel may read a value like 2025-01 written into a General cell as a date (January 2025). The check accepts either form. In the solution, the `On Error GoTo CleanUp` line sends any error to the cleanup block, which turns ScreenUpdating back on before reporting the problem.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

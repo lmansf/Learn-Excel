@@ -910,7 +910,7 @@ End Sub
 ```
 
 
-This is the **counter pattern**: start a Long at 0 and add 1 each time a condition is true. Each `Or` side must be a full comparison: `cell.Value = "HH" Or cell.Value = "LL"`. Writing `cell.Value = "HH" Or "LL"` gives a Type mismatch error. Cross-check with a formula: `=COUNTIF('Labs'!I2:I506,"HH")+COUNTIF('Labs'!I2:I506,"LL")`.
+This is the **counter pattern**: start a Long at 0 and add 1 each time a condition is true. Each `Or` side must be a full comparison: `cell.Value = "HH" Or cell.Value = "LL"`. Writing `cell.Value = "HH" Or "LL"` gives a Type mismatch error. Cross-check with a formula: `=COUNTIF(Labs!I2:I506,"HH")+COUNTIF(Labs!I2:I506,"LL")`.
 
 **9. Complete AveragePotassium: loop over the rows with For…Next, add up ResultValue for…**
 

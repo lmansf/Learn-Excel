@@ -55,7 +55,7 @@ The **Allow** box offers eight kinds of rule:
 |---|---|---|
 | Any value | Anything (the default, which means no rule) | Patient name |
 | Whole number | Integers only, within limits | Pain score 0 to 10 |
-| Decimal | Any number within limits | Copay between $0 and $100 |
+| Decimal | Any number within limits | Copay between \$0 and \$100 |
 | List | Only items from a list, with an optional drop-down arrow | Payer, Facility |
 | Date | Dates within limits | Visit date in December 2025 |
 | Time | Times within limits | Appointment between 07:00 and 18:00 |
@@ -87,7 +87,7 @@ The **Ignore blank** checkbox (on by default) treats an empty cell as valid. Lea
 ### 3. Input messages and error alerts
 
 An **input message** is a short prompt that appears when someone selects the cell, before they type. Use it to state the
-rule in plain words: *"Enter the amount collected, $0 to $100."* The title holds up to 32 characters and the message up to
+rule in plain words: *"Enter the amount collected, \$0 to \$100."* The title holds up to 32 characters and the message up to
 255.
 
 The **error alert** appears after an invalid entry. Its **Style** decides how strict the rule is:
@@ -95,12 +95,12 @@ The **error alert** appears after an invalid entry. Its **Style** decides how st
 | Style | Icon | What happens after an invalid entry | Use it when |
 |---|---|---|---|
 | **Stop** | ⛔ | Excel refuses the entry. **Retry** lets you fix it, **Cancel** restores the old value | The value must be right (MRN, payer) |
-| **Warning** | ⚠️ | Asks "Continue?" **Yes** keeps the entry, **No** lets you edit, **Cancel** restores the old value | Unusual but possible values (a $150 copay) |
+| **Warning** | ⚠️ | Asks "Continue?" **Yes** keeps the entry, **No** lets you edit, **Cancel** restores the old value | Unusual but possible values (a \$150 copay) |
 | **Information** | ℹ️ | Shows your message. **OK** keeps the entry, **Cancel** restores the old value | Gentle reminders |
 
 Write your own **Title** and **Error message**, because Excel's default ("This value doesn't match the data validation
 restrictions defined for this cell") doesn't tell the registrar what to type instead. A good error message says what's
-allowed: *"Copay must be between $0 and $100. Enter refunds in the Refund log."*
+allowed: *"Copay must be between \$0 and \$100. Enter refunds in the Refund log."*
 
 > ⚠️ Warning and Information alerts let invalid data in after one click. If a field feeds billing or patient matching, use Stop.
 
@@ -486,7 +486,7 @@ The Format Painter copies conditional formatting along with ordinary formatting.
 | Name Manager | Ctrl + F3 | **Formulas → Name Manager** |
 | Go To (then **Special**) | Ctrl + G or F5 | ⌃ + G |
 | Paste Special | Ctrl + Alt + V | ⌃ + ⌘ + V |
-| Toggle $ in a reference | F4 | ⌘ + T |
+| Toggle \$ in a reference | F4 | ⌘ + T |
 | Turn the filter on or off | Ctrl + Shift + L | ⌘ + Shift + F |
 
 | Feature | Version |
@@ -509,18 +509,18 @@ Part A (tasks 1–6) uses the IntakeLog and Lists sheets. Add each validation ru
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | IntakeLog, Payer column (F2:F51): add a List validation whose Source is the payer list on the Lists sheet (Lists!$A$2:$A$9). Then circle invalid data. How many Payer cells are circled? | Data → Data Validation → Allow: List |
+| 1 | IntakeLog, Payer column (F2:F51): add a List validation whose Source is the payer list on the Lists sheet (Lists!\$A\$2:\$A\$9). Then circle invalid data. How many Payer cells are circled? | Data → Data Validation → Allow: List |
 | 2 | IntakeLog, VisitDate (B2:B51): the log covers December 2025 only. Allow a Date between 12/01/2025 and 12/31/2025 (type =DATE(2025,12,1) and =DATE(2025,12,31) in the boxes so it works in any regional setting). How many VisitDate cells are circled? | Allow: Date, Data: between |
-| 3 | IntakeLog, CopayAmt (G2:G51): allow a Decimal between 0 and 100. On the Input Message tab, add the title Copay and the message "Enter the amount collected, $0 to $100." Leave the Error Alert style as Stop. How many CopayAmt cells are circled? | Allow: Decimal. Between includes both limits |
+| 3 | IntakeLog, CopayAmt (G2:G51): allow a Decimal between 0 and 100. On the Input Message tab, add the title Copay and the message "Enter the amount collected, \$0 to \$100." Leave the Error Alert style as Stop. How many CopayAmt cells are circled? | Allow: Decimal. Between includes both limits |
 | 4 | IntakeLog, ZIP (E2:E51): allow Text length equal to 5. How many ZIP cells are circled? | Allow: Text length, Data: equal to |
 | 5 | IntakeLog, MRN (C2:C51): an MRN must be exactly 8 characters, and all of them digits. Select the column with C2 as the active cell and add a Custom validation rule that is TRUE only for a valid MRN. How many MRN cells are circled? | Combine a LEN test with an ISNUMBER(--C2) test inside AND, written for the active cell C2 |
-| 6 | Dependent drop-down: on the Lists sheet, name each department column after its facility (Formulas → Create from Selection → Top row, one column at a time: E1:E16, F1:F5, G1:G6, H1:H7). Give IntakeLog Facility (H2:H51) a List validation from Lists!$C$2:$C$5. Then give Department (I2:I51) a List validation whose Source is =INDIRECT(SUBSTITUTE($H2," ","_")). How many Department cells are circled? | Names can't contain spaces, so Create from Selection uses underscores |
+| 6 | Dependent drop-down: on the Lists sheet, name each department column after its facility (Formulas → Create from Selection → Top row, one column at a time: E1:E16, F1:F5, G1:G6, H1:H7). Give IntakeLog Facility (H2:H51) a List validation from Lists!\$C\$2:\$C\$5. Then give Department (I2:I51) a List validation whose Source is =INDIRECT(SUBSTITUTE(\$H2," ","_")). How many Department cells are circled? | Names can't contain spaces, so Create from Selection uses underscores |
 | 7 | Labs sheet: the lab interface re-sent some results, so a few LabResultIDs appear more than once. Select A2:A322 and apply Highlight Cells Rules → Duplicate Values. How many cells are highlighted? | Home → Conditional Formatting → Highlight Cells Rules |
 | 8 | Labs, TATMin (L2:L322): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → Top 10 Items. What is the smallest TAT that your rule highlights? Enter it in minutes. | Ties with the 10th value are highlighted too. LARGE gives the k-th largest |
 | 9 | Supplies, PctOfPar (K2:K258) is QtyOnHand ÷ ParLevel. Add Data Bars, then edit the rule so Minimum is Type Number, Value 0 and Maximum is Type Number, Value 1. A full bar now means "stocked to par or above." How many items show a full bar? | Every value at or above the Maximum gets a full bar. Filter by Color can't see bars, but COUNTIF can count them |
 | 10 | Census sheet (Medical-Surgical 5 East, Nov–Dec 2025): apply the Red - Yellow - Green Color Scale to Occupancy (F2:F62) so the fullest days are red. In Manage Rules → Edit Rule you'll see the midpoint is the 50th percentile. Which occupancy gets the pure yellow midpoint color? Enter it as a percentage to 1 decimal place. | The 50th percentile has a more common name |
 | 11 | Labs, TATMin (L2:L322): apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green below 45). How many cells show a yellow light? | Each icon's test is ">=". The default Type is Percent, not Number. Filter by Color → Filter by Cell Icon counts icons |
-| 12 | Labs: highlight the entire row of every critical result (AbnormalFlag HH or LL). Select A2:L322 with A2 active, choose New Rule → "Use a formula to determine which cells to format," and set a red fill. How many rows are highlighted? | Lock the column with $, not the row |
+| 12 | Labs: highlight the entire row of every critical result (AbnormalFlag HH or LL). Select A2:L322 with A2 active, choose New Rule → "Use a formula to determine which cells to format," and set a red fill. How many rows are highlighted? | Lock the column with \$, not the row |
 | 13 | Supplies: add two formula rules to A2:M258. Rule 1 (red fill): the item has expired, meaning ExpirationDate is not blank and is on or before ReportDate. Rule 2 (amber fill): ExpirationDate is not blank and is on or before ReportDate + ExpiringWindowDays. ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Excel puts each new rule at the top of the list, so open Manage Rules and move the red rule above the amber rule. How many rows are amber? | A blank cell counts as 0, which is "on or before" any date. The rule higher in Manage Rules wins the fill |
 <!-- END GENERATED: practice -->
 
@@ -577,7 +577,7 @@ Two entries are text that only looks like a date: 12/32/2025 doesn't exist, and 
 Equivalent formula: `=COUNTIF(IntakeLog!G2:G51,"<0")+COUNTIF(IntakeLog!G2:G51,">100")`
 
 
-"Between" includes both limits, so the $0.00 and $100.00 copays in the log are valid. The circled values are a negative amount (a refund typed into the wrong field), 2,500 (almost certainly $25.00 typed without the decimal point), and 350. Click any cell in the column to see your input message.
+"Between" includes both limits, so the \$0.00 and \$100.00 copays in the log are valid. The circled values are a negative amount (a refund typed into the wrong field), 2,500 (almost certainly \$25.00 typed without the decimal point), and 350. Click any cell in the column to see your input message.
 
 **4. ZIP code length rule (circled entries)**
 
@@ -620,7 +620,7 @@ LEN catches the 7- and 9-character MRNs and the MRN that was stored as a number 
 Equivalent formula (uses the facility–department map in Lists!J:K): `=SUMPRODUCT(--(COUNTIFS(Lists!$J$2:$J$31,IntakeLog!H2:H51,Lists!$K$2:$K$31,IntakeLog!I2:I51)=0))`
 
 
-Create from Selection turns the header "Cedar Ridge Medical Center" into the name Cedar_Ridge_Medical_Center, because names can't contain spaces. SUBSTITUTE makes the same change to the facility in column H, and INDIRECT turns that text into a reference to the named range. Because $H2 has no $ before the row, every row builds its list from its own facility. The circled entries are real departments at the wrong facility: Pediatric Clinic, for example, is at the Outpatient Pavilion, not at Bluestone Memorial Hospital.
+Create from Selection turns the header "Cedar Ridge Medical Center" into the name Cedar_Ridge_Medical_Center, because names can't contain spaces. SUBSTITUTE makes the same change to the facility in column H, and INDIRECT turns that text into a reference to the named range. Because \$H2 has no \$ before the row, every row builds its list from its own facility. The circled entries are real departments at the wrong facility: Pediatric Clinic, for example, is at the Outpatient Pavilion, not at Bluestone Memorial Hospital.
 
 **7. Duplicate LabResultIDs (highlighted cells)**
 
@@ -708,7 +708,7 @@ The default thresholds are Percent 67 and 33. They split the span between the lo
 Equivalent formula: `=COUNTIF(Labs!K2:K322,"HH")+COUNTIF(Labs!K2:K322,"LL")`
 
 
-You write the rule for the active cell's row (row 2), and Excel shifts it for every other cell in the Applies-to range. $K keeps every cell in the row looking at column K, and the unlocked 2 lets each row check its own flag. Without the $, cell B2 would test L2 and the rule breaks. There are 12 HH and 2 LL results, so 14 rows turn red.
+You write the rule for the active cell's row (row 2), and Excel shifts it for every other cell in the Applies-to range. \$K keeps every cell in the row looking at column K, and the unlocked 2 lets each row check its own flag. Without the \$, cell B2 would test L2 and the rule breaks. There are 12 HH and 2 LL results, so 14 rows turn red.
 
 **13. Expired vs expiring supplies: two rules and rule order**
 
@@ -724,7 +724,7 @@ You write the rule for the active cell's row (row 2), and Excel shifts it for ev
 Equivalent formula: `=COUNTIFS(Supplies!L2:L258,">"&ReportDate,Supplies!L2:L258,"<="&ReportDate+ExpiringWindowDays)`
 
 
-Rule 2 is TRUE for 17 rows, because every expired item also expires before ReportDate + 90. The red rule sits above it and both rules set a fill, so red wins on the 10 expired rows and 7 rows stay amber. If you skip the move, the newer amber rule stays on top and you'd see 17 amber rows and no red. The $L2<>"" guard matters too: an empty cell counts as 0 (the date 1/0/1900), which is "on or before ReportDate," so without the guard all 121 non-perishable items would turn red.
+Rule 2 is TRUE for 17 rows, because every expired item also expires before ReportDate + 90. The red rule sits above it and both rules set a fill, so red wins on the 10 expired rows and 7 rows stay amber. If you skip the move, the newer amber rule stays on top and you'd see 17 amber rows and no red. The \$L2<>"" guard matters too: an empty cell counts as 0 (the date 1/0/1900), which is "on or before ReportDate," so without the guard all 121 non-perishable items would turn red.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -803,7 +803,7 @@ There are 2 overflow units, and both rules are TRUE for them. The overflow rule 
    MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board lists each facility's units together, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 first.
 3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. The card fills in, and the gray answer cell on the Bonus sheet shows its occupancy.
 
-The guide's version starts at Lists!K1 and uses $H2, because every intake row has its own facility. Here the start is the board's Unit header (B11) and the parent is the single cell $B$4.
+The guide's version starts at Lists!K1 and uses \$H2, because every intake row has its own facility. Here the start is the board's Unit header (B11) and the parent is the single cell \$B\$4.
 
 An INDIRECT version would need a second set of named lists that hold only the inpatient units. The names from task 6 (such as `Cedar_Ridge_Medical_Center`) already point at every department on the Lists sheet, so new names would have to differ from them. OFFSET skips that setup because it reads the board itself.
 

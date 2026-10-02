@@ -165,7 +165,7 @@ any cell of an empty Table column:
 2. Type `=`, click J2 (QtyOnHand), type `*`, and click G2 (UnitCost). Excel writes `=[@QtyOnHand]*[@UnitCost]`.
 3. Press **Enter**. Excel fills the formula into every row of the column.
 
-Row 2 holds small nitrile exam gloves in Cedar Ridge's Emergency Department: 527 boxes × $8.22 = 4,331.94. Every other row
+Row 2 holds small nitrile exam gloves in Cedar Ridge's Emergency Department: 527 boxes × \$8.22 = 4,331.94. Every other row
 gets the same formula and its own result.
 
 Right after the fill, a lightning-bolt **AutoCorrect Options** button appears next to the cell. Use it if you didn't want a
@@ -549,7 +549,7 @@ below, collapsed so you don't see them by accident.
 
 1. Click any cell inside the data, for example **A2**.
 2. Press **Ctrl + T** (Mac: **Control + T**), or choose **Insert → Table**.
-3. Check that the range shows **$A$1:$S$258** and that **My table has headers** is ticked, then click **OK**.
+3. Check that the range shows **\$A\$1:\$S\$258** and that **My table has headers** is ticked, then click **OK**.
 4. On the **Table Design** tab (Mac: **Table** tab), click in the **Table Name** box at the far left, type `tblInventory`, and press **Enter**.
 
 
@@ -668,7 +668,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B1.** Add a new column to tblInventory by typing OrderCost in cell T1, just right of the NeedsReorder header. The Table expands to include it. Make it a calculated column that returns ReorderQty × UnitCost for rows where NeedsReorder is TRUE, and 0 for every other row. The gray cell totals the column: what's the total cost of this week's orders? *(Hint: IF's test can be the TRUE/FALSE value in [@NeedsReorder] itself, with no comparison needed)*
 - **B2.** On the Vendors sheet, convert the vendor list to a Table named tblVendors. Fill its yellow ReorderCost column with a calculated column that adds up tblInventory[OrderCost] for that row's vendor. Which vendor gets the largest purchase order? (Type the vendor's name, or return it with a formula.) *(Hint: In tblVendors, SUMIFS can add up another Table's column, with [@Vendor] as the criterion)*
 - **B3.** What's the value of that vendor's purchase order, to the cent? *(Hint: The largest value in tblVendors[ReorderCost])*
-- **B4.** The group purchasing contract gives a 2% discount on any single vendor order of $20,000 or more. Define two named constants, DiscountMin (=20000) and DiscountPct (=0.02), then calculate the total discount on this week's orders, to the cent. *(Hint: SUMIFS can use the same column as the sum range and the criteria range)*
+- **B4.** The group purchasing contract gives a 2% discount on any single vendor order of \$20,000 or more. Define two named constants, DiscountMin (=20000) and DiscountPct (=0.02), then calculate the total discount on this week's orders, to the cent. *(Hint: SUMIFS can use the same column as the sum range and the criteria range)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -687,7 +687,7 @@ Typing in the first empty column next to a Table adds a column to it (Excel's *A
 - **Answer:** Summit Orthopedic Systems
 - **Solution:** `=INDEX(tblVendors[Vendor],MATCH(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],0))`
 
-The calculated column in tblVendors is `=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. `=XLOOKUP(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],tblVendors[Vendor])` works too in Excel 2021 or Microsoft 365. All four reorder lines for Summit Orthopedic Systems are orthopedic implants, and three of them cost more than $2,000 per unit, so a handful of lines makes the largest order.
+The calculated column in tblVendors is `=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. `=XLOOKUP(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],tblVendors[Vendor])` works too in Excel 2021 or Microsoft 365. All four reorder lines for Summit Orthopedic Systems are orthopedic implants, and three of them cost more than \$2,000 per unit, so a handful of lines makes the largest order.
 
 **B3. What's the value of that vendor's purchase order, to the cent?**
 
@@ -701,7 +701,7 @@ MAX scans the ReorderCost column of tblVendors, so it returns the largest vendor
 - **Answer:** 2,431.66
 - **Solution:** `=SUMIFS(tblVendors[ReorderCost],tblVendors[ReorderCost],">="&DiscountMin)*DiscountPct`
 
-The criteria range and the sum range are the same column, so SUMIFS adds only the vendor totals that pass the test against DiscountMin. Orders from 3 vendors reach $20,000. Together they total $121,583.18, and 2% of that is the discount. With the thresholds in named constants, Purchasing can test a new contract (say 3% at $15,000) by editing two names in Name Manager, and every formula that uses them updates.
+The criteria range and the sum range are the same column, so SUMIFS adds only the vendor totals that pass the test against DiscountMin. Orders from 3 vendors reach \$20,000. Together they total \$121,583.18, and 2% of that is the discount. With the thresholds in named constants, Purchasing can test a new contract (say 3% at \$15,000) by editing two names in Name Manager, and every formula that uses them updates.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

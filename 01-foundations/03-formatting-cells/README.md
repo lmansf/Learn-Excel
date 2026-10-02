@@ -69,7 +69,7 @@ You'll use two places, plus keyboard shortcuts (section 3).
 | Control | What it does |
 |---|---|
 | **Number Format** box (shows *General* at first) | Lists 11 common formats. The box always names the active cell's format. |
-| **$** Accounting Number Format | Applies Accounting with two decimals. Its arrow offers other currency symbols. |
+| **\$** Accounting Number Format | Applies Accounting with two decimals. Its arrow offers other currency symbols. |
 | **%** Percent Style | Applies `0%`. |
 | **,** Comma Style | Applies Accounting without a currency symbol. |
 | Increase Decimal / Decrease Decimal | Adds or removes one displayed decimal place per click (Windows KeyTips **Alt, H, 0** and **Alt, H, 9**). |
@@ -113,12 +113,12 @@ from the key left of 1 through 6, which makes them easy to remember.
 | **Ctrl + Shift + !** | **⌃ + Shift + !** | Number: two decimals, thousands separator | `9,165,952.00` |
 | **Ctrl + Shift + @** | **⌃ + Shift + @** | Time: hour, minute, AM/PM | `9:24 AM` |
 | **Ctrl + Shift + #** | **⌃ + Shift + #** | Date: day, month, year | `1-Dec-25` |
-| **Ctrl + Shift + $** | **⌃ + Shift + $** | Currency: two decimals, negatives in parentheses | `$257,801.00` |
+| **Ctrl + Shift + \$** | **⌃ + Shift + \$** | Currency: two decimals, negatives in parentheses | `$257,801.00` |
 | **Ctrl + Shift + %** | **⌃ + Shift + %** | Percentage with no decimals | `3%` |
 | **Ctrl + Shift + ^** | **⌃ + Shift + ^** | Scientific with two decimals | `9.17E+06` |
 | **Ctrl + 1** | **⌘ + 1** | Opens Format Cells | |
 
-> 📋 On a Mac, **⌃ + Shift + $** also shows negative amounts in red. On both platforms you can press the shortcut with the whole
+> 📋 On a Mac, **⌃ + Shift + \$** also shows negative amounts in red. On both platforms you can press the shortcut with the whole
 > column selected, so new numbers typed into it pick up the format too.
 
 ### 4. Currency vs. Accounting
@@ -128,19 +128,19 @@ use Accounting and price lists or single amounts use Currency.
 
 | | **Currency** | **Accounting** |
 |---|---|---|
-| Where the $ sits | Right next to the number: `$212.08` | Pinned to the left edge of the cell, with the number at the right |
-| A column of amounts | The $ signs form a ragged edge, because each one sits next to its own number | The $ signs form a straight line on the left, and the decimal points line up |
+| Where the \$ sits | Right next to the number: `$212.08` | Pinned to the left edge of the cell, with the number at the right |
+| A column of amounts | The \$ signs form a ragged edge, because each one sits next to its own number | The \$ signs form a straight line on the left, and the decimal points line up |
 | Zero | `$0.00` | A dash |
 | Negative numbers | You choose: `-$1,234.10`, red, `($1,234.10)`, or red with parentheses | Always in parentheses |
-| How to apply | **Ctrl + Shift + $** (Mac: **⌃ + Shift + $**) or the Number Format box | The Accounting Number Format button (the dollar-sign button on the Home tab), or the Number Format box |
+| How to apply | **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**) or the Number Format box | The Accounting Number Format button (the dollar-sign button on the Home tab), or the Number Format box |
 | Typical use | A copay on a registration form, a price per unit | Budget reports, financial statements, any column of money you'll total |
 
-> ⚠️ **The $ button is not Currency.** The big **$** button on the Home tab applies **Accounting**. The keyboard shortcut
-> **Ctrl + Shift + $** (Mac: **⌃ + Shift + $**) applies **Currency**. Check the Number Format box if you're not sure which one a
+> ⚠️ **The \$ button is not Currency.** The big **\$** button on the Home tab applies **Accounting**. The keyboard shortcut
+> **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**) applies **Currency**. Check the Number Format box if you're not sure which one a
 > cell has.
 
 **Comma Style** (the **,** button) is Accounting without the dollar sign. It's a good choice for counts and dollar columns in a
-table where only the first row and the total show a $ sign, a common layout in hospital financial statements.
+table where only the first row and the total show a \$ sign, a common layout in hospital financial statements.
 
 ### 5. Percentages
 
@@ -318,10 +318,10 @@ color first, as in `[Red][<0]`.
 
 #### 8f. Spacing tricks you'll see in built-in codes
 
-Select a cell you formatted with **Ctrl + Shift + $** (Mac: **⌃ + Shift + $**), open Format Cells, and click **Custom**. The Type
+Select a cell you formatted with **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**), open Format Cells, and click **Custom**. The Type
 box shows `$#,##0.00_);($#,##0.00)` (on a Mac, `$#,##0.00_);[Red]($#,##0.00)`). The `_)` means "leave a space as wide as a
 closing parenthesis," so positive numbers line up with negative ones in parentheses. An asterisk repeats the next character to
-fill the cell, so `* ` in the Accounting code pushes the $ to the left edge.
+fill the cell, so `* ` in the Accounting code pushes the \$ to the left edge.
 
 #### 8g. Healthcare recipes
 
@@ -458,7 +458,7 @@ A **cell style** is a named bundle of formatting, such as a font, fill, border, 
 | Data and Model | Calculation, Check Cell, Explanatory Text, Input, Linked Cell, Note, Output, Warning Text | Marking input cells vs. calculated cells in a model |
 | Titles and Headings | Heading 1–4, Title, **Total** | Report structure. **Total** makes a grand-total row bold and draws lines above and below it in the accounting style |
 | Themed Cell Styles | Accent1–Accent6 and their 20%, 40%, and 60% tints | Banding and highlights in theme colors |
-| Number Format | Comma, Comma [0], Currency, Currency [0], Percent | The same formats as the Home-tab buttons, as styles. The style named **Currency** is the one the **$** button applies, so it uses the Accounting format, not Currency |
+| Number Format | Comma, Comma [0], Currency, Currency [0], Percent | The same formats as the Home-tab buttons, as styles. The style named **Currency** is the one the **\$** button applies, so it uses the Accounting format, not Currency |
 
 - To change a style everywhere, right-click it in the gallery and choose **Modify…**.
 - To save your own look, format one cell and choose **Cell Styles → New Cell Style…**.
@@ -523,11 +523,11 @@ Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, an
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | On the Budget sheet, select the Variance cells E5:E21 and press Ctrl + Shift + $ (Mac: ⌃ + Shift + $). What does E11 (Emergency Department, which spent more than its budget) display now? | Negative amounts in this format don't use a minus sign |
+| 1 | On the Budget sheet, select the Variance cells E5:E21 and press Ctrl + Shift + \$ (Mac: ⌃ + Shift + \$). What does E11 (Emergency Department, which spent more than its budget) display now? | Negative amounts in this format don't use a minus sign |
 | 2 | Select the Variance % cells F5:F21, press Ctrl + Shift + % (Mac: ⌃ + Shift + %), then click Home → Increase Decimal once. What does F17 (Orthopedics & Spine) display? | The shortcut shows 0 decimals; each Increase Decimal click adds one |
 | 3 | C5 already has a finance format: it shows the Laboratory budget in thousands with a K. What number is actually stored in C5? Click the cell and read the formula bar. | The cell shows one thing; the formula bar shows another |
 | 4 | Copy C5's format to the rest of the money columns with Format Painter: select C5, double-click Home → Format Painter, drag over C5:E20, then drag over the Total row C21:E21, and press Esc. What does E6 (Pharmacy's variance) display now? | A format with only one section puts a minus sign in front of negatives |
-| 5 | On the Registry sheet, select the PatientDue cells F5:F24 and click Home → Accounting Number Format (the $ button). Cox, Ronald (row 5) owes nothing for this visit. What character does F5 show where the 0 used to be? | Compare Accounting with Currency in the guide's table |
+| 5 | On the Registry sheet, select the PatientDue cells F5:F24 and click Home → Accounting Number Format (the \$ button). Cox, Ronald (row 5) owes nothing for this visit. What character does F5 show where the 0 used to be? | Compare Accounting with Currency in the guide's table |
 | 6 | The MRN column lost its leading zeros on the way out of the registration system. Bluestone MRNs are always 8 digits. Select B5:B24, open Format Cells (Ctrl + 1; Mac: ⌘ + 1), choose Custom, and type the code 00000000 in the Type box. What does B13 display? | Each 0 in the code is a digit that always shows, even when it's a zero |
 | 7 | The Phone column (D) stores 10-digit numbers. Write a custom number format that shows each one the usual US way: the first three digits in parentheses, a space, three digits, a hyphen, and the last four digits. For example, D5 (5555298330) should display as (555) 529-8330. Apply your format to D5:D24, then type the format code you used. | 0 is a digit placeholder; parentheses, spaces, and hyphens can be typed as they are |
 | 8 | On the Stays sheet, the Admitted column (C) shows serial numbers because the export lost its date format. Select C5:C40 and apply the custom format ddd mm/dd/yyyy h:mm AM/PM. What does C6 display? | ddd is the short day name; mm right after h means minutes |
@@ -550,11 +550,11 @@ function, which you'll meet in Lesson 2.2, to prove what each format code displa
 
 **1. Currency shortcut on a negative variance**
 
-- **Answer:** ($572,762.00)
+- **Answer:** (\$572,762.00)
 - **Solution:**
 
 1. Select **Budget!E5:E21**.
-2. Press **Ctrl + Shift + $** (Mac: **⌃ + Shift + $**).
+2. Press **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**).
 3. Read **E11**.
 
 
@@ -582,7 +582,7 @@ The cell displays `$11,737K`, but it stores 11,736,897. The custom code `$#,##0,
 
 **4. Format Painter: thousands format on a negative number**
 
-- **Answer:** -$231K
+- **Answer:** -\$231K
 - **Solution:**
 
 1. Select **Budget!C5**.
@@ -600,11 +600,11 @@ Format Painter copies *all* of C5's formatting (number format, font, fill, borde
 - **Solution:**
 
 1. Select **Registry!F5:F24**.
-2. Click the **$** button in the **Number** group of the **Home** tab (its ScreenTip says Accounting Number Format).
-3. Look at **F5**: the $ sits at the left edge and a dash sits near the right.
+2. Click the **\$** button in the **Number** group of the **Home** tab (its ScreenTip says Accounting Number Format).
+3. Look at **F5**: the \$ sits at the left edge and a dash sits near the right.
 
 
-The Accounting code is `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`. Its third section (zero) prints a dash, so a column of balances shows which patients owe nothing at a glance. Accounting also pins the $ to the left edge of the cell and lines up the decimal points, and it always shows negatives in parentheses. Currency puts the $ right next to the number and shows `$0.00` for zero. The cell still stores 0.
+The Accounting code is `_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)`. Its third section (zero) prints a dash, so a column of balances shows which patients owe nothing at a glance. Accounting also pins the \$ to the left edge of the cell and lines up the decimal points, and it always shows negatives in parentheses. Currency puts the \$ right next to the number and shows `$0.00` for zero. The cell still stores 0.
 
 **6. Custom format 00000000 for MRNs**
 
@@ -705,10 +705,10 @@ The built-in **Total** style makes the text bold and draws a thin line above the
 The Emergency Department director presents the December 2025 operating report to the CFO next week. Finance's style guide has five rules for department reports. Apply them on the Dec Report sheet, writing every custom format code yourself. Then type what each listed Dec Report cell displays into the yellow cells on the Bonus sheet. When you finish, compare your sheet with the hidden Report Key sheet.
 
 - Rule 1: Center the title across A1:I1 without merging. Make the header row bold white text on a dark blue fill, wrapped and centered. Give the Total row the Total cell style.
-- Rule 2: Show Dec Budget and Dec Actual in thousands with one decimal place, a dollar sign, and a K, so 843,879 displays as $843.9K.
-- Rule 3: Show both Variance columns the same way, except that negative variances (over budget) are red and in parentheses instead of having a minus sign, so -25,403 displays as ($25.4K).
+- Rule 2: Show Dec Budget and Dec Actual in thousands with one decimal place, a dollar sign, and a K, so 843,879 displays as \$843.9K.
+- Rule 3: Show both Variance columns the same way, except that negative variances (over budget) are red and in parentheses instead of having a minus sign, so -25,403 displays as (\$25.4K).
 - Rule 4: Show both Var % columns with one decimal place, with negatives red and in parentheses, so -0.1075… displays as (10.8%).
-- Rule 5: Show YTD Budget and YTD Actual with a dollar sign: in millions with two decimals and an M when the amount is 1,000,000 or more (10,290,782 displays as $10.29M), and otherwise in thousands with no decimals and a K.
+- Rule 5: Show YTD Budget and YTD Actual with a dollar sign: in millions with two decimals and an M when the amount is 1,000,000 or more (10,290,782 displays as \$10.29M), and otherwise in thousands with no decimals and a K.
 
 Work on the **Bonus** sheet of the workbook.
 
@@ -725,7 +725,7 @@ Work on the **Bonus** sheet of the workbook.
 
 **B1. Thousands with one decimal**
 
-- **Answer:** $261.7K
+- **Answer:** \$261.7K
 - **Solution:**
 
 1. **Rule 1** uses the same steps as practice task 13: select **'Dec Report'!A1:I1** and set **Center Across Selection** (**Ctrl + 1**, Mac: **⌘ + 1** → **Alignment** tab), style the header **A4:I4** (bold, white font, dark blue fill, Wrap Text, Center), and apply **Home → Cell Styles → Total** to **A12:I12**.
@@ -737,7 +737,7 @@ Work on the **Bonus** sheet of the workbook.
 
 **B2. Negative variance: red, parentheses, thousands**
 
-- **Answer:** ($47.8K)
+- **Answer:** (\$47.8K)
 - **Solution:** Select **'Dec Report'!D5:D12**, then hold **Ctrl** (Mac: **⌘**) and drag over **H5:H12** to add the YTD Variance column. Apply the custom format `$#,##0.0,"K";[Red]($#,##0.0,"K")`.
 
 The first section formats positive variances (under budget). The second section starts with `[Red]` and wraps the same thousands pattern in parentheses, so -47,771 shows as `($47.8K)` in red. Because the format has a negative section, Excel adds no minus sign. In December, 5 of the 8 Dec Variance cells (including the total) turn red.
@@ -751,14 +751,14 @@ The cell stores -0.082270… Each section has its own `%`, so both multiply by 1
 
 **B4. Conditional format: millions**
 
-- **Answer:** $17.56M
+- **Answer:** \$17.56M
 - **Solution:** Select **'Dec Report'!F5:G12** and apply the custom format `[>=1000000]$#,##0.00,,"M";[>=1000]$#,##0,"K";$#,##0`.
 
 A condition in square brackets replaces the usual positive/negative meaning of a section. `[>=1000000]` sends 17,563,319 to the first section, where two scaling commas divide by 1,000,000: `$17.56M`. This total matches the Emergency Department's 2025 actual on the Budget sheet, because December closes the fiscal year.
 
 **B5. Conditional format: thousands**
 
-- **Answer:** $298K
+- **Answer:** \$298K
 - **Solution:** Same format as the previous part. Check that values under 1,000,000 fall through to the K section.
 
 298,078 is less than 1,000,000, so Excel skips the first section and uses `[>=1000]$#,##0,"K"`: `$298K`. The full code is `[>=1000000]$#,##0.00,,"M";[>=1000]$#,##0,"K";$#,##0`. Its third section catches anything under 1,000. Without conditions, every value would get the same scale, and a `$298K` line would show as `$0.30M`.
@@ -772,8 +772,8 @@ A condition in square brackets replaces the usual positive/negative meaning of a
   calculation uses that.
 - **Ctrl + 1** (Mac: **⌘ + 1**) opens Format Cells. **Ctrl + Shift** (Mac: **⌃ + Shift**) with `~ ! @ # $ % ^` applies General,
   Number, Time, Date, Currency, Percentage, and Scientific.
-- **Accounting** (the $ button) pins the $ to the left, aligns decimals, and shows zero as a dash. **Currency** (Ctrl + Shift + $;
-  Mac: ⌃ + Shift + $) keeps the $ next to the number.
+- **Accounting** (the \$ button) pins the \$ to the left, aligns decimals, and shows zero as a dash. **Currency** (Ctrl + Shift + \$;
+  Mac: ⌃ + Shift + \$) keeps the \$ next to the number.
 - Custom codes are built from placeholders (`0 # ?`), scaling commas, quoted text, `[Color]` tags, `[conditions]`, and up to four
   sections: positive; negative; zero; text. A negative section needs its own sign.
 - Use `[h]:mm` for durations that can pass 24 hours, and remember that `m` means minutes only next to `h` or `s`.

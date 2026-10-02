@@ -102,7 +102,7 @@ their charges?
 =SUMPRODUCT((tblStays[FacilityID]="F03")*(YEAR(tblStays[DischargeDateTime])=2025)*(tblStays[DischargeDisposition]="Skilled Nursing Facility"))
 ```
 
-The result is **51**. Add the charges column as a second argument and the same conditions give **$1,860,774.45**:
+The result is **51**. Add the charges column as a second argument and the same conditions give **\$1,860,774.45**:
 
 ```
 =SUMPRODUCT((tblStays[FacilityID]="F03")*(YEAR(tblStays[DischargeDateTime])=2025)*(tblStays[DischargeDisposition]="Skilled Nursing Facility"), tblStays[TotalCharges])
@@ -133,7 +133,7 @@ There are 38 sepsis stays and 20 long stays, but 10 stays are both. Without the 
 returns 58. With `((A)+(B))>0`, each stay is either TRUE or FALSE, and the correct answer is **48**.
 
 **Conditional averages.** Divide a SUMPRODUCT sum by a SUMPRODUCT count. The average charge for F02 sepsis stays discharged
-in 2025 is **$73,787.82**:
+in 2025 is **\$73,787.82**:
 
 ```
 =SUMPRODUCT((tblStays[FacilityID]="F02")*(tblStays[PrimaryDxCode]="A41.9")*(YEAR(tblStays[DischargeDateTime])=2025), tblStays[TotalCharges])
@@ -444,7 +444,7 @@ These functions run a LAMBDA many times for you, each in a different pattern:
 ```
 
 MAP passes one item at a time, so AND, OR, and MAX behave. Count F02 stays discharged in 2025 that were both long (LOS days of
-10 or more) and expensive ($100,000 or more):
+10 or more) and expensive (\$100,000 or more):
 
 ```
 =SUM(MAP(tblStays[FacilityID], tblStays[AdmitDateTime], tblStays[DischargeDateTime], tblStays[TotalCharges],
@@ -631,7 +631,7 @@ each formula in the yellow cell, and the **Check** column turns green when you'r
 or Excel 2024. Tasks 3, 4, 6, 7, and the bonus use XLOOKUP, FILTER, or LET, which need Excel 2021 or later.
 
 <!-- BEGIN GENERATED: practice -->
-Every task works on the Excel Tables in this workbook. Table references such as tblStays[FacilityID] are the easiest to read, and A1 ranges such as Stays!$C$2:$C$5587 work too. LOS days = discharge date − admit date (midnights), with a minimum of 1 day. Each answer cell must return ONE value, so try array formulas on the Sandbox sheet first.
+Every task works on the Excel Tables in this workbook. Table references such as tblStays[FacilityID] are the easiest to read, and A1 ranges such as Stays!\$C\$2:\$C\$5587 work too. LOS days = discharge date − admit date (midnights), with a minimum of 1 day. Each answer cell must return ONE value, so try array formulas on the Sandbox sheet first.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -677,7 +677,7 @@ Each comparison returns an array of 5,586 TRUE/FALSE values. Multiplying the two
 ```
 
 
-(A)+(B) is 0, 1, or 2. The 49 long SNF stays score 2, so multiplying by charges without the `>0` test counts their charges twice and gives $42,880,891.91. `((A)+(B))>0` turns the sum back into TRUE/FALSE, so every stay counts once. LOS days of 7 or more only depends on the midnight count, so `INT(dis)-INT(adm)>=7` is enough here (the 1-day minimum only changes 0-night stays).
+(A)+(B) is 0, 1, or 2. The 49 long SNF stays score 2, so multiplying by charges without the `>0` test counts their charges twice and gives \$42,880,891.91. `((A)+(B))>0` turns the sum back into TRUE/FALSE, so every stay counts once. LOS days of 7 or more only depends on the midnight count, so `INT(dis)-INT(adm)>=7` is enough here (the 1-day minimum only changes 0-night stays).
 
 **3. Most recent creatinine for PT11882 (multi-criteria XLOOKUP)**
 
@@ -842,7 +842,7 @@ Bluestone's quality committee wants 30-day all-cause readmission rates by hospit
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** How many index stays are there system-wide? *(Hint: ISNA(MATCH(disposition, {list}, 0)) is TRUE when a disposition is NOT on the list.)*
-- **B2.** Write one LET formula that returns the readmission rate for Bluestone Memorial (F01). Enter it as a percentage (1 decimal place is enough). *(Hint: Name readmit (the Task 5 test for every row at once, as in guide section 4c), eligible, and keep. Then divide SUM(keep*readmit) by SUM(keep).)*
+- **B2.** Write one LET formula that returns the readmission rate for Bluestone Memorial (F01). Enter it as a percentage (1 decimal place is enough). (Hint: Name readmit (the Task 5 test for every row at once, as in guide section 4c), eligible, and keep. Then divide SUM(keep*readmit) by SUM(keep).)
 - **B3.** Which hospital has the highest rate? Enter its FacilityID. *(Hint: Wrap your B2 formula in LAMBDA(facility, …), save it as READMITRATE, and MAP it over {"F01";"F02";"F03"}. Or edit the facility ID three times.)*
 - **B4.** What is that hospital's rate? Enter it as a percentage (1 decimal place is enough). *(Hint: Reuse B2 with the other facility ID, or call your READMITRATE function.)*
 - **B5.** CMS also publishes readmission rates by condition. What is the system-wide rate for index stays whose primary diagnosis is one of the four HRRP conditions from Task 12? Enter it as a percentage (1 decimal place is enough). *(Hint: Swap the facility test for a diagnosis-list test: ISNUMBER(MATCH(dx, {list}, 0)).)*

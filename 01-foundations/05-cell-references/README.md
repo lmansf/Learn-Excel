@@ -13,8 +13,8 @@ the parts that must not move, and pull numbers from other sheets, including the 
 ## What you'll learn
 
 - Predict how relative references change when a formula is copied
-- Lock references with $ (absolute) and use F4 to toggle
-- Build two-way grids with mixed references ($A1 and A$1)
+- Lock references with \$ (absolute) and use F4 to toggle
+- Build two-way grids with mixed references (\$A1 and A\$1)
 - Reference other sheets and sum the same cell across sheets (3-D references)
 
 ## 📖 Guide
@@ -87,7 +87,7 @@ The fix is to lock the denominator with dollar signs, as in `=J5/$J$21`:
 
 > 💡 **Tip:** A % of total column always adds up to 100%. Put `=SUM(K5:K20)` under it as a free sanity check.
 
-### 3. Absolute and mixed references: the $ sign
+### 3. Absolute and mixed references: the \$ sign
 
 A `$` in a reference means "don't change the next thing when this formula is copied." A reference can lock the column, the row,
 both, or neither:
@@ -104,7 +104,7 @@ The `$` before the letter pins the column. The `$` before the number pins the ro
 The `$` signs only matter when a formula is **copied**. A formula you type once and never copy works the same with or without
 them, and the result in the original cell never changes.
 
-### 4. F4: add the $ signs for you
+### 4. F4: add the \$ signs for you
 
 You can type the `$` signs, but **F4** (Mac: **⌘ + T**, or **fn + F4**) is faster. While you're typing or editing a formula, put the
 cursor in or just after a reference and press it. Each press cycles to the next form:
@@ -385,7 +385,7 @@ Tasks 1, 4, and 8 ask you to predict a formula or reference. Type your answer as
 | 5 | On the 4 West OT sheet, Jessica Aguilar (row 33) worked 9.10 overtime hours in December. On this Practice sheet, write a formula for this employee's overtime pay: OTHours × HourlyRate × the overtime multiplier in B3. Refer to the cells; don't type the numbers. | The sheet name starts with a digit and contains spaces, so it needs single quotes |
 | 6 | On the 4 West OT sheet, fill the yellow OTPay column (H6:H72) with one formula: OTHours × HourlyRate × the overtime multiplier in B3. Type it in H6 and copy it down. The gray cell totals your column: what did December's overtime cost? | Lock B3; let the row references move |
 | 7 | Finance asks what December's overtime would have cost at double time. Change '4 West OT'!B3 to 2, read task 6's gray cell, and type that amount here as a number. Then set B3 back to 1.5. | One edit updates the whole column. That's the point of the rate cell |
-| 8 | A grid has labels across row 2 and down column A, and cell B3 holds =B$2*$A3. If you copy B3 to D6, what formula will D6 contain? Type it without the =. | A $ freezes only the part right after it |
+| 8 | A grid has labels across row 2 and down column A, and cell B3 holds =B\$2*\$A3. If you copy B3 to D6, what formula will D6 contain? Type it without the =. | A \$ freezes only the part right after it |
 | 9 | On the Staffing Grid sheet, fill the yellow grid B6:H12 with ONE formula: nursing hours needed per day = census (column A) × HPPD target (row 5). Type it in B6, copy it across to H6, then down to row 12. The gray cell adds up the whole grid. | Lock the column of the census and the row of the HPPD |
 | 10 | Using one 3-D reference, what did Oncology (row 11 on the Oct, Nov, and Dec sheets) spend on Pharmaceuticals (column F) in Q4 2025? | Type =SUM(, click the Oct tab, Shift+click the Dec tab, then click the cell |
 | 11 | Fill the yellow grid on the Q4 Summary sheet (C5:I20) with ONE 3-D formula that adds the same cell on the Oct, Nov, and Dec sheets. Type it in C5, copy it across to I5, then down to row 20. The gray cell adds up your grid: what was Bluestone Memorial's Q4 operating expense? | 3-D references copy like ordinary relative references |
@@ -421,28 +421,28 @@ A reference to another sheet is the sheet name, an exclamation mark, then the ce
 - **Answer:** 100.0%
 - **Solution:** `=J5/$J$21`
 
-Without the $ signs, K6 would hold =J6/J22. Row 22 is empty, so the result is #DIV/0!. $J$21 stays put wherever you copy it, while J5 moves to each department's row. =J5/J$21 also works here, because you only copy down. Every % of total column adds up to 100%, so the gray cell doubles as a sanity check.
+Without the \$ signs, K6 would hold =J6/J22. Row 22 is empty, so the result is #DIV/0!. \$J\$21 stays put wherever you copy it, while J5 moves to each department's row. =J5/J\$21 also works here, because you only copy down. Every % of total column adds up to 100%, so the gray cell doubles as a sanity check.
 
 **4. F4 pressed three times**
 
 - **Answer:** `$C21`
-- **Solution:** F4 cycles C21 → $C$21 → C$21 → $C21 → back to C21. The third press gives **$C21**.
+- **Solution:** F4 cycles C21 → \$C\$21 → C\$21 → \$C21 → back to C21. The third press gives **\$C21**.
 
-$C21 locks the column (C) but lets the row change. Try it: type the formula, press F4 three times, and watch the formula bar. Press Esc afterwards so you don't leave the test formula in the sheet.
+\$C21 locks the column (C) but lets the row change. Try it: type the formula, press F4 three times, and watch the formula bar. Press Esc afterwards so you don't leave the test formula in the sheet.
 
 **5. Overtime pay for Jessica Aguilar**
 
 - **Answer:** 559.65
 - **Solution:** `='4 West OT'!G33*'4 West OT'!D33*'4 West OT'!B3`
 
-Sheet names that contain spaces or start with a digit must be wrapped in single quotes: '4 West OT'!B3. When you click the cells instead of typing, Excel adds the quotes for you. No $ signs are needed here, because this formula is never copied.
+Sheet names that contain spaces or start with a digit must be wrapped in single quotes: '4 West OT'!B3. When you click the cells instead of typing, Excel adds the quotes for you. No \$ signs are needed here, because this formula is never copied.
 
 **6. OTPay column (rate in one cell)**
 
 - **Answer:** 16,029.43
 - **Solution:** `=G6*D6*$B$3`
 
-G6 and D6 are relative, so each row uses its own employee's hours and rate. $B$3 is absolute, so all 67 rows share the one multiplier cell. If you had typed *1.5 into every formula, a policy change would mean editing 67 formulas.
+G6 and D6 are relative, so each row uses its own employee's hours and rate. \$B\$3 is absolute, so all 67 rows share the one multiplier cell. If you had typed *1.5 into every formula, a policy change would mean editing 67 formulas.
 
 **7. What-if: double time**
 
@@ -459,16 +459,16 @@ Because every OTPay formula points at B3, one edit recalculates all 67 rows and 
 **8. Predict: B3 copied to D6**
 
 - **Answer:** `=D$2*$A6`
-- **Solution:** The move is 2 columns right (B to D) and 3 rows down (row 3 to row 6). In B$2 the row is locked, so only the column moves and it becomes D$2. In $A3 the column is locked, so only the row moves and it becomes $A6. The answer is **=D$2*$A6**.
+- **Solution:** The move is 2 columns right (B to D) and 3 rows down (row 3 to row 6). In B\$2 the row is locked, so only the column moves and it becomes D\$2. In \$A3 the column is locked, so only the row moves and it becomes \$A6. The answer is **=D\$2*\$A6**.
 
-B$2 always reads row 2 (the labels across the top) in the current column. $A3 always reads column A (the labels down the side) in the current row. Together they make every cell multiply its own column label by its own row label, which is exactly what a two-way grid needs. You'll build one in the next task.
+B\$2 always reads row 2 (the labels across the top) in the current column. \$A3 always reads column A (the labels down the side) in the current row. Together they make every cell multiply its own column label by its own row label, which is exactly what a two-way grid needs. You'll build one in the next task.
 
 **9. Staffing grid (mixed references)**
 
 - **Answer:** 13,328
 - **Solution:** `=$A6*B$5`
 
-$A6 keeps every formula looking at column A, and B$5 keeps every formula looking at row 5. With =$A$6*$B$5, every cell would repeat 182, the B6 result. With no $ at all, C6 would compute =B6*C5, multiplying the previous result by the HPPD instead of using the census. Cross-check: the sum of a multiplication grid equals (sum of the census values) × (sum of the HPPD targets), which is how the key's live formula works.
+\$A6 keeps every formula looking at column A, and B\$5 keeps every formula looking at row 5. With =\$A\$6*\$B\$5, every cell would repeat 182, the B6 result. With no \$ at all, C6 would compute =B6*C5, multiplying the previous result by the HPPD instead of using the census. Cross-check: the sum of a multiplication grid equals (sum of the census values) × (sum of the HPPD targets), which is how the key's live formula works.
 
 **10. 3-D SUM: Oncology pharmaceuticals in Q4**
 
@@ -505,7 +505,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B2.** What is the 2026 plan for Laboratory · Medical Supplies (Plan 2026, row 18, column E)? Reference the cell in your grid. *(Hint: Check it by hand: 2025 amount × (1 + inflation) × (1 + growth))*
 - **B3.** By what percentage would Bluestone Memorial's total operating expense grow from 2025 to 2026 under this plan? Enter it as a percentage. *(Hint: New ÷ old − 1)*
 - **B4.** Which department's total expense is planned to grow by the largest percentage? Type the department name exactly as it appears in column A. *(Hint: Add a helper column that divides each department's 2026 total by its 2025 total)*
-- **B5.** Pharmaceutical prices are the shakiest assumption. If pharmaceutical inflation were 9.0% instead of 7.5%, how many dollars higher would the 2026 plan total be? Change the one input cell, compare the totals, and type the difference here as a number, rounded to the nearest dollar. Then put the input back. *(Hint: Because of the $ signs, one edit flows to all 16 Pharmaceuticals cells)*
+- **B5.** Pharmaceutical prices are the shakiest assumption. If pharmaceutical inflation were 9.0% instead of 7.5%, how many dollars higher would the 2026 plan total be? Change the one input cell, compare the totals, and type the difference here as a number, rounded to the nearest dollar. Then put the input back. *(Hint: Because of the \$ signs, one edit flows to all 16 Pharmaceuticals cells)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -517,14 +517,14 @@ Work on the **Bonus** sheet of the workbook.
 - **Answer:** 162,219,455.28
 - **Solution:** `=Expenses!C5*(1+C$3)*(1+$B5)`
 
-Expenses!C5 is fully relative, because each plan cell needs the matching 2025 cell. C$3 locks the row, so every department reads the inflation in row 3 of its own category column. $B5 locks the column, so every category reads the growth in column B of its own department row. One formula, three reference types, 112 correct cells.
+Expenses!C5 is fully relative, because each plan cell needs the matching 2025 cell. C\$3 locks the row, so every department reads the inflation in row 3 of its own category column. \$B5 locks the column, so every category reads the growth in column B of its own department row. One formula, three reference types, 112 correct cells.
 
 **B2. Spot-check: Laboratory · Medical Supplies**
 
 - **Answer:** 3,424,829.93
 - **Solution:** `='Plan 2026'!E18`
 
-Spot-checking a cell far from where you typed the formula proves the copy worked. E18 should hold =Expenses!E18*(1+E$3)*(1+$B18): the inflation is still read from row 3 and the growth from column B.
+Spot-checking a cell far from where you typed the formula proves the copy worked. E18 should hold =Expenses!E18*(1+E\$3)*(1+\$B18): the inflation is still read from row 3 and the growth from column B.
 
 **B3. Hospital-wide growth, 2025 → 2026**
 

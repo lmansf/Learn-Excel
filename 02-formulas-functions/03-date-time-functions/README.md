@@ -481,8 +481,8 @@ pay week, and their paid time adds up to 1.6958 days:
 
 To apply one, press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Number → Custom**, and type the code in the **Type** box.
 
-> ⚠️ **Multiply by 24 before you multiply by a rate.** At EMP2124's rate of $19.83 an hour, `=total*19.83` pays $33.63, because
-> the total is 1.6958 *days*. `=total*24*19.83` correctly pays $807.08.
+> ⚠️ **Multiply by 24 before you multiply by a rate.** At EMP2124's rate of \$19.83 an hour, `=total*19.83` pays \$33.63, because
+> the total is 1.6958 *days*. `=total*24*19.83` correctly pays \$807.08.
 
 ### 13. Text that looks like a date: DATEVALUE and TIMEVALUE
 

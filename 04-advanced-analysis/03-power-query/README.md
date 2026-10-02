@@ -197,7 +197,7 @@ The icon at the left of each column header shows its **data type**. Click the ic
 | ABC | Text | `type text` | ClaimID, PayerID, DenialReason |
 | 123 | Whole Number | `Int64.Type` | AvgDaysToPay, the budget month columns |
 | 1.2 | Decimal Number | `type number` | BilledAmount, PaidAmount |
-| $ | Fixed Decimal Number (currency, 4 decimal places) | `Currency.Type` | An alternative for money columns |
+| \$ | Fixed Decimal Number (currency, 4 decimal places) | `Currency.Type` | An alternative for money columns |
 | % | Percentage | `Percentage.Type` | A denial rate you calculate |
 | Calendar | Date | `type date` | ServiceDate, SubmitDate, PaidDate |
 | Calendar + clock | Date/Time | `type datetime` | AdmitDateTime |
@@ -877,7 +877,7 @@ in
 ```
 
 
-Advanced Group By returns several summaries per group in one pass. Authorization Required has the most denials, but Medical Necessity denials average about $13,339 of billed charges each, the highest of any reason. Volume and dollars tell different stories, which is why denial reports show both counts and amounts.
+Advanced Group By returns several summaries per group in one pass. Authorization Required has the most denials, but Medical Necessity denials average about \$13,339 of billed charges each, the highest of any reason. Volume and dollars tell different stories, which is why denial reports show both counts and amounts.
 
 **7. Merge Claims with Payers (PaidAmount by PayerType)**
 
@@ -981,7 +981,7 @@ in
 ```
 
 
-A **Left Anti** join keeps only the rows in the first table that have **no** match in the second. It's the fastest way to answer "what's missing?" questions. These encounters were discharged but not yet billed (hospitals call this *discharged not final billed*, or DNFB), and together they carry $2,371,213.36 of charges. The bonus refreshes this list after the January 2026 claims arrive.
+A **Left Anti** join keeps only the rows in the first table that have **no** match in the second. It's the fastest way to answer "what's missing?" questions. These encounters were discharged but not yet billed (hospitals call this *discharged not final billed*, or DNFB), and together they carry \$2,371,213.36 of charges. The bonus refreshes this list after the January 2026 claims arrive.
 
 **11. Read and edit M code (aged pending claims)**
 

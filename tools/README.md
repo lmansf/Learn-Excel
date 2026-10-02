@@ -155,6 +155,37 @@ LibreOffice is only a stand-in for Excel, and a few behaviors differ. Write summ
   them directly.
 - In VBA smoke tests, LibreOffice raises error 91 on `Debug.Print` and has no `Worksheet.Sort`, `ListObjects`, or
   `Scripting.Dictionary`. See `xlcourse/vba.py` for the full list.
+- **Booleans:** LibreOffice treats TRUE/FALSE as numbers, so `COUNT` counts them and `SUMPRODUCT(range>5)` works without
+  `--`. In Excel, `COUNT` ignores logical values and `SUMPRODUCT` treats them as 0. Always coerce with `--` in solutions.
+  Also, `=90<A1<130` behaves differently in the two apps.
+- **Bare Table names:** LibreOffice reads `tblX` as including the header row, so `ROWS(tblX)` is one higher and
+  `FILTER(tblX, …)` errors. Use column references such as `ROWS(tblX[ID])` in summaries.
+- **Spill references and arrays:** the `A1#` spill operator returns `#NAME?` in LibreOffice. XLOOKUP with an *array* of
+  lookup values silently returns only the first result. TEXTBEFORE/TEXTAFTER don't vectorize over ranges.
+- **Number-like text:** COUNTIF/MAXIFS compare number-like text as text in LibreOffice, but Excel coerces it to numbers.
+- **`_xlfn.NETWORKDAYS.INTL`** (the correct stored form for Excel) returns `#NAME?` in LibreOffice, so use `live=False`
+  or a NETWORKDAYS cross-check.
+- **Blank cells in SORT/UNIQUE:** Excel shows empty cells as 0, while LibreOffice leaves them blank.
+
+## Optional Lesson settings
+
+| Attribute / argument | Use it when |
+|---|---|
+| `lesson.practice_instructions`, `lesson.bonus_instructions` | The generic "Type a formula or value in each yellow cell" line doesn't fit (e.g. macro-fed gray cells) |
+| `lesson.practice_how` | You want a different Start Here "2. Practice" text |
+| `lesson.key_note` | You want a different subtitle on the hidden key sheets |
+| `lesson.bonus_where` | The bonus work happens on another sheet (`""` omits the README line) |
+| `lesson.sheet_notes = [(sheet, description)]` | You add sheets in a customize hook and want them listed on Start Here |
+| `lesson.verify_scan = [(sheet, "A1:Z99")]` | The verifier should also scan a custom sheet for error values |
+| `add_table_sheet(..., freeze=False, hidden=True, hidden_cols=[...])` | The lesson needs unfrozen, hidden sheets or hidden columns |
+| `Task(fill=[{...}, {...}])` | The self-test must fill several ranges |
+| `Task(self_test="summary")` | A customize hook simulates the work behind a summary task (no `fill`) |
+| `Task(key_solution="...")` | The key's "Sample solution" cell should show different text from the README |
+
+The library also strips Markdown from prompts, hints, intros and non-code solutions when it writes them into Excel cells,
+escapes `$` in generated README blocks so GitHub doesn't render `$…$` as math, and writes 3-D references
+(`Jan:Mar!B2`) as ordinary formulas because Excel rejects them inside array formulas. `build.py` warns about `$` pairs in
+hand-written README text and about broken relative links.
 
 ## Data sheets
 

@@ -1160,7 +1160,7 @@ End Sub
 ```
 
 
-12 files × 18 units × the days in each month = 6,570 rows. The gray cell also inspects column A (CensusDate), where every cell should be a real date. "Text rows found" means header rows or README.txt lines were copied in: drop each file's header with Offset(1, 0).Resize(rows − 1), and skip other files with LCase$(fileName) Like "*.csv". "Blank rows found" means each file left an empty row behind. That happens with Offset(1, 0) alone, because the shifted block keeps the header's row in its count and so ends one row below the data. Because the macro clears row 2 down first, running it twice gives the same count instead of doubling it.
+12 files × 18 units × the days in each month = 6,570 rows. The gray cell also inspects column A (CensusDate), where every cell should be a real date. "Text rows found" means header rows or README.txt lines were copied in: drop each file's header with Offset(1, 0).Resize(rows − 1), and skip other files with LCase\$(fileName) Like "*.csv". "Blank rows found" means each file left an empty row behind. That happens with Offset(1, 0) alone, because the shifted block keeps the header's row in its count and so ends one row below the data. Because the macro clears row 2 down first, running it twice gives the same count instead of doubling it.
 
 **12. D130 occupancy from the combined data**
 

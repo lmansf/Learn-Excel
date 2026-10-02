@@ -657,7 +657,7 @@ SORT(…,,-1) sorts descending (the empty second argument keeps the default sort
 ```
 
 
-DROP is the mirror image of TAKE: it removes rows from the start (or, with a negative number, from the end). The full inpatient average is 33,987.43, so ten very expensive stays move the mean by about $2,215. TRIMMEAN (Lesson 2.4) trims a percentage from both ends, while DROP lets you decide exactly what to remove.
+DROP is the mirror image of TAKE: it removes rows from the start (or, with a negative number, from the end). The full inpatient average is 33,987.43, so ten very expensive stays move the mean by about \$2,215. TRIMMEAN (Lesson 2.4) trims a percentage from both ends, while DROP lets you decide exactly what to remove.
 
 **10. Attending with the highest total charges (SORTBY)**
 
@@ -669,7 +669,7 @@ DROP is the mirror image of TAKE: it removes rows from the start (or, with a neg
 ```
 
 
-SUMIFS normally takes one criterion. Hand it the whole UNIQUE list and it returns one total per name (142 totals). SORTBY then orders the names by those totals, even though the totals never appear in the result, and TAKE(…,1) keeps the top name. The runner-up, Hawkins, Bruce, is only $3,146 behind.
+SUMIFS normally takes one criterion. Hand it the whole UNIQUE list and it returns one total per name (142 totals). SORTBY then orders the names by those totals, even though the totals never appear in the result, and TAKE(…,1) keeps the top name. The runner-up, Hawkins, Bruce, is only \$3,146 behind.
 
 **11. Specialties attending inpatient stays (XLOOKUP with an array)**
 
@@ -760,7 +760,7 @@ INDEX works on a spill like on any range: row 2 (row 1 is the header), column 2.
 - **Answer:** 39,862.22
 - **Solution:** `=INDEX(Workspace!N6#,2,4)`
 
-Column 4 of the leaderboard is AvgCharge. A Cardiac Step-Down stay averages $39,862, about 15 times the average Bluestone Memorial emergency visit. If your answer has many decimals, that's fine: the check accepts the unrounded value.
+Column 4 of the leaderboard is AvgCharge. A Cardiac Step-Down stay averages \$39,862, about 15 times the average Bluestone Memorial emergency visit. If your answer has many decimals, that's fine: the check accepts the unrounded value.
 
 **B4. Leaderboard units' share of charges**
 

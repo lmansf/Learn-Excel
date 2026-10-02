@@ -154,22 +154,22 @@ counting the values in each bin. You have three ways to build one.
 less than or equal to its own limit*. FREQUENCY returns one more count than there are limits, and that last count holds
 everything above the top limit.
 
-Here is TotalCharges in $10,000 bins. With the limits 10,000, 20,000, …, 100,000 typed in I2:I11 of the Stays sheet,
+Here is TotalCharges in \$10,000 bins. With the limits 10,000, 20,000, …, 100,000 typed in I2:I11 of the Stays sheet,
 `=FREQUENCY(G2:G401,I2:I11)` returns:
 
 | Bin limit | Counts stays charged | Stays | Cumulative % |
 |--:|---|--:|--:|
-| 10,000 | $10,000 or less | 18 | 4.5% |
-| 20,000 | over $10,000, up to $20,000 | 138 | 39.0% |
-| 30,000 | over $20,000, up to $30,000 | 93 | 62.3% |
-| 40,000 | over $30,000, up to $40,000 | 44 | 73.3% |
-| 50,000 | over $40,000, up to $50,000 | 28 | 80.3% |
-| 60,000 | over $50,000, up to $60,000 | 19 | 85.0% |
-| 70,000 | over $60,000, up to $70,000 | 20 | 90.0% |
-| 80,000 | over $70,000, up to $80,000 | 10 | 92.5% |
-| 90,000 | over $80,000, up to $90,000 | 9 | 94.8% |
-| 100,000 | over $90,000, up to $100,000 | 9 | 97.0% |
-| (extra 11th count) | over $100,000 | 12 | 100.0% |
+| 10,000 | \$10,000 or less | 18 | 4.5% |
+| 20,000 | over \$10,000, up to \$20,000 | 138 | 39.0% |
+| 30,000 | over \$20,000, up to \$30,000 | 93 | 62.3% |
+| 40,000 | over \$30,000, up to \$40,000 | 44 | 73.3% |
+| 50,000 | over \$40,000, up to \$50,000 | 28 | 80.3% |
+| 60,000 | over \$50,000, up to \$60,000 | 19 | 85.0% |
+| 70,000 | over \$60,000, up to \$70,000 | 20 | 90.0% |
+| 80,000 | over \$70,000, up to \$80,000 | 10 | 92.5% |
+| 90,000 | over \$80,000, up to \$90,000 | 9 | 94.8% |
+| 100,000 | over \$90,000, up to \$100,000 | 9 | 97.0% |
+| (extra 11th count) | over \$100,000 | 12 | 100.0% |
 
 In Microsoft 365 and Excel 2021 or later, FREQUENCY spills all 11 counts. In Excel 2019 and earlier, select 11 cells first, type
 the formula, and confirm it with **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**). To get a single bin's count in one cell,
@@ -214,10 +214,10 @@ label starts with `[`.
 > 30,000," not "30,000 and up." With whole-number data such as LOS, this decides which bin a value that sits exactly on a limit
 > falls into. Misreading the limits is the most common histogram mistake.
 
-> 💡 **Tip:** Pick bin widths that are round numbers a reader can say out loud ($10,000, 2 days, 15 minutes), and aim for roughly
+> 💡 **Tip:** Pick bin widths that are round numbers a reader can say out loud (\$10,000, 2 days, 15 minutes), and aim for roughly
 > 5 to 20 bins. Too few bins hide the shape. Too many turn it into noise.
 
-The charges histogram shows a tall peak between $10,000 and $30,000 and a long tail to the right, which is exactly what a
+The charges histogram shows a tall peak between \$10,000 and \$30,000 and a long tail to the right, which is exactly what a
 skewness of 2.59 describes. **Insert → Insert Statistic Chart → Box and Whisker** draws the same distribution as a box from Q1 to
 Q3 with the median inside it, and marks values beyond the IQR fences from Lesson 2.4 as separate dots.
 
@@ -563,7 +563,7 @@ The first trailing 7-day average you can calculate is for 01/07/2024, row 8 of E
 ```
 
 Fill it down and the range slides one row at a time: row 9 averages C3:C9, row 10 averages C4:C10, and so on. Leave the
-references relative, with no $ signs.
+references relative, with no \$ signs.
 
 Other ways to get the same numbers:
 
@@ -605,7 +605,7 @@ pattern that repeats every year. A straight line can't see it.
 how much that calendar month usually runs above or below the trend.
 
 1. In column I of the Monthly sheet (one blank column away from the Table), calculate the trend value for every month: type
-   `=TREND($E$2:$E$25,$B$2:$B$25,B2)` in I2 and fill it down to I25. Press **F4** (Mac: **⌘ + T**) to add the $ signs.
+   `=TREND($E$2:$E$25,$B$2:$B$25,B2)` in I2 and fill it down to I25. Press **F4** (Mac: **⌘ + T**) to add the \$ signs.
 2. In column J, divide actual by trend: `=E2/I2`, filled down. January 2024's 233 discharges ÷ a trend value of 221.5 = 1.052.
    January 2025 gives 287 ÷ 233.2 = 1.230.
 3. Average the ratios for each calendar month. January's seasonal index is (1.052 + 1.230) ÷ 2 = **1.141**: Januaries run about
@@ -888,7 +888,7 @@ r = 0.130 is a weak positive correlation. Older patients stay slightly longer on
 - **Answer:** 6,665.43
 - **Solution:** `=SLOPE(Stays!G2:G401,Stays!F2:F401)`
 
-Each extra day of stay goes with about $6,665.43 more in charges. The line is Charges = $2,600.11 + $6,665.43 × LOSDays, and `=INTERCEPT(Stays!G2:G401,Stays!F2:F401)` gives the intercept. `=RSQ(Stays!G2:G401,Stays!F2:F401)` gives R² = 43.8%, so LOS explains a little under half of the stay-to-stay differences in charges. The rest comes from diagnosis, procedures, ICU days, and so on. Swapping the arguments gives the slope of LOS on charges (0.000066 days per dollar), which answers a different question. SLOPE always takes the y-values (the outcome) first.
+Each extra day of stay goes with about \$6,665.43 more in charges. The line is Charges = \$2,600.11 + \$6,665.43 × LOSDays, and `=INTERCEPT(Stays!G2:G401,Stays!F2:F401)` gives the intercept. `=RSQ(Stays!G2:G401,Stays!F2:F401)` gives R² = 43.8%, so LOS explains a little under half of the stay-to-stay differences in charges. The rest comes from diagnosis, procedures, ICU days, and so on. Swapping the arguments gives the slope of LOS on charges (0.000066 days per dollar), which answers a different question. SLOPE always takes the y-values (the outcome) first.
 
 **5. Using the straight line that predicts LOSDays from Age (all 400 stays), what LOS does…**
 
@@ -919,7 +919,7 @@ With stats set to TRUE, LINEST returns a 5 × 2 block: row 1 holds the slope (0.
 ```
 
 
-The slope is $6,665.43 with a standard error of $378.83. With 398 residual degrees of freedom, `T.INV.2T(0.05,398)` = 1.9659, so the interval is $6,665.43 ± 1.9659 × $378.83, which runs from $5,920.66 to $7,410.19 per day. Finance can say each extra day goes with roughly $5,921 to $7,410 more in charges. It's the same t × standard error recipe CONFIDENCE.T uses for a mean (guide section 9), applied to a slope. Without LET, repeat the LINEST call inside each INDEX.
+The slope is \$6,665.43 with a standard error of \$378.83. With 398 residual degrees of freedom, `T.INV.2T(0.05,398)` = 1.9659, so the interval is \$6,665.43 ± 1.9659 × \$378.83, which runs from \$5,920.66 to \$7,410.19 per day. Finance can say each extra day goes with roughly \$5,921 to \$7,410 more in charges. It's the same t × standard error recipe CONFIDENCE.T uses for a mean (guide section 9), applied to a slope. Without LET, repeat the LINEST call inside each INDEX.
 
 **8. Do Bluestone Memorial and Cedar Ridge differ in average LOS? Run a two-tailed t-test…**
 
@@ -982,7 +982,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B2.** September 2024 had the fewest index stays (177). What is its upper control limit? Enter it as a percentage to 2 decimal places. *(Hint: p̄ + 3 × SQRT(p̄ × (1 − p̄) / n), with this month's n)*
 - **B3.** How many of the 24 months fall outside their control limits (above the UCL or below the LCL)? *(Hint: Compare each month's rate with its own limits. Add helper columns for the rate, UCL, LCL, and a TRUE/FALSE flag, then COUNTIF the flags. One SUMPRODUCT also works)*
 - **B4.** Which month is it? Enter its MonthStart date. *(Hint: Read it off your helper columns, or XLOOKUP(TRUE, your test, the MonthStart column))*
-- **B5.** Drop December 2025 and recompute p̄ from the other 23 months (rows 2–24). The highest remaining month is February 2025 (row 15). How many standard errors above the new center line is it? Calculate z = (rate − p̄) ÷ √(p̄ × (1 − p̄) ÷ n) and enter it to 2 decimal places. *(Hint: LET(p, new p̄, n, that month's IndexStays, (rate − p) / SQRT(p*(1−p)/n)))*
+- **B5.** Drop December 2025 and recompute p̄ from the other 23 months (rows 2–24). The highest remaining month is February 2025 (row 15). How many standard errors above the new center line is it? Calculate z = (rate − p̄) ÷ √(p̄ × (1 − p̄) ÷ n) and enter it to 2 decimal places. (Hint: LET(p, new p̄, n, that month's IndexStays, (rate − p) / SQRT(p*(1−p)/n)))
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->

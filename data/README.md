@@ -181,7 +181,7 @@ One row per patient encounter (visit or stay), Jan 2024 – Dec 2025. A represen
 | `PrimaryDxCode` | FK → diagnoses. |
 | `DischargeDisposition` | Where the patient went. |
 | `PayerID` | FK → payers (payer billed for this encounter). |
-| `TotalCharges` | Gross billed charges ($). |
+| `TotalCharges` | Gross billed charges (\$). |
 | `Readmit30` | Inpatient encounters only (blank otherwise): Y if the same patient has another Inpatient encounter whose AdmitDateTime is after this DischargeDateTime and whose admit DATE is at most 30 days after this discharge DATE (0–30 days); N otherwise. Stays ending in death (DischargeDisposition = Expired) are always N. Observation stays do not count as readmissions. |
 
 ### `ed_visits.csv`
@@ -223,7 +223,7 @@ One claim per encounter with payment status as of 12/31/2025.
 | `PayerID` | FK → payers. |
 | `ServiceDate` | Discharge/service date. |
 | `SubmitDate` | Date the claim was submitted. |
-| `BilledAmount` | Gross charges billed ($). |
+| `BilledAmount` | Gross charges billed (\$). |
 | `AllowedAmount` | Contracted allowed amount (0 if denied). |
 | `PatientResponsibility` | Copay/coinsurance/deductible owed by patient. |
 | `PaidAmount` | Amount received to date. |
@@ -268,7 +268,7 @@ Pharmacy medication orders and doses dispensed.
 | `Route` | IV, PO, SubQ, IM, Inhaled. |
 | `Frequency` | Dosing frequency. |
 | `DosesDispensed` | Number of doses dispensed. |
-| `UnitCost` | Acquisition cost per dose ($). |
+| `UnitCost` | Acquisition cost per dose (\$). |
 | `HighAlert` | Y for high-alert medications (insulin, opioids, anticoagulants, chemo…). |
 | `OrderingProviderID` | FK → providers. |
 
@@ -323,7 +323,7 @@ Nursing and clinical support staff at Bluestone Memorial Hospital (F01).
 | `FacilityID` | FK → facilities. |
 | `EmploymentType` | Full-Time, Part-Time, Per Diem, Agency. |
 | `FTE` | FTE (0 = per diem). |
-| `HourlyRate` | Base hourly rate ($). |
+| `HourlyRate` | Base hourly rate (\$). |
 | `HireDate` | Hire date. |
 | `TermDate` | Termination date (blank if employed). |
 | `Status` | Active, Terminated, Leave of Absence. |
@@ -362,7 +362,7 @@ Supply stock by storage location (snapshot 12/31/2025). One row per SKU per loca
 | `Category` | Supply category. |
 | `Vendor` | Supplier. |
 | `UnitOfMeasure` | Each, Box, Case, Pack… |
-| `UnitCost` | Cost per unit of measure ($). |
+| `UnitCost` | Cost per unit of measure (\$). |
 | `LocationDeptID` | FK → departments (storeroom location). |
 | `QtyOnHand` | Units on hand. |
 | `ParLevel` | Target stock level. |
@@ -387,8 +387,8 @@ Monthly budget vs. actual by department and category, 2024–2025 (fiscal year =
 | `CostCenter` | Cost center. |
 | `LineType` | Revenue or Expense. |
 | `Category` | Revenue or expense category. |
-| `BudgetAmount` | Budget ($). |
-| `ActualAmount` | Actual ($). |
+| `BudgetAmount` | Budget (\$). |
+| `ActualAmount` | Actual (\$). |
 
 ## Regenerating
 

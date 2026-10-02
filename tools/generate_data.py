@@ -15,6 +15,7 @@ from __future__ import annotations
 import csv
 import math
 import random
+import re
 from bisect import bisect_right
 from datetime import date, datetime, timedelta
 from itertools import accumulate
@@ -1880,7 +1881,9 @@ def write_readme(counts):
             lines.append(f"| `{c}` | {d} |")
         lines.append("")
     lines += ["## Regenerating", "", "```bash", "python tools/generate_data.py", "```", ""]
-    (OUT / "README.md").write_text("\n".join(lines), encoding="utf-8")
+    text = "\n".join(lines)
+    text = re.sub(r"(?<!\\)\$", r"\\$", text)  # GitHub would render $...$ pairs as math
+    (OUT / "README.md").write_text(text, encoding="utf-8")
 
 
 if __name__ == "__main__":
