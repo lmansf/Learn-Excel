@@ -182,7 +182,7 @@ One row per patient encounter (visit or stay), Jan 2024 – Dec 2025. A represen
 | `DischargeDisposition` | Where the patient went. |
 | `PayerID` | FK → payers (payer billed for this encounter). |
 | `TotalCharges` | Gross billed charges ($). |
-| `Readmit30` | Inpatient only: Y if the patient had another inpatient admission within 30 days after this discharge (0 ≤ days ≤ 30, by date). |
+| `Readmit30` | Inpatient encounters only (blank otherwise): Y if the same patient has another Inpatient encounter whose AdmitDateTime is after this DischargeDateTime and whose admit DATE is at most 30 days after this discharge DATE (0–30 days); N otherwise. Stays ending in death (DischargeDisposition = Expired) are always N. Observation stays do not count as readmissions. |
 
 ### `ed_visits.csv`
 

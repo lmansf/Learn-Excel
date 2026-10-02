@@ -1681,7 +1681,7 @@ DICTIONARY = {
         "AdmitDateTime": "Start of encounter (for ED-admitted patients: time the admit decision was made).",
         "DischargeDateTime": "End of encounter.", "PrimaryDxCode": "FK → diagnoses.", "DischargeDisposition": "Where the patient went.",
         "PayerID": "FK → payers (payer billed for this encounter).", "TotalCharges": "Gross billed charges ($).",
-        "Readmit30": "Inpatient only: Y if the patient had another inpatient admission within 30 days after this discharge (0 ≤ days ≤ 30, by date)."}),
+        "Readmit30": "Inpatient encounters only (blank otherwise): Y if the same patient has another Inpatient encounter whose AdmitDateTime is after this DischargeDateTime and whose admit DATE is at most 30 days after this discharge DATE (0–30 days); N otherwise. Stays ending in death (DischargeDisposition = Expired) are always N. Observation stays do not count as readmissions."}),
     "ed_visits": ("Emergency department timeline for every ED arrival (treat-and-release and admitted).", {
         "EDVisitID": "Primary key.", "EncounterID": "FK → encounters (the ED or resulting inpatient/observation encounter).",
         "PatientID": "FK → patients.", "FacilityID": "FK → facilities.", "ArrivalDateTime": "Door time.", "TriageDateTime": "Triage time.",
