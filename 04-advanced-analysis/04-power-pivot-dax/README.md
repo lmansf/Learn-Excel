@@ -35,7 +35,7 @@ Three names come up in this lesson, and they are three different things:
 | **Power Pivot** | The Excel add-in (and its separate window) where you manage the Data Model: load tables, draw relationships, write formulas |
 | **DAX** (Data Analysis Expressions) | The formula language of the Data Model. It looks like Excel formulas but works on whole tables and columns instead of cells |
 
-The Data Model stores each column separately and compresses it, so tens of millions of rows fit in a normal workbook. A
+The Data Model stores each column separately and compresses it, so millions of rows fit in a normal workbook. A
 PivotTable built on the model can use fields from every table at once.
 
 | | Classic PivotTable | Data Model PivotTable |
@@ -123,7 +123,8 @@ Four design rules keep a model trustworthy:
 
 > ⚠️ **Why not one flat table?** Joining claims onto encounters works here because there is exactly one claim per encounter.
 > Join something with a different grain, such as lab results (many per encounter), and every encounter row repeats once per
-> lab. SUM(TotalCharges) then counts the same charges several times. Separate fact tables never double count.
+> lab. SUM(TotalCharges) then counts the same charges several times. Keeping each fact table at its own grain, related
+> only to dimensions, avoids that double counting.
 
 ### 3. Turn on Power Pivot and load the tables
 
@@ -209,8 +210,8 @@ unique.
 > right-click `FactEncounters[FacilityID]` in Data View or Diagram View → **Hide from Client Tools**. People then slice by `DimFacility[FacilityName]`, which is the column the
 > relationships are designed for.
 
-> 📋 Power BI can also filter in both directions and supports many-to-many relationships. Excel's Data Model doesn't. In
-> Excel, filters always flow from the dimension to the fact.
+> 📋 Power BI lets you set a relationship to filter in both directions and supports many-to-many relationships. Excel's
+> relationship settings offer neither option, so in Excel, filters flow from the dimension to the fact.
 
 ### 5. The date table
 
@@ -245,8 +246,9 @@ sort MonthName by **MonthNum**. Without this, PivotTables list months alphabetic
 > FactEncounters has AdmitDate and DischargeDate columns with the time removed. When you build your own models, strip the
 > time in Power Query (Lesson 4.3) or with a calculated column before relating.
 
-> ⚠️ **Automatic date grouping.** If you drag a date column into a PivotTable, Excel may add hidden *Date (Month)*,
-> *Date (Quarter)* columns to the model. Use DimDate's own columns instead. To stop the automatic grouping, tick **File →
+> ⚠️ **Automatic date grouping.** If you drag a date column such as AdmitDate into a PivotTable's Rows, Excel may add
+> extra calculated columns such as *AdmitDate (Month)* and *AdmitDate (Quarter)* to that table in the model. Use DimDate's
+> own columns instead. To stop the automatic grouping, tick **File →
 > Options → Data → Disable automatic grouping of Date/Time columns in PivotTables**.
 
 > 📋 No date table in your data? In the Power Pivot window, **Design → Date Table → New** builds a *Calendar* table that
@@ -311,6 +313,9 @@ Encounters := COUNTROWS(FactEncounters)
 Avg Charge := DIVIDE([Total Charges], [Encounters])
 ```
 
+In the Measure dialog, type the part before `:=` in **Measure name** and the rest after the `=` in **Formula**. Lines that
+start with `--` in the answer key are notes about the PivotTable layout, so don't type them into a measure.
+
 | DAX syntax | Meaning |
 |---|---|
 | `FactEncounters[TotalCharges]` | A column: always write the table name in front |
@@ -356,8 +361,9 @@ is 3,576. A patient seen at Bluestone Memorial and at the Outpatient Pavilion co
 The total is right. A measure **recalculates** the grand total from the underlying rows in the total's filter context. It
 never adds up the cells above it, which is why rates and distinct counts total correctly in DAX.
 
-> 💡 **Tip:** Use DIVIDE for every ratio. `[Denied Claims] / [Claims]` shows an error in a row with no claims, while
-> DIVIDE returns a blank, and PivotTables hide rows where every measure is blank.
+> 💡 **Tip:** Use DIVIDE for every ratio. DAX's `/` operator never returns #DIV/0!. A number divided by 0 or by a blank
+> returns **Infinity**, 0 ÷ 0 returns **NaN**, and the PivotTable shows those words in the cell. DIVIDE returns a blank
+> instead (or the *alternate* result you give it), and PivotTables hide rows where every measure is blank.
 
 ### 9. Filter context and CALCULATE
 
@@ -397,9 +403,9 @@ CALCULATE does with its filter arguments:
 
 `ALL(DimFacility)` clears every filter that comes from DimFacility, so the denominator counts all facilities. The year filter
 stays because it comes from DimDate. In 2024, Cedar Ridge had 575 of the system's 3,747 ED visits, so the measure shows
-**15.3%** in its row. `REMOVEFILTERS(DimFacility)` does the same thing and makes the intent clearer to a reader. It needs a
-recent version of Excel, so use ALL if Excel doesn't recognize it. `ALL(DimFacility[FacilityName])` removes the filter on one
-column only.
+**15.3%** in its row. `REMOVEFILTERS(DimFacility)` does the same thing and makes the intent clearer to a reader. Excel for
+Microsoft 365 recognizes it, but older versions such as Excel 2016 and 2019 don't, so use ALL there. ALL works in every
+version. `ALL(DimFacility[FacilityName])` removes the filter on one column only.
 
 **FILTER for conditions a simple filter can't express.** A filter argument such as `FactEncounters[EncounterType] =
 "Emergency"` compares one column with fixed values. When the test compares two columns, or uses a measure, use
@@ -544,7 +550,7 @@ or to a rolling window. All of them take the date table's Date column.
 | `DATESYTD(DimDate[Date])` | Year to date, as a filter for CALCULATE | `CALCULATE([Claims], DATESYTD(DimDate[Date]))` |
 | `SAMEPERIODLASTYEAR(DimDate[Date])` | The same dates, one year earlier | `CALCULATE([ED Visits], SAMEPERIODLASTYEAR(DimDate[Date]))` |
 | `DATEADD(DimDate[Date], n, interval)` | Shifted by n DAY, MONTH, QUARTER, or YEAR (negative = back) | `CALCULATE([ED Visits], DATEADD(DimDate[Date], -1, MONTH))` |
-| `DATESINPERIOD(DimDate[Date], end, n, interval)` | A window of n intervals ending on *end* | `DATESINPERIOD(DimDate[Date], MAX(DimDate[Date]), -3, MONTH)` |
+| `DATESINPERIOD(DimDate[Date], date, n, interval)` | A window of n intervals that starts on *date*, or ends on it when n is negative | `DATESINPERIOD(DimDate[Date], MAX(DimDate[Date]), -3, MONTH)` |
 
 **Worked example: year to date.** Ashby Falls Community Hospital, 2025, with DimDate[Year] and DimDate[MonthName] in Rows:
 
@@ -565,7 +571,7 @@ ED YoY % := DIVIDE([ED Visits] - [ED Visits LY], [ED Visits LY])
 ```
 
 For Cedar Ridge in 2025, ED Visits is 577 and ED Visits LY is 575, so ED YoY % is **0.3%**. The 2024 row shows a blank for
-ED Visits LY because the data has no 2023, and DIVIDE turns that into a blank rather than an error. Put months in Rows and
+ED Visits LY because the data has no 2023, and DIVIDE turns that into a blank rather than Infinity. Put months in Rows and
 the same two measures compare each month with the same month last year.
 
 **Why marking the date table matters.** The March 2025 row filters DimDate[Year] = 2025 *and* DimDate[MonthName] = Mar.
@@ -605,12 +611,14 @@ A **KPI** in Power Pivot wraps a measure with a target and a status icon.
 3. **KPI base field (value):** Readmission Rate.
 4. **Target value:** choose **Absolute value** and type `0.15`, or pick another measure (for example last year's rate).
 5. **Status thresholds:** choose the color scheme that runs from green on the left (low values) to red on the right,
-   because a lower readmission rate is better. Drag the sliders to set the cut-offs.
+   because a lower readmission rate is better. The sliders measure the value as a **percentage of the target**, so drag
+   the left slider to 100% and the right slider to 120%. A rate below the 15% target is then green, a rate between 15%
+   and 18% is yellow, and anything higher is red.
 6. Pick an icon style and click **OK**.
 
 The KPI appears in the PivotTable Fields pane under the measure's home table, with three parts you can tick: **Value**,
-**Goal**, and **Status**. The system's 2024 readmission rate was 376 ÷ 2,727 = 13.8%, so it would show a green icon against
-a 15% target.
+**Goal**, and **Status**. The system's 2024 readmission rate was 376 ÷ 2,727 = 13.8%, which is 92% of the 15% target, so
+its Status shows the green icon.
 
 ### 15. Getting numbers out: GETPIVOTDATA, CUBEVALUE, and CUBEMEMBER
 
@@ -635,9 +643,10 @@ workbook's own model connection. Each extra argument is a member, written as `[T
 with AND:
 
 ```
-=CUBEVALUE("ThisWorkbookDataModel", "[Measures].[Encounters]",
-           "[DimFacility].[FacilityName].&[Cedar Ridge Medical Center]", "[DimDate].[Year].&[2024]")
+=CUBEVALUE("ThisWorkbookDataModel", "[Measures].[Encounters]", "[DimFacility].[FacilityName].&[Cedar Ridge Medical Center]", "[DimDate].[Year].&[2024]")
 ```
+
+That one returns **1,043**, Cedar Ridge's 2024 encounters from section 9.
 
 **CUBEMEMBER** puts a member in a cell, so other formulas can refer to it:
 `=CUBEMEMBER("ThisWorkbookDataModel", "[DimPayer].[PayerType].&[Commercial]")` shows *Commercial*, and
@@ -693,12 +702,12 @@ Start by building the model (Guide sections 3–5): add all nine tables to the D
 |:-:|------|------|
 | 1 | Load all nine tables into the Data Model and create the relationships listed on the Model Map sheet. Then insert a PivotTable from the Data Model with DimFacility[FacilityName] in Rows and FactEncounters[EncounterID] in Values (Excel names it Count of EncounterID). How many encounters (2024 and 2025 together) does Cedar Ridge Medical Center show? | If every facility shows the same number, a relationship is missing |
 | 2 | Create the measure Total Charges = the sum of FactEncounters[TotalCharges]. Show it in a PivotTable with DimDate[Year] in Rows. What are the total charges for 2025? Enter the amount rounded to the nearest dollar. | Power Pivot → Measures → New Measure…, then SUM |
-| 3 | Create the measure Encounters = the number of rows in FactEncounters. How many encounters did the Emergency Department at Cedar Ridge Medical Center have in Q3 2025? Filter DimFacility[FacilityName], DimDepartment[DeptName] = Emergency Department, DimDate[Year] = 2025, and DimDate[Quarter] = Q3. | COUNTROWS counts the rows of a table |
+| 3 | Create the measure Encounters = the number of rows in FactEncounters. How many encounters did the Emergency Department at Cedar Ridge Medical Center have in Q3 2025? Filter DimFacility[FacilityName] = Cedar Ridge Medical Center, DimDepartment[DeptName] = Emergency Department, DimDate[Year] = 2025, and DimDate[Quarter] = Q3. | COUNTROWS counts the rows of a table |
 | 4 | Create the measure Patients = the number of distinct PatientID values in FactEncounters. How many different patients had at least one encounter in 2025, system-wide? (Use the Grand Total, not a sum of facility rows.) | DISTINCTCOUNT |
 | 5 | Create the measure Avg LOS (IP) = the average of FactEncounters[LOSDays] for Inpatient encounters only, using CALCULATE so that the measure applies the filter itself. What is it for Bluestone Memorial Hospital in 2025? Enter it to 2 decimal places. | CALCULATE(expression, Table[Column] = "value") |
 | 6 | FactClaims shares DimDate and DimPayer with FactEncounters. Create Claims (rows of FactClaims), Denied Claims (claims whose ClaimStatus is Denied or Appealed, because an appealed claim was denied first), and Denial Rate = Denied Claims ÷ Claims, using DIVIDE. What is the denial rate for DimPayer[PayerType] = Medicare Advantage in 2025? Enter it as a percentage with 1 decimal place. | Two conditions on the same column can be joined with \|\| inside CALCULATE |
 | 7 | Create Inpatient Stays = Encounters for EncounterType = Inpatient (build it on your Encounters measure), and Readmission Rate = the sum of FactEncounters[Readmit30] ÷ Inpatient Stays. What is the readmission rate for inpatient stays billed to the payer named Medicare (DimPayer[PayerName]) in 2025? Enter it as a percentage with 1 decimal place. | A measure can use another measure: CALCULATE([Encounters], …) |
-| 8 | Create ED Visits = Encounters for EncounterType = Emergency, and % of System ED = ED Visits ÷ ED Visits with every DimFacility filter removed. In a PivotTable with DimFacility[FacilityName] in Rows and DimDate[Year] = 2025, what share of the system's ED visits did Ashby Falls Community Hospital handle? Enter it as a percentage with 1 decimal place. | CALCULATE([ED Visits], REMOVEFILTERS(DimFacility)) or ALL(DimFacility) |
+| 8 | Create ED Visits = Encounters for EncounterType = Emergency, and % of System ED = ED Visits ÷ ED Visits with every DimFacility filter removed. In a PivotTable with DimFacility[FacilityName] in Rows and DimDate[Year] = 2025, what share of the system's ED visits did Ashby Falls Community Hospital handle? Enter it as a percentage with 1 decimal place. | CALCULATE([ED Visits], ALL(DimFacility)), or REMOVEFILTERS(DimFacility) in Microsoft 365 |
 | 9 | Create Stays Over Expected = the number of Inpatient encounters whose LOSDays is greater than the ExpectedLOS of their primary diagnosis in DimDiagnosis. Use FILTER over FactEncounters and RELATED. How many inpatient stays at Cedar Ridge Medical Center in 2025 ran longer than expected? | FILTER(FactEncounters, … && FactEncounters[LOSDays] > RELATED(DimDiagnosis[ExpectedLOS])) |
 | 10 | Expected reimbursement: create Expected Allowed = the sum, row by row, of FactEncounters[TotalCharges] × the payer's AvgAllowedPctOfCharges from DimPayer. Use SUMX and RELATED. What is Expected Allowed for Bluestone Memorial Hospital in 2025? Enter it rounded to the nearest dollar. | SUMX(table, expression evaluated on each row) |
 | 11 | Create Avg Charges per Patient = the average, over the patients in the current filter context, of each patient's Total Charges. Use AVERAGEX over VALUES(FactEncounters[PatientID]) with your Total Charges measure. What is it for patients in DimPatient[AgeGroup] = 75+ in 2025? Enter it rounded to the nearest dollar. | AVERAGEX(VALUES(…), [Total Charges]) |
@@ -725,7 +734,7 @@ answers are below, collapsed so you don't see them by accident.
 1. Click any cell in the FactEncounters table, then **Power Pivot → Add to Data Model**. Repeat for the other eight tables.
 2. In the Power Pivot window, click **Home → Diagram View**. Drag **FactEncounters[FacilityID]** onto **DimFacility[FacilityID]**, and create the other relationships on the Model Map the same way.
 3. Click **Home → PivotTable → PivotTable**, choose **New Worksheet**, and click OK.
-4. Tick **DimFacility → FacilityName** (Rows) and **FactEncounters → EncounterID** (Values).
+4. Tick **DimFacility → FacilityName** so it goes to Rows. Then drag **FactEncounters → EncounterID** into the **Values** area. (Ticking a text field such as EncounterID would put it in Rows instead.)
 5. Read the Cedar Ridge Medical Center row. The Grand Total is 21,857.
 
 
@@ -805,7 +814,7 @@ Denial Rate := DIVIDE([Denied Claims], [Claims])
 ```
 
 
-The PayerType filter reaches FactClaims through FactClaims[PayerID] and the year reaches it through ServiceDate. Those are the claims table's own relationships to the shared (conformed) dimensions, so one PivotTable can show encounter measures and claim measures side by side. The || operator means OR, and because both conditions test the same column, CALCULATE accepts it as a single filter. In Microsoft 365 you can also write FactClaims[ClaimStatus] IN {"Denied", "Appealed"}. DIVIDE returns a blank instead of #DIV/0! when a payer has no claims. Counting only the Denied status would give 10.2%.
+The PayerType filter reaches FactClaims through FactClaims[PayerID] and the year reaches it through ServiceDate. Those are the claims table's own relationships to the shared (conformed) dimensions, so one PivotTable can show encounter measures and claim measures side by side. The || operator means OR, and because both conditions test the same column, CALCULATE accepts it as a single filter. In Microsoft 365 you can also write FactClaims[ClaimStatus] IN {"Denied", "Appealed"}. DIVIDE returns a blank whenever the denominator is 0 or blank, where the / operator would return Infinity or NaN (DAX never shows #DIV/0!). Counting only the Denied status would give 10.2%.
 
 **7. Readmission rate, Medicare, 2025**
 
@@ -832,13 +841,14 @@ ED Visits := CALCULATE([Encounters], FactEncounters[EncounterType] = "Emergency"
 % of System ED :=
 DIVIDE(
     [ED Visits],
-    CALCULATE([ED Visits], REMOVEFILTERS(DimFacility))
+    CALCULATE([ED Visits], ALL(DimFacility))
 )
+-- Microsoft 365 can also use REMOVEFILTERS(DimFacility) in place of ALL(DimFacility)
 -- PivotTable: DimFacility[FacilityName] in Rows, DimDate[Year] = 2025 in Filters
 ```
 
 
-In the Ashby Falls row, the numerator sees two filters: the facility and the year. The denominator uses REMOVEFILTERS(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits in the system. ALL(DimFacility) does the same job and works in every version of Excel, so use it if your Excel doesn't recognize REMOVEFILTERS. This is the DAX version of Show Values As → % of Column Total, with one big advantage: it's a real measure that you can reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities through DimFacility. A filter on FactEncounters[FacilityID] would survive REMOVEFILTERS(DimFacility).
+In the Ashby Falls row, the numerator sees two filters: the facility and the year. The denominator uses ALL(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits in the system. REMOVEFILTERS(DimFacility) does the same job and reads more clearly, but only Excel for Microsoft 365 recognizes it. ALL works in every version. This is the DAX version of Show Values As → % of Column Total, with one big advantage: it's a real measure that you can reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities through DimFacility. A filter on FactEncounters[FacilityID] would survive ALL(DimFacility).
 
 **9. Cedar Ridge stays over expected LOS, 2025**
 
@@ -919,7 +929,7 @@ ED YoY % := DIVIDE([ED Visits] - [ED Visits LY], [ED Visits LY])
 ```
 
 
-In the 2025 row, SAMEPERIODLASTYEAR shifts the year's dates back one year, so ED Visits LY returns the 2024 count (2,642) next to the 2025 count (2,687). The 2024 row has no prior year in the data, so its LY value is blank and DIVIDE returns a blank instead of an error. The same measures work by quarter or by month without any change, because they shift whatever dates the cell contains. CALCULATE([ED Visits], DATEADD(DimDate[Date], -1, YEAR)) gives the same result.
+In the 2025 row, SAMEPERIODLASTYEAR shifts the year's dates back one year, so ED Visits LY returns the 2024 count (2,642) next to the 2025 count (2,687). The 2024 row has no prior year in the data, so its LY value is blank and DIVIDE returns a blank. The / operator would show Infinity there. The same measures work by quarter or by month without any change, because they shift whatever dates the cell contains. CALCULATE([ED Visits], DATEADD(DimDate[Date], -1, YEAR)) gives the same result.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -933,8 +943,8 @@ Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Create ED Visits 3M Avg = the average monthly ED visits over the three months ending with the last date in the current filter context (use DATESINPERIOD). What does it show for December 2025, system-wide? Enter it to 1 decimal place. *(Hint: DATESINPERIOD(DimDate[Date], MAX(DimDate[Date]), -3, MONTH))*
 - **B2.** Ashby Falls Community Hospital: what is the percentage change in ED visits for December 2025 compared with December 2024? Enter it as a percentage with 1 decimal place (negative if visits fell). *(Hint: Your ED YoY % measure from Task 13 works at month level too)*
-- **B3.** Create Provider Rank = the rank of each attending provider by Inpatient Stays (1 = most stays), using RANKX over ALL(DimProvider[ProviderName]) and returning a blank on the Grand Total row. With DimProvider[ProviderName] in Rows and DimDate[Year] = 2025, which provider is ranked 1? Enter the name exactly as it appears in DimProvider[ProviderName]. *(Hint: IF(HASONEVALUE(DimProvider[ProviderName]), RANKX(ALL(DimProvider[ProviderName]), [Inpatient Stays])))*
-- **B4.** The briefing must count inpatient discharges by discharge date, not admit date. Create IP Discharges = Inpatient Stays evaluated through the inactive relationship FactEncounters[DischargeDate] → DimDate[Date]. How many inpatient discharges did the system have in December 2025? *(Hint: CALCULATE(…, USERELATIONSHIP(FactEncounters[DischargeDate], DimDate[Date])))*
+- **B3.** Create Provider Rank = the rank of each attending provider by Inpatient Stays (1 = most stays), using RANKX over ALL(DimProvider[ProviderName]) and returning a blank on the Grand Total row. With DimProvider[ProviderName] in Rows and DimDate[Year] = 2025, which provider is ranked 1? Enter the name exactly as it appears in DimProvider[ProviderName]. *(Hint: RANKX(ALL(…), [measure]) ranks against every provider. HASONEVALUE is TRUE only on a single-provider row)*
+- **B4.** The briefing must count inpatient discharges by discharge date, not admit date. Create IP Discharges = Inpatient Stays evaluated through the inactive relationship FactEncounters[DischargeDate] → DimDate[Date]. How many inpatient discharges did the system have in December 2025? *(Hint: USERELATIONSHIP(many-side column, one-side column) goes inside CALCULATE as a filter argument)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
@@ -1005,7 +1015,7 @@ CALCULATE(
 ```
 
 
-Only one relationship between two tables can be active, so the DischargeDate relationship is inactive (a dashed line in Diagram View) and normally does nothing. USERELATIONSHIP switches it on for this one calculation, so the December 2025 filter from DimDate now selects stays that were discharged in December. In the same row, Inpatient Stays shows 268 admissions and IP Discharges shows 310. The two differ because stays admitted in November were discharged in December, and some December admissions were still in the hospital at midnight on 12/31. If the inactive relationship doesn't exist in your model, USERELATIONSHIP returns an error, so create it first (see the Model Map).
+Only one relationship between two tables can be active, so the DischargeDate relationship is inactive (a dashed line in Diagram View) and normally does nothing. USERELATIONSHIP switches it on for this one calculation, so the December 2025 filter from DimDate now selects stays that were discharged in December. In the same row, Inpatient Stays shows 268 admissions and IP Discharges shows 310. The difference is the 42 stays admitted before December and discharged in December. All 268 December admissions in this extract went home by 12/31. In a live system, some December admissions would still be in the hospital at midnight on 12/31, which would pull the two numbers apart the other way. If the inactive relationship doesn't exist in your model, USERELATIONSHIP returns an error, so create it first (see the Model Map).
 
 </details>
 <!-- END GENERATED: bonus-answers -->

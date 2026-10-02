@@ -76,8 +76,9 @@ Wrap each comparison in its own parentheses, because Excel does arithmetic befor
 Adding comparisons is how clinical scores work: one point for each criterion met, summed. You'll build a SIRS score exactly
 this way in the practice, with no IF at all.
 
-> ⚠️ **SUM ignores TRUE and FALSE stored in cells.** If a helper column holds TRUE/FALSE results, SUM over that column returns 0.
-> Count the TRUEs with `=COUNTIF(range,TRUE)`, or make the helper column hold 1s and 0s in the first place with `--`.
+> ⚠️ **SUM ignores TRUE and FALSE stored in cells.** If a column of formulas returns TRUE/FALSE, SUM over that column returns 0.
+> Count the TRUEs with `=COUNTIF(range,TRUE)` (section 7 explains COUNTIF), or make the formulas return 1s and 0s in the first
+> place with `--`.
 
 ### 3. IF: one test, two outcomes
 
@@ -110,8 +111,9 @@ Labs row 3 is a STAT glucose of 132 mg/dL with a reference range of 70–99:
 
 > 📋 **Excel Tables:** the Labs and ED sheets are Excel Tables. When you type a formula into the first cell of an empty Table
 > column, Excel fills the whole column for you (a *calculated column*). If you click cells instead of typing their addresses, Excel
-> may write `=IF([@ResultValue]>[@RefHigh],"High","")`, where `[@ResultValue]` means "ResultValue in this row." Both styles give
-> the same results. Lesson 3.1 covers these structured references.
+> may write `=IF([@ResultValue]>[@RefHigh],"High","")`, where `[@ResultValue]` means "ResultValue in this row." In the same way,
+> if you build a formula on the Practice sheet and drag across all of the ED Table's TempF values, Excel writes `tblED[TempF]`
+> instead of `ED!F2:F424`. Both styles give the same results. Lesson 3.1 covers these structured references.
 
 ### 4. Nested IF: more than two outcomes
 
@@ -124,7 +126,7 @@ Example: classify oxygen saturation. Below 90 is "Critical," below 95 is "Low," 
 =IF(J2<90, "Critical", IF(J2<95, "Low", "Normal"))
 ```
 
-Here is how Excel reads it for row 23, where SpO2 is 93:
+Here is how Excel reads the copy of this formula on row 23, which tests J23 (SpO2 93):
 
 1. Is 93 < 90? No, so Excel moves to value_if_false, which is the second IF.
 2. Is 93 < 95? Yes, so the formula returns "Low."
@@ -171,9 +173,9 @@ Example: temperature categories on the ED sheet.
 =IFS(F2<96.8, "Low", F2<=100.4, "Normal", F2<103, "Fever", TRUE, "High fever")
 ```
 
-Row 11 (102.3 °F) fails the first two tests, passes `F2<103`, and returns "Fever." Filled down the sheet, the formula finds 2 Low,
-357 Normal, 61 Fever, and 3 High fever readings. Because the tests run in order, `F2<103` only ever sees temperatures above 100.4.
-You don't need to write `AND(F2>100.4,F2<103)`.
+On row 11 (102.3 °F), the formula fails the first two tests, passes the third (`F11<103`), and returns "Fever." Filled down
+the sheet, the formula finds 2 Low, 357 Normal, 61 Fever, and 3 High fever readings. Because the tests run in order, `F2<103`
+only ever sees temperatures above 100.4. You don't need to write `AND(F2>100.4,F2<103)`.
 
 The last pair, `TRUE, "High fever"`, is the **catch-all**. TRUE is always true, so it catches every row that failed the earlier
 tests. IFS has no value_if_false argument, so this is how you say "otherwise." Without a catch-all, a row that fails every test
@@ -189,7 +191,7 @@ returns #N/A.
 
 The rule about order is the same for both: the first TRUE test wins.
 
-> ⚠️ **Version note:** IFS and SWITCH aren't available in Excel 2016 (the one-time-purchase version) or earlier, on Windows or Mac.
+> 📋 **Version note:** IFS and SWITCH aren't available in Excel 2016 (the one-time-purchase version) or earlier, on Windows or Mac.
 > A workbook that uses them shows #NAME? there. If colleagues use older versions, use nested IF.
 
 ### 6. AND, OR, NOT, and XOR: combining tests
@@ -248,11 +250,35 @@ AND, OR, and NOT work in every version of Excel. XOR needs Excel 2013 or later o
 So far every formula has tested one row. A quality report usually wants a count instead: "How many visits had both signs?" You
 can get it two ways.
 
-**Way 1: a helper column.** Put `=AND(F2>100.4,G2>90)` in a spare column, fill it down, and count the TRUEs with
-`=COUNTIF(range,TRUE)`. It's easy to check row by row.
+**Way 1: a helper column, then COUNTIF.** A **helper column** is a spare column that holds one in-between result per row. It's
+easy to check row by row.
 
-**Way 2: one formula that does math on logical values.** When you give a comparison a whole range, it returns a whole list of TRUE/FALSE values,
-one per row. (Excel calls a list like this an **array**.) Turn the list into 1s and 0s and add them up:
+1. On the ED sheet, type `=AND(F2>100.4,G2>90)` in T2.
+2. Fill it down to row 424. Double-clicking the fill handle won't work here, because the column next to it (S) is empty. Instead,
+   type `T2:T424` in the Name Box, press **Enter**, and then press **Ctrl + D** (Mac: **⌘ + D**) to fill down.
+3. Count the TRUEs in any empty cell: `=COUNTIF(T2:T424,TRUE)`.
+
+**COUNTIF** counts the cells in a range that meet one condition. The condition is the **criteria** argument.
+
+```
+=COUNTIF(range, criteria)
+```
+
+| Criteria | Counts the cells that… | Example on the ED sheet | Result |
+|---|---|---|---|
+| `TRUE` | hold the logical value TRUE | `=COUNTIF(T2:T424,TRUE)` | the TRUEs in your helper column |
+| `"Walk-In"` | equal this text (case is ignored) | `=COUNTIF(C2:C424,"Walk-In")` | 320 walk-ins |
+| `4` | equal this number | `=COUNTIF(D2:D424,4)` | 112 visits at ESI 4 |
+| `">100.4"` | pass this comparison | `=COUNTIF(F2:F424,">100.4")` | 64 fevers |
+| `"<=2"` | pass this comparison | `=COUNTIF(D2:D424,"<=2")` | 100 visits at ESI 1 or 2 |
+
+When the criteria is a comparison, put the operator and the number inside one pair of double quotes: `">100.4"`, not
+`>100.4`. COUNTIF tests every cell in *one* range against *one* fixed criteria. It can't compare two columns row by row (such
+as ResultValue against RefHigh on the Labs sheet), and it can't combine two conditions. Way 2 handles both. Lesson 2.5 covers
+COUNTIFS, SUMIF, and the rest of the family.
+
+**Way 2: one formula that does math on logical values.** When you give a comparison a whole range, it returns a whole list of
+TRUE/FALSE values, one per row. (Excel calls a list like this an **array**.) Turn the list into 1s and 0s and add them up:
 
 ```
 =SUMPRODUCT(--(F2:F424>100.4))     → 64 visits with a fever
@@ -260,6 +286,10 @@ one per row. (Excel calls a list like this an **array**.) Turn the list into 1s 
 
 SUMPRODUCT adds up arrays. It works in every version of Excel and needs no special keystroke. (Lesson 2.4 shows its other job,
 multiplying columns together.) In Microsoft 365 and Excel 2021 or later, `=SUM(--(F2:F424>100.4))` gives the same answer.
+
+> ⚠️ **Use the data rows, not the whole column.** `=SUMPRODUCT(--(F:F>100.4))` returns 65, one more than the real count. The
+> whole column includes the header "TempF", which is text, and text ranks above every number (section 1), so the header counts
+> as a fever. A whole column also makes SUMPRODUCT check more than a million rows. Use `F2:F424`, or `tblED[TempF]` (section 3).
 
 > ⚠️ **AND, OR, and XOR don't work row by row on ranges.** `=AND(F2:F424>100.4,G2:G424>90)` doesn't return a list. It collapses
 > everything into one answer: "is *every* visit febrile and tachycardic?" To combine conditions row by row inside one formula, use
@@ -288,10 +318,10 @@ For example, this counts STAT lab results that came back above their upper limit
 ```
 
 Multiplying already converts TRUE/FALSE to numbers, so you don't need `--` there. You do need it whenever the last step is a
-comparison, because a comparison always returns TRUE/FALSE, even when its inputs were numbers. That covers a single test, the `>0` in the OR pattern,
-and the `<>` in the XOR pattern, which is why those rows of the table start with `--`. Leave it out and Excel returns 0:
-`=SUMPRODUCT(F2:F424>100.4)` is 0, because SUMPRODUCT treats logical values as zeros. Lesson 4.2 takes this kind of array logic
-much further.
+comparison, because a comparison always returns TRUE/FALSE, even when its inputs were numbers. That covers a single test, the
+`>0` in the OR pattern, and the `<>` in the XOR pattern, which is why those rows of the table start with `--`. Leave it out and
+Excel returns 0: `=SUMPRODUCT(F2:F424>100.4)` is 0, because SUMPRODUCT treats logical values as zeros. Lesson 4.2 takes this
+kind of array logic much further.
 
 **IF over a range.** IF also accepts a whole range. `IF(F2:F424>100.4, G2:G424)` returns the heart rate on febrile rows and FALSE
 on all the others. AVERAGE skips the FALSEs, so this averages heart rate for febrile visits only:
@@ -469,6 +499,7 @@ are not clinical guidance.)
 | SWITCH | `SWITCH(value, match1, result1, …, [default])` | Result for the first exact match | Excel 2019+, Microsoft 365 |
 | IFERROR | `IFERROR(value, value_if_error)` | value, or the fallback for any error | Excel 2007+ |
 | IFNA | `IFNA(value, value_if_na)` | value, or the fallback for #N/A | Excel 2013+ (Mac: 2016+) |
+| COUNTIF | `COUNTIF(range, criteria)` | The number of cells that meet one criteria, such as `">=2"` or `TRUE` | Every version |
 | SUMPRODUCT | `SUMPRODUCT(--(range>x))` | The number of TRUEs in a test over a range | Every version |
 
 | Action | Windows | Mac |
@@ -488,7 +519,7 @@ cell, as a formula wherever possible. For the column tasks, fill the yellow colu
 Practice sheet summarizes your work. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Tasks 1–3 use the Labs sheet. Tasks 4–13 use the ED sheet. Several tasks ask you to fill one of the yellow columns on a data sheet: type the formula in the first data row and Excel fills the rest of the Table column for you (if it doesn't, double-click the fill handle). The gray cell on this sheet then summarizes your column. When a formula on this sheet points at a data sheet, include the sheet name (for example Labs!E38), or click the cell on that sheet and Excel adds the name for you.
+Tasks 1–3 use the Labs sheet. Tasks 4–13 use the ED sheet. Several tasks ask you to fill one of the yellow columns on a data sheet: type the formula in the first data row and Excel fills the rest of the Table column for you (if it doesn't, double-click the fill handle). The gray cell on this sheet then summarizes your column. When a formula on this sheet points at a data sheet, include the sheet name (for example Labs!E2), or click the cell on that sheet and Excel adds the name for you. Tasks 4 and 11 use IFS and SWITCH, which need Excel 2019 or later. In Excel 2016 or earlier, build those two columns with nested IFs instead. The gray cells count the labels, so the checks still work.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -501,9 +532,9 @@ Tasks 1–3 use the Labs sheet. Tasks 4–13 use the ED sheet. Several tasks ask
 | 7 | The sepsis coordinator already reviews visits with both signs. How many visits had exactly ONE of the two: a fever (TempF above 100.4) or tachycardia (HeartRate above 90), but not both? | This is XOR logic. Use XOR in a helper column, or compare the two TRUE/FALSE lists with <> |
 | 8 | Fill the yellow FastTrack column: "Fast Track" when ESILevel is 4 or 5 AND ArrivalMode is "Walk-In" AND the ChiefComplaint is NOT "Chest Pain" or "Shortness of Breath" (it is neither one). Every other visit is "Main ED". Start in N2. The gray cell counts your "Fast Track" rows. | IF(AND(…, …, NOT(OR(…, …))), "Fast Track", "Main ED") |
 | 9 | Fill the yellow SIRS column with a vital-sign SIRS score from 0 to 3: one point for an abnormal temperature (TempF above 100.4 OR below 96.8), one for HeartRate above 90, and one for RespRate above 20. Start in O2. The gray cell adds up your whole column. | TRUE + TRUE = 2. Add three TRUE/FALSE tests together |
-| 10 | How many visits are SIRS-positive, meaning a score of 2 or more in your SIRS column? | COUNTIF with a ">=2" criterion |
+| 10 | How many visits are SIRS-positive, meaning a score of 2 or more in your SIRS column? | COUNTIF with ">=2" as the criteria |
 | 11 | Fill the yellow ESIName column with SWITCH: ESILevel 1 is "Resuscitation", 2 is "Emergent", 3 is "Urgent", 4 is "Less Urgent", 5 is "Non-Urgent". Start in P2. The gray cell counts your "Emergent" rows. | SWITCH(value, 1, "…", 2, "…", …) |
-| 12 | Shock index = HeartRate ÷ SystolicBP, and 1.0 or more is a warning sign. Fill the yellow ShockIndex column, wrapping the division in IFERROR so the 12 visits with no SystolicBP show a blank ("") instead of #DIV/0!. Start in Q2. The gray cell counts visits with a shock index of 1.0 or higher (it asks you to fix any errors first). | IFERROR(value, value_if_error) |
+| 12 | Shock index = HeartRate ÷ SystolicBP, and 1.0 or more is a warning sign. Fill the yellow ShockIndex column, wrapping the division in IFERROR so the 12 visits with no SystolicBP show a blank ("") instead of #DIV/0!. Start in Q2. The gray cell counts visits with a shock index of 1.0 or higher. While any #DIV/0! errors are left in your column, it shows "Fix the errors first" instead. | IFERROR(value, value_if_error) |
 | 13 | Visit ED211716 (ED row 13) has no SystolicBP. In the yellow cell, calculate its shock index again, but wrap the division in IFNA(…, "") instead of IFERROR. The check turns green when your cell shows the error that IFNA lets through. | IFNA traps only one kind of error |
 <!-- END GENERATED: practice -->
 
@@ -529,7 +560,7 @@ A comparison always returns TRUE or FALSE. Here the result (11) is exactly equal
 - **Answer:** 114
 - **Solution:** `=SUMPRODUCT(--(Labs!E2:E392>Labs!H2:H392))`
 
-Comparing two ranges row by row gives a list of TRUE/FALSE values. The double minus (`--`) converts them to 1s and 0s, and SUMPRODUCT adds them. In Microsoft 365 and Excel 2021 or later, `=SUM(--(…>…))` works too. Plain `SUM` over a column of TRUE/FALSE *cells* returns 0, because SUM ignores logical values stored in cells.
+Comparing two ranges row by row gives a list of TRUE/FALSE values. The double minus (`--`) converts them to 1s and 0s, and SUMPRODUCT adds them. In Microsoft 365 and Excel 2021 or later, `=SUM(--(…>…))` works too. COUNTIF can't do this, because it compares one range with one fixed criteria, and here every row has its own RefHigh. Plain `SUM` over a column of TRUE/FALSE *cells* returns 0, because SUM ignores logical values stored in cells.
 
 **3. Flag column with nested IF (count of Normal)**
 
@@ -590,7 +621,7 @@ When you do arithmetic on TRUE/FALSE, Excel treats TRUE as 1 and FALSE as 0, so 
 - **Answer:** 115
 - **Solution:** `=COUNTIF(ED!O2:O424,">=2")`
 
-Once the score is a number, COUNTIF can count any threshold. The key's live formula does the whole thing in one cell: it builds the score for every row as an array, then counts the rows where it is `>=2`.
+Once the score is a number, COUNTIF can count any threshold. The criteria `">=2"` keeps the operator and the number together inside one pair of quotes. `=SUMPRODUCT(--(ED!O2:O424>=2))` gives the same answer. The key's live formula does the whole thing in one cell: it builds the score for every row as an array, then counts the rows where it is `>=2`.
 
 **11. ESIName column with SWITCH (count of Emergent)**
 
@@ -604,7 +635,7 @@ SWITCH compares one value against a list and returns the result paired with the 
 - **Answer:** 54
 - **Solution:** `=IFERROR(G2/I2,"")`
 
-Dividing by an empty cell divides by zero, so those rows show #DIV/0!. `IFERROR(G2/I2,"")` returns the division when it works and an empty text string when it fails. COUNTIF then skips the blanks because they are text. `=IF(I2="","",G2/I2)` is an even better formula, because it handles the one problem you expect (a missing BP) and still lets any *other* mistake show up as an error.
+Dividing by an empty cell divides by zero, so those rows show #DIV/0!. `IFERROR(G2/I2,"")` returns the division when it works and empty text when it fails. COUNTIF then skips the blanks because they are text. `=IF(I2="","",G2/I2)` is an even better formula, because it handles the one problem you expect (a missing BP) and still lets any *other* mistake show up as an error.
 
 **13. IFNA vs IFERROR experiment**
 
@@ -623,7 +654,7 @@ The sepsis committee wants to know what a quick qSOFA-style screen would flag if
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Fill the qSOFA column (0–3) on the ED sheet, starting in R2. The gray cell adds up your whole column. What is the total number of qSOFA points? *(Hint: Add three tests. Guard the BP test with I2<>"". ISNUMBER(SEARCH("altered", E2)) tests 'contains')*
+- **B1.** Fill the yellow qSOFA column with a score from 0 to 3 on the ED sheet, starting in R2. The gray cell adds up your whole column, so it shows the total number of qSOFA points. *(Hint: Add three tests. Guard the BP test with I2<>"". ISNUMBER(SEARCH("altered", E2)) tests 'contains')*
 - **B2.** How many visits are screen-positive (a qSOFA score of 2 or more)? *(Hint: COUNTIF on your qSOFA column)*
 - **B3.** What was the average HeartRate of the screen-positive visits? Round to 1 decimal place. *(Hint: AVERAGE(IF(test_range>=2, values_range)). AVERAGEIF (Lesson 2.5) also works)*
 - **B4.** Safety check: how many screen-positive visits ended with EDDisposition "Discharged" (sent home)? *(Hint: Two conditions over whole columns: multiply the TRUE/FALSE lists)*
@@ -682,6 +713,7 @@ NOT(score>=2) is the same as score<2, so you don't need the NOT function over a 
 - A comparison (`=`, `<>`, `>`, `<`, `>=`, `<=`) returns TRUE or FALSE. Equal is not greater, so match the operator to the exact
   wording of the rule.
 - In arithmetic TRUE is 1 and FALSE is 0. Adding tests builds a score, and `SUMPRODUCT(--(…))` counts the rows that pass a test.
+  COUNTIF counts the cells in one range that meet one criteria, such as `">=2"`.
 - IF picks one of two outcomes. For more, nest IFs or use IFS, put the tests in an order where the first TRUE is the right one,
   and end IFS with a `TRUE` catch-all.
 - AND means all, OR means any, NOT flips, and XOR means exactly one of two. Over whole ranges, use `*`, `+` with `>0`, `1-`, and

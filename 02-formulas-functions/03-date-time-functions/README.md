@@ -1,7 +1,7 @@
 # Lesson 2.3 · Dates & Times
 
 > **Level:** Beginner → Intermediate · **Time:** about 55 minutes · **Workbook:** [`2.3-date-time-functions.xlsx`](2.3-date-time-functions.xlsx)
-> **Data:** All 369 inpatient stays admitted at Ashby Falls Community Hospital in 2025 (with each patient's date of birth and, for ED admissions, the ED arrival time) and the insurance claim for each stay; the hospital's 226 emergency department visits in Q4 2025; one pay week (December 14–20, 2025) of worked shifts on Medical-Surgical 4 West at Bluestone Memorial Hospital; and the business office's 2025–2026 holiday calendar.
+> **Data:** All 369 inpatient stays admitted at Ashby Falls Community Hospital in 2025 (with each patient's date of birth and, for ED admissions, the ED arrival time), the insurance claim for each stay, and the hospital's 226 emergency department visits in Q4 2025. The workbook also has one pay week (December 14–20, 2025) of worked shifts on Medical-Surgical 4 West at Bluestone Memorial Hospital and the business office's 2025–2026 holiday calendar. The columns come from [`encounters.csv`](../../data/README.md#encounterscsv), [`claims.csv`](../../data/README.md#claimscsv), [`ed_visits.csv`](../../data/README.md#ed_visitscsv), and [`shifts.csv`](../../data/README.md#shiftscsv) in the data dictionary.
 
 Almost every number a hospital reports has a clock behind it. Length of stay drives bed planning and reimbursement. Door-to-provider
 minutes show how well the emergency department keeps up. Payers set filing and appeal deadlines in days, and payroll needs the
@@ -20,14 +20,19 @@ to calculate ages, lengths of stay, business-day deadlines, ED waits, and shift 
 ## 📖 Guide
 
 The examples use the lesson workbook. On the **Stays** sheet, column E is DOB, F is EDArrivalDateTime, G is AdmitDateTime, and H
-is DischargeDateTime. On **Claims**, E is ServiceDate, F is SubmitDate, and G is PaidDate. On **ED**, C is ArrivalDateTime, D is
+is DischargeDateTime. On **Claims**, E is ServiceDate, F is SubmitDate, and G is PaidDate. On **ED**, B is ESILevel, C is ArrivalDateTime, D is
 TriageDateTime, E is ProviderSeenDateTime, and F is DepartureDateTime. On **Shifts**, F is ClockIn and G is ClockOut. **Settings!B2**
 holds the report date, 12/31/2025, and **Holidays!A2:A19** lists the business office's holidays.
 
 Many examples use **Stays row 5**: a patient born 09/01/1947 who arrived in the ED on Friday, January 3, 2025 at 12:51, was admitted
-at 15:42, and went home on January 9 at 16:47. Open the workbook and try each example in an empty cell as you read. Type each
-example on the sheet it describes (Stays examples on the Stays sheet, claim examples on the Claims sheet, and so on), or add the
-sheet name, as in `=Stays!H5-Stays!G5`.
+at 15:42, and went home on January 9 at 16:47. Open the workbook and try each example as you read. Type it on the sheet it
+describes (Stays examples on the Stays sheet, claim examples on the Claims sheet, and so on), in an empty cell at least one column
+away from the Table: column O on Stays, or column J on Claims, ED, and Shifts. A cell right next to or right below a Table becomes
+part of the Table as soon as you type in it, and Excel may copy your formula down the whole column. To work on another sheet
+instead, add the sheet name, as in `=Stays!H5-Stays!G5`.
+
+> ⚠️ **Keep the yellow columns empty.** The yellow columns on the data sheets (I to M on Stays, and H on Claims, ED, and Shifts) are
+> for the practice tasks, and the Practice sheet reads them. Don't try the examples in them.
 
 ### 1. Dates are numbers
 
@@ -66,10 +71,9 @@ fixed values that never change, which makes them useful as time stamps.
 > for dates of birth.
 
 > 📋 **The 1904 date system.** Excel for Mac 2008 and earlier counted days from January 1, 1904, and any workbook can still be set
-> to that system (Windows: **File → Options → Advanced → Use 1904 date system**; Mac: **Excel → Settings → Calculation**, called
-> **Preferences** in older versions). Dates
-> copied between a 1900 workbook and a 1904 workbook shift by 1,462 days, which is four years and a day. If pasted dates jump by four
-> years, check that setting. Excel also treats 1900 as a leap year, a bug kept for compatibility with Lotus 1-2-3, so serial numbers
+> to that system. On Windows the setting is **File → Options → Advanced → Use 1904 date system**. On a Mac it's under
+> **Excel → Settings → Calculation**, called **Preferences** in older versions. Dates copied between a 1900 workbook and a 1904
+> workbook shift by 1,462 days, which is four years and a day. If pasted dates jump by four years, check that setting. Excel also treats 1900 as a leap year, a bug kept for compatibility with Lotus 1-2-3, so serial numbers
 > before March 1, 1900 are off by one day. That never affects modern dates. Dates before 1900 can't be stored as dates at all.
 
 ### 2. Times are fractions of a day
@@ -88,6 +92,10 @@ spent `=G5-F5` = 0.11875 days in the ED before admission:
 | seconds | 86,400 (24 × 60 × 60) | 10,260 |
 
 To go the other way, divide: 90 minutes as a time value is `=90/1440`.
+
+> 💡 **Tip:** When you subtract two date-times, Excel may copy their date format into the result, so 0.11875 shows as
+> 01/00/1900 02:51. The number is right. Press **Ctrl + Shift + ~** (Mac: **Control + Shift + ~**) to see it as a plain number.
+> Section 7 covers this again for day counts.
 
 | Function | Returns | Example on Stays row 5 | Result |
 |---|---|---|---|
@@ -117,8 +125,8 @@ in Settings!B2 (12/31/2025, the date the course data is current to).
 | Age of the Stays row 5 patient | `=DATEDIF(E5,TODAY(),"Y")` | `=DATEDIF(E5,Settings!$B$2,"Y")` → 78 |
 | Days since a claim was submitted | `=TODAY()-Claims!F2` | `=Settings!$B$2-Claims!F2` |
 
-The `$` signs lock the reference, so it stays on Settings!B2 when you copy the formula down a column (Lesson 1.5; press **F4**, or
-**⌘ + T** on a Mac, to add them). To rerun the report for another date, you change one cell.
+The `$` signs lock the reference, so it stays on Settings!B2 when you copy the formula down a column. Press **F4** (Mac: **⌘ + T**)
+to add them, as in Lesson 1.5. To rerun the report for another date, you change one cell.
 
 ### 4. Building and taking apart dates: DATE, YEAR, MONTH, DAY
 
@@ -205,8 +213,17 @@ When you want the *name* of the day or month, use TEXT with a date format code (
 | `=TEXT(G5,"mmm yyyy")` | Jan 2025 |
 | `=TEXT(G5,"yyyy-mm")` | 2025-01 (sorts correctly as text) |
 
-A helper column of weekday names lets you group and average by day. For example, `AVERAGEIF(day_names,"Friday",values)` averages
-the values on Friday rows. Lesson 2.5 covers AVERAGEIF fully.
+A helper column of weekday names lets you group and average by day. **AVERAGEIF** averages only the rows that meet one condition:
+
+```
+=AVERAGEIF(range, criteria, average_range)
+```
+
+**range** holds the labels to test, such as a column of weekday names. **criteria** is the label you want, such as `"Friday"` or a
+cell that holds it. **average_range** holds the numbers to average, in the same rows. For example, once you've filled the
+DoorToProviderMin column in practice task 12, `=AVERAGEIF(B2:B227,2,H2:H227)` on the ED sheet averages the door-to-provider minutes
+of the 65 ESI 2 visits: 19.4. Lesson 2.5 covers AVERAGEIF and its relatives fully. The `AVERAGE(IF(…))` array formula from Lesson 2.1
+does the same job.
 
 > ⚠️ **TEXT returns text, not a date.** You can't add days to "Friday", and "Apr 2025" sorts before "Jan 2025" alphabetically. Keep
 > the real date in its own column and use TEXT only for labels. The format codes also depend on the language of your Office
@@ -507,15 +524,16 @@ All of them work in Microsoft 365 and Excel for the web.
 
 ## 🧪 Hands-on practice
 
-Download [`2.3-date-time-functions.xlsx`](2.3-date-time-functions.xlsx) and open the **Practice** sheet. Type each answer in the
-yellow cell, as a formula wherever possible. The **Check** column turns green when you're right.
+Download [`2.3-date-time-functions.xlsx`](2.3-date-time-functions.xlsx) and open the **Practice** sheet. Type each answer in its
+yellow cell, as a formula wherever possible, and the **Check** column turns green when you're right. For the column tasks (gray
+answer cells), you fill a yellow column on a data sheet and the gray cell summarizes your work.
 
 <!-- BEGIN GENERATED: practice -->
-Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 13 the Shifts sheet. Settings!B2 holds the report date (12/31/2025) and the Holidays sheet lists the business office's holidays. Several tasks ask you to fill a yellow column on a data sheet: type the formula in the first data row and the Table fills the rest (if it doesn't, double-click the fill handle). The gray cell on this sheet then summarizes your column.
+Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 13 the Shifts sheet. Settings!B2 holds the report date (12/31/2025) and the Holidays sheet lists the business office's holidays. When a formula on this sheet points at a data sheet, include the sheet name, as in Stays!G2:G370, or click the cells on that sheet and Excel adds the name for you. (Selecting a whole Table column may write tblStays[AdmitDateTime] instead, which works the same.) Several tasks ask you to fill a yellow column on a data sheet: type the formula in the first data row and the Table fills the rest (if it doesn't, double-click the fill handle). The gray cell on this sheet then summarizes your column.
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Stays!G2 shows the first admission of 2025: 01/01/2025 21:09. What number does Excel actually store in that cell? Point a formula at the cell (the answer cell is already formatted to show 4 decimal places). | A date-time is one number: whole days since 1900, plus a fraction of a day |
+| 1 | Stays!G2 shows the first admission of 2025: 01/01/2025 21:09. What number does Excel actually store in that cell? Enter a formula that refers to the cell. The answer cell is already formatted to show 5 decimal places, so you'll see the stored number instead of a date. | A date-time is one number: whole days since 1900, plus a fraction of a day |
 | 2 | The patient in Stays row 15 (encounter ENC110973) was 64 at admission. On what date does the patient turn 65, the usual age of Medicare eligibility? Use the DOB in that row. | EDATE moves a date by whole months. How many months are in 65 years? |
 | 3 | Fill the yellow AgeAtAdmit column on the Stays sheet with each patient's age in completed years on the admit date. Start in I2. The gray cell averages your column. What was the average age at admission? | DATEDIF(start_date, end_date, "Y") counts completed years. Type it in full, because Excel won't suggest it |
 | 4 | The youngest patient (Stays row 42, encounter ENC112029) was an infant. Calculate the exact age in years at admission with YEARFRAC, using basis 1 (actual/actual). Round to 2 decimal places. | YEARFRAC(start_date, end_date, basis). Don't skip the third argument |
@@ -533,7 +551,7 @@ Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 1
 ## ✅ Answer key
 
 The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…** → *Answer Key*). Its *Live result* column
-runs a working formula for every formula-based answer, so you can watch it calculate. The same answers are below, collapsed so you don't see them by accident.
+runs a one-cell version of each solution, so you can watch it calculate. The same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -541,10 +559,10 @@ runs a working formula for every formula-based answer, so you can watch it calcu
 
 **1. Stays!G2 shows the first admission of 2025: 01/01/2025 21:09. What number does Excel…**
 
-- **Answer:** 45,658.8812
+- **Answer:** 45,658.88125
 - **Solution:** `=Stays!G2`
 
-The whole part, 45,658, is the **date serial number**: January 1, 2025 is day 45,658 counting from January 1, 1900. The decimal part, 0.8812, is the time as a fraction of a 24-hour day: 21:09 is 1,269 minutes ÷ 1,440 minutes per day. You can also see the number by giving the cell the General format with Ctrl + Shift + ~ (Mac: Control + Shift + ~). Because dates and times are numbers, you can add, subtract, and compare them.
+The whole part, 45,658, is the **date serial number**: January 1, 2025 is day 45,658 counting from January 1, 1900. The decimal part, 0.88125, is the time as a fraction of a 24-hour day: 21:09 is 1,269 minutes ÷ 1,440 minutes per day. You can also see the number by giving the cell the General format with Ctrl + Shift + ~ (Mac: Control + Shift + ~). Because dates and times are numbers, you can add, subtract, and compare them.
 
 **2. The patient in Stays row 15 (encounter ENC110973) was 64 at admission. On what date…**
 
@@ -586,7 +604,7 @@ DATE(2025,4,1) builds the serial number for April 1, and multiplying the two TRU
 - **Answer:** 4.54
 - **Solution:** `=H2-G2`
 
-Subtracting two date-times gives the elapsed days, with the hours as a decimal: 2.50 is two and a half days. In a cell with the General format, Excel may copy the date format from the cells you referenced and show 4.5 days as 01/04/1900 12:00. Change the format to Number when that happens. Multiply by 24 to get hours. The live formula in the key uses a shortcut: the sum of the differences equals the difference of the sums.
+Subtracting two date-times gives the elapsed days, with the hours as a decimal: 2.50 is two and a half days. The LOSDays column is already formatted as a number. In a General cell, Excel may copy the date format from the cells you referenced and show 4.5 days as 01/04/1900 12:00, so change the format to Number when that happens. Multiply by 24 to get hours. The live formula in the key uses a shortcut: the sum of the differences equals the difference of the sums.
 
 **8. Ashby Falls' billing standard says a claim must be submitted by the last day of the…**
 
@@ -628,7 +646,7 @@ Subtracting gives a fraction of a day (0.0347 is 50 minutes), and multiplying by
 - **Answer:** 2213:48 (h:mm)
 - **Solution:** `=MOD(G2-F2,1)-TIME(0,30,0)`
 
-Shift SH915484 clocked in at 18:48 and out at 08:20. 08:20 − 18:48 is negative (−0.4361 of a day). MOD(…, 1) adds one whole day to a negative result and leaves positive results alone, so the shift becomes 13:32. Subtract the meal break as a time, `TIME(0,30,0)` or `"0:30"` or `30/1440`. Subtracting 0.5 would remove half a *day*. The total is 2,213.8 hours, so it needs **[h]:mm**. Plain h:mm would wrap past every 24 hours and show only the leftover hours. Without MOD the week totals 557.8 hours, because every overnight shift comes out negative. Format your column as [h]:mm (or h:mm) to read each shift.
+Shift SH915484 clocked in at 18:48 and out at 08:20. 08:20 − 18:48 is negative (−0.4361 of a day). MOD(…, 1) adds one whole day to a negative result and leaves positive results alone, so the shift becomes 13:32. Subtract the meal break as a time, `TIME(0,30,0)` or `"0:30"` or `30/1440`. Subtracting 0.5 would remove half a *day*. The total is 2,213.8 hours, so it needs **[h]:mm**. Plain h:mm would wrap past every 24 hours and show only the leftover hours. Without MOD the week totals 557.8 hours, because every overnight shift comes out negative. The PaidTime column is formatted h:mm, so a shift that comes out negative shows ######## instead of a time.
 
 </details>
 <!-- END GENERATED: answers -->
@@ -643,7 +661,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B1.** Fill the Midnights column with the number of midnights each stay crossed between AdmitDateTime and DischargeDateTime. Start in K2. The gray cell counts your rows with 2 or more. How many stays crossed at least two midnights? *(Hint: INT strips the time from a date-time. Subtract the two dates)*
 - **B2.** How many stays crossed two or more midnights even though they lasted LESS than 48 hours? *(Hint: Two conditions on two of your columns: multiply the TRUE/FALSE lists. 48 hours is 2 days)*
 - **B3.** CMS starts the benchmark clock when hospital care begins, which for ED admissions is the ED arrival, not the inpatient admit order. Fill the BenchMidnights column: midnights from EDArrivalDateTime to DischargeDateTime, or from AdmitDateTime when EDArrivalDateTime is blank. Start in L2. The gray cell counts your rows with 2 or more. How many stays meet the benchmark when ED time counts? *(Hint: Use IF to pick the clock start for each row, then count midnights the same way as in B1)*
-- **B4.** Fill the AdmitDay column with the weekday name of each AdmitDateTime (Monday, Tuesday, …). What was the average length of stay, in HOURS, for patients admitted on a Friday? Round to 1 decimal place. *(Hint: TEXT(date, "dddd") gives the weekday name. AVERAGEIF (a preview of Lesson 2.5) or AVERAGE(IF(…)) averages the Friday rows)*
+- **B4.** Fill the AdmitDay column with the weekday name of each AdmitDateTime (Monday, Tuesday, …). Start in M2. What was the average length of stay, in HOURS, for patients admitted on a Friday? Use your LOSDays column and round to 1 decimal place. *(Hint: TEXT(date, "dddd") gives the weekday name. AVERAGEIF (a preview of Lesson 2.5) or AVERAGE(IF(…)) averages the Friday rows)*
 - **B5.** Which weekday of admission has the LONGEST average length of stay? Type the weekday name. *(Hint: Build a small seven-row table of averages, one per weekday)*
 <!-- END GENERATED: bonus -->
 
@@ -677,14 +695,14 @@ The IF picks the start of care for each row, and INT turns it into a date. 23 ED
 - **Answer:** 108.3
 - **Solution:** `=ROUND(AVERAGEIF(Stays!M2:M370,"Friday",Stays!J2:J370)*24,1)`
 
-Fill AdmitDay with `=TEXT(G2,"dddd")`, which returns full weekday names. AVERAGEIF averages the LOSDays values on rows where AdmitDay is "Friday", and × 24 converts days to hours. In Microsoft 365 and Excel 2021, `=ROUND(AVERAGE(IF(Stays!M2:M370="Friday",Stays!J2:J370))*24,1)` also works, as you saw in Lesson 2.1. TEXT returns weekday names in your Office language, so a German Excel shows "Freitag".
+Fill AdmitDay with `=TEXT(G2,"dddd")`, which returns full weekday names. AVERAGEIF averages the LOSDays values on rows where AdmitDay is "Friday", and × 24 converts days to hours. The array formula from Lesson 2.1, `=ROUND(AVERAGE(IF(Stays!M2:M370="Friday",Stays!J2:J370))*24,1)`, also works. Microsoft 365 and Excel 2021 calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). TEXT returns weekday names in your Office language, so a German Excel shows "Freitag".
 
 **B5. Which weekday of admission has the LONGEST average length of stay? Type the weekday name.**
 
 - **Answer:** Thursday
 - **Solution:**
 
-1. On the Bonus sheet, type the seven weekday names, Monday to Sunday, in G2:G8.
+1. On the Bonus sheet, type Monday in G2 and drag the fill handle down to G8. AutoFill (Lesson 1.2) completes the week through Sunday.
 2. In H2, enter `=AVERAGEIF(Stays!$M$2:$M$370,G2,Stays!$J$2:$J$370)*24` and fill it down to H8.
 3. Find the largest average by eye, or let Excel find it: `=INDEX(G2:G8,MATCH(MAX(H2:H8),H2:H8,0))` (INDEX and MATCH are covered in Lesson 2.6).
 

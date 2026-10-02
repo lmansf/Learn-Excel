@@ -90,7 +90,7 @@ def build() -> Lesson:
     pat = L.add_table_sheet(
         "Patients", patients, table="tblPatients",
         columns=["PatientID", ("MRNNumber", "MRN"), "PatientName", "Phone", "Email", "ChronicConditions"],
-        extra_cols=["FirstName", "ContactLine", "HasDM", "ConditionCount"],
+        extra_cols=["HasDM", "ContactLine", "FirstName", "ConditionCount"],  # in the order the tasks use them
         formats={"MRN": "General"},
         widths={"PatientName": 26, "Email": 34, "ChronicConditions": 22, "FirstName": 14, "ContactLine": 50,
                 "HasDM": 10, "ConditionCount": 16},
@@ -201,14 +201,17 @@ def build() -> Lesson:
     t_phone = pick(lambda i, r: True, start=57)
     phone_digits = "".join(ch for ch in t_phone["Phone"] if ch.isdigit())
 
-    # 5 · MRN as 8-character text (choose a patient who lost two leading zeros)
-    t_mrn = pick(lambda i, r: r["MRN"].startswith("00") and r["MRN"][2] != "0", start=0)
+    # 5 · MRN as 8-character text. The guide's worked example is PT10002 (row 3), so pick a different patient,
+    #     one who lost three leading zeros, so the learner applies the skill instead of copying the example.
+    t_mrn = pick(lambda i, r: r["MRN"].startswith("000") and r["MRN"][3] != "0", start=0)
+    assert prow(t_mrn["PatientID"]) != 3
     mrn_text = f"{t_mrn['MRNNumber']:08d}"
     assert mrn_text == t_mrn["MRN"]
 
-    # 6 · month label with TEXT
-    t_enc = next(e for e in encounters if e["AdmitDate"].month == 11 and e["AdmitDate"].day >= 14)
+    # 6 · month label with TEXT. The guide formats row 128 (Nov-2025), so use a December encounter here.
+    t_enc = next(e for e in encounters if e["AdmitDate"].month == 12 and e["AdmitDate"].day >= 9)
     e_row = ef + encounters.index(t_enc)
+    assert e_row != 128
     month_label = t_enc["AdmitDate"].strftime("%b-%Y")
 
     # 7 · provider badge label (an MD)
@@ -246,7 +249,8 @@ def build() -> Lesson:
     C, Cc = pat.col("PatientName"), pat.col("ChronicConditions")
     L.practice_intro = ("Tasks use the Patients, Encounters, and Providers sheets. When a task names one patient, it also gives "
                         "the row, so you can point your formula at that row's cells (for example Patients!C25). Column tasks "
-                        "ask you to fill a yellow column on a data sheet; a gray cell here then summarizes your column.")
+                        "ask you to fill a yellow column on a data sheet, and a gray cell on this sheet then summarizes your "
+                        "column.")
     L.tasks = [
         Task(f"Front-desk staff confirm a caller's identity with the last 4 digits of their phone number. Return the last 4 "
              f"digits of patient {t_last4['PatientID']}'s phone (row {prow(t_last4['PatientID'])} of the Patients sheet).",
@@ -273,12 +277,13 @@ def build() -> Lesson:
              f"\"{t_last['PatientName']}\"): everything before the comma.",
              answer=last_answer, solution=f'=LEFT({pcell("PatientName", t_last["PatientID"])},'
                                           f'FIND(",",{pcell("PatientName", t_last["PatientID"])})-1)',
-             hint="FIND gives the comma's position; LEFT takes everything before it",
+             hint="FIND gives the comma's position, and LEFT takes everything before it",
              explanation=f"FIND(\",\",…) returns the comma's position ({len(last_answer) + 1}). The last name is the "
                          f"{len(last_answer)} characters before it, so subtract 1. In Microsoft 365 you can also write "
                          f"=TEXTBEFORE({pcell('PatientName', t_last['PatientID'])},\",\")."),
         Task(f"The appointment-reminder system needs phone numbers as 10 digits with no punctuation. Convert patient "
-             f"{t_phone['PatientID']}'s phone (row {prow(t_phone['PatientID'])}, \"{t_phone['Phone']}\") to digits only.",
+             f"{t_phone['PatientID']}'s phone (row {prow(t_phone['PatientID'])} of the Patients sheet, \"{t_phone['Phone']}\") "
+             f"to digits only.",
              answer=phone_digits,
              solution=f'=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE({pcell("Phone", t_phone["PatientID"])},'
                       f'"(",""),")","")," ",""),"-","")',
@@ -287,9 +292,9 @@ def build() -> Lesson:
                          "parentheses, the space, and the dash in one formula. Work from the inside out: the innermost "
                          "SUBSTITUTE runs first and passes its result to the next one. The result is text, which is what you "
                          "want for phone numbers."),
-        Task(f"Patient {t_mrn['PatientID']}'s MRN (row {prow(t_mrn['PatientID'])}) shows {t_mrn['MRNNumber']} because the "
-             f"export stored it as a number and dropped the leading zeros. Return it as the 8-character text MRN printed on "
-             f"wristbands.",
+        Task(f"Patient {t_mrn['PatientID']}'s MRN (row {prow(t_mrn['PatientID'])} of the Patients sheet) shows "
+             f"{t_mrn['MRNNumber']} because the export stored it as a number and dropped the leading zeros. Return it as the "
+             f"8-character text MRN printed on wristbands.",
              answer=mrn_text, solution=f'=TEXT({pcell("MRN", t_mrn["PatientID"])},"00000000")',
              hint="TEXT(value, format_text) with a format of eight 0s",
              explanation="In a format code, each 0 is a required digit, so \"00000000\" pads the number with leading zeros "
@@ -310,40 +315,46 @@ def build() -> Lesson:
              f"Dr. {ex_prov['FirstName']} {ex_prov['LastName']}, {ex_prov['Credential']}.",
              answer=badge,
              solution=f'="Dr. "&Providers!B{pr_row}&" "&Providers!C{pr_row}&", "&Providers!D{pr_row}',
-             hint="Join pieces with &; spaces and punctuation go inside quotes",
+             hint="Join the pieces with &. Spaces and punctuation go inside double quotes",
              explanation="The & operator joins text. Literal text, including every space, the period after Dr, and the "
                          "comma, goes inside double quotes. =CONCAT(\"Dr. \",Providers!B{0},\" \",Providers!C{0},\", \","
                          "Providers!D{0}) gives the same result.".format(pr_row)),
         Task(f"On the Patients sheet, fill the yellow HasDM column with TRUE when the patient's ChronicConditions list "
-             f"includes DM (diabetes) and FALSE otherwise. Blank lists should give FALSE. The gray cell counts the TRUEs.",
+             f"includes DM (diabetes) and FALSE otherwise. Blank lists should give FALSE. Type your formula in "
+             f"{pat.cell('HasDM', 0, sheet=False)}, then copy it down. The gray cell counts the TRUEs.",
              answer=dm_count, title="HasDM column (patients with diabetes)",
              solution=f'=ISNUMBER(SEARCH("DM",{Cc}{pf}))',
              summary=f'=IF(COUNTA({prng("HasDM")})=0,"",COUNTIF({prng("HasDM")},TRUE))',
              fill={"range": f"Patients!{pat.col('HasDM')}{pf}:{pat.col('HasDM')}{pl}",
                    "formula": f'=ISNUMBER(SEARCH("DM",{Cc}{pf}))'},
              live=f'=SUMPRODUCT(--ISNUMBER(SEARCH("DM",{prng("ChronicConditions")})))',
-             hint="SEARCH returns a position or #VALUE!; ISNUMBER turns that into TRUE/FALSE",
+             hint="SEARCH returns a position or #VALUE!, and ISNUMBER turns that into TRUE or FALSE",
              explanation="SEARCH returns the position where DM starts, or #VALUE! when it isn't there (including in blank "
                          "cells). ISNUMBER converts any position to TRUE and the error to FALSE. SEARCH ignores case, so it "
                          "would also find dm. If a code could hide inside a longer code, search for \";DM;\" inside "
                          "\";\"&F2&\";\" instead."),
         Task(f"The patient portal username is the part of the email address before the @. Return the username for patient "
-             f"{t_mail['PatientID']} (row {prow(t_mail['PatientID'])}).",
+             f"{t_mail['PatientID']} (row {prow(t_mail['PatientID'])} of the Patients sheet).",
              answer=username, solution=f'=TEXTBEFORE({pcell("Email", t_mail["PatientID"])},"@")',
              hint="TEXTBEFORE (Microsoft 365 or Excel 2024), or LEFT + FIND",
-             explanation="TEXTBEFORE returns everything before the first @. The classic version, which works in every "
-                         f"Excel, is =LEFT({pcell('Email', t_mail['PatientID'])},FIND(\"@\",{pcell('Email', t_mail['PatientID'])})-1)."),
-        Task(f"How many chronic conditions does patient {t_cc['PatientID']} (row {prow(t_cc['PatientID'])}) have? Split the "
-             f"semicolon-separated ChronicConditions list with TEXTSPLIT and count the pieces.",
+             explanation="TEXTBEFORE returns everything before the first @, however long the username is. The classic "
+                         "version, which works in every Excel, is "
+                         f"=LEFT({pcell('Email', t_mail['PatientID'])},FIND(\"@\",{pcell('Email', t_mail['PatientID'])})-1): "
+                         f"FIND returns the position of the @ ({len(username) + 1} here), and -1 stops LEFT just before it, so it "
+                         f"keeps the {len(username)} characters of the username."),
+        Task(f"How many chronic conditions does patient {t_cc['PatientID']} (row {prow(t_cc['PatientID'])} of the Patients "
+             f"sheet) have? Split the semicolon-separated ChronicConditions list with TEXTSPLIT and count the pieces.",
              answer=cc_count, solution=f'=COUNTA(TEXTSPLIT({pcell("ChronicConditions", t_cc["PatientID"])},";"))',
-             hint="COUNTA(TEXTSPLIT(…)) returns one number instead of a spill",
+             hint="COUNTA(TEXTSPLIT(…)) returns one number instead of a spill. Without TEXTSPLIT, count the semicolons "
+                  "with LEN and SUBSTITUTE (guide section 6)",
              explanation="TEXTSPLIT spills one condition per cell to the right. Wrapping it in COUNTA counts the pieces and "
                          "returns a single number, so nothing spills into the Check column. Without TEXTSPLIT, count the "
                          "semicolons and add 1: =LEN({0})-LEN(SUBSTITUTE({0},\";\",\"\"))+1.".format(
                              pcell("ChronicConditions", t_cc["PatientID"]))),
         Task(f"On the Patients sheet, fill the yellow ContactLine column with the phone and email joined by \" | \" "
              f"(space, vertical bar, space), for example (555) 875-0698 | edward.abbott94@example.com. When there's no "
-             f"email, show just the phone, with no dangling separator. The gray cell counts lines that contain a |.",
+             f"email, show just the phone, with no dangling delimiter. Type your formula in "
+             f"{pat.cell('ContactLine', 0, sheet=False)}, then copy it down. The gray cell counts lines that contain a |.",
              answer=with_email, title="ContactLine column (lines with both phone and email)",
              solution=f'=TEXTJOIN(" | ",TRUE,{pat.col("Phone")}{pf},{pat.col("Email")}{pf})',
              summary=f'=IF(COUNTA({prng("ContactLine")})=0,"",COUNTIF({prng("ContactLine")},"*|*"))',
@@ -352,14 +363,14 @@ def build() -> Lesson:
              live=f"=COUNTA({prng('Email')})",
              hint="TEXTJOIN(delimiter, ignore_empty, …)",
              explanation="TEXTJOIN puts the delimiter between items. With ignore_empty set to TRUE, it skips the blank email, "
-                         "so those rows show only the phone. With FALSE, or with D2&\" | \"&E2, every row gets a separator "
-                         "and the blank rows end in a dangling \" | \". Without TEXTJOIN (Excel 2016), add the separator only "
+                         "so those rows show only the phone. With FALSE, or with D2&\" | \"&E2, every row gets a delimiter "
+                         "and the blank rows end in a dangling \" | \". Without TEXTJOIN (Excel 2016), add the delimiter only "
                          "when there is an email: =D2&IF(E2=\"\",\"\",\" | \"&E2)."),
         Task(f"On the Patients sheet, fill the yellow FirstName column with each patient's first name: everything after "
              f"the comma in PatientName, with no extra spaces. Watch out: some names have doubled, leading, or trailing "
              f"spaces, and {nbsp_rows} were pasted from the patient portal with non-breaking spaces (UNICHAR(160)). Case "
-             f"doesn't matter here. The gray cell adds up the lengths of all your first names, so any leftover space "
-             f"changes the total.",
+             f"doesn't matter here. Type your formula in {pat.cell('FirstName', 0, sheet=False)}, then copy it down. The "
+             f"gray cell adds up the lengths of all your first names, so any leftover space changes the total.",
              answer=first_chars, title="FirstName column (checksum: total characters)",
              solution=f'=TRIM(MID(SUBSTITUTE({C}{pf},UNICHAR(160)," "),FIND(",",{C}{pf})+1,LEN({C}{pf})))',
              summary=f'=IF(COUNTA({prng("FirstName")})=0,"",SUMPRODUCT(LEN({prng("FirstName")})))',
@@ -367,16 +378,16 @@ def build() -> Lesson:
                    "formula": f'=TRIM(MID(SUBSTITUTE({C}{pf},UNICHAR(160)," "),FIND(",",{C}{pf})+1,LEN({C}{pf})))'},
              live=f'=SUMPRODUCT(LEN(TRIM(MID(SUBSTITUTE({prng("PatientName")},UNICHAR(160)," "),'
                   f'FIND(",",{prng("PatientName")})+1,LEN({prng("PatientName")})))))',
-             hint="TRIM can't remove a non-breaking space; SUBSTITUTE it with a normal space first",
+             hint="TRIM can't remove a non-breaking space, so SUBSTITUTE it with a normal space first",
              explanation="Work from the inside out. SUBSTITUTE turns each non-breaking space into an ordinary space, "
                          "MID takes everything after the comma (LEN is simply a length that's long enough), and TRIM "
                          f"removes the leading, trailing, and doubled spaces. Without the SUBSTITUTE, the {nbsp_rows} portal rows "
                          f"keep an invisible character and the total comes out {no_nbsp_chars - first_chars} too high. "
                          "On Windows, CHAR(160) is the same character as UNICHAR(160). A Microsoft 365 version is "
                          "=TRIM(SUBSTITUTE(TEXTAFTER(C2,\",\"),UNICHAR(160),\" \"))."),
-        Task(f"Patient {t_disp['PatientID']}'s name was typed as \"{t_disp['PatientName']}\" (row {prow(t_disp['PatientID'])}, "
-             f"with two trailing spaces). Return a clean display name in the form First Last, in Proper Case. This check is "
-             f"case-sensitive.",
+        Task(f"Patient {t_disp['PatientID']}'s name was typed as \"{t_disp['PatientName']}\" (row {prow(t_disp['PatientID'])} "
+             f"of the Patients sheet, with two trailing spaces). Return a clean display name in the form First Last, in "
+             f"Proper Case. This check is case-sensitive.",
              answer=display, check="custom", custom_check="EXACT({cell},{key})", live=False,
              solution=f'=PROPER(TRIM(MID({pcell("PatientName", "PT10325")},FIND(",",{pcell("PatientName", "PT10325")})+1,'
                       f'LEN({pcell("PatientName", "PT10325")})))&" "&LEFT({pcell("PatientName", "PT10325")},'
@@ -439,8 +450,9 @@ def build() -> Lesson:
         "Removing those is a Lesson 3.3 job, so leave them in.)")
     L.bonus = [
         Task(f"On the Registrations sheet, fill the yellow City column with just the city name in Proper Case, with no comma, "
-             f"state, or ZIP (for example Lakeview Heights). The gray cell counts rows whose City is exactly "
-             f"Lakeview Heights (case-sensitive). That town appears in every messy style, so it's a good test.",
+             f"state, or ZIP (for example Lakeview Heights). Type your formula in {reg.cell('City', 0, sheet=False)}, then "
+             f"copy it down. The gray cell counts rows whose City is exactly Lakeview Heights (case-sensitive). That town "
+             f"appears in every messy style, so it's a good test.",
              answer=lakeview, title="City column (rows exactly 'Lakeview Heights')",
              solution=f'=PROPER(TRIM(SUBSTITUTE(TEXTBEFORE({D}{rf}," ",-2),",","")))',
              summary=f'=IF(COUNTA({rng_city})=0,"",SUMPRODUCT(--EXACT({rng_city},"Lakeview Heights")))',
@@ -456,15 +468,16 @@ def build() -> Lesson:
                          f"=PROPER(SUBSTITUTE(LEFT({D2},LEN({D2})-LEN(TRIM(RIGHT(SUBSTITUTE({D2},\" \",REPT(\" \",100)),100)))-4),\",\",\"\")): "
                          "the TRIM(RIGHT(SUBSTITUTE(…))) part pulls out the last word (the ZIP), and LEFT keeps everything except "
                          "the ZIP and the 4 characters of \" OH \"."),
-        Task(f"Fill the yellow ZIP5 column with the 5-digit ZIP code as text. ZIP+4 codes like 45720-1280 must become "
-             f"45720. The gray cell counts rows in ZIP 45501 (downtown Bluestone).",
+        Task(f"On the Registrations sheet, fill the yellow ZIP5 column with the 5-digit ZIP code as text. ZIP+4 codes like "
+             f"45720-1280 must become 45720. Type your formula in {reg.cell('ZIP5', 0, sheet=False)}, then copy it down. "
+             f"The gray cell counts rows in ZIP 45501 (downtown Bluestone).",
              answer=z45501, title="ZIP5 column (rows in ZIP 45501)",
              solution=f'=LEFT(TEXTAFTER({D}{rf}," ",-1),5)',
              summary=f'=IF(COUNTA({rng_zip})=0,"",COUNTIF({rng_zip},"45501"))',
              fill={"range": f"Registrations!{reg.col('ZIP5')}{rf}:{reg.col('ZIP5')}{rl}",
                    "formula": f'=LEFT(TEXTAFTER({D}{rf}," ",-1),5)'},
              live=f'=COUNTIF({rrng("CityStateZip")},"* 45501*")',
-             hint="The ZIP is the last word; keep only its first 5 characters",
+             hint="The ZIP is the last word. Keep only its first 5 characters",
              explanation=f"TEXTAFTER({D2},\" \",-1) returns everything after the last space: the whole ZIP or ZIP+4. LEFT(…,5) "
                          f"keeps the first five digits. RIGHT({D2},5) looks tempting but returns \"-1280\" for 45720-1280. "
                          f"{z45501_plus4} of the {z45501} rows in 45501 have a ZIP+4. Keep ZIPs as text: a ZIP like 02134 would "
@@ -472,7 +485,7 @@ def build() -> Lesson:
                          f"=LEFT(TRIM(RIGHT(SUBSTITUTE({D2},\" \",REPT(\" \",100)),100)),5). SUBSTITUTE swaps every space for "
                          "100 spaces, RIGHT(…,100) then grabs a chunk that holds only the last word plus padding, and TRIM "
                          "strips the padding."),
-        Task(f"Write one formula that turns record {t_lab['RecordID']}'s CityStateZip (row {lab_row}, "
+        Task(f"Write one formula that turns record {t_lab['RecordID']}'s CityStateZip (row {lab_row} of the Registrations sheet, "
              f"\"{t_lab['CityStateZip']}\") into the mailing-label line City, ST 12345: city in Proper Case, a comma and a space, "
              f"the 2-letter state in capitals, a space, and the 5-digit ZIP. This check is case-sensitive.",
              answer=label, check="custom", custom_check="EXACT({cell},{key})", live=False,
@@ -486,8 +499,9 @@ def build() -> Lesson:
                          "also works, but extracting the "
                          "state keeps the formula correct for out-of-state patients."),
         Task(f"Back on the Patients sheet, fill the yellow ConditionCount column with the number of chronic conditions each "
-             f"patient has: 0 when ChronicConditions is blank, 1 for HTN, 2 for HTN;DM, and so on. The gray cell counts "
-             f"'complex' patients with 3 or more conditions.",
+             f"patient has: 0 when ChronicConditions is blank, 1 for HTN, 2 for HTN;DM, and so on. Type your formula in "
+             f"{pat.cell('ConditionCount', 0, sheet=False)}, then copy it down. The gray cell counts 'complex' patients "
+             f"with 3 or more conditions.",
              answer=complex3, title="ConditionCount column (patients with 3+ conditions)",
              solution=cc_formula,
              summary=f'=IF(COUNTA({prng("ConditionCount")})=0,"",COUNTIF({prng("ConditionCount")},">=3"))',
@@ -496,11 +510,12 @@ def build() -> Lesson:
              live=f'=SUMPRODUCT(({rng_cc}<>"")*((LEN({rng_cc})-LEN(SUBSTITUTE({rng_cc},";",""))+1)>=3))',
              hint="Items = semicolons + 1. How many semicolons? Compare LEN before and after removing them",
              explanation="LEN(F2)-LEN(SUBSTITUTE(F2,\";\",\"\")) is the number of semicolons, because removing them shortens "
-                         "the text by exactly that many characters. A list always has one more item than separators, so add 1. "
+                         "the text by exactly that many characters. A list always has one more item than delimiters, so add 1. "
                          "The IF handles blank lists: without it, a blank cell has 0 semicolons and would count as 1 condition. "
                          "COUNTA(TEXTSPLIT(F2,\";\")) has the same problem on blank cells, so it needs the same IF."),
         Task(f"What is the average number of chronic conditions per patient across all {N_PATIENTS} patients, including "
-             f"those with none? Use your ConditionCount column. (The check accepts 2 decimal places.)",
+             f"those with none? Use your ConditionCount column. Enter it unrounded or rounded to 2 decimal places. The check "
+             f"accepts either.",
              answer=avg_cond, fmt="0.00",
              solution=f"=AVERAGE({prng('ConditionCount')})",
              live=f'=SUMPRODUCT(({rng_cc}<>"")*(LEN({rng_cc})-LEN(SUBSTITUTE({rng_cc},";",""))+1))/ROWS({rng_cc})',

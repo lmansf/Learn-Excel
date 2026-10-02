@@ -4,9 +4,9 @@
 > **Data:** Supply inventory snapshot for 15 storerooms across three Bluestone hospitals (257 stock rows, as of 12/31/2025), a Settings sheet with the report date and expiry window, and Purchasing's vendor list.
 
 Bluestone's supply chain team gets a fresh inventory snapshot every week. Today it has 257 stock rows, and next Monday it will
-have a few more or a few less. A formula like `=SUM(Inventory!J2:J258)` still stops at row 258 when next week's rows are
-pasted below it, so it quietly misses them, and nobody notices until a unit runs out of saline flushes. **Excel Tables** fix this because they grow with
-the data, and their formulas read like the question you're asking: `=SUM(tblInventory[QtyOnHand])`. **Named ranges** do the
+have a few more or a few less. A formula like `=SUM(Inventory!J2:J258)` still stops at row 258 when next week's extra rows
+are pasted below it. It quietly misses them, and nobody notices until a unit runs out of saline flushes. **Excel Tables** fix
+this because they grow with the data, and their formulas read like the question you're asking: `=SUM(tblInventory[QtyOnHand])`. **Named ranges** do the
 same for the settings a report depends on, such as the report date and the 90-day expiry window. In this lesson you turn a raw
 inventory export into a Table, use it to find stockouts, expired stock, and overdue counts, and then build a reorder report
 that updates itself.
@@ -95,7 +95,8 @@ tblInventory[QtyOnHand]     every data cell in the QtyOnHand column
 ```
 
 The full syntax is the Table name followed by square brackets that hold a column name, a **special item** such as `#All`, or
-both:
+both. Some examples below use `ROWS(reference)`, which returns the number of rows a reference covers. It's a quick way to see
+which rows a structured reference includes.
 
 | Structured reference | Refers to | Example |
 |---|---|---|
@@ -124,7 +125,8 @@ You rarely type a structured reference in full:
   sheet gives `tblInventory[[#Totals],[ColumnName]]`.
 
 > 💡 **Tip:** If clicking gives you `J2` instead of `[@QtyOnHand]`, the option is switched off. Turn it back on in
-> **File → Options → Formulas → Use table names in formulas** (Mac: **Excel → Preferences → Tables & Filters**).
+> **File → Options → Formulas → Use table names in formulas** (Mac: **Excel → Settings → Tables & Filters**, called
+> Preferences in older versions).
 
 #### Worked examples on the inventory
 
@@ -147,10 +149,11 @@ symbol such as `$` or `%` needs the extra brackets in every form, as in `tblInve
 `[`, `]`, `#`, `'`, and `@`, also need an apostrophe in front of them. Excel adds the brackets and apostrophes for you when
 you click, but short headers without spaces or symbols keep every formula easier to read.
 
-> ⚠️ **Dragging sideways changes the column.** If you drag `=SUM(tblInventory[QtyOnHand])` one cell to the right with the
-> fill handle, it becomes `=SUM(tblInventory[ParLevel])`, because Excel treats the column name like a relative reference.
-> Copy and paste (Ctrl + C, Ctrl + V; Mac: ⌘ + C, ⌘ + V) leaves it alone. To lock a column so it never moves, write it as a
-> one-column range: `tblInventory[[QtyOnHand]:[QtyOnHand]]`.
+> ⚠️ **Dragging sideways changes the column.** Filling a structured reference down a column never changes it. But if you drag
+> `=SUM(tblInventory[QtyOnHand])` one cell to the right with the fill handle, it becomes `=SUM(tblInventory[ParLevel])`,
+> because Excel treats the column name like a relative reference. Copying with Ctrl + C and pasting with Ctrl + V (Mac: ⌘ + C
+> and ⌘ + V) leaves it alone. To lock a column so it never moves, write it as a one-column range:
+> `tblInventory[[QtyOnHand]:[QtyOnHand]]`.
 
 ### 5. Calculated columns
 
@@ -192,6 +195,16 @@ share of the system's stock value:
 
 For the gloves in row 2, that's 0.43%.
 
+A calculated column can also use whole columns from *another* Table. Suppose a small Table named tblFacilities lists the
+three hospitals in a Facility column. This calculated column counts each hospital's stock rows in tblInventory:
+
+```
+=COUNTIFS(tblInventory[Facility],[@Facility])
+```
+
+`tblInventory[Facility]` is every row of the other Table, and `[@Facility]` supplies this row's hospital as the criterion. So
+the Ashby Falls Community Hospital row shows 37, and each other row shows its own count.
+
 > ⚠️ A calculated column starts automatically only when the column is empty. If the column already holds values, Excel puts
 > your formula in just one cell and offers **Overwrite all cells in this column with this formula** on the AutoCorrect
 > Options button.
@@ -209,12 +222,14 @@ Every structured reference follows the new size. `=SUM(tblInventory[QtyOnHand])`
 so do charts and drop-down lists built on the Table. A PivotTable built on the Table picks up the new rows the next time you
 refresh it, without any change to its source (Lesson 3.4).
 
-> 💡 **Try it:** After task 1, and before you turn on the Total Row, type `=SUM(tblInventory[QtyOnHand])` in an empty cell on
-> the Practice sheet. On the Inventory sheet, type `TEST` in A259 and `100` in J259, and watch the sum grow by 100. Then press
-> **Ctrl + Z** (Mac: **⌘ + Z**) until the test row is gone, so your practice answers stay correct.
+> 💡 **Tip:** See AutoExpansion for yourself. After task 1, and before you turn on the Total Row, type
+> `=SUM(tblInventory[QtyOnHand])` in an empty cell on the Practice sheet. On the Inventory sheet, type `TEST` in A259 and `100`
+> in J259, and watch the sum grow by 100. Then press **Ctrl + Z** (Mac: **⌘ + Z**) until the test row is gone, so your practice
+> answers stay correct.
 
 > ⚠️ **The Total Row blocks AutoExpansion below the Table.** With the Total Row on, typing under it doesn't add a row. Press
-> **Tab** in the last data cell instead, or right-click a row in the Table and choose **Insert → Table Rows Above**.
+> **Tab** in the last cell of the last data row instead, or right-click a row in the Table and choose **Insert → Table Rows
+> Above**.
 
 > 📋 If nothing expands when you type, check that **File → Options → Proofing → AutoCorrect Options → AutoFormat As You Type
 > → Include new rows and columns in table** is ticked.
@@ -307,8 +322,8 @@ A Table can't contain some things:
 ### 10. Named ranges
 
 A **defined name** is a label you give to a cell, a range, a constant, or a formula. A **named range** is a defined name that
-points to cells, such as *ReportDate* for Settings!B2. Once it exists, you write `=ReportDate+7` instead of
-`=Settings!$B$2+7`.
+points to cells. A named range that points to a single cell, such as *ReportDate* for Settings!B2, is called a **named cell**.
+Once it exists, you write `=ReportDate+7` instead of `=Settings!$B$2+7`.
 
 Names help in three ways:
 
@@ -437,13 +452,21 @@ OFFSET version:  =OFFSET(Inventory!$J$2,0,0,COUNTA(Inventory!$A:$A)-1,1)
 INDEX version:   =Inventory!$J$2:INDEX(Inventory!$J:$J,COUNTA(Inventory!$A:$A))
 ```
 
-Both count the filled cells in column A (257 StockIDs plus the header, so 258) to find where the data ends. Then
-`=SUM(QtyList)` adds J2:J258 and keeps up as rows are added.
+Both count the filled cells in column A (257 StockIDs plus the header, so 258) to find where the data ends.
+
+`OFFSET(start, rows, columns, height, width)` returns a range that begins *rows* below and *columns* to the right of
+*start*, and is *height* rows tall and *width* columns wide. The OFFSET version starts at J2, moves 0 rows and 0 columns, and
+is 258 − 1 = 257 rows tall and 1 column wide. That's J2:J258.
+
+The INDEX version uses INDEX from Lesson 2.6. `INDEX(Inventory!$J:$J,258)` points at the 258th cell of column J, which is
+J258. Placed after a colon, it becomes the end of the range, so the name again refers to J2:J258.
+
+Either way, `=SUM(QtyList)` adds J2:J258, and when rows are added, COUNTA grows and the name grows with it.
 
 | | OFFSET name | INDEX name | Table column |
 |---|---|---|---|
 | Grows with new rows | Yes | Yes | Yes |
-| Recalculates | After every change anywhere, because OFFSET is **volatile** | Only when its inputs change | Only when its inputs change |
+| Recalculates | After every change anywhere, because OFFSET is **volatile**, like TODAY (Lesson 2.3) | Only when its inputs change | Only when its inputs change |
 | Breaks if column A has a blank cell or a stray value below the data | Yes | Yes | No |
 | Readable | Hard | Hard | `tblInventory[QtyOnHand]` |
 | Where the logic lives | Hidden in Name Manager | Hidden in Name Manager | In the formula itself |
@@ -485,9 +508,9 @@ Tables and names work together. In the practice tasks, Table columns supply the 
 
 ## 🧪 Hands-on practice
 
-Download [`3.1-tables-named-ranges.xlsx`](3.1-tables-named-ranges.xlsx) and open the **Practice** sheet. Work through the tasks
-in order, because task 1 builds the Table that every later task uses. Type each answer in a yellow cell. Gray cells read the
-work you do on the Inventory and Settings sheets. The **Check** column turns green when you're right.
+Download [`3.1-tables-named-ranges.xlsx`](3.1-tables-named-ranges.xlsx) and open the **Practice** sheet. Type each answer in
+a yellow cell. Gray cells read the work you do on the Inventory and Settings sheets, and the **Check** column turns green when
+you're right.
 
 <!-- BEGIN GENERATED: practice -->
 The tasks use the Inventory sheet: supply stock in 15 storerooms across three Bluestone hospitals, in the snapshot taken on 12/31/2025. Task 9 also uses the Settings sheet. Do the tasks in order, because later tasks use the Table, columns, Total Row, and names you create in earlier ones. After task 1, write formulas with structured references such as tblInventory[QtyOnHand] instead of cell ranges.
@@ -684,7 +707,7 @@ Orders from 3 vendors reach $20,000. Together they total $121,583.18, and 2% of 
 
 ## Key takeaways
 
-- Convert every list of records to a Table (**Ctrl + T**; Mac: **Control + T**) and give it a descriptive name such as
+- Convert every list of records to a Table with **Ctrl + T** (Mac: **Control + T**) and give it a descriptive name such as
   `tblInventory` right away.
 - Structured references like `tblInventory[QtyOnHand]` and `[@QtyOnHand]` are always the right size, grow with the data,
   and read like the question you're asking.

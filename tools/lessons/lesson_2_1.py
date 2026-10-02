@@ -151,7 +151,9 @@ def build() -> Lesson:
                         "yellow columns on a data sheet: type the formula in the first data row and Excel fills the rest of "
                         "the Table column for you (if it doesn't, double-click the fill handle). The gray cell on this sheet "
                         "then summarizes your column. When a formula on this sheet points at a data sheet, include the sheet "
-                        "name (for example Labs!E38), or click the cell on that sheet and Excel adds the name for you.")
+                        "name (for example Labs!E2), or click the cell on that sheet and Excel adds the name for you. Tasks 4 and "
+                        "11 use IFS and SWITCH, which need Excel 2019 or later. In Excel 2016 or earlier, build those two "
+                        "columns with nested IFs instead. The gray cells count the labels, so the checks still work.")
 
     L.tasks = [
         # ---------------- comparisons & booleans
@@ -169,8 +171,9 @@ def build() -> Lesson:
              solution=f"=SUMPRODUCT(--({lr('ResultValue')}>{lr('RefHigh')}))",
              hint="-- turns TRUE/FALSE into 1/0, and SUMPRODUCT adds them up",
              explanation="Comparing two ranges row by row gives a list of TRUE/FALSE values. The double minus (`--`) converts them to "
-                         "1s and 0s, and SUMPRODUCT adds them. In Microsoft 365 and Excel 2021 or later, `=SUM(--(…>…))` works too. Plain `SUM` over a "
-                         "column of TRUE/FALSE *cells* returns 0, because SUM ignores logical values stored in cells."),
+                         "1s and 0s, and SUMPRODUCT adds them. In Microsoft 365 and Excel 2021 or later, `=SUM(--(…>…))` works too. COUNTIF can't "
+                         "do this, because it compares one range with one fixed criteria, and here every row has its own RefHigh. "
+                         "Plain `SUM` over a column of TRUE/FALSE *cells* returns 0, because SUM ignores logical values stored in cells."),
         Task(f"Fill the yellow Flag column on the Labs sheet with a nested IF: \"High\" if ResultValue is greater than RefHigh, "
              f"\"Low\" if it is less than RefLow, otherwise \"Normal\". A result exactly on a limit is Normal. Start in "
              f"{lab.cell('Flag', 0, sheet=False)}. The gray cell counts your \"Normal\" flags.",
@@ -260,9 +263,11 @@ def build() -> Lesson:
              answer=sirs_pos_n,
              solution=f'=COUNTIF({er("SIRS")},">=2")',
              live=f"=SUMPRODUCT(--(({sirs_live_parts})>=2))",
-             hint="COUNTIF with a \">=2\" criterion",
-             explanation="Once the score is a number, COUNTIF can count any threshold. The key's live formula does the whole thing in "
-                         "one cell: it builds the score for every row as an array, then counts the rows where it is `>=2`."),
+             hint="COUNTIF with \">=2\" as the criteria",
+             explanation="Once the score is a number, COUNTIF can count any threshold. The criteria `\">=2\"` keeps the operator and "
+                         f"the number together inside one pair of quotes. `=SUMPRODUCT(--({er('SIRS')}>=2))` gives the same answer. "
+                         "The key's live formula does the whole thing in one cell: it builds the score for every row as an array, "
+                         "then counts the rows where it is `>=2`."),
         # ---------------- SWITCH / IFERROR / IFNA
         Task(f"Fill the yellow ESIName column with SWITCH: ESILevel 1 is \"Resuscitation\", 2 is \"Emergent\", 3 is \"Urgent\", "
              f"4 is \"Less Urgent\", 5 is \"Non-Urgent\". Start in {edd.cell('ESIName', 0, sheet=False)}. The gray cell counts "
@@ -280,7 +285,7 @@ def build() -> Lesson:
         Task(f"Shock index = HeartRate ÷ SystolicBP, and 1.0 or more is a warning sign. Fill the yellow ShockIndex column, "
              f"wrapping the division in IFERROR so the {len(blank_bp)} visits with no SystolicBP show a blank (\"\") instead of "
              f"#DIV/0!. Start in {edd.cell('ShockIndex', 0, sheet=False)}. The gray cell counts visits with a shock index of "
-             f"1.0 or higher (it asks you to fix any errors first).",
+             f"1.0 or higher. While any #DIV/0! errors are left in your column, it shows \"Fix the errors first\" instead.",
              answer=shock_n, title="ShockIndex column with IFERROR (count of 1.0 or higher)",
              solution=f'=IFERROR({ec("HeartRate")}/{ec("SystolicBP")},"")',
              summary=(f'=IF(COUNTA({edd.rng("ShockIndex")})=0,"",IF(SUMPRODUCT(--ISERROR({edd.rng("ShockIndex")}))>0,'
@@ -290,7 +295,7 @@ def build() -> Lesson:
              live=f'=SUMPRODUCT(({er("SystolicBP")}<>"")*({er("HeartRate")}>={er("SystolicBP")}))',
              hint="IFERROR(value, value_if_error)",
              explanation="Dividing by an empty cell divides by zero, so those rows show #DIV/0!. `IFERROR(G2/I2,\"\")` returns the "
-                         "division when it works and an empty text string when it fails. COUNTIF then skips the blanks because they "
+                         "division when it works and empty text when it fails. COUNTIF then skips the blanks because they "
                          "are text. `=IF(I2=\"\",\"\",G2/I2)` is an even better formula, because it handles the one problem you expect "
                          "(a missing BP) and still lets any *other* mistake show up as an error."),
         Task(f"Visit {t13['EDVisitID']} (ED row {t13_row}) has no SystolicBP. In the yellow cell, calculate its shock index again, "
@@ -338,8 +343,9 @@ def build() -> Lesson:
         "NO point. (3) Altered mentation, meaning the ChiefComplaint contains the word \"Altered\" or \"Confusion\" anywhere. "
         "A score of 2 or more is screen-positive. Build the score in the yellow qSOFA column on the ED sheet, then answer the questions.")
     L.bonus = [
-        Task(f"Fill the qSOFA column (0–3) on the ED sheet, starting in {edd.cell('qSOFA', 0, sheet=False)}. The gray cell adds "
-             f"up your whole column. What is the total number of qSOFA points?",
+        Task(f"Fill the yellow qSOFA column with a score from 0 to 3 on the ED sheet, starting in "
+             f"{edd.cell('qSOFA', 0, sheet=False)}. The gray cell adds up your whole column, so it shows the total number "
+             f"of qSOFA points.",
              answer=q_total, title="qSOFA column (total points)",
              solution=q_first,
              summary=f'=IF(COUNTA({qcol})=0,"",SUM({qcol}))',

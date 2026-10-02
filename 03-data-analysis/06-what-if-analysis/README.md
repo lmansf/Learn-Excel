@@ -83,8 +83,8 @@ month. B43 averages the five payers' rates, weighted by their share of visits:
 
 Net patient revenue is then 4,200 × $106.63 = $447,850 per month. Below that, wages, benefits, supplies, the billing fee,
 and three fixed cost lines add up to total operating expenses. The **Sources** sheet shows where each data-derived input
-came from. For example, the Commercial rate of $142 is the average allowed amount on the clinic's 2025 commercial claims,
-and the RN rate of $42.73 is the median hourly rate of Bluestone's active RNs.
+came from. For example, the Commercial rate of $142 is the average allowed amount on the clinic's 2025 commercial and
+workers' comp claims, and the RN rate of $42.73 is the median hourly rate of Bluestone's active RNs.
 
 **How to find a hard-coded number.** A **hard-coded number** is a constant typed inside a formula, such as the 21 in
 `=VisitsPerDay*21`. It gives the right answer today, so nothing looks wrong. But change ClinicDays to 22 and that formula
@@ -95,14 +95,16 @@ ignores you, along with every Data Table, scenario, and Goal Seek that depends o
 2. **Trace Dependents.** Select an input and choose **Formulas → Trace Dependents**. Blue arrows point to every formula that
    uses it. If Excel draws no arrows and says no formula refers to the active cell, that input is an orphan, and some
    formula probably holds a typed-in copy of its value. **Formulas → Remove Arrows** clears the arrows.
-3. **Go To Special.** Select the calculation area and choose **Home → Find & Select → Go To Special → Constants**. Excel
-   selects every cell that holds a typed value instead of a formula. In a clean calculation section it finds nothing.
+3. **Go To Special.** Select the calculation cells (B42:B56) and choose **Home → Find & Select → Go To Special →
+   Constants** (Windows: **F5 → Special…**). Excel selects every cell that holds a typed value instead of a formula. In a
+   clean calculation section it finds nothing and says *No cells were found*.
 
 > ⚠️ Go To Special finds cells that *are* constants, not constants hidden *inside* formulas. A formula like
 > `=VisitsPerDay*21` passes the Go To Special test. Show Formulas and Trace Dependents catch it.
 
 > 💡 **Tip:** Before you run any what-if tool, make sure the outputs are formulas and the inputs are values. Goal Seek
-> refuses to target a cell without a formula, and every tool overwrites the input cells it changes.
+> refuses to target a cell without a formula. Goal Seek, Scenario Manager's **Show** button, and Solver all write numbers
+> into the input cells they change, so a formula in one of those cells would be replaced.
 
 ### 3. Goal Seek: work backward from a target
 
@@ -138,7 +140,7 @@ Contribution margin per visit = $106.63 × (1 − 4% billing fee) − $4.39 supp
 Fixed costs per month         = wages + benefits + facility + IT + other operating        = $414,783
 Operating income              = visits per month × $96.71 − $414,783
 
-Target $10,000:  visits per month = (414,783 + 10,000) ÷ 96.71 = 4,392.5  →  ÷ 21 days = 209.2 visits per day
+Target $10,000:  visits per month = (414,783 + 10,000) ÷ 96.71 ≈ 4,392  →  ÷ 21 days ≈ 209.2 visits per day
 ```
 
 Goal Seek got there by trial and error, so you didn't need the algebra. But the algebra tells you *why* the answer is 209.2,
@@ -147,11 +149,13 @@ without another provider. **Goal Seek has no constraints.** It returns whatever 
 one.
 
 **How precise is Goal Seek?** Goal Seek tries a value, measures how far the set cell is from the target, and adjusts. It
-stops when the result is close enough or after 100 tries. Both limits come from **File → Options → Formulas → Maximum
-Iterations** (100) and **Maximum Change** (0.001) (Mac: **Excel → Preferences → Calculation**). For a linear model like
-this one, Goal Seek lands on the exact answer almost at once. For a ratio such as operating margin, it stops within about
-0.001 of the target, which is 0.1 percentage point of margin. Lower Maximum Change (for example, to 0.000001) when you need
-more precision.
+stops when the result is close enough or after 100 tries. Both limits come from the iteration settings in **File →
+Options → Formulas**: **Maximum Iterations** (default 100) and **Maximum Change** (default 0.001) (Mac: **Excel →
+Preferences → Calculation**). For a linear model like this one, Goal Seek lands on the exact answer almost at once. For a
+ratio such as operating margin, it can stop anywhere within about 0.001 of the target, which is 0.1 percentage point of
+margin. Lower Maximum Change (for example, to 0.000001) when you need more precision. The two boxes are grayed out until
+you tick **Enable iterative calculation**, so tick it, change the value, and then untick it again so Excel keeps warning
+you about circular references.
 
 | Goal Seek limitation | What to do instead |
 |---|---|
@@ -272,8 +276,9 @@ input and the second is always the column input.
 | Down the left column | **Column input cell** | Visits per day (B8) |
 
 > ⚠️ **Swapped input cells don't raise an error.** If you swap them, Excel fills the table with numbers that look fine and
-> are wrong. Sanity-check one result: the base case is 200 visits at $142, so the cell at 200 visits and $140 should be
-> close to the Model's own operating income in B59.
+> are wrong. Sanity-check one result against the Model. The base case is 200 visits at $142, so the cell at 200 visits and
+> $140 should be a little below the Model's own operating income in B59, because commercial visits pay $2 less. With the
+> inputs swapped, that cell would show 140 visits a day at $200, which is a much bigger loss.
 
 > ⚠️ **The input cell must be on the same sheet as the Data Table.** Otherwise Excel says *Input cell reference is not
 > valid*. That's why the Sensitivity area lives on the Model sheet. The table can show results from anywhere, but the input
@@ -287,7 +292,8 @@ More Data Table rules:
   feed back into itself.
 - **Read the results with ordinary formulas.** `=COUNTIF(G23:K31,">0")` counts the profitable combinations, and charts and
   conditional formatting work on the result block too.
-- **Big tables slow everything down.** Excel recalculates every Data Table whenever anything changes. In a large model,
+- **Big tables slow everything down.** Excel recalculates every Data Table each time the workbook recalculates, even when
+  the change has nothing to do with the table. In a large model,
   choose **Formulas → Calculation Options → Automatic Except for Data Tables** (Mac: also in **Excel → Preferences →
   Calculation**). Press **F9** (Mac: **⌘ + =**) whenever you want the tables refreshed.
 
@@ -316,7 +322,7 @@ and some combinations aren't allowed, as in staffing, scheduling, and supply ord
 **Turn Solver on (once per computer):**
 
 - **Windows:** **File → Options → Add-ins**. At the bottom, set **Manage** to *Excel Add-ins* and click **Go…**. Tick
-  **Solver Add-in** and click **OK**. Solver appears at the right end of the **Data** tab, in the **Analyze** group.
+  **Solver Add-in** and click **OK**. Solver appears at the right end of the **Data** tab.
 - **Mac:** **Tools → Excel Add-ins…**, tick **Solver Add-In**, and click **OK**. Solver appears on the **Data** tab.
 
 Every Solver model has three parts:
@@ -335,8 +341,8 @@ licensed staff. Each FTE works 168 paid hours a month. Here is how each rule bec
 |---|---|
 | Spend as little as possible on clinical support staff | Objective `$B$31`, **To: Min** |
 | Decide how many RN, LPN, and CNA FTEs to staff | Variable cells `$B$18:$B$20` |
-| Cover every support hour: 168 × (RN + LPN + CNA) ≥ visits × 0.60 | `$B$25 >= $D$25` |
-| Cover every licensed hour: 168 × (RN + LPN) ≥ visits × 0.28 | `$B$26 >= $D$26` |
+| Cover every support hour: 168 × (RN + LPN + CNA) ≥ visits per month × 0.60 | `$B$25 >= $D$25` |
+| Cover every licensed hour: 168 × (RN + LPN) ≥ visits per month × 0.28 | `$B$26 >= $D$26` |
 | RNs are at least 60% of licensed FTEs | `$B$27 >= $D$27` (B27 holds RN − 0.6 × (RN + LPN), and D27 holds 0) |
 | No negative staff | Tick **Make Unconstrained Variables Non-Negative** |
 | *(Bonus)* At most 6 CNAs | `$B$28 <= $D$28` |
@@ -477,7 +483,7 @@ order, because later tasks build on the outputs you complete and the fix you mak
 the yellow cell, and the **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green only while the Model holds its base-case inputs (200 visits per day, Commercial $142, and so on). After each what-if run, put the original values back: click Cancel in the Goal Seek Status box, and choose Restore Original Values in the Solver Results box.
+Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green only while the Model holds its base-case inputs (200 visits per day, Commercial $142, and so on). After each Goal Seek run, click Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't feed the Model, so you can keep Solver's solutions there.
 
 | # | Task | Hint |
 |:-:|------|------|
@@ -499,8 +505,8 @@ Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model liv
 ## ✅ Answer key
 
 The workbook has hidden **Answer Key** and **Bonus Key** sheets (right-click any sheet tab → **Unhide…**). For the Goal Seek
-tasks and the shadow price, the key's *Live result* column checks the answer with the algebra from sections 3 and 7. The
-same answers are below, collapsed so you don't see them by accident.
+and Solver tasks, the key's *Live result* column checks the answer with algebra like the worked examples in sections 3 and
+7. The same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -539,7 +545,7 @@ Today both versions return the same number, so nothing looks wrong. The trouble 
 
 1. Choose **Data → What-If Analysis → Goal Seek**.
 2. **Set cell:** `B59` · **To value:** `0` · **By changing cell:** `B8`.
-3. Click **OK**. B8 shows about 204.2440. Note it, then click **Cancel**.
+3. Click **OK**. B8 shows 204.2 (the cell holds 204.2440…). Note it, then click **Cancel**.
 
 
 Each extra visit per day adds one visit on each of the 21 clinic days. Each of those visits brings in $96.71 after the billing fee, supplies, and vaccines (its **contribution margin**). Fixed costs are $414,783 a month, so break-even = $414,783 ÷ ($96.71 × 21) ≈ 204.2. That is 98% of the clinic's 208-visit daily capacity, so volume alone is a fragile fix. The live result in the key does this algebra, and Goal Seek reaches the same answer by trial and error.
@@ -568,14 +574,14 @@ The visits per day values run **down a column** (F9:F17), so B8 is the **column*
 - **Answer:** 205
 - **Solution:** `=MINIFS(Model!F9:F17,Model!G9:G17,">0")`
 
-The table jumps in steps of 5, so it brackets the break-even point instead of finding it: 200 visits loses money and 205 makes money, which agrees with Goal Seek's 204.2. Use a Data Table to see the whole curve, and Goal Seek to pin down the exact crossing.
+The table jumps in steps of 5, so it brackets the break-even point instead of finding it: 200 visits loses money and 205 makes money, which agrees with Goal Seek's 204.2. Use a Data Table to see the whole curve, and Goal Seek to pin down the exact crossing. MINIFS needs Excel 2019 or later. In older versions, read the value off the table and type it.
 
 **8. Two-variable Data Table: 210 visits/day × $160**
 
 - **Answer:** 40,342
 - **Solution:** `=Model!J29`
 
-A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand: at 200 visits and $140 the result should be close to the base case (−$8,619), because the base case is 200 visits at $142.
+A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand. The base case is 200 visits at $142 (−$8,619), so the cell at 200 visits and $140 should be about $3,032 lower: $2 less on each of the 37.6% of visits that are commercial, after the 4% fee. With swapped input cells that cell would show 140 visits a day at $200, a far bigger loss.
 
 **9. Two-variable Data Table: profitable combinations**
 
@@ -607,9 +613,16 @@ The Upside case brings the clinic to roughly 2.6%. It takes three things at once
 **12. Solver: lowest-cost staffing mix (FTEs)**
 
 - **Answer:** 88,342
-- **Solution:** `=Staffing!B31`
+- **Solution:**
 
-Solver parameters: **Set Objective** `$B$31`, **To** Min, **By Changing Variable Cells** `$B$18:$B$20`, **Subject to the Constraints** `$B$25:$B$27 >= $D$25:$D$27`, Simplex LP. Then keep the solution and point at (or type) B31. Solver chooses 4.2 RN, 2.8 LPN and 8.0 CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs $96,798, so the plan saves about $8,457 a month.
+1. Choose **Data → Solver**.
+2. **Set Objective:** `$B$31` · **To:** Min · **By Changing Variable Cells:** `$B$18:$B$20`.
+3. Click **Add** and enter `$B$25:$B$27` **>=** `$D$25:$D$27`, then click **OK**.
+4. Leave **Make Unconstrained Variables Non-Negative** ticked, choose **Simplex LP**, and click **Solve**.
+5. Choose **Keep Solver Solution**, click **OK**, and type the value of B31, rounded to the dollar, in the answer cell.
+
+
+Solver chooses 4.2 RN, 2.8 LPN and 8.0 CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs $96,798, so the plan saves about $8,457 a month. Type the number rather than pointing at B31, because the bonus runs Solver on the same sheet again. The key's live result rebuilds this optimum with algebra from the Staffing sheet's own cells.
 
 **13. Solver Sensitivity Report: shadow price**
 

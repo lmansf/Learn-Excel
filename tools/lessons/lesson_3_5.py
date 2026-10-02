@@ -525,7 +525,8 @@ def build() -> Lesson:
                       f"2. ({hi_sl['ReadmitRate']:.4f} − {AXIS_MIN}) ÷ ({lo_sl['ReadmitRate']:.4f} − {AXIS_MIN}) = "
                       f"**{t4_raw:.1f}**.\n3. Fix the chart: double-click the vertical axis, and in **Format Axis → Axis "
                       "Options → Bounds** set **Minimum** to `0` (or click **Reset** so Excel chooses 0). Turn off "
-                      "**Vary colors by point** (**Format Data Series → Fill**), delete the legend, add data labels, "
+                      "**Vary colors by point** (**Format Data Series → Fill & Line → Fill**), delete the legend, add data "
+                      "labels, "
                       "and give the chart a title that states the finding.",
              live=f4,
              explanation=f"The real ratio is {hi_sl['ReadmitRate']:.1%} ÷ {lo_sl['ReadmitRate']:.1%} = {t4_true:.1f}, but "
@@ -558,8 +559,8 @@ def build() -> Lesson:
              answer=t6, title="Histogram: stays in the overflow bin",
              hint="Select D1:D301, then Insert → Insert Statistic Chart → Histogram. Double-click the horizontal axis",
              solution="1. On **Stays**, select **D1:D301** (the LOSDays column with its header).\n"
-                      "2. Choose **Insert → Insert Statistic Chart → Histogram** (Mac: **Insert → Statistical chart → "
-                      "Histogram**).\n3. Double-click the horizontal axis. Under **Axis Options → Bins**, choose **Bin "
+                      "2. Choose **Insert → Insert Statistic Chart → Histogram**. On a Mac, the same Statistic Chart "
+                      "button is on the Insert tab.\n3. Double-click the horizontal axis. Under **Axis Options → Bins**, choose **Bin "
                       f"width** `1`, tick **Overflow bin** and type `{HIST_OVER}`, and tick **Underflow bin** and type "
                       f"`{HIST_UNDER}`.\n4. Hover over the last column, labeled **>{HIST_OVER}**.",
              live=f6,
@@ -669,7 +670,7 @@ def build() -> Lesson:
                          "be comparable, open **Sparkline → Axis** and set both the minimum and the maximum to **Same for "
                          "All Sparklines**. " + cross(f12)),
         Task("Write a formula in the yellow cell that builds this chart title from tblEDMonthly: ED visits by facility, "
-             "<first month> to <last month> (<total visits> visits). Show each month as a three-letter month and year, and "
+             "[first month] to [last month] ([total visits] visits). Show each month as a three-letter month and year, and "
              "the total with a thousands separator. Example of the pattern: ED visits by facility, Mar 2023 to Feb 2024 "
              "(9,876 visits). Then link your line chart's title to this cell.",
              answer=t13, accept=t13_accept, solution=f13, title="Dynamic chart title",
@@ -1089,7 +1090,7 @@ def build() -> Lesson:
                              [[f"{h}: {'ends higher' if h in up else 'ends lower'} (Jan 2024 {first_m[h]} → Dec 2025 {last_m[h]})"]
                               for h in FAC_COLS.values()], [None], height=6)
         ws.cell(row=row[0] - 2, column=1,
-                value="openpyxl can't draw sparklines, so compare your sparklines with the values above.").font = note_font
+                value="This sheet can't show sparklines, so compare your sparklines with the values above.").font = note_font
 
         # Bonus charts
         first, last, anchor = block("Bonus B2 · Combo: monthly ED visits (columns) + LWBS rate (line, secondary axis)",

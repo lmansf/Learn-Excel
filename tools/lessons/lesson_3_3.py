@@ -213,7 +213,8 @@ def build() -> Lesson:
          "FixApplied": "Raw copied to Clean. Every fix is a formula in a new yellow column", "RowsChanged": 0,
          "Notes": "Never type over Raw"},
         {"Step": 2, "Column": "Sex", "ProblemFound": "10 spellings of 2 values: F, f, ' F', Female, FEMALE, M, m, 'M ', Male, MALE",
-         "FixApplied": "SexClean: =UPPER(LEFT(TRIM(D2),1))", "RowsChanged": None, "Notes": "Practice task 12"},
+         "FixApplied": None, "RowsChanged": None, "Notes": "Practice tasks 2 and 12"},   # FixApplied left for the learner (it
+         # would otherwise print task 2's solution formula on a visible sheet)
         {"Step": 3, "Column": "PatientName", "ProblemFound": "Two layouts (Last, First and First Last), stray spaces, ALL CAPS and lowercase"},
         {"Step": 4, "Column": "Phone", "ProblemFound": "Six layouts, some with a +1 country code, and some blanks"},
         {"Step": 5, "Column": "MRN", "ProblemFound": "Leading zeros lost on some rows; MRN- prefix on others"},
@@ -268,6 +269,9 @@ def build() -> Lesson:
     assert next(r["RecordID"] for r in raw if "-" in r["CityStateZip"]) == "R1010"   # Flash Fill steps name row 11
     a, b = by_rid[PAIR[0]], by_rid[PAIR[1]]
     assert (a["PatientName"], b["PatientName"]) == ("Amber White", "WHITE, AMBER") and truth[PAIR[0]] == truth[PAIR[1]]
+    # README section 14 says Email is the ONLY raw column the pair shares character for character
+    assert [c for c in RAW_COLS[1:] if a[c] == b[c]] == ["Email"], "README section 14 duplicate-pair table changed"
+    assert (a["CityStateZip"], b["CityStateZip"]) == ("Cedar Ridge OH 45720", "Cedar Ridge, OH 45720")
 
     # ------------------------------------------------------------------ cleaning results (computed in Python)
     names = [name_clean(r["PatientName"]) for r in raw]
@@ -323,7 +327,8 @@ def build() -> Lesson:
     # 10 · names: distinct clean names (fewer than patients: some different patients share a name)
     distinct_names = len({x.lower() for x in names})
     distinct_names_noflip = len({xl_proper(xl_trim(r["PatientName"].replace(",", ""))).lower() for r in raw})
-    assert distinct_names != distinct_names_noflip
+    distinct_names_trim_only = len({xl_proper(xl_trim(r["PatientName"])).lower() for r in raw})   # =PROPER(TRIM(B2))
+    assert distinct_names < distinct_names_noflip < distinct_names_trim_only
     name_twins = sorted({nm for nm in names if len({pids[i] for i, x in enumerate(names) if x == nm}) > 1})
     mc_rows = [r["RecordID"] for r, nm in zip(raw, names) if "Mcd" in nm]
     # 11 · DOB: rows whose day is 13+ (impossible if month and day were swapped)
@@ -404,6 +409,12 @@ def build() -> Lesson:
         return d
 
     raw_mrn_text = f'TEXT(VALUE(SUBSTITUTE({R("MRN")},"MRN-","")),"00000000")'
+    # Region-proof array versions of the DOB and RegisteredOn formulas, run on Raw, for the key's Live result column
+    # (DATEVALUE and --text follow the computer's regional settings, so they would show #VALUE! in a day-first region).
+    raw_dob_dates = dob_formula[1:].replace(f"C{F}", R("DOB"))
+    raw_reg_times = reg_formula[1:].replace(f"J{F}", R("RegisteredOn"))
+    assert raw_dob_dates.count("Raw!") == dob_formula.count(f"C{F}") > 0
+    assert raw_reg_times.count("Raw!") == reg_formula.count(f"J{F}") > 0
     raw_phone = (f'RIGHT(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE({R("Phone")},"(",""),")",""),"-",""),".",""),'
                  f'" ",""),10)')
     ce_rng = lambda col: f"CensusExport!{ce.col(col)}{ce.first_row}:{ce.col(col)}{ce.last_row}"  # noqa: E731
@@ -442,7 +453,8 @@ def build() -> Lesson:
                          "(task 8)."),
         # ---------------------------------------------------------------- Remove Duplicates (on a copy)
         Task("Make a copy of the Raw sheet (right-click its tab → Move or Copy → tick Create a copy). On the copy, run "
-             "Data → Remove Duplicates on the whole table with every column ticked except RecordID (each row has its own "
+             f"Data → Remove Duplicates on all the data (A1:{rw.col('RegisteredOn')}{LR}) with every column ticked except "
+             "RecordID (each row has its own "
              "RecordID, so leaving it ticked finds nothing). How many duplicate rows does Excel remove?",
              answer=exact_dups, title="Remove Duplicates on the raw columns",
              solution=("1. Right-click the **Raw** tab → **Move or Copy…** → tick **Create a copy** → **OK**. Work on "
@@ -500,9 +512,10 @@ def build() -> Lesson:
                          "\"one row up\" points somewhere else after a sort."),
         # ---------------------------------------------------------------- Flash Fill ZIP5
         Task(f"Back on Clean, use Flash Fill to fill the yellow ZIP5 column ({cl.col('ZIP5')}) with the 5-digit ZIP from "
-             f"CityStateZip. {zip4_rows} rows carry a ZIP+4 such as 45501-8106, and those must become 45501. Type the "
-             f"first two or three ZIPs yourself (include one ZIP+4 row), then press Ctrl + E. The gray cell counts the "
-             f"distinct ZIP codes in your column.",
+             f"CityStateZip. {zip4_rows} rows carry a ZIP+4 such as 45501-8106, and those must become 45501. Type three "
+             f"examples yourself: rows {F} and {F + 1}, plus the first ZIP+4 row (row {row_of('R1010')}). Then select the "
+             f"first empty cell and press Ctrl + E (Mac: Data → Flash Fill). The gray cell counts the distinct ZIP codes "
+             f"in your column.",
              answer=distinct_zips, title="Flash Fill ZIP5 (distinct ZIP codes)",
              solution=(f"1. In **{c1('ZIP5')}** type **{zips[0]}** (from *{raw[0]['CityStateZip']}*), and in "
                        f"**{cl.col('ZIP5')}{F + 1}** type **{zips[1]}** (from *{raw[1]['CityStateZip']}*).\n"
@@ -569,7 +582,7 @@ def build() -> Lesson:
                       f'"Unmapped rows",COUNTIF({C("PayerID")},"PY02")))'),
              fill=fill("PayerID", payer_formula),
              live=f'=SUMPRODUCT(--(XLOOKUP(TRIM({R("Insurance")}),{map_var},{map_id},"UNMAPPED")="PY02"))',
-             hint="XLOOKUP(TRIM(H2), PayerMap Variant column, PayerMap PayerID column, \"UNMAPPED\")",
+             hint="XLOOKUP the TRIMmed Insurance value in tblPayerMap, and use XLOOKUP's if_not_found argument for UNMAPPED",
              explanation=f"A mapping table turns a messy category into a standard code with one lookup, and it documents your "
                          "decisions where everyone can see them, such as Uninsured → PY07 Self-Pay. XLOOKUP ignores case, so the "
                          "map needs only one row per spelling, not one per capitalization. It does not ignore spaces, so TRIM "
@@ -621,9 +634,11 @@ def build() -> Lesson:
                          "ISNUMBER(FIND(…)) tells the two layouts apart. For Last, First rows, MID takes everything after the "
                          "comma (the first name) and LEFT takes everything before it (the last name). TRIM each piece before "
                          "joining, because the spaces sit around the comma. PROPER on the outside fixes the case of both "
-                         f"layouts at once. Two checks on the result: if you skip the flip, the count rises to "
-                         f"{distinct_names_noflip}, because the same patient appears as both \"Amber White\" (row {row_of(PAIR[0])}) "
-                         f"and \"White Amber\" (row {row_of(PAIR[1])}). And the count is {distinct_names}, not {distinct_mrn}, because "
+                         f"layouts at once. Two checks on the result. First, the flip matters: =PROPER(TRIM(B2)) alone gives "
+                         f"{distinct_names_trim_only} distinct names, and deleting the comma without flipping still gives "
+                         f"{distinct_names_noflip}, because the same patient then appears as both \"Amber White\" (row "
+                         f"{row_of(PAIR[0])}) and \"White Amber\" (row {row_of(PAIR[1])}). Second, the count is {distinct_names}, "
+                         f"not {distinct_mrn}, because "
                          f"{len(name_twins)} names belong to two different patients ({', '.join(name_twins)}). That's why "
                          "you dedupe on MRN, never on name. PROPER also turns McDonald into Mcdonald, so fix known exceptions "
                          "by hand and note them in the cleaning log."),
@@ -637,16 +652,17 @@ def build() -> Lesson:
              summary=(f'=IF(COUNTA({C("DOBClean")})=0,"",IF(COUNT({C("DOBClean")})<ROWS({C("DOBClean")}),"Not all dates yet",'
                       f'SUMPRODUCT(--(DAY({C("DOBClean")})>12))))'),
              fill=fill("DOBClean", dob_formula),
-             live=f'=SUMPRODUCT(--(DAY(DATEVALUE(SUBSTITUTE({R("DOB")},".","/")))>12))',
+             live=f'=SUMPRODUCT(--(DAY({raw_dob_dates})>12))',
              hint="DATEVALUE can't read 01.11.2003 until the dots become slashes. For a version that works with any "
                   "regional setting, build DATE(year, month, day) from the pieces",
              explanation="This solution works on any computer: it reads the layout and builds DATE(year, month, day) from the "
                          "pieces. ISO dates have a dash in position 5. In 03-Apr-1957 the dash is in position 3, and the month comes "
                          f"from where Apr sits in \"{MONTHS}\" (position 10, and (10+2)/3 = 4). Everything else is month/day/year "
                          "with a / or . after the month. If your Windows or Mac region is United States, the much shorter "
-                         "=DATEVALUE(SUBSTITUTE(C2,\".\",\"/\")) gives identical results, because DATEVALUE reads the ISO and "
-                         "03-Apr-1957 layouts everywhere and reads slashes month first. In a day-first region it reads "
-                         "08/06/1989 as 8 June and fails on 3/22/1961. The day-13 test catches a swap: a month number is "
+                         "=DATEVALUE(SUBSTITUTE(C2,\".\",\"/\")) gives identical results, because U.S. settings read the ISO "
+                         "and 03-Apr-1957 layouts and read slashes month first. In a day-first region it reads "
+                         "08/06/1989 as 8 June and fails on 3/22/1961, and in a language whose month names differ from English "
+                         "it can fail on 03-Apr-1957 too. The day-13 test catches a swap: a month number is "
                          "never above 12, so if the slash and dot rows had month and day swapped, none of them could show a "
                          f"day above 12 and the count would fall to {day13_iso_mon} instead of {day13}."),
         # ---------------------------------------------------------------- document
@@ -683,7 +699,7 @@ def build() -> Lesson:
              summary=(f'=IF(COUNTA({C("RegisteredClean")})=0,"",IF(COUNT({C("RegisteredClean")})<ROWS({C("RegisteredClean")}),'
                       f'"Not all date-times yet",SUMPRODUCT(--(HOUR({C("RegisteredClean")})>=17))))'),
              fill=fill("RegisteredClean", reg_formula),
-             live=f"=SUMPRODUCT(--(HOUR(--{R('RegisteredOn')})>=17))",
+             live=f"=SUMPRODUCT(--(HOUR({raw_reg_times})>=17))",
              hint="In both layouts the time starts at character 12, and TIMEVALUE understands both 18:33:00 and 05:42 PM. "
                   "Build the date part with DATE",
              explanation="Both layouts put the time at character 12, so TIMEVALUE(MID(J2,12,8)) reads \"18:33:00\" and "
@@ -709,7 +725,7 @@ def build() -> Lesson:
         Task(f"Which RegisteredOn did you keep for MRN {KEEP_MRN}? Enter it as a date and time.",
              answer=kept_reg, fmt="mm/dd/yyyy hh:mm", title=f"Registration kept for MRN {KEEP_MRN}",
              solution=f'=MAXIFS({C("RegisteredClean")},{C("MRNClean")},"{KEEP_MRN}",{C("Keep")},TRUE)',
-             live=(f'=MAX(IF({raw_mrn_text}="{KEEP_MRN}",--{R("RegisteredOn")}))'),
+             live=(f'=MAX(IF({raw_mrn_text}="{KEEP_MRN}",{raw_reg_times}))'),
              hint="MAXIFS (or XLOOKUP) with two conditions: this MRN, and Keep = TRUE",
              explanation=f"This patient has three rows. Two of them say {by_rid[raw[groups[KEEP_MRN][0]]['RecordID']]['MRN']} (the "
                          f"MRN lost its leading zero) with the time {first_reg:%H:%M}, and the third says {KEEP_MRN} with "

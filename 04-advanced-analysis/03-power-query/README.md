@@ -1,7 +1,7 @@
 # Lesson 4.3 · Power Query: Import, Transform & Combine
 
 > **Level:** Advanced · **Time:** about 70 minutes · **Workbook:** [`4.3-power-query.xlsx`](4.3-power-query.xlsx) · **Files:** [`data/`](data/) (one download: [`4.3-power-query-data.zip`](data/4.3-power-query-data.zip))
-> **Data:** CSV exports in the lesson's data folder: twelve monthly files of claims submitted in 2025, a January 2026 claim file for the bonus, the payer list, 11,196 encounters discharged in 2025, and a wide 2025 budget-vs-actual export. The workbook adds a hand-maintained denial-reason mapping table.
+> **Data:** CSV exports in the lesson's data folder: twelve monthly files of claims submitted in 2025, a January 2026 claim file (simulated next-month export) for the bonus, the payer list, 11,196 encounters discharged in 2025, and a wide 2025 budget-vs-actual export. The workbook adds a hand-maintained denial-reason mapping table.
 
 Early every month, a revenue-cycle analyst at Bluestone Health downloads the billing system's claims export. She pastes it
 under last month's rows, fixes the date columns, looks up each payer's type, and rebuilds the denial report. It takes most
@@ -42,7 +42,7 @@ its source, is a **query**. Three properties make a query different from a formu
 
 | Approach | Best for | Weak spot |
 |---|---|---|
-| Formulas (Modules 1–2, Lesson 4.1) | Calculations that update the moment someone types | Slow on very large data, and they can't read files on disk |
+| Formulas (Modules 1–2, Lesson 4.1) | Calculations that update the moment someone types | Slow on very large data, and they can't import, clean, or combine CSV files |
 | Manual cleanup (Lesson 3.3) | One-off fixes to a single file | You redo every step next month |
 | **Power Query** (this lesson) | Importing, cleaning, reshaping, and combining the same kind of data again and again | Results change only when you refresh |
 | VBA macros (Module 5) | Automating Excel itself: formatting, buttons, emailing reports | Code to maintain, and macro security prompts |
@@ -67,7 +67,7 @@ Power Query reads files from your disk, so the workbook alone isn't enough. You 
 ```
 C:\PQ\data\
 ├── claims_monthly\          claims_2025_01.csv … claims_2025_12.csv (one file per submit month)
-├── new_month\               claims_2026_01.csv (bonus only)
+├── new_month\               claims_2026_01.csv (bonus only: a simulated January 2026 export)
 ├── budget_2025_wide.csv     2025 budget and actual, one column per month
 ├── encounters_2025.csv      encounters discharged in 2025
 ├── payers.csv               payer list with PayerType
@@ -76,7 +76,9 @@ C:\PQ\data\
 
 Each claims file has the same 13 columns as the course's [`claims.csv`](../../data/README.md#claimscsv): ClaimID,
 EncounterID, PatientID, PayerID, ServiceDate, SubmitDate, BilledAmount, AllowedAmount, PatientResponsibility, PaidAmount,
-ClaimStatus, DenialReason, and PaidDate. The **Data Files** sheet in the workbook describes every file.
+ClaimStatus, DenialReason, and PaidDate. The **Data Files** sheet in the workbook describes every file. The course
+data ends on 12/31/2025, so `claims_2026_01.csv` is a **simulated** next-month export: claims for late-2025 services that
+go out in January 2026.
 
 > ⚠️ Import from the **extracted** folder, never from inside the zip. Windows lets you browse into a zip as if it were a
 > folder, but Power Query can't read files there.
@@ -84,7 +86,7 @@ ClaimStatus, DenialReason, and PaidDate. The **Data Files** sheet in the workboo
 > ⚠️ Keep the `new_month` folder **outside** `claims_monthly` until the bonus tells you to copy its file in. From Folder
 > reads subfolders too, so a folder inside `claims_monthly` would be combined with the 2025 files.
 
-### 3. Import one CSV file
+### 3. Import a CSV file or a workbook table
 
 This walk-through imports `payers.csv`, which you need for task 7. Task 1 uses the same steps on a claims file.
 
@@ -129,6 +131,25 @@ That pane is the most reliable place to read a query's row count.
 
 > ⚠️ The status bar at the bottom of the editor counts only the **preview**, which holds the first 1,000 rows. A large
 > query shows "999+ ROWS" there, so read the real total from Queries & Connections after you load.
+
+**Import a table from this workbook.** Power Query can also read an Excel Table in the workbook you're working in, such
+as the hand-maintained **tblDenialMap** on the DenialMap sheet (task 9).
+
+1. Click any cell inside the Table.
+2. Click **Data → From Table/Range** (in the Get & Transform Data group; some versions label it **From Table**). If the
+   cells aren't a Table yet, Excel first shows the **Create Table** dialog and converts them.
+3. The Power Query Editor opens. The query is named after the Table (`tblDenialMap`), so rename it, for example to
+   `DenialMap`.
+
+The Source step reads the Table by name, and Power Query adds a Changed Type step after it:
+
+```
+= Excel.CurrentWorkbook(){[Name="tblDenialMap"]}[Content]
+```
+
+Because the source is a Table, rows that someone adds to it later are picked up on the next refresh. **Close & Load**
+writes the query's result to a **new** Table on a new sheet, so a lookup query like this is usually better loaded as
+**Only Create Connection** (section 15).
 
 ### 4. A tour of the Power Query Editor
 
@@ -453,18 +474,26 @@ the workbook to a colleague, or open it on a Mac, and every query fails with a *
    = Folder.Files(DataFolder & "claims_monthly")
    ```
 
-4. In each single-file query, change the path inside `File.Contents(...)` the same way, for example
+4. Make the same change in the **Sample File** helper query (in the Helper Queries group). Its Source step repeats the
+   folder path, and Claims reads its column names from Sample File, so a stale path there still breaks the refresh.
+5. In each single-file query, change the path inside `File.Contents(...)` the same way, for example
    `File.Contents(DataFolder & "payers.csv")`.
 
 From then on, a new location means one edit: **Home → Manage Parameters**, change *Current Value*, then **Refresh All**.
 The answer key's M code uses DataFolder from task 3 on.
 
+> ⚠️ **On a Mac, skip the parameter.** Microsoft documents that Excel for Mac supports only literal (absolute) paths in
+> a data source, so a Source step that builds its path from a parameter can fail there. Keep full paths such as
+> `Folder.Files("/Users/you/PQ/data/claims_monthly")`, and when you paste answer-key code, replace
+> `DataFolder & "payers.csv"` with the full path in quotes, such as `"/Users/you/PQ/data/payers.csv"`.
+
 > 💡 **Tip:** Without a parameter, you can still repoint queries in bulk with **Data → Get Data → Data Source Settings**,
 > select the old path, and click **Change Source…**.
 
 > 📋 Some workbooks read the path from a worksheet cell with `Excel.CurrentWorkbook(){[Name="DataFolder"]}[Content]{0}[Column1]`,
-> so people who never open the editor can change it. Combining that cell with a file source can trigger a
-> *Formula.Firewall* error about privacy levels (section 13), which is one reason parameters are the simpler choice.
+> so people who never open the editor can change it. A step that uses a value from the workbook to open a file can
+> trigger a *Formula.Firewall* error, because Power Query's privacy firewall controls how data from different sources is
+> combined (section 13). That's one reason parameters are the simpler choice.
 
 ### 13. Merge queries (joins)
 
@@ -511,9 +540,9 @@ The M code is two steps, the join and the expand:
 > ⚠️ **Duplicate keys multiply rows.** If the payer list had PY04 twice, every PY04 claim would appear twice after the
 > merge. Lookup tables should have one row per key, so use **Remove Duplicates** on the key if you aren't sure.
 
-> 📋 **Privacy levels.** When a merge combines two different kinds of source, such as a folder of CSV files and a table
-> inside the workbook, Excel may show *Information is required about data privacy*. Click **Continue** and set both
-> sources to **Organizational**. On a computer you control, you can instead choose **Data → Get Data → Query Options →
+> 📋 **Privacy levels.** When a query combines data from two different sources, such as the claims folder and
+> `payers.csv` (task 7) or the claims folder and a table inside the workbook (task 9), Excel may show *Information is
+> required about data privacy*. Click **Continue** and set each source to **Organizational**. On a computer you control, you can instead choose **Data → Get Data → Query Options →
 > Current Workbook → Privacy → Ignore the Privacy Levels**.
 
 ### 14. Build a pipeline: Reference, Duplicate, and dependencies
@@ -559,14 +588,19 @@ button) lets you choose:
 
 To change a query's load setting later, right-click it in the Queries & Connections pane and choose **Load To…**.
 
+> 📋 A connection-only query shows *Connection only* in the Queries & Connections pane instead of "N rows loaded." When a
+> task asks how many rows a query returns, load it to a Table, or reference it and click **Transform → Count Rows** in the
+> editor. On a Mac, **Close & Load** puts each query on a worksheet as a Table. Depending on your version, **Close & Load
+> To…** and **Only Create Connection** may be missing there, and the Data Model isn't available.
+
 | To refresh | Do this |
 |---|---|
 | Every query in the workbook | **Data → Refresh All** (Windows: **Ctrl + Alt + F5**) |
 | One loaded table | Click inside it and press **Alt + F5** (Windows), or right-click → **Refresh** |
 | One query | Right-click it in Queries & Connections → **Refresh** |
 
-Refresh All runs queries in dependency order, so Claims refreshes before the reports that reference it. To refresh
-automatically, right-click a query → **Properties…** and tick **Refresh data when opening the file**, or set **Refresh
+Refresh All refreshes every query in the workbook. A report query re-runs the queries it references (Claims, Payers)
+as part of its own refresh, so every report sees the files as they are right now. To refresh automatically, right-click a query → **Properties…** and tick **Refresh data when opening the file**, or set **Refresh
 every** *n* minutes.
 
 > ⚠️ Don't type over values inside a loaded query table, because the next refresh replaces them. To add your own
@@ -631,9 +665,10 @@ When a query fails, the message names the problem:
 |---|---|---|
 | *DataSource.NotFound* | The file or folder moved or was renamed | Update the DataFolder parameter or **Data Source Settings → Change Source** |
 | *Expression.Error: The column 'X' of the table wasn't found* | A source column was renamed or removed, and a step still names it | Fix the column name in the step (often Changed Type) |
-| *Expression.Error: The import X matches no exports* | The code refers to a query or step name that doesn't exist (check spelling and case) | Rename the query or fix the reference |
+| *Expression.Error: The import X matches no exports* | The code refers to a query that doesn't exist, for example `DenialMap` when the query is still named `tblDenialMap` | Rename the query or fix the reference (names are case-sensitive) |
+| *Expression.Error: The name 'X' wasn't recognized* | A misspelled step or function name, such as `table.selectrows` | Fix the spelling and case |
 | *DataFormat.Error: We couldn't convert to Number* | Text that isn't a number, or a locale mismatch | Fix the source, use **Change Type → Using Locale…**, or replace errors |
-| *Formula.Firewall: … references other queries or steps, so it may not directly access a data source* | Mixing sources with different privacy levels in one step | Set privacy levels (section 13) or use a parameter instead of a cell |
+| *Formula.Firewall: … references other queries or steps, so it may not directly access a data source* | One step both opens a data source and uses data from another query or source, such as a path read from a worksheet cell | Use a parameter for the path, move the data access into its own query, or (on your own computer) ignore privacy levels (section 13) |
 
 ### 17. Version notes
 
@@ -642,12 +677,12 @@ When a query fails, the message names the problem:
 | Microsoft 365, Excel 2021, Excel 2024 (Windows) | Full Power Query Editor. Everything in this lesson works |
 | Excel 2016 and 2019 (Windows) | Built in as **Get & Transform**. Early Excel 2016 builds call the entry point **Data → New Query** instead of Get Data |
 | Excel 2010 and 2013 (Windows) | A free Microsoft add-in with its own **Power Query** tab. Same ideas, older menus |
-| Microsoft 365 for Mac | Power Query Editor with Text/CSV, Table/Range, folder (added in 2024), merge, append, group, and unpivot. Start from **Data → Get Data (Power Query)**. No Data Model loading and no fuzzy merge. Older perpetual Mac versions such as Excel 2019 for Mac don't have the editor |
+| Microsoft 365 for Mac | Power Query Editor with Text/CSV, Table/Range, folder (added in 2024), merge, append, group, and unpivot. Start from **Data → Get Data (Power Query)**. Paths must be typed in full (no DataFolder parameter in a Source step), load destinations are limited, and there's no Data Model and no fuzzy merge. Older perpetual Mac versions such as Excel 2019 for Mac don't have the editor |
 | Excel for the web | Can refresh some queries, and recent versions include a basic editor, but it can't read files on your computer. Use desktop Excel for this lesson |
 
 > 📋 Mac support has grown with each update. If a command in this lesson is missing on your Mac, update Excel. Most steps
-> can also be pasted as M code from the answer key into a blank query's Advanced Editor. Change backslashes in paths to
-> forward slashes on a Mac.
+> can also be pasted as M code from the answer key into a blank query's Advanced Editor. On a Mac, replace each
+> `DataFolder & "…"` with the full path in quotes, and use forward slashes instead of backslashes.
 
 ## 🧪 Hands-on practice
 
@@ -657,19 +692,19 @@ turns green when you're right. The workbook's **DenialMap** sheet holds the tabl
 holds the code for task 11 (also in [`starter/AgedPending.m`](starter/AgedPending.m)).
 
 <!-- BEGIN GENERATED: practice -->
-Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks in order because later tasks reuse earlier queries. Type each result in the yellow cell as a plain number or text. From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, your code shows your full folder path in its place.
+Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks in order because later tasks reuse earlier queries. Type each result in the yellow cell as a plain number or text. From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, or work on a Mac, your code shows your full folder path in its place.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Import claims_2025_01.csv from the claims_monthly folder with Data → Get Data → From File → From Text/CSV and load it to a new sheet. How many claims (rows, not counting the header) does the January 2025 file contain? | After loading, the Queries & Connections pane says 'N rows loaded' |
-| 2 | Import claims_2025_11.csv and claims_2025_12.csv as two more queries, then stack them with Home → Append Queries → Append Queries as New. How many rows does the appended query return? | Append stacks rows, and columns line up by name |
+| 2 | Import claims_2025_11.csv and claims_2025_12.csv as two more queries. Then, in the Power Query Editor, stack them with Home → Append Queries → Append Queries as New. How many rows does the appended query return? | Append stacks rows, and columns line up by name |
 | 3 | Now combine all twelve 2025 files at once. Choose Data → Get Data → From File → From Folder, select the claims_monthly folder, then Combine & Transform Data. Rename the new query Claims. How many rows does Claims return? | One folder query replaces twelve imports |
 | 4 | What is the total PaidAmount across all 2025 claims in your Claims query? Check that PaidAmount has the Decimal Number type (1.2 icon), then enter the total to the cent. | Reference Claims, then Transform → Statistics → Sum on PaidAmount |
 | 5 | Reference Claims, keep only rows whose ClaimStatus is Denied, and use Home → Group By on DenialReason with the operation Count Rows. How many denied claims list Authorization Required as the reason? | Filter first, then Group By (Basic) |
 | 6 | Edit that Group By step (gear icon → Advanced) and add two aggregations of BilledAmount: Sum and Average. Which denial reason has the highest AVERAGE BilledAmount per denied claim? Type the reason exactly as it appears. | Group By → Advanced → Add aggregation |
 | 7 | Import payers.csv as a query named Payers. Then reference Claims, merge it with Payers on PayerID (Join Kind: Left Outer), expand only PayerType, and group by PayerType with Sum of PaidAmount. What was the total PaidAmount for the Commercial payer type? Enter it to the cent. | Home → Merge Queries, then the expand button (two arrows) in the new column's header |
 | 8 | Reference Claims and add a custom column DaysToSubmit that holds the number of days from ServiceDate to SubmitDate. How many 2025 claims took MORE than 30 days to submit? | Add Column → Custom Column, then Duration.Days of the date difference |
-| 9 | Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range. Reference Claims, keep the Denied rows, merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied BilledAmount owned by Patient Access? Enter it to the cent. | Merges match text exactly: look at Transform → Format → Trim and Capitalize Each Word |
+| 9 | Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range and name the query DenialMap. Reference Claims, keep the Denied rows, merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied BilledAmount owned by Patient Access? Enter it to the cent. | Merges match text exactly: look at Transform → Format → Trim and Capitalize Each Word |
 | 10 | Import encounters_2025.csv (one row per encounter discharged in 2025) as a query named Encounters2025. Use Merge Queries as New with Encounters2025 on top, Claims below, EncounterID in both, and Join Kind Left Anti. How many 2025 encounters have no claim in the 2025 claim files? | Left Anti = rows only in the first (top) table |
 | 11 | Create a blank query (Data → Get Data → From Other Sources → Blank Query), name it AgedPending, open Home → Advanced Editor, and replace its contents with the starter code on the Starter M sheet (also in starter/AgedPending.m). It lists Pending claims more than 60 days old as of 12/31/2025. Read the code, change it to more than 90 days, and report how many Pending claims are more than 90 days old. | Find the step that compares DaysPending with 60 |
 | 12 | Import budget_2025_wide.csv as a query named Budget2025. Remove the FY Total column, select the five label columns (FacilityID, Department, LineType, Category, Measure), and choose Transform → Unpivot Columns → Unpivot Other Columns. Rename Attribute to Month and Value to Amount. How many rows does Budget2025 return? | Unpivot Other Columns keeps the selected columns and unpivots the rest |
@@ -734,6 +769,9 @@ Appending stacks the rows of one query under another (`Table.Combine`). It match
 // choose the first file as the sample, OK, then rename the query from claims_monthly to Claims)
 // Excel also creates a "Helper Queries" group (Sample File, Parameter1, Transform Sample File, Transform File).
 // The Source line below uses the DataFolder parameter (Guide section 12); the generated code has your full path.
+// The helper query Sample File repeats the folder path in its own Source step, so make the same change there:
+//     Source = Folder.Files(DataFolder & "claims_monthly"),
+// (On a Mac, keep full paths such as "/Users/you/PQ/data/claims_monthly" instead of the parameter.)
 // Step names can differ slightly between Excel versions. Optional hardening (Guide section 11): insert
 //     #"CSV Only" = Table.SelectRows(Source, each Text.Lower([Extension]) = ".csv"),
 // after Source (and make the next step read #"CSV Only") so stray files, such as a Mac .DS_Store file,
@@ -840,7 +878,7 @@ in
 ```
 
 
-A merge is Power Query's lookup. **Left Outer** keeps every claim and brings in the matching payer row as a nested table, and the expand button pulls out just the columns you need. Commercial combines three different payers, so you can't answer this by PayerID alone. You need the PayerType from the lookup table and then a Group By. Uncheck *Use original column name as prefix* when you expand, or the column is named Payers.PayerType.
+A merge is Power Query's lookup. **Left Outer** keeps every claim and brings in the matching payer row as a nested table, and the expand button pulls out just the columns you need. Commercial combines 3 different payers, so you can't answer this by PayerID alone. You need the PayerType from the lookup table and then a Group By. Uncheck *Use original column name as prefix* when you expand, or the column is named Payers.PayerType.
 
 **8. Custom column: days from service to submission**
 
@@ -970,9 +1008,17 @@ The wide file has 494 rows with a column per month. Unpivoting turns each month 
 - **Solution:**
 
 ```powerquery
-// Budget2025 gets one more step after #"Renamed Columns" (Transform > Split Column > By Delimiter,
-// Custom delimiter " - " (space hyphen space), Split at: Left-most delimiter), and its "in" line now returns it.
-// The dialog names the parts Department.1 and Department.2; typing the final names here splits and renames at once.
+// Query: Budget2025 after task 13: the task 12 query plus one step at the end. Select Department >
+// Transform > Split Column > By Delimiter > --Custom-- " - " (space hyphen space) > Split at: Left-most delimiter.
+// The dialog names the parts Department.1 and Department.2 (and adds a Changed Type step); typing the final
+// names in the step, as here, splits and renames at once.
+let
+    Source = Csv.Document(File.Contents(DataFolder & "budget_2025_wide.csv"),[Delimiter=",", Columns=18, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"FacilityID", type text}, {"Department", type text}, {"LineType", type text}, {"Category", type text}, {"Measure", type text}, {"Jan", Int64.Type}, {"Feb", Int64.Type}, {"Mar", Int64.Type}, {"Apr", Int64.Type}, {"May", Int64.Type}, {"Jun", Int64.Type}, {"Jul", Int64.Type}, {"Aug", Int64.Type}, {"Sep", Int64.Type}, {"Oct", Int64.Type}, {"Nov", Int64.Type}, {"Dec", Int64.Type}, {"FY Total", Int64.Type}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"FY Total"}),
+    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Removed Columns", {"FacilityID", "Department", "LineType", "Category", "Measure"}, "Attribute", "Value"),
+    #"Renamed Columns" = Table.RenameColumns(#"Unpivoted Other Columns",{{"Attribute", "Month"}, {"Value", "Amount"}}),
     #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns", "Department", Splitter.SplitTextByEachDelimiter({" - "}, QuoteStyle.Csv, false), {"CostCenter", "DeptName"})
 in
     #"Split Column by Delimiter"
@@ -997,14 +1043,14 @@ Splitting at ' - ' (with the spaces) separates the cost center from the name wit
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-It's the first week of February 2026 and the CFO wants a denial dashboard she can refresh every month without anyone rebuilding it. Build it on top of your Claims query. First, make the pipeline portable: if you haven't yet, create the DataFolder parameter (Guide section 12) and use it in the Source step of Claims. Answer B1–B3 BEFORE you add the January 2026 file, then follow B4 and B5.
+It's the first week of February 2026 and the CFO wants a denial dashboard she can refresh every month without anyone rebuilding it. Build it on top of your Claims query. First, make the pipeline portable: if you haven't yet, create the DataFolder parameter (Guide section 12) and use it in the Source steps of Claims and its Sample File helper query (on a Mac, keep the full paths instead). Answer B1–B3 BEFORE you add the January 2026 file, then follow B4 and B5.
 
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Build a query named DenialDashboard: reference Claims, keep Denied claims, merge Payers to get PayerType, and group by BOTH PayerType and DenialReason with Count Rows and Sum of BilledAmount. What is the denied BilledAmount for Government + Authorization Required? Enter it to the cent. *(Hint: Ctrl-click two columns in the Group By dialog (Advanced))*
 - **B2.** Build DenialRateByPayerType from ALL claims: reference Claims, merge Payers for PayerType, add a conditional column IsDenied (1 if ClaimStatus is Denied, otherwise 0), then group by PayerType with Count Rows and Sum of IsDenied. Which payer type has the highest denial rate (denied claims ÷ all claims)? *(Hint: Add Column → Conditional Column, then a custom column Denied / AllClaims)*
 - **B3.** What is that payer type's denial rate? Enter it as a percentage rounded to 1 decimal place. *(Hint: Format the DenialRate column as Percentage)*
-- **B4.** Now copy data\new_month\claims_2026_01.csv into the claims_monthly folder and click Data → Refresh All. You don't edit any query. What is the denied BilledAmount for Government + Authorization Required now? Enter it to the cent. *(Hint: Refresh All runs every query in dependency order)*
+- **B4.** Now copy data\new_month\claims_2026_01.csv into the claims_monthly folder and click Data → Refresh All. You don't edit any query. What is the denied BilledAmount for Government + Authorization Required now? Enter it to the cent. *(Hint: Every query built on Claims re-reads the folder when you refresh)*
 - **B5.** Your Unbilled query (task 10) refreshed too. How many 2025 encounters are still unbilled now that the January 2026 claims are in? *(Hint: Look at the Queries & Connections pane after the refresh)*
 <!-- END GENERATED: bonus -->
 
@@ -1083,7 +1129,7 @@ Claims reads whatever files are in the folder, so the thirteenth file flows thro
 - **Answer:** 59
 - **Solution:** Read the row count of the refreshed **Unbilled** query in the Queries & Connections pane (or `=ROWS(Unbilled)` if you loaded it as a Table named Unbilled).
 
-The January 2026 file billed 204 of the 263 encounters on the unbilled list, so 59 remain. They were billed in February–May 2026 or are still waiting. Because the Left Anti merge points at Claims, the unbilled list maintains itself as new files arrive. No one has to rerun a lookup.
+The January 2026 file billed 204 of the 263 encounters on the unbilled list, so 59 remain. (In the course's full claims data, their claims go out between February and May 2026, so later monthly files keep shrinking the list.) Because the Left Anti merge points at Claims, the unbilled list maintains itself as new files arrive. No one has to rerun a lookup.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

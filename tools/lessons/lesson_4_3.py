@@ -103,6 +103,9 @@ M_CLAIMS = f'''// Query: Claims   (Data > Get Data > From File > From Folder > p
 // choose the first file as the sample, OK, then rename the query from claims_monthly to Claims)
 // Excel also creates a "Helper Queries" group (Sample File, Parameter1, Transform Sample File, Transform File).
 // The Source line below uses the DataFolder parameter (Guide section 12); the generated code has your full path.
+// The helper query Sample File repeats the folder path in its own Source step, so make the same change there:
+//     Source = Folder.Files(DataFolder & "claims_monthly"),
+// (On a Mac, keep full paths such as "/Users/you/PQ/data/claims_monthly" instead of the parameter.)
 // Step names can differ slightly between Excel versions. Optional hardening (Guide section 11): insert
 //     #"CSV Only" = Table.SelectRows(Source, each Text.Lower([Extension]) = ".csv"),
 // after Source (and make the next step read #"CSV Only") so stray files, such as a Mac .DS_Store file,
@@ -243,12 +246,18 @@ let
 in
     #"Renamed Columns"'''
 
-M_ICU = '''// Budget2025 gets one more step after #"Renamed Columns" (Transform > Split Column > By Delimiter,
-// Custom delimiter " - " (space hyphen space), Split at: Left-most delimiter), and its "in" line now returns it.
-// The dialog names the parts Department.1 and Department.2; typing the final names here splits and renames at once.
-    #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns", "Department", Splitter.SplitTextByEachDelimiter({" - "}, QuoteStyle.Csv, false), {"CostCenter", "DeptName"})
-in
-    #"Split Column by Delimiter"
+_SPLIT_STEP = ('    #"Split Column by Delimiter" = Table.SplitColumn(#"Renamed Columns", "Department", '
+               'Splitter.SplitTextByEachDelimiter({" - "}, QuoteStyle.Csv, false), {"CostCenter", "DeptName"})')
+_BUDGET_TAIL = '\nin\n    #"Renamed Columns"'
+assert M_BUDGET.endswith(_BUDGET_TAIL)
+M_ICU = (
+    '// Query: Budget2025 after task 13: the task 12 query plus one step at the end. Select Department >\n'
+    '// Transform > Split Column > By Delimiter > --Custom-- " - " (space hyphen space) > Split at: Left-most delimiter.\n'
+    '// The dialog names the parts Department.1 and Department.2 (and adds a Changed Type step); typing the final\n'
+    '// names in the step, as here, splits and renames at once.\n'
+    + M_BUDGET.split("\n", 3)[3][: -len(_BUDGET_TAIL)]
+    + ",\n" + _SPLIT_STEP + '\nin\n    #"Split Column by Delimiter"'
+    + '''
 
 // Query: ICU_Q1_Salaries   (right-click Budget2025 > Reference)
 let
@@ -258,7 +267,7 @@ let
         and List.Contains({"Jan", "Feb", "Mar"}, [Month])),
     #"Grouped Rows" = Table.Group(#"Filtered Rows", {"DeptName"}, {{"Q1Actual", each List.Sum([Amount]), type nullable number}})
 in
-    #"Grouped Rows"'''
+    #"Grouped Rows"''')
 
 M_DASHBOARD = '''// Query: DenialDashboard   (right-click Claims > Reference)
 let
@@ -388,7 +397,7 @@ def build() -> Lesson:
             "Build refreshable, repeatable data pipelines and read the M code behind them",
         ],
         data_note="CSV exports in the lesson's data folder: twelve monthly files of claims submitted in 2025, a January "
-                  "2026 claim file for the bonus, the payer list, 11,196 encounters discharged in 2025, and a wide "
+                  "2026 claim file (simulated next-month export) for the bonus, the payer list, 11,196 encounters discharged in 2025, and a wide "
                   "2025 budget-vs-actual export. The workbook adds a hand-maintained denial-reason mapping table.",
     )
 
@@ -464,6 +473,8 @@ def build() -> Lesson:
     icu_q1 = sum(int(r[m]) for r in icu for m in ("Jan", "Feb", "Mar"))
     assert all(int(r["FY Total"]) == sum(int(r[m]) for m in MONTHS) for r in budget)
     n_dept_names = len({r["Department"].split(" - ", 1)[1] for r in budget})
+    n_depts = len({r["Department"] for r in budget})
+    n_commercial_payers = sum(1 for p in payers.values() if p["PayerType"] == "Commercial")
 
     # Bonus: dashboard before and after the January 2026 file
     def dashboard(rows):
@@ -487,12 +498,21 @@ def build() -> Lesson:
     assert max(dash_before, key=dash_before.get) == combo
     rate_before = rates(claims)
     top_rate_type = max(rate_before, key=rate_before.get)
+    assert top_rate_type == "Medicare Advantage", "the B2 explanation discusses Medicare Advantage plans"
     ranked_rates = sorted(rate_before.values(), reverse=True)
     assert ranked_rates[0] - ranked_rates[1] > 0.01
     billed_after = {r["EncounterID"] for r in claims + jan26}
     unbilled_after = sum(1 for e in enc25 if e["EncounterID"] not in billed_after)
     assert dash_after[combo] != dash_before[combo]
     denied_after = sum(1 for r in claims + jan26 if r["ClaimStatus"] == "Denied")
+    # Where the still-unbilled encounters end up in the full course claims file (for the B5 explanation)
+    billed_later = {r["EncounterID"]: r["SubmitDate"] for r in data.load_raw("claims")}
+    still_unbilled = [e["EncounterID"] for e in enc25 if e["EncounterID"] not in billed_after]
+    later_months = sorted({billed_later[i][:7] for i in still_unbilled if i in billed_later})
+    assert len(later_months) >= 2 and all(i in billed_later for i in still_unbilled)
+    later_span = (f"{datetime.strptime(later_months[0], '%Y-%m'):%B} and "
+                  f"{datetime.strptime(later_months[-1], '%Y-%m'):%B %Y}")
+    rate_top = rate_before[max(rate_before, key=rate_before.get)]
 
     # ------------------------------------------------------------------ workbook sheets
     file_rows = [
@@ -500,8 +520,9 @@ def build() -> Lesson:
          "Contents": "One file per month of claims SUBMITTED in 2025 (12 files, 13 columns each, same layout as the "
                      "course's claims.csv). Used from task 1 on."},
         {"File": "data/new_month/claims_2026_01.csv", "Rows": len(jan26),
-         "Contents": "Claims submitted in January 2026 (services from late 2025). Bonus only: keep it out of "
-                     "claims_monthly until the bonus tells you to copy it in."},
+         "Contents": "Simulated next-month export: claims submitted in January 2026 for services in late 2025 (the "
+                     "course data is otherwise as of 12/31/2025). Bonus only: keep it out of claims_monthly until the "
+                     "bonus tells you to copy it in."},
         {"File": "data/payers.csv", "Rows": len(payers), "Contents": "Payer list: PayerID, PayerName, PayerType, contract terms."},
         {"File": "data/encounters_2025.csv", "Rows": len(enc25),
          "Contents": "Encounters DISCHARGED in 2025 (10 columns: IDs, type, facility, department, admit/discharge, "
@@ -541,7 +562,8 @@ def build() -> Lesson:
         for row in ws.iter_rows(min_row=5, max_row=4 + len(file_rows)):
             for c in row:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
-            ws.row_dimensions[row[0].row].height = 32
+            longest = max(-(-len(str(row[0].value or "")) // 55), -(-len(str(row[2].value or "")) // 85))
+            ws.row_dimensions[row[0].row].height = 15 * max(2, longest) + 2
         ws.column_dimensions["C"].width = 80
         ws.page_setup.orientation = "landscape"
         ws.page_setup.fitToWidth = 1
@@ -574,7 +596,7 @@ def build() -> Lesson:
         "Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks "
         "in order because later tasks reuse earlier queries. Type each result in the yellow cell as a plain number or text. "
         "From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, "
-        "your code shows your full folder path in its place.")
+        "or work on a Mac, your code shows your full folder path in its place.")
     L.tasks = [
         Task("Import claims_2025_01.csv from the claims_monthly folder with Data → Get Data → From File → From Text/CSV and "
              "load it to a new sheet. How many claims (rows, not counting the header) does the January 2025 file contain?",
@@ -586,8 +608,8 @@ def build() -> Lesson:
                          "data type from the first 200 rows. The status bar inside the editor only counts the rows in the "
                          "preview, so read the total from the Queries & Connections pane (or from the loaded Table) after "
                          "**Close & Load**."),
-        Task("Import claims_2025_11.csv and claims_2025_12.csv as two more queries, then stack them with Home → Append "
-             "Queries → Append Queries as New. How many rows does the appended query return?",
+        Task("Import claims_2025_11.csv and claims_2025_12.csv as two more queries. Then, in the Power Query Editor, stack "
+             "them with Home → Append Queries → Append Queries as New. How many rows does the appended query return?",
              answer=n_novdec, solution=M_APPEND, solution_lang="m", live=False,
              hint="Append stacks rows, and columns line up by name",
              title="Append two monthly files",
@@ -639,7 +661,7 @@ def build() -> Lesson:
              title="Merge Claims with Payers (PaidAmount by PayerType)",
              explanation="A merge is Power Query's lookup. **Left Outer** keeps every claim and brings in the matching payer "
                          "row as a nested table, and the expand button pulls out just the columns you need. Commercial "
-                         "combines three different payers, so you can't answer this by PayerID alone. You need the PayerType "
+                         f"combines {n_commercial_payers} different payers, so you can't answer this by PayerID alone. You need the PayerType "
                          "from the lookup table and then a Group By. Uncheck *Use original column name as prefix* when you "
                          "expand, or the column is named Payers.PayerType."),
         Task("Reference Claims and add a custom column DaysToSubmit that holds the number of days from ServiceDate to "
@@ -651,7 +673,7 @@ def build() -> Lesson:
                          "turns it into whole days. You can also build it without typing: select SubmitDate, Ctrl-click "
                          "ServiceDate, then Add Column → Date → Subtract Days (the order you click sets which date comes "
                          "first). Claims billed more than 30 days after service delay cash and risk timely-filing denials."),
-        Task("Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range. Reference Claims, keep the Denied rows, "
+        Task("Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range and name the query DenialMap. Reference Claims, keep the Denied rows, "
              "merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim "
              "found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied "
              "BilledAmount owned by Patient Access? Enter it to the cent.",
@@ -708,7 +730,7 @@ def build() -> Lesson:
              explanation="Splitting at ' - ' (with the spaces) separates the cost center from the name without breaking "
                          "names that contain a plain hyphen, such as *Medical-Surgical*. After the split, all three hospitals' "
                          f"ICUs share the DeptName *Intensive Care Unit* (the file has {n_dept_names} distinct department "
-                         "names for 31 departments), so one filter catches all three. The unpivoted Month column makes "
+                         f"names for {n_depts} departments), so one filter catches all three. The unpivoted Month column makes "
                          "\"Q1\" a simple filter on Jan, Feb, and Mar."),
     ]
 
@@ -717,8 +739,8 @@ def build() -> Lesson:
     L.bonus_scenario = (
         "It's the first week of February 2026 and the CFO wants a denial dashboard she can refresh every month without anyone "
         "rebuilding it. Build it on top of your Claims query. First, make the pipeline portable: if you haven't yet, create the "
-        "DataFolder parameter (Guide section 12) and use it in the Source step of Claims. Answer B1–B3 BEFORE you add the "
-        "January 2026 file, then follow B4 and B5.")
+        "DataFolder parameter (Guide section 12) and use it in the Source steps of Claims and its Sample File helper query "
+        "(on a Mac, keep the full paths instead). Answer B1–B3 BEFORE you add the January 2026 file, then follow B4 and B5.")
     L.bonus = [
         Task("Build a query named DenialDashboard: reference Claims, keep Denied claims, merge Payers to get PayerType, and "
              "group by BOTH PayerType and DenialReason with Count Rows and Sum of BilledAmount. What is the denied BilledAmount "
@@ -738,17 +760,17 @@ def build() -> Lesson:
              title="Denial rate by payer type",
              explanation="A rate needs two counts per group: all claims (Count Rows) and denied claims. Summing a 1/0 flag "
                          "counts the rows where the condition is true, the same trick as SUMPRODUCT with booleans. "
-                         "Dividing in a custom column after the Group By gives the rate. In this data, Medicare Advantage "
-                         "denies about 1 claim in 10, the highest rate of any payer type, which mirrors what many US "
-                         "health systems report about Medicare Advantage plans."),
+                         "Dividing in a custom column after the Group By gives the rate. In this data, "
+                         f"{top_rate_type} denies about 1 claim in {round(1 / rate_top)}, the highest rate of any payer "
+                         "type, which mirrors what many US health systems report about Medicare Advantage plans."),
         Task("What is that payer type's denial rate? Enter it as a percentage rounded to 1 decimal place.",
              answer=rate_before[top_rate_type], fmt="0.0%", live=False,
              solution=("Use the DenialRateByPayerType query from B2 and read the DenialRate value on the "
                        f"{top_rate_type} row. The Percentage type displays it as a percentage."),
              hint="Format the DenialRate column as Percentage",
              title="Highest denial rate (value)",
-             explanation=f"{top_rate_type}: {round(rate_before[top_rate_type] * 100, 1)}% of its claims were denied. "
-                         "Typing 10.2 or 10.2% both pass the check."),
+             explanation=f"{top_rate_type}: {rate_top * 100:.1f}% of its claims were denied. Typing "
+                         f"{rate_top * 100:.1f} or {rate_top * 100:.1f}% both pass the check."),
         Task("Now copy data\\new_month\\claims_2026_01.csv into the claims_monthly folder and click Data → Refresh All. You "
              "don't edit any query. What is the denied BilledAmount for Government + Authorization Required now? Enter it to "
              "the cent.",
@@ -758,7 +780,7 @@ def build() -> Lesson:
                  "2. In Excel, click **Data → Refresh All** (Windows: Ctrl + Alt + F5).\n"
                  "3. Read the Government / Authorization Required row of the loaded DenialDashboard table."),
              live=False, title="Drop in the January 2026 file and Refresh All",
-             hint="Refresh All runs every query in dependency order",
+             hint="Every query built on Claims re-reads the folder when you refresh",
              explanation="Claims reads whatever files are in the folder, so the thirteenth file flows through every query "
                          f"that references it: Claims now returns {n_claims + len(jan26):,} rows and the dashboard counts "
                          f"{denied_after} denied claims instead of {len(denied)}. This is the payoff of a folder-based "
@@ -771,9 +793,10 @@ def build() -> Lesson:
              live=False, title="Unbilled encounters after the refresh",
              hint="Look at the Queries & Connections pane after the refresh",
              explanation=f"The January 2026 file billed {n_unbilled - unbilled_after} of the {n_unbilled} encounters on the "
-                         f"unbilled list, so {unbilled_after} remain. They were billed in February–May 2026 or are still "
-                         "waiting. Because the Left Anti merge points at Claims, the unbilled list maintains itself as new "
-                         "files arrive. No one has to rerun a lookup."),
+                         f"unbilled list, so {unbilled_after} remain. (In the course's full claims data, their claims go "
+                         f"out between {later_span}, so later monthly files keep shrinking the list.) Because the Left "
+                         "Anti merge points at Claims, the unbilled list maintains itself as new files arrive. No one has "
+                         "to rerun a lookup."),
     ]
 
     # ------------------------------------------------------------------ files next to the workbook

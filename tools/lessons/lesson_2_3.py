@@ -236,7 +236,7 @@ def build() -> Lesson:
     sh = L.add_table_sheet(
         "Shifts", shifts, table="tblShifts",
         columns=["ShiftID", "EmployeeID", "JobTitle", "ShiftDate", "ShiftType", ("InTime", "ClockIn"), ("OutTime", "ClockOut")],
-        extra_cols=["PaidTime"], formats={"ClockIn": "hh:mm", "ClockOut": "hh:mm"},
+        extra_cols=["PaidTime"], formats={"ClockIn": "hh:mm", "ClockOut": "hh:mm", "PaidTime": "h:mm"},
         widths={"JobTitle": 28, "ShiftDate": 12, "ShiftType": 12, "ClockIn": 10, "ClockOut": 10, "PaidTime": 11},
     )
 
@@ -246,17 +246,16 @@ def build() -> Lesson:
                             widths={"Date": 12, "Holiday": 34, "Day": 7})
     holidays = {r["Date"] for r in hol_rows}
     settings_rows = [{"Setting": "ReportDate", "Value": REPORT_DATE,
-                      "Notes": "The course's 'today' (the data is as of this date). Use this cell instead of TODAY() "
-                               "so your answers never change."}]
+                      "Notes": "The course's 'today'. Use this cell instead of TODAY() so your answers never change."}]
     stg = L.add_table_sheet("Settings", settings_rows, columns=["Setting", "Value", "Notes"], as_table=False,
                             formats={"Value": "mm/dd/yyyy"}, widths={"Setting": 14, "Value": 12, "Notes": 90})
 
     n_stays, n_ed = len(stays), len(ed)
     L.data_note = (f"All {n_stays} inpatient stays admitted at Ashby Falls Community Hospital in 2025 (with each patient's "
-                   f"date of birth and, for ED admissions, the ED arrival time) and the insurance claim for each stay; "
-                   f"the hospital's {n_ed} emergency department visits in Q4 2025; one pay week "
+                   f"date of birth and, for ED admissions, the ED arrival time), the insurance claim for each stay, and the "
+                   f"hospital's {n_ed} emergency department visits in Q4 2025. The workbook also has one pay week "
                    f"({PAY_WEEK[0]:%B} {PAY_WEEK[0].day}–{PAY_WEEK[1].day}, 2025) of worked shifts on Medical-Surgical "
-                   f"4 West at Bluestone Memorial Hospital; and the business office's 2025–2026 holiday calendar.")
+                   f"4 West at Bluestone Memorial Hospital and the business office's 2025–2026 holiday calendar.")
     L.start_notes = [
         "Settings!B2 holds the report date (12/31/2025). Use it wherever a task says \"as of\" or \"today\". TODAY() "
         "would give a different answer every day you open the file.",
@@ -426,19 +425,22 @@ def build() -> Lesson:
 
     L.practice_intro = ("Tasks 1–7 use the Stays sheet, 8–11 the Claims sheet, 12 the ED sheet, and 13 the Shifts sheet. "
                         "Settings!B2 holds the report date (12/31/2025) and the Holidays sheet lists the business office's "
-                        "holidays. Several tasks ask you to fill a yellow column on a data sheet: type the formula in the "
-                        "first data row and the Table fills the rest (if it doesn't, double-click the fill handle). The gray "
-                        "cell on this sheet then summarizes your column.")
+                        "holidays. When a formula on this sheet points at a data sheet, include the sheet name, as in "
+                        "Stays!G2:G370, or click the cells on that sheet and Excel adds the name for you. (Selecting a whole "
+                        "Table column may write tblStays[AdmitDateTime] instead, which works the same.) Several tasks ask you "
+                        "to fill a yellow column on a data sheet: type the formula in the first data row and the Table fills "
+                        "the rest (if it doesn't, double-click the fill handle). The gray cell on this sheet then summarizes "
+                        "your column.")
 
     L.tasks = [
         # ---------------- serial numbers
         Task(f"Stays!{A}{sf} shows the first admission of 2025: {s1['AdmitDateTime']:%m/%d/%Y %H:%M}. What number does "
-             f"Excel actually store in that cell? Point a formula at the cell (the answer cell is already formatted to show "
-             f"4 decimal places).",
-             answer=t1_serial, fmt="0.0000", tol=0.0001,
+             f"Excel actually store in that cell? Enter a formula that refers to the cell. The answer cell is already "
+             f"formatted to show 5 decimal places, so you'll see the stored number instead of a date.",
+             answer=t1_serial, fmt="0.00000", tol=0.0001,
              solution=f"=Stays!{A}{sf}", hint="A date-time is one number: whole days since 1900, plus a fraction of a day",
              explanation=f"The whole part, {int(t1_serial):,}, is the **date serial number**: {s1['AdmitDateTime']:%B} {s1['AdmitDateTime'].day}, {s1['AdmitDateTime'].year} is "
-                         f"day {int(t1_serial):,} counting from January 1, 1900. The decimal part, {t1_serial % 1:.4f}, is the "
+                         f"day {int(t1_serial):,} counting from January 1, 1900. The decimal part, {t1_serial % 1:.5f}, is the "
                          f"time as a fraction of a 24-hour day: {s1['AdmitDateTime']:%H:%M} is "
                          f"{s1['AdmitDateTime'].hour * 60 + s1['AdmitDateTime'].minute:,} minutes ÷ 1,440 minutes per day. You can also "
                          "see the number by giving the cell the General format with Ctrl + Shift + ~ (Mac: Control + Shift + ~). Because dates and times are "
@@ -510,8 +512,9 @@ def build() -> Lesson:
              live=f"=(SUM({sr('DischargeDateTime')})-SUM({sr('AdmitDateTime')}))/COUNT({sr('AdmitDateTime')})",
              hint="Later date-time minus earlier date-time gives days",
              explanation="Subtracting two date-times gives the elapsed days, with the hours as a decimal: 2.50 is two and a half "
-                         "days. In a cell with the General format, Excel may copy the date format from the cells you referenced and "
-                         "show 4.5 days as 01/04/1900 12:00. Change the format to Number when that happens. Multiply by 24 to get hours. "
+                         "days. The LOSDays column is already formatted as a number. In a General cell, Excel may copy the date format "
+                         "from the cells you referenced and show 4.5 days as 01/04/1900 12:00, so change the format to Number when that "
+                         "happens. Multiply by 24 to get hours. "
                          "The live formula in the key uses a shortcut: the sum of the differences equals the difference of the sums."),
         # ---------------- EOMONTH
         Task(f"Ashby Falls' billing standard says a claim must be submitted by the last day of the month after the month of "
@@ -600,7 +603,7 @@ def build() -> Lesson:
                          f"The total is {paid_total.total_seconds() / 3600:,.1f} hours, so it needs **[h]:mm**. Plain h:mm would wrap "
                          "past every 24 hours and show only the leftover hours. Without MOD the week totals "
                          f"{naive_total.total_seconds() / 3600:,.1f} hours, because every overnight shift comes out negative. "
-                         "Format your column as [h]:mm (or h:mm) to read each shift."),
+                         "The PaidTime column is formatted h:mm, so a shift that comes out negative shows ######## instead of a time."),
     ]
 
     # ------------------------------------------------------------------ bonus: two-midnight benchmark & weekday effect
@@ -651,19 +654,22 @@ def build() -> Lesson:
                          "below the benchmark to meeting it. The rest already had 2 or more. "
                          f"`=INT({scol('DischargeDateTime')})-INT(MIN({scol('EDArrivalDateTime')}:{scol('AdmitDateTime')}))` is a "
                          "shorter trick that works because MIN ignores the blank cell, but the IF says what you mean."),
-        Task("Fill the AdmitDay column with the weekday name of each AdmitDateTime (Monday, Tuesday, …). What was the average "
-             "length of stay, in HOURS, for patients admitted on a Friday? Round to 1 decimal place.",
+        Task(f"Fill the AdmitDay column with the weekday name of each AdmitDateTime (Monday, Tuesday, …). Start in "
+             f"{st.cell('AdmitDay', 0, sheet=False)}. What was the average length of stay, in HOURS, for patients admitted on "
+             f"a Friday? Use your LOSDays column and round to 1 decimal place.",
              answer=round(fri_hours, 1), fmt="0.0", tol=0.051,
              solution=f'=ROUND(AVERAGEIF({sr("AdmitDay")},"Friday",{sr("LOSDays")})*24,1)',
              live=f"=ROUND(SUMPRODUCT({fri_arr}*({sr('DischargeDateTime')}-{sr('AdmitDateTime')}))*24/SUMPRODUCT(--{fri_arr}),1)",
              hint="TEXT(date, \"dddd\") gives the weekday name. AVERAGEIF (a preview of Lesson 2.5) or AVERAGE(IF(…)) averages the Friday rows",
              explanation=f"Fill AdmitDay with `=TEXT({scol('AdmitDateTime')},\"dddd\")`, which returns full weekday names. AVERAGEIF averages the "
-                         "LOSDays values on rows where AdmitDay is \"Friday\", and × 24 converts days to hours. In Microsoft 365 and Excel 2021, "
-                         f"`=ROUND(AVERAGE(IF({sr('AdmitDay')}=\"Friday\",{sr('LOSDays')}))*24,1)` also works, as you saw in "
-                         "Lesson 2.1. TEXT returns weekday names in your Office language, so a German Excel shows \"Freitag\"."),
+                         "LOSDays values on rows where AdmitDay is \"Friday\", and × 24 converts days to hours. The array formula from Lesson 2.1, "
+                         f"`=ROUND(AVERAGE(IF({sr('AdmitDay')}=\"Friday\",{sr('LOSDays')}))*24,1)`, also works. Microsoft 365 and Excel 2021 "
+                         "calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). "
+                         "TEXT returns weekday names in your Office language, so a German Excel shows \"Freitag\"."),
         Task("Which weekday of admission has the LONGEST average length of stay? Type the weekday name.",
              answer=top_day, accept=[top_day[:3]], live=False,
-             solution=("1. On the Bonus sheet, type the seven weekday names, Monday to Sunday, in G2:G8.\n"
+             solution=("1. On the Bonus sheet, type Monday in G2 and drag the fill handle down to G8. AutoFill (Lesson 1.2) "
+                       "completes the week through Sunday.\n"
                        f"2. In H2, enter `=AVERAGEIF(Stays!${st.col('AdmitDay')}${sf}:${st.col('AdmitDay')}${sl},G2,"
                        f"Stays!${st.col('LOSDays')}${sf}:${st.col('LOSDays')}${sl})*24` and fill it down "
                        "to H8.\n"

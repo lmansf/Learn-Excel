@@ -37,6 +37,7 @@ A few definitions you'll need:
 
 - **LOSDays** (length of stay) is the number of midnights between admission and discharge, with a minimum of 1 day. It's the
   same definition Lesson 4.2 used.
+- **Age** on the Stays sheet is the patient's age in whole years on the admission date.
 - **DoorToProviderMin** is the number of minutes from ED arrival until a provider first saw the patient. It's blank for
   patients who **left without being seen (LWBS)**.
 - The EDDaily counts are ED arrivals per calendar day. Days with no arrivals show 0.
@@ -65,8 +66,8 @@ statistical procedures through dialog boxes and writes the results as a table.
 
 **Mac:** select **Tools → Excel Add-ins…**, tick **Analysis ToolPak**, and select **OK**. The button appears on the **Data** tab.
 
-**Excel for the web** doesn't have the ToolPak. Every number it produces can also be calculated with the worksheet functions in
-this lesson, and those work everywhere.
+**Excel for the web** doesn't have the ToolPak. Every ToolPak number this lesson uses can also be calculated with the worksheet
+functions shown here, and those work everywhere.
 
 The tools you'll use here:
 
@@ -252,10 +253,11 @@ These bands are rules of thumb, not laws. What counts as "strong" depends on the
 The order of the two ranges doesn't matter for CORREL. When one cell of a pair is blank, as for LWBS patients on EDWaits, CORREL
 skips that pair. **Data → Data Analysis → Correlation** builds a table of every pairwise r for several adjacent columns at once.
 
-**r measures straight lines only.** ESI level and wait time have r = 0.474, yet the averages show the relationship isn't a line:
-ESI 4 patients (61 minutes median) wait longer than ESI 5 patients (59 minutes median), because the least urgent patients are
-often fast-tracked. A curve, a U shape, or two separate clusters can all produce a misleading r. **Always look at the scatter plot
-before you trust r.** A single extreme point can also create or hide a correlation on its own.
+**r measures straight lines only.** ESI level and wait time have r = 0.474, yet the group medians show the relationship isn't a
+straight line. The median wait climbs steeply from ESI 1 (3 minutes) to ESI 4 (61 minutes), then levels off, and ESI 5 patients
+(59 minutes) wait slightly less than ESI 4 patients, because the least urgent patients are often fast-tracked. A curve, a U
+shape, or two separate clusters can all produce a misleading r. **Always look at the scatter plot before you trust r.** A single
+extreme point can also create or hide a correlation on its own.
 
 **r² (r squared)** is the share of the variation in one measure that a straight line through the other explains. With r = 0.752,
 r² = 0.565, so ED volume accounts for about 57% of the month-to-month variation in inpatient discharges.
@@ -286,7 +288,8 @@ as possible. Each of those vertical distances, actual y minus predicted y, is a 
 | `TREND(known_y's, known_x's, new_x's)` | Predictions for one or many new x values (and several x columns, section 7) |
 | `LINEST(known_y's, known_x's, TRUE, TRUE)` | The whole regression in one array (section 7) |
 
-Every one of these takes **y first**. Swap the ranges and you get a different line, one that predicts x from y.
+Every one of these lists **known_y's before known_x's**. Swap the ranges and you get a different line, one that predicts x from
+y. FORECAST.LINEAR also takes the new x as its first argument, ahead of both ranges.
 
 **Worked example.** How many inpatient discharges should the system expect in a month with a given number of ED visits?
 
@@ -378,8 +381,9 @@ one x column, LINEST returns a block of 5 rows × 2 columns:
 | 4 | F statistic | residual degrees of freedom (n − 2) |
 | 5 | regression sum of squares | residual sum of squares |
 
-In Microsoft 365 the block spills. In Excel 2019 and earlier, select 5 × 2 cells first and confirm with **Ctrl + Shift + Enter**
-(Mac: **⌘ + Shift + Return**). To pull out one number, wrap LINEST in INDEX(…, row, column), which works in every version:
+In Microsoft 365 and Excel 2021 or later, the block spills. In Excel 2019 and earlier, select 5 × 2 cells first and confirm
+with **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**). To pull out one number, wrap LINEST in INDEX(…, row, column), which
+works in every version:
 
 | You want | Formula | Result |
 |---|---|--:|
@@ -480,7 +484,7 @@ natural pairs, use type 1.**
 **The ToolPak versions.** **Data → Data Analysis** offers *t-Test: Paired Two Sample for Means*, *t-Test: Two-Sample Assuming
 Equal Variances*, and *t-Test: Two-Sample Assuming Unequal Variances*. Each reports both groups' means, variances, and counts, the
 t Stat, and both one-tail and two-tail p-values (`P(T<=t) one-tail` and `P(T<=t) two-tail`) with the matching critical t values.
-Leave **Hypothesized Mean Difference** at 0. The two-tail p-value is what T.TEST returns.
+Leave **Hypothesized Mean Difference** blank, which means 0. The two-tail p-value is what T.TEST returns.
 
 > 📋 For the unequal-variance test, the ToolPak rounds the degrees of freedom to a whole number before calculating its p-value, so
 > its result can differ from T.TEST's in the later decimal places. With samples of a few hundred, the difference is negligible.
@@ -518,7 +522,9 @@ The two hospitals have almost the same spread, but Cedar Ridge's interval is abo
 as many patients. The margin shrinks with √n, so **cutting the margin in half takes four times as many patients**.
 
 > ⚠️ **Use COUNT for size.** The blank DoorToProviderMin cells are patients who left without being seen, not measurements. COUNT
-> counts only numbers, while ROWS and COUNTA would count the blanks too and make the interval too narrow.
+> counts only numbers. ROWS counts every row, blanks included, and makes the interval too narrow. COUNTA skips truly empty cells,
+> so it happens to agree with COUNT here, but it also counts text, such as an export that writes "LWBS" instead of leaving the
+> cell blank.
 
 | Function | Uses | When |
 |---|---|---|
@@ -602,7 +608,7 @@ how much that calendar month usually runs above or below the trend.
    January 2025 gives 287 ÷ 233.2 = 1.230.
 3. Average the ratios for each calendar month. January's seasonal index is (1.052 + 1.230) ÷ 2 = **1.141**: Januaries run about
    14% above trend. `AVERAGEIFS` with `MONTH()` in a helper column does this for all 12 months at once.
-4. Forecast = trend forecast × index = 244.99 × 1.141 ≈ **279.6** discharges for January 2026.
+4. Forecast = trend forecast × index = 244.99 × 1.141 ≈ **279.5** discharges for January 2026.
 
 With only two years of history, each index rests on two values, so treat it as rough. Three or more years make it much more
 stable.
@@ -687,12 +693,15 @@ Which chart to use:
 |---|---|---|
 | One measurement or count per period | **I-chart** (individuals, also called XmR) | Daily ED arrivals, monthly ALOS |
 | A proportion with a different denominator each period | **p-chart** | Monthly readmission rate, LWBS rate |
-| Counts of events per period, same area of opportunity | c-chart | Falls per month on one unit |
+| Counts of rare events per period, same area of opportunity | c-chart (an I-chart also works) | Falls per month on one unit |
 | Several measurements per period | X̄ and R charts | Five lab turnaround times sampled each day |
 
+> 📋 A c-chart sets its limits from the count's own average, which assumes the events follow a Poisson pattern. The I-chart makes
+> no such assumption, so it's the safer general-purpose choice for counts like daily ED arrivals.
+
 **The I-chart.** You can't estimate the noise with STDEV.S of all the points, because STDEV.S also captures slow seasonal swings
-and real shifts, which would inflate the limits until nothing ever signals. Instead, the I-chart estimates short-term noise from
-the **moving range (MR)**: the absolute change from one point to the next.
+and real shifts. Those inflate the limits and hide real signals. Instead, the I-chart estimates short-term noise from the
+**moving range (MR)**: the absolute change from one point to the next.
 
 ```
 MR (each point after the first) = ABS(this value − previous value)
@@ -766,8 +775,9 @@ Small months get wide limits and big months get narrow ones, so the limit lines 
 1. Center line: `=SUM(Monthly!D2:D25)/SUM(Monthly!C2:C25)` gives 237 ÷ 12,292 = **1.93%**. Put it in a cell, say M2, and refer to
    it with `$M$2`.
 2. In three helper columns, calculate each month's rate `=D2/C2`, its UCL `=$M$2+3*SQRT($M$2*(1-$M$2)/C2)`, and its LCL
-   `=MAX(0,$M$2-3*SQRT($M$2*(1-$M$2)/C2))`. If you type them in the columns right next to the Table, the Table grows to include
-   them and Excel fills each formula down to row 25 for you. That's what you want here, because every row needs the formula.
+   `=MAX(0,$M$2-3*SQRT($M$2*(1-$M$2)/C2))`. If you type them in columns H, I, and J, right next to the Table, the Table grows to
+   include them and Excel fills each formula down to row 25 for you. That's what you want here, because every row needs the
+   formula. If I and J still hold your seasonal-index work from section 11, clear them first.
 3. Flag any month where the rate is above its UCL or below its LCL, and count the flags.
 
 February 2024 (row 3) is the closest call. 21 of 586 patients left without being seen, a rate of 3.58%, just under its UCL of
@@ -919,7 +929,7 @@ The sample means are 4.845 days (Memorial) and 4.660 days (Cedar Ridge), a diffe
 - **Answer:** 6.09
 - **Solution:** `=CONFIDENCE.T(0.05,STDEV.S(EDWaits!E1158:E1383),COUNT(EDWaits!E1158:E1383))`
 
-217 patients saw a provider. Their mean wait was 49.15 minutes with a standard deviation of 45.52. The margin is t × s ÷ √n = 1.9710 × 45.52 ÷ √217 = 6.09, so the 95% confidence interval is 43.1 to 55.2 minutes. Use COUNT, not ROWS or COUNTA: the 9 blank rows aren't measurements, and counting them gives 5.97. `CONFIDENCE.NORM` (and the old `CONFIDENCE`) uses 1.96 instead of t and gives 6.06, slightly too narrow. The ToolPak's "Confidence Level(95.0%)" row is CONFIDENCE.T.
+217 patients saw a provider. Their mean wait was 49.15 minutes with a standard deviation of 45.52. The margin is t × s ÷ √n = 1.9710 × 45.52 ÷ √217 = 6.09, so the 95% confidence interval is 43.1 to 55.2 minutes. Use COUNT, not ROWS: ROWS also counts the 9 blank rows, which aren't measurements, and gives 5.97. COUNTA agrees with COUNT here only because the blank cells are truly empty. It would also count a text entry such as "LWBS" if an export had one. `CONFIDENCE.NORM` (and the old `CONFIDENCE`) uses 1.96 instead of t and gives 6.06, slightly too narrow. The ToolPak's "Confidence Level(95.0%)" row is CONFIDENCE.T.
 
 **10. A trailing 7-day moving average smooths out the weekday pattern. What was the 7-day…**
 
@@ -966,7 +976,7 @@ Work on the **Bonus** sheet of the workbook.
 
 - **B1.** What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal places. *(Hint: Total readmissions ÷ total index stays. Don't average the 24 monthly rates)*
 - **B2.** September 2024 had the fewest index stays (177). What is its upper control limit? Enter it as a percentage to 2 decimal places. *(Hint: p̄ + 3 × SQRT(p̄ × (1 − p̄) / n), with this month's n)*
-- **B3.** How many of the 24 months fall outside their control limits (above the UCL or below the LCL)? *(Hint: Compare each month's rate with its own limits. A helper column of UCL and LCL, then COUNTIFS, works)*
+- **B3.** How many of the 24 months fall outside their control limits (above the UCL or below the LCL)? *(Hint: Compare each month's rate with its own limits. Helper columns for the rate, UCL, LCL, and a TRUE/FALSE flag, then COUNTIF the flags, works. So does one SUMPRODUCT)*
 - **B4.** Which month is it? Enter its MonthStart date. *(Hint: Read it off your helper columns, or XLOOKUP(TRUE, your test, the MonthStart column))*
 - **B5.** Drop December 2025 and recompute p̄ from the other 23 months (rows 2–24). The highest remaining month is February 2025 (row 15). How many standard errors above the new center line is it? Calculate z = (rate − p̄) ÷ √(p̄ × (1 − p̄) ÷ n) and enter it to 2 decimal places. *(Hint: LET(p, new p̄, n, that month's IndexStays, (rate − p) / SQRT(p*(1−p)/n)))*
 <!-- END GENERATED: bonus -->
@@ -1030,10 +1040,10 @@ The corrected p̄ is 15.04%, higher than 14.62% because the artificially low Dec
 - A histogram bin's number is its upper limit, inclusive. Check how your tool defines bins before you read the counts.
 - r measures straight-line association only, R² is the share of variation explained, and neither proves causation. Look at the
   scatter plot first.
-- Regression functions take y first. Read a slope with its standard error and p-value: significant means "probably not zero,"
-  not "large."
-- A p-value is the chance of a difference this big if nothing real were going on. Use T.TEST type 3 for independent groups and
-  type 1 for paired data, and report the size of the difference alongside it.
+- Regression functions list known_y's before known_x's. Read a slope with its standard error and p-value: significant means
+  "probably not zero," not "large."
+- A p-value is the chance of a difference at least this big if nothing real were going on. Use T.TEST type 3 for independent
+  groups and type 1 for paired data, and report the size of the difference alongside it.
 - A 95% confidence interval for a mean is mean ± CONFIDENCE.T(0.05, s, n). Its width shrinks with √n.
 - Straight-line forecasts miss seasons. Use a seasonal index or FORECAST.ETS. Control charts use frozen baseline limits from the
   moving range (I-chart) or from each period's n (p-chart) to separate special causes from everyday noise.

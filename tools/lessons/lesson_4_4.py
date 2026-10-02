@@ -279,6 +279,20 @@ def build() -> Lesson:
              and r["DischargeDate"].month == 12)
     b4_admits = sum(1 for r in fact_enc if is_type(r, "Inpatient") and yr(r) and r["AdmitDate"].month == 12)
     assert b4 != b4_admits
+    dec1 = date(2025, 12, 1)
+    b4_carry_in = sum(1 for r in fact_enc if is_type(r, "Inpatient") and r["AdmitDate"] < dec1
+                      and dec1 <= r["DischargeDate"] <= date(2025, 12, 31))
+    b4_still_in = sum(1 for r in fact_enc if is_type(r, "Inpatient") and r["AdmitDate"] >= dec1
+                      and r["DischargeDate"] > date(2025, 12, 31))
+    assert b4 == b4_admits - b4_still_in + b4_carry_in
+    if b4_still_in == 0:
+        b4_why = (f"The difference is the {b4_carry_in} stays admitted before December and discharged in December. "
+                  f"All {b4_admits} December admissions in this extract went home by 12/31. In a live system, some "
+                  "December admissions would still be in the hospital at midnight on 12/31, which would pull the "
+                  "two numbers apart the other way.")
+    else:
+        b4_why = (f"{b4_carry_in} stays admitted before December were discharged in December, and {b4_still_in} "
+                  "December admissions were still in the hospital at midnight on 12/31.")
 
     # ================================================================== live cross-check formulas (worksheet only)
     E, C = "FactEncounters", "FactClaims"
@@ -339,7 +353,8 @@ def build() -> Lesson:
                  "2. In the Power Pivot window, click **Home → Diagram View**. Drag **FactEncounters[FacilityID]** onto "
                  "**DimFacility[FacilityID]**, and create the other relationships on the Model Map the same way.\n"
                  "3. Click **Home → PivotTable → PivotTable**, choose **New Worksheet**, and click OK.\n"
-                 "4. Tick **DimFacility → FacilityName** (Rows) and **FactEncounters → EncounterID** (Values).\n"
+                 "4. Tick **DimFacility → FacilityName** so it goes to Rows. Then drag **FactEncounters → EncounterID** "
+                 "into the **Values** area. (Ticking a text field such as EncounterID would put it in Rows instead.)\n"
                  f"5. Read the Cedar Ridge Medical Center row. The Grand Total is {t1_total:,}."),
              explanation=(
                  "The facility names live in DimFacility and the encounters live in FactEncounters. The PivotTable can split "
@@ -360,8 +375,9 @@ def build() -> Lesson:
                  "only the 2025 rows. The same measure gives the 2024 row and the grand total without any change. Set the "
                  "measure's format to Currency in the Measure dialog so every PivotTable that uses it shows dollars.")),
         Task("Create the measure Encounters = the number of rows in FactEncounters. How many encounters did the Emergency "
-             "Department at Cedar Ridge Medical Center have in Q3 2025? Filter DimFacility[FacilityName], "
-             "DimDepartment[DeptName] = Emergency Department, DimDate[Year] = 2025, and DimDate[Quarter] = Q3.",
+             "Department at Cedar Ridge Medical Center have in Q3 2025? Filter DimFacility[FacilityName] = Cedar Ridge "
+             "Medical Center, DimDepartment[DeptName] = Emergency Department, DimDate[Year] = 2025, and "
+             "DimDate[Quarter] = Q3.",
              answer=t3, live=x_t3, solution_lang="dax", title="Cedar Ridge ED encounters, Q3 2025",
              hint="COUNTROWS counts the rows of a table",
              solution=dax("Encounters := COUNTROWS(FactEncounters)",
@@ -422,8 +438,9 @@ def build() -> Lesson:
                  "ServiceDate. Those are the claims table's own relationships to the shared (conformed) dimensions, so one "
                  "PivotTable can show encounter measures and claim measures side by side. The || operator means OR, and "
                  "because both conditions test the same column, CALCULATE accepts it as a single filter. In Microsoft 365 you "
-                 "can also write FactClaims[ClaimStatus] IN {\"Denied\", \"Appealed\"}. DIVIDE returns a blank instead of "
-                 "#DIV/0! when a payer has no claims. Counting only the Denied status would give "
+                 "can also write FactClaims[ClaimStatus] IN {\"Denied\", \"Appealed\"}. DIVIDE returns a blank whenever "
+                 "the denominator is 0 or blank, where the / operator would return Infinity or NaN (DAX never shows "
+                 "#DIV/0!). Counting only the Denied status would give "
                  f"{t6_denied_only:.1%}.")),
         Task("Create Inpatient Stays = Encounters for EncounterType = Inpatient (build it on your Encounters measure), and "
              "Readmission Rate = the sum of FactEncounters[Readmit30] ÷ Inpatient Stays. What is the readmission rate for "
@@ -446,22 +463,23 @@ def build() -> Lesson:
              "2025, what share of the system's ED visits did Ashby Falls Community Hospital handle? Enter it as a percentage "
              "with 1 decimal place.",
              answer=t8, fmt="0.0%", live=x_t8, solution_lang="dax", title="Ashby Falls share of system ED visits, 2025",
-             hint="CALCULATE([ED Visits], REMOVEFILTERS(DimFacility)) or ALL(DimFacility)",
+             hint="CALCULATE([ED Visits], ALL(DimFacility)), or REMOVEFILTERS(DimFacility) in Microsoft 365",
              solution=dax("ED Visits := CALCULATE([Encounters], FactEncounters[EncounterType] = \"Emergency\")",
                           "% of System ED :=",
                           "DIVIDE(",
                           "    [ED Visits],",
-                          "    CALCULATE([ED Visits], REMOVEFILTERS(DimFacility))",
+                          "    CALCULATE([ED Visits], ALL(DimFacility))",
                           ")",
+                          "-- Microsoft 365 can also use REMOVEFILTERS(DimFacility) in place of ALL(DimFacility)",
                           "-- PivotTable: DimFacility[FacilityName] in Rows, DimDate[Year] = 2025 in Filters"),
              explanation=(
                  "In the Ashby Falls row, the numerator sees two filters: the facility and the year. The denominator uses "
-                 "REMOVEFILTERS(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits "
-                 "in the system. ALL(DimFacility) does the same job and works in every version of Excel, so use it if your Excel doesn't "
-                 "recognize REMOVEFILTERS. This is the DAX "
+                 "ALL(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits "
+                 "in the system. REMOVEFILTERS(DimFacility) does the same job and reads more clearly, but only Excel for "
+                 "Microsoft 365 recognizes it. ALL works in every version. This is the DAX "
                  "version of Show Values As → % of Column Total, with one big advantage: it's a real measure that you can "
                  "reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities "
-                 "through DimFacility. A filter on FactEncounters[FacilityID] would survive REMOVEFILTERS(DimFacility).")),
+                 "through DimFacility. A filter on FactEncounters[FacilityID] would survive ALL(DimFacility).")),
         Task("Create Stays Over Expected = the number of Inpatient encounters whose LOSDays is greater than the ExpectedLOS of "
              "their primary diagnosis in DimDiagnosis. Use FILTER over FactEncounters and RELATED. How many inpatient stays at "
              "Cedar Ridge Medical Center in 2025 ran longer than expected?",
@@ -544,7 +562,8 @@ def build() -> Lesson:
              explanation=(
                  f"In the 2025 row, SAMEPERIODLASTYEAR shifts the year's dates back one year, so ED Visits LY returns the 2024 "
                  f"count ({ed_f01[2024]:,}) next to the 2025 count ({ed_f01[2025]:,}). The 2024 row has no prior year in the "
-                 "data, so its LY value is blank and DIVIDE returns a blank instead of an error. The same measures work by "
+                 "data, so its LY value is blank and DIVIDE returns a blank. The / operator would show Infinity there. "
+                 "The same measures work by "
                  "quarter or by month without any change, because they shift whatever dates the cell contains. "
                  "CALCULATE([ED Visits], DATEADD(DimDate[Date], -1, YEAR)) gives the same result.")),
     ]
@@ -594,7 +613,7 @@ def build() -> Lesson:
              "Rows and DimDate[Year] = 2025, which provider is ranked 1? Enter the name exactly as it appears in "
              "DimProvider[ProviderName].",
              answer=b3, accept=[b3_id, b3_last_first], live=x_b3, solution_lang="dax", title="Top inpatient attending (RANKX), 2025",
-             hint="IF(HASONEVALUE(DimProvider[ProviderName]), RANKX(ALL(DimProvider[ProviderName]), [Inpatient Stays]))",
+             hint="RANKX(ALL(…), [measure]) ranks against every provider. HASONEVALUE is TRUE only on a single-provider row",
              solution=dax("Provider Rank :=",
                           "IF(",
                           "    HASONEVALUE(DimProvider[ProviderName]),",
@@ -611,7 +630,7 @@ def build() -> Lesson:
              "Stays evaluated through the inactive relationship FactEncounters[DischargeDate] → DimDate[Date]. How many "
              "inpatient discharges did the system have in December 2025?",
              answer=b4, live=x_b4, solution_lang="dax", title="Inpatient discharges, Dec 2025 (USERELATIONSHIP)",
-             hint="CALCULATE(…, USERELATIONSHIP(FactEncounters[DischargeDate], DimDate[Date]))",
+             hint="USERELATIONSHIP(many-side column, one-side column) goes inside CALCULATE as a filter argument",
              solution=dax("IP Discharges :=",
                           "CALCULATE(",
                           "    [Inpatient Stays],",
@@ -622,9 +641,8 @@ def build() -> Lesson:
                  "Only one relationship between two tables can be active, so the DischargeDate relationship is inactive (a "
                  "dashed line in Diagram View) and normally does nothing. USERELATIONSHIP switches it on for this one "
                  "calculation, so the December 2025 filter from DimDate now selects stays that were discharged in December. "
-                 f"In the same row, Inpatient Stays shows {b4_admits} admissions and IP Discharges shows {b4}. The two differ "
-                 "because stays admitted in November were discharged in December, and some December admissions were still "
-                 "in the hospital at midnight on 12/31. If the inactive relationship doesn't exist in your model, "
+                 f"In the same row, Inpatient Stays shows {b4_admits} admissions and IP Discharges shows {b4}. {b4_why} "
+                 "If the inactive relationship doesn't exist in your model, "
                  "USERELATIONSHIP returns an error, so create it first (see the Model Map).")),
     ]
 

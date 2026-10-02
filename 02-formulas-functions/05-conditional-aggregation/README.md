@@ -74,8 +74,8 @@ Text criteria follow four rules:
 - **The whole cell must match.** `"Medicare"` matches cells that say exactly Medicare, not Silverline Medicare Advantage. Section 8
   shows how wildcards match part of a cell.
 - **Upper and lower case don't matter.** "INPATIENT", "inpatient", and "Inpatient" all match.
-- **Spaces do matter.** A cell holding "Inpatient " with a trailing space doesn't match "Inpatient". Lesson 3.3 shows how to clean
-  that up.
+- **Spaces do matter.** A cell holding "Inpatient " with a trailing space doesn't match "Inpatient". TRIM (Lesson 2.2) removes the
+  extra spaces, and Lesson 3.3 covers cleaning a whole dataset.
 
 ### 2. Writing criteria: operators, cell references, and blanks
 
@@ -300,6 +300,9 @@ Here's how to read the examples:
 - **"E11.?"** allows exactly one character after the dot, so it matches E11.9 but not E11.65. Half of the diabetes encounters drop out.
 - **"???"** matches codes that are exactly three characters long: I10, R55, Z23, O80, and O82.
 - **"\*fracture\*"** finds the word fracture anywhere in the description, whether at the start, in the middle, or at the end.
+- **"\*~?\*"** puts a tilde in front of the question mark, so the `?` is a plain character instead of a wildcard. The criterion
+  finds descriptions that contain a real question mark. A literal asterisk works the same way: `"*~**"` finds cells that contain
+  an asterisk, and `"~*"` alone matches a cell holding just one asterisk.
 
 Wildcards are powerful, and that's the danger. `=COUNTIF(N2:N2725,"*Medicare*")` returns 987, because it catches Silverline Medicare
 Advantage (405 encounters) as well as Medicare (582). `=COUNTIF(D2:D2725,"Bluestone*")` returns 2,256, because two facilities start with
@@ -314,8 +317,8 @@ such as "Heart failure, unspecified" can pay less than a specific one. Add a con
 > ⚠️ **Wildcards only match text.** ICD-10 codes, MRNs, and ZIP codes stored as text work. A number, such as a charge of 4,250, doesn't
 > match `"4*"`. To test a number, use a numeric range such as `">=4000"` and `"<5000"`.
 
-> ⚠️ **Wildcards work in criteria, not in `=` comparisons.** `=K2="*sepsis*"` looks for a description that literally contains
-> asterisks, so it returns FALSE. Wildcards work in COUNTIF(S), SUMIF(S), AVERAGEIF(S), MAXIFS, MINIFS, and the lookup functions in
+> ⚠️ **Wildcards work in criteria, not in `=` comparisons.** `=K2="*sepsis*"` compares K2 with the exact text \*sepsis\*,
+> asterisks included, so it returns FALSE. Wildcards work in COUNTIF(S), SUMIF(S), AVERAGEIF(S), MAXIFS, MINIFS, and the lookup functions in
 > Lesson 2.6.
 
 ### 9. Date criteria
@@ -406,7 +409,8 @@ many hospital monthly reports are built.
 
 **Worked example: inpatient discharges by month and hospital.** On a new sheet, type the three hospital names in B4:D4. For the
 months, type 01/01/2025 in A5 and `=EDATE(A5,1)` in A6, then copy A6 down to A16, so column A holds the first day of every month of
-2025. The finished grid looks like this:
+2025. EDATE returns a serial number, so if A6:A16 show numbers such as 45689, format them as dates. The finished grid looks like
+this:
 
 |   | A | B | C | D |
 |---|---|--:|--:|--:|
@@ -480,7 +484,8 @@ all, because they only count.
 
 A few more rules apply to the whole family:
 
-- Text criteria ignore case. For a case-sensitive count, use EXACT inside SUMPRODUCT (Lesson 2.1).
+- Text criteria ignore case. For a case-sensitive count, use EXACT (Lesson 2.2) inside SUMPRODUCT (Lesson 2.1):
+  `=SUMPRODUCT(--EXACT(C2:C2725,"Inpatient"))`.
 - When the condition is a calculation on each row, such as the month of a date, LOSDays compared with a benchmark, or the length of a
   code, the -IFS functions can't do it directly. Add a helper column, or use SUMPRODUCT (Lesson 2.1) or FILTER (Lesson 4.1).
 
@@ -564,7 +569,7 @@ SUMIF tests one column (PayerName) and adds the matching rows of another (TotalC
 - **Answer:** 824,904.94
 - **Solution:** `=SUMIFS(Claims!G2:G2667,Claims!I2:I2667,"Denied",Claims!J2:J2667,"Authorization Required")`
 
-SUMIFS starts with the column to add, then lists range/criteria pairs. The status criterion matters: 88 claims carry the reason Authorization Required, but only 77 of them are still fully Denied. The others were partially paid or are under appeal.
+SUMIFS starts with the column to add, then lists range/criteria pairs. The status criterion matters: 88 claims carry the reason Authorization Required, but only 77 of them are still plain Denied. The other 11 are all under appeal (ClaimStatus = Appealed), so they don't belong in a Denied total.
 
 **5. Heart failure average length of stay**
 
@@ -663,7 +668,7 @@ Work on the **Bonus** sheet of the workbook.
 - **B2.** On the Scorecard sheet, fill columns B (adjudicated inpatient claims), C (denied inpatient claims), and D (denial rate) for all 8 payers, one formula per column copied down. A payer with no adjudicated inpatient claims must show n/a in column D instead of #DIV/0!. The gray cell shows the highest rate in your column D. (If it shows #DIV/0!, a row still needs the guard.) *(Hint: Adjudicated: "<>Pending". Denied: SUM(COUNTIFS(…,{"Denied","Appealed"})). Guard: IF(B5=0,"n/a",…))*
 - **B3.** Which payer has the highest inpatient denial rate? Type its PayerName. *(Hint: Compare the rates in column D)*
 - **B4.** Dollars at risk: what is the total BilledAmount of that payer's inpatient claims that are Denied or Appealed? *(Hint: The same OR trick works with SUMIFS)*
-- **B5.** Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer has none). How many more days, on average, does the payer from B3 take to pay an inpatient claim than Medicare does? Round to 1 decimal place. *(Hint: AVERAGEIFS on your DaysToPay column, wrapped in IFERROR for the payer with no claims)*
+- **B5.** Fill column E of the Scorecard with each payer's average DaysToPay for inpatient claims (show n/a when a payer has none). How many more days, on average, does the payer from B3 take to pay an inpatient claim than Medicare does? Subtract the full-precision averages (point at the cells instead of retyping the 1-decimal values that column E displays), then round the difference to 1 decimal place. *(Hint: AVERAGEIFS on your DaysToPay column, wrapped in IFERROR for the payer with no claims)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->

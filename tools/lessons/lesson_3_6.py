@@ -4,7 +4,8 @@ The lesson revolves around one model: a monthly operating (P&L) model for Bluest
 (D400, Bluestone Outpatient Pavilion). Its data-derived inputs come from the course datasets:
 
   * payer mix .......... share of 2025 D400 claims by payer group (claims.csv joined to encounters.csv)
-  * $ per visit ........ average AllowedAmount per 2025 D400 claim in each payer group (denials count as $0)
+  * $ per visit ........ average AllowedAmount per 2025 D400 claim in each payer group (denied and appealed claims,
+                         whose AllowedAmount is 0, count as $0)
   * hourly rates ....... median HourlyRate of ACTIVE employees by job title (employees.csv)
   * benefits load ...... 2025 D400 Employee Benefits / Salaries & Wages actuals (budget.csv)
   * supplies, vaccines . 2025 D400 Medical Supplies / Pharmaceuticals actuals per month / planned visits per month
@@ -22,8 +23,9 @@ Sheets
   Sources   where every data-derived input came from (an Excel Table).
 
 Self-test simulation (selftest=True only): the hook writes the learner's two Data Tables as real Excel data-table
-formulas (<f t="dataTable">, which LibreOffice evaluates) and puts the Solver LP optimum into the Staffing decision
-cells, so the self-test checks the workbook's own model against the Python answers. LibreOffice can't run a data table
+formulas (<f t="dataTable">, which LibreOffice evaluates), so the self-test checks the workbook's own model against the
+Python answers. The Solver answers are checked in the pristine key instead: task 12's live formula rebuilds the LP
+optimum in closed form from the Staffing sheet's cells, and task 13's from the Model. LibreOffice can't run a data table
 whose input cell sits inside a range argument (SUMPRODUCT(B14:B18,C14:C18) with input C17), so the self-test copy
 replaces that one formula with the identical explicit sum B14*C14+…+B18*C18. The learner's workbook keeps SUMPRODUCT.
 
@@ -33,6 +35,7 @@ Goal Seek break-even has a unique answer; the Solver answers come from an exact 
 """
 from __future__ import annotations
 
+import re
 import statistics
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal
@@ -122,6 +125,8 @@ def build() -> Lesson:
     claims = [c for c in data.load("claims")
               if enc[c["EncounterID"]]["DeptID"] == "D400" and c["ServiceDate"].year == 2025]
     n_claims = len(claims)
+    # the Sources text says denied and appealed claims carry AllowedAmount 0 (and only they do)
+    assert all((c["AllowedAmount"] == 0) == (c["ClaimStatus"] in ("Denied", "Appealed")) for c in claims)
     g_count, g_allowed = defaultdict(int), defaultdict(float)
     for c in claims:
         g = GROUP_OF[c["PayerID"]]
@@ -223,6 +228,8 @@ def build() -> Lesson:
     n_profitable = sum(1 for v in dt2.values() if v > 0)
     dt2_first = {x: min(v for v in DT2_VISITS if dt2[(v, x)] > 0) for x in DT2_RATES}
     assert min(abs(v) for v in dt2.values()) > 100 and min(abs(d["oi"]) for d in dt1.values()) > 100
+    # task 8 explanation: with swapped input cells, the (200 visits, $140) cell would show 140 visits at $200
+    assert model(dict(with_commercial_rate(200), vpd=140))["oi"] < dt2[(VISITS_PER_DAY, 140)] - 20000
 
     # ---------------------------------------------------------------- Scenario answers
     scen = {k: model(with_scenario(s)) for k, s in SCENARIOS.items()}
@@ -281,6 +288,11 @@ def build() -> Lesson:
         return sols
 
     lp_cost, lp_x = lp_min(staffing_constraints(VISITS_PER_DAY, None))
+    # the task 12 live formula assumes this vertex: licensed FTEs = licensed hours / 168, split at the RN minimum,
+    # and CNAs cover the rest of the support hours
+    _lic = VISITS_PER_DAY * CLINIC_DAYS * F(LICENSED_HRS_PER_VISIT) / HOURS_PER_FTE
+    assert lp_x == (F(RN_MIN_SHARE) * _lic, (1 - F(RN_MIN_SHARE)) * _lic,
+                    VISITS_PER_DAY * CLINIC_DAYS * (F(SUPPORT_HRS_PER_VISIT) - F(LICENSED_HRS_PER_VISIT)) / HOURS_PER_FTE)
     # shadow price of the total-hours constraint: re-solve with one more required hour
     cons_plus = staffing_constraints(VISITS_PER_DAY, None)
     cons_plus[0] = (cons_plus[0][0], cons_plus[0][1] + 1)
@@ -347,8 +359,8 @@ def build() -> Lesson:
                 "point so the five shares total exactly 100%", "claims.csv + encounters.csv (DeptID D400)")
     for g in GROUPS:
         add_src(f"{GROUP_LABEL[g]}: $ per visit", f"C{payer_row[g]}", f"${rate[g]}",
-                f"Average AllowedAmount per 2025 D400 claim = ${avg_allowed[g]:,.2f} (denied claims count as $0), "
-                "rounded to the dollar", "claims.csv")
+                f"Average AllowedAmount per 2025 D400 claim = ${avg_allowed[g]:,.2f} (denied and appealed claims carry an "
+                "AllowedAmount of $0 and count as $0), rounded to the dollar", "claims.csv")
     for label, row, val, n_, title in (("RN hourly rate", R["rn_rate"], rn_rate, n_rn, "Registered Nurse"),
                                        ("LPN hourly rate", R["lpn_rate"], lpn_rate, n_lpn, "Licensed Practical Nurse"),
                                        ("CNA hourly rate", R["cna_rate"], cna_rate, n_cna, "Certified Nursing Assistant"),
@@ -383,8 +395,8 @@ def build() -> Lesson:
     L.practice_intro = (
         "Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model live, so their checks stay green "
         f"only while the Model holds its base-case inputs ({VISITS_PER_DAY} visits per day, Commercial ${rate['Commercial']}, and so on). After each "
-        "what-if run, put the original values back: click Cancel in the Goal Seek Status box, and choose Restore Original "
-        "Values in the Solver Results box.")
+        "Goal Seek run, click Cancel in the Goal Seek Status box so the Model keeps those inputs. The Staffing sheet doesn't "
+        "feed the Model, so you can keep Solver's solutions there.")
 
     t_oi = Task(
         f"On the Model sheet, complete the yellow Operating income cell ({OI}): net patient revenue minus total operating "
@@ -432,8 +444,12 @@ def build() -> Lesson:
         answer=round(breakeven_vpd, 1), fmt="0.0", tol=0.051, title="Goal Seek: break-even visits per day",
         solution=f"1. Choose **Data → What-If Analysis → Goal Seek**.\n"
                  f"2. **Set cell:** `{OI}` · **To value:** `0` · **By changing cell:** `B{R['vpd']}`.\n"
-                 f"3. Click **OK**. B{R['vpd']} shows about {breakeven_vpd:.4f}. Note it, then click **Cancel**.",
-        live=f"=ROUND({m('vpd')}-({m('rev')}-{m('exp')})/(({m('avg')}*(1-{m('fee')})-{m('sup')}-{m('vac')})*{m('days')}),1)",
+                 f"3. Click **OK**. B{R['vpd']} shows {breakeven_vpd:.1f} (the cell holds {breakeven_vpd:.4f}…). Note it, "
+                 "then click **Cancel**.",
+        # The fee rate is read as B52/B44 (fee ÷ revenue), never from the fee input B36: task 3 relies on B36 having
+        # no dependents at all, and Excel's Trace Dependents would draw an arrow to this hidden key otherwise.
+        live=f"=ROUND({m('vpd')}-({m('rev')}-{m('exp')})/(({m('avg')}*(1-{m('c_fee')}/{m('rev')})-{m('sup')}-{m('vac')})"
+             f"*{m('days')}),1)",
         hint="Data → What-If Analysis → Goal Seek",
         explanation=f"Each extra visit per day adds one visit on each of the {CLINIC_DAYS} clinic days. Each of those visits brings "
                     f"in {money2(base['cm'])} after the billing fee, supplies, and vaccines (its **contribution margin**). "
@@ -451,7 +467,8 @@ def build() -> Lesson:
         solution=f"1. **Data → What-If Analysis → Goal Seek**.\n"
                  f"2. **Set cell:** `{MARGIN}` · **To value:** `0.05` · **By changing cell:** `C{COM_ROW}`.\n"
                  f"3. Click **OK**, read C{COM_ROW}, and click **Cancel**.",
-        live=(f"=Model!C{COM_ROW}+(({m('exp')}-{m('c_fee')})/(1-{m('fee')}-0.05)/{m('vpm')}-{m('avg')})/Model!B{COM_ROW}"),
+        live=(f"=Model!C{COM_ROW}+(({m('exp')}-{m('c_fee')})/(1-{m('c_fee')}/{m('rev')}-0.05)/{m('vpm')}-{m('avg')})"
+              f"/Model!B{COM_ROW}"),
         hint="The Set cell must contain a formula, so use the margin cell",
         explanation=f"Commercial plans would have to pay about {money(comm_rate_5)} instead of ${rate['Commercial']}, an increase of "
                     f"{comm_rate_5 / rate['Commercial'] - 1:.0%}. Only {s_c:.1%} of visits are commercial, so each extra "
@@ -477,7 +494,8 @@ def build() -> Lesson:
         hint="Read the table, or let MINIFS find it",
         explanation=f"The table jumps in steps of 5, so it brackets the break-even point instead of finding it: "
                     f"{first_profit - 5} visits loses money and {first_profit} makes money, which agrees with Goal Seek's "
-                    f"{breakeven_vpd:.1f}. Use a Data Table to see the whole curve, and Goal Seek to pin down the exact crossing.")
+                    f"{breakeven_vpd:.1f}. Use a Data Table to see the whole curve, and Goal Seek to pin down the exact crossing. "
+                    "MINIFS needs Excel 2019 or later. In older versions, read the value off the table and type it.")
     t_dt2 = Task(
         f"Build the two-variable Data Table: put =B{R['oi']} in the corner cell F{DT2_CORNER}, select "
         f"F{DT2_CORNER}:K{DT2_LAST}, and use Row input cell C{COM_ROW} (commercial $ across row {DT2_CORNER}) and Column "
@@ -489,9 +507,11 @@ def build() -> Lesson:
         explanation=f"A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value "
                     f"into the **row** input cell (C{COM_ROW}) and each left-column value into the **column** input cell "
                     f"(B{R['vpd']}), and fills every intersection. If you swap the two input cells, the table still fills "
-                    f"without any warning, but with wrong numbers. So check one cell by hand: at {VISITS_PER_DAY} visits and $140 the "
-                    f"result should be close to the base case ({money(base['oi'])}), because the base case is {VISITS_PER_DAY} "
-                    f"visits at ${rate['Commercial']}.")
+                    f"without any warning, but with wrong numbers. So check one cell by hand. The base case is {VISITS_PER_DAY} "
+                    f"visits at ${rate['Commercial']} ({money(base['oi'])}), so the cell at {VISITS_PER_DAY} visits and $140 should "
+                    f"be about {money(base['oi'] - dt2[(VISITS_PER_DAY, 140)])} lower: $2 less on each of the "
+                    f"{s_c:.1%} of visits that are commercial, after the {BILLING_FEE:.0%} fee. With swapped input cells that "
+                    "cell would show 140 visits a day at $200, a far bigger loss.")
     t_dtcount = Task(
         f"How many of the 45 combinations in your two-variable table (G{DT2_FIRST}:K{DT2_LAST}) are profitable (operating "
         "income above 0)? Use a formula.",
@@ -540,16 +560,27 @@ def build() -> Lesson:
         f"(leave out the CNA cap in row {S['c_cap']}). Keep Make Unconstrained Variables Non-Negative ticked and choose "
         "Simplex LP. What is the minimum monthly cost? Round to the nearest dollar.",
         answer=round(float(lp_cost)), tol=0.51, fmt="#,##0", title="Solver: lowest-cost staffing mix (FTEs)",
-        solution=f"=Staffing!B{S['objective']}", live=False,
+        solution=f"1. Choose **Data → Solver**.\n"
+                 f"2. **Set Objective:** `$B${S['objective']}` · **To:** Min · **By Changing Variable Cells:** "
+                 f"`$B${S['rn']}:$B${S['cna']}`.\n"
+                 f"3. Click **Add** and enter `$B${S['c_total']}:$B${S['c_rn']}` **>=** `$D${S['c_total']}:$D${S['c_rn']}`, "
+                 "then click **OK**.\n"
+                 "4. Leave **Make Unconstrained Variables Non-Negative** ticked, choose **Simplex LP**, and click **Solve**.\n"
+                 f"5. Choose **Keep Solver Solution**, click **OK**, and type the value of B{S['objective']}, rounded to the "
+                 "dollar, in the answer cell.",
+        # Live check: the LP optimum in closed form, read from the Staffing sheet's own cells. Licensed FTEs cover the
+        # licensed hours exactly and split at the RN minimum; CNAs cover the remaining support hours.
+        live=(f"=Staffing!B{S['vpm']}*Staffing!B{S['lic_hpv']}/Staffing!B{S['hrs']}*(Staffing!B{S['rn_share']}"
+              f"*Staffing!D{S['rn']}+(1-Staffing!B{S['rn_share']})*Staffing!D{S['lpn']})+Staffing!B{S['vpm']}"
+              f"*(Staffing!B{S['sup_hpv']}-Staffing!B{S['lic_hpv']})/Staffing!B{S['hrs']}*Staffing!D{S['cna']}"),
         hint="Data → Solver (enable the Solver add-in first)",
-        explanation=f"Solver parameters: **Set Objective** `$B${S['objective']}`, **To** Min, **By Changing Variable Cells** "
-                    f"`$B${S['rn']}:$B${S['cna']}`, **Subject to the Constraints** `$B${S['c_total']}:$B${S['c_rn']} >= "
-                    f"$D${S['c_total']}:$D${S['c_rn']}`, Simplex LP. Then keep the solution and point at (or type) "
-                    f"B{S['objective']}. Solver chooses {float(lp_x[0]):.1f} RN, {float(lp_x[1]):.1f} LPN and "
+        explanation=f"Solver chooses {float(lp_x[0]):.1f} RN, {float(lp_x[1]):.1f} LPN and "
                     f"{float(lp_x[2]):.1f} CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every "
                     "hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN "
                     f"minimum, because LPNs cost less than RNs. Today's 5/3/8 staffing costs {money(float(current_cost))}, so "
-                    f"the plan saves about {money(float(current_cost - lp_cost))} a month.")
+                    f"the plan saves about {money(float(current_cost - lp_cost))} a month. Type the number rather than "
+                    f"pointing at B{S['objective']}, because the bonus runs Solver on the same sheet again. The key's live "
+                    "result rebuilds this optimum with algebra from the Staffing sheet's own cells.")
     t_shadow = Task(
         f"Run Solver again (same setup) and select Sensitivity under Reports before you click OK. On the Sensitivity Report "
         f"sheet, what is the Shadow Price of the Total support hours constraint (Staffing!B{S['c_total']})? Enter it in "
@@ -638,8 +669,8 @@ def build() -> Lesson:
         "complete two yellow output cells and build two Data Tables in the Sensitivity area (columns F–K).",
         "Staffing is a Solver worksheet. The green cells are the decision variables that Solver changes. Sources lists where "
         "every data-derived input came from.",
-        "Goal Seek, Scenario Manager, and Solver change input cells. Put the base case back after each run so the other "
-        "tasks stay correct.",
+        "Goal Seek and Scenario Manager's Show button change the Model's input cells. Put the base case back after each run "
+        "so the other tasks stay correct. Solver only changes the Staffing sheet, which doesn't feed the Model.",
         "Solver is a free add-in that ships with Excel. Turn it on once: File → Options → Add-ins → Manage: Excel Add-ins → "
         "Go → tick Solver Add-in (Mac: Tools → Excel Add-ins).",
     ]
@@ -660,7 +691,7 @@ def build() -> Lesson:
         ("lpn", "LPN FTEs", LPN_FTE, "0.0", "FTE", "Current staffing"),
         ("cna", "CNA FTEs", CNA_FTE, "0.0", "FTE", "Current staffing"),
         ("fd", "Front desk & admin FTEs", FD_FTE, "0.0", "FTE", "Current staffing"),
-        ("hrs", "Paid hours per FTE per month", HOURS_PER_FTE, "0", "hours", "8-hour day × 21 clinic days"),
+        ("hrs", "Paid hours per FTE per month", HOURS_PER_FTE, "0", "hours", "Full-time paid hours per month (plan)"),
         ("md_sal", "Physician salary per FTE", MD_SALARY, "#,##0", "$/month", "FY2026 compensation plan"),
         ("app_sal", "APP salary per FTE", APP_SALARY, "#,##0", "$/month", "FY2026 compensation plan"),
         ("rn_rate", "RN hourly rate", rn_rate, MONEY2, "$/hour", "Median of active RNs (Sources)"),
@@ -985,6 +1016,19 @@ def build() -> Lesson:
                 c.alignment = Alignment(wrap_text=True, vertical="top")
         fit(so)
 
+        # Task 3 and the guide promise that Trace Dependents on the fee input finds no formulas at all, so nothing in the
+        # workbook (including the hidden keys) may read Model!B36 until the learner fixes the hard-coded fee.
+        same_sheet = re.compile(rf"(?<![A-Za-z$!])\$?B\$?{R['fee']}(?!\d)")
+        other_sheet = re.compile(rf"Model!\$?B\$?{R['fee']}(?!\d)|\bBillingFeePct\b")
+        for sh in wb.worksheets:
+            for row in sh.iter_rows():
+                for c in row:
+                    f = c.value.text if hasattr(c.value, "text") else c.value
+                    if c.data_type != "f" and not hasattr(c.value, "text") or not isinstance(f, str):
+                        continue
+                    assert not other_sheet.search(f) and not (sh.title == "Model" and same_sheet.search(f)), \
+                        f"{sh.title}!{c.coordinate} reads the fee input: {f}"
+
         # ------------------------------------------------------------------ self-test: simulate the learner's work
         if selftest:
             # LibreOffice's data-table engine (MULTIPLE.OPERATIONS) returns Err:504 when an input cell sits inside a
@@ -997,7 +1041,5 @@ def build() -> Lesson:
             lesson.set_formula(ws, f"F{DT2_CORNER}", f"=B{R['oi']}", dynamic=False)
             ws[f"G{DT2_FIRST}"] = DataTableFormula(ref=f"G{DT2_FIRST}:K{DT2_LAST}", dt2D=True,
                                                    r1=f"C{COM_ROW}", r2=f"B{R['vpd']}")
-            for key, x in zip(("rn", "lpn", "cna"), lp_x):
-                st[f"B{S[key]}"] = float(x)
 
     return L

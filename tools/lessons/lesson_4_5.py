@@ -363,7 +363,8 @@ def build() -> Lesson:
     w_t = t_inv_2t(0.05, w_n - 1)
     ci_half = w_t * w_sd / math.sqrt(w_n)
     ci_norm = norm_s_inv(0.975) * w_sd / math.sqrt(w_n)
-    ci_wrong_n = w_t * w_sd / math.sqrt(len(w_all))          # if n counted the blank (LWBS) rows too
+    # if size counted the blank (LWBS) rows too: CONFIDENCE.T(0.05, s, ROWS(...)) uses t with ROWS-1 df
+    ci_wrong_n = t_inv_2t(0.05, len(w_all) - 1) * w_sd / math.sqrt(len(w_all))
     assert abs(ci_half - ci_norm) > 0.012, "CONFIDENCE.NORM must fail the check"
 
     # 10 · trailing 7-day moving average: the busiest week of 2025 at Memorial
@@ -530,8 +531,10 @@ def build() -> Lesson:
              explanation=f"{w_n} patients saw a provider. Their mean wait was {w_mean:.2f} minutes with a standard deviation of "
                          f"{w_sd:.2f}. The margin is t × s ÷ √n = {w_t:.4f} × {w_sd:.2f} ÷ √{w_n} = {ci_half:.2f}, so the 95% "
                          f"confidence interval is {w_mean - ci_half:.1f} to {w_mean + ci_half:.1f} minutes. Use COUNT, not "
-                         f"ROWS or COUNTA: the {len(w_all) - w_n} blank rows aren't measurements, and counting them gives "
-                         f"{ci_wrong_n:.2f}. `CONFIDENCE.NORM` (and the old `CONFIDENCE`) uses 1.96 instead of t and gives "
+                         f"ROWS: ROWS also counts the {len(w_all) - w_n} blank rows, which aren't measurements, and gives "
+                         f"{ci_wrong_n:.2f}. COUNTA agrees with COUNT here only because the blank cells are truly empty. It "
+                         "would also count a text entry such as \"LWBS\" if an export had one. "
+                         f"`CONFIDENCE.NORM` (and the old `CONFIDENCE`) uses 1.96 instead of t and gives "
                          f"{ci_norm:.2f}, slightly too narrow. The ToolPak's \"Confidence Level(95.0%)\" row is CONFIDENCE.T."),
         Task(f"A trailing 7-day moving average smooths out the weekday pattern. What was the 7-day moving average of "
              f"Memorial's daily arrivals on {ma_date:%m/%d/%Y} (that day and the 6 days before it)? Enter it to 2 decimal "
@@ -659,7 +662,8 @@ def build() -> Lesson:
              answer=len(outside),
              solution=f"=SUMPRODUCT(--({out_test}))",
              live=f"=SUMPRODUCT(--({out_test_live}))",
-             hint="Compare each month's rate with its own limits. A helper column of UCL and LCL, then COUNTIFS, works",
+             hint="Compare each month's rate with its own limits. Helper columns for the rate, UCL, LCL, and a TRUE/FALSE "
+                  "flag, then COUNTIF the flags, works. So does one SUMPRODUCT",
              explanation="Only one month signals, and it falls below its LCL. No month is above its UCL. "
                          "`ABS(rate − p̄) > 3σ` catches both directions in one test because "
                          "every LCL here is above zero. When n is small, p̄ − 3σ can go negative and the LCL is set to 0, so "

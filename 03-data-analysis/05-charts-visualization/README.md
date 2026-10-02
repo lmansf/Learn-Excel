@@ -88,7 +88,9 @@ button controls two behaviors that surprise people:
 - Empty cells can show as gaps, as zero, or (for lines) as a line connecting the neighbors.
 
 > 💡 **Tip:** Build charts from an Excel Table (Lesson 3.1). When you add a row to the Table, every chart that uses its
-> columns extends automatically. A chart built on a fixed range such as `A1:D25` ignores row 26.
+> columns extends automatically, even if you selected the cells by address. A chart built on a plain range that isn't a
+> Table ignores a new row 26 until you edit its data in **Select Data**. Every data sheet in this lesson's workbook is a
+> Table.
 
 ### 3. Chart anatomy and the Format pane
 
@@ -244,7 +246,7 @@ gaps between them. Select one column of numbers (with its header) and choose **I
 
 | Bins option | What it does |
 |---|---|
-| **By Category** | Counts text categories instead of binning numbers |
+| **By Category** | Groups identical text categories and adds up their values, instead of binning numbers |
 | **Automatic** | Excel chooses the bin width (using Scott's normal reference rule) |
 | **Bin width** | Makes every bin this wide, for example 1 day |
 | **Number of bins** | Divides the range into this many equal bins |
@@ -443,7 +445,9 @@ keep a readable format. Without TEXT, a date shows up as its serial number and a
 ="Highest 30-day readmission rate: "&XLOOKUP(MAX(tblReadmits[ReadmitRate]),tblReadmits[ReadmitRate],tblReadmits[ServiceLine])&" ("&TEXT(MAX(tblReadmits[ReadmitRate]),"0.0%")&")"
 ```
 
-This returns *Highest 30-day readmission rate: Cardiovascular (18.4%)*. Useful TEXT format codes for titles:
+This returns *Highest 30-day readmission rate: Cardiovascular (18.4%)*. XLOOKUP needs Microsoft 365 or Excel 2021 or later.
+In older versions, use `INDEX(tblReadmits[ServiceLine],MATCH(MAX(tblReadmits[ReadmitRate]),tblReadmits[ReadmitRate],0))`
+instead (Lesson 2.6). Useful TEXT format codes for titles:
 
 | Format code | Example result |
 |---|---|
@@ -503,8 +507,9 @@ this lesson's Chart Key use it:
 | Bluish green | `#009E73` | Reddish purple | `#CC79A7` |
 | Yellow | `#F0E442` | Black | `#000000` |
 
-To apply one, select the element and choose **Format → Shape Fill → More Colors** (Mac: **More Fill Colors**), then enter
-the hex code. Microsoft 365 has a **Hex** box in that dialog. For quick monochrome sets, use **Chart Design → Change
+To apply one, select the element and choose **Format → Shape Fill → More Fill Colors**, then enter the hex code. On Windows,
+Microsoft 365 has a **Hex** box on the dialog's **Custom** tab. On a Mac, the color picker opens: choose its sliders tab, then
+**RGB Sliders**, and type the code in **Hex Color #**. For quick monochrome sets, use **Chart Design → Change
 Colors**.
 
 **Add alt text.** **Alt text** is a short description that screen readers announce. Right-click the chart → **Edit Alt
@@ -601,14 +606,14 @@ Each task names the sheet to work on. Build each chart on the same sheet as its 
 | 10 | On Denials, select A1:B8 (DenialReason and Claims) and insert a Pareto chart. What cumulative percentage does the line reach at the second bar (the top two reasons together)? Enter it as a percentage to 1 decimal place. | Insert → Insert Statistic Chart → Pareto. Confirm with LARGE and SUM |
 | 11 | On Budget, select A4:B14 and insert a waterfall chart. Set the first and last bars as totals. Which step is the largest drop (the longest downward bar)? Type the Step name as it appears in the table. | Insert → Insert Waterfall, Funnel, Stock, Surface, or Radar Chart → Waterfall. Right-click a bar → Set as Total |
 | 12 | On ED_Monthly, insert line sparklines in the yellow cells B27:D27 (Data Range B2:D25), one per hospital. Turn on First Point and Last Point markers. For how many of the three hospitals is the last point (Dec 2025) higher than the first point (Jan 2024)? | Insert → Sparklines → Line. Then the Sparkline tab → Show → First Point, Last Point |
-| 13 | Write a formula in the yellow cell that builds this chart title from tblEDMonthly: ED visits by facility, <first month> to <last month> (<total visits> visits). Show each month as a three-letter month and year, and the total with a thousands separator. Example of the pattern: ED visits by facility, Mar 2023 to Feb 2024 (9,876 visits). Then link your line chart's title to this cell. | TEXT(MIN(…),"mmm yyyy") and TEXT(SUM(…),"#,##0"), joined with & |
+| 13 | Write a formula in the yellow cell that builds this chart title from tblEDMonthly: ED visits by facility, [first month] to [last month] ([total visits] visits). Show each month as a three-letter month and year, and the total with a thousands separator. Example of the pattern: ED visits by facility, Mar 2023 to Feb 2024 (9,876 visits). Then link your line chart's title to this cell. | TEXT(MIN(…),"mmm yyyy") and TEXT(SUM(…),"#,##0"), joined with & |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
 
-The workbook has two hidden key sheets (right-click any sheet tab → **Unhide…**). The **Answer Key** lists every answer, and
-its *Live result* column runs a formula that confirms each chart reading. The **Chart Key** shows a reference version of
-every chart. The same answers are below, collapsed so you don't see them by accident.
+The workbook has three hidden key sheets (right-click any sheet tab → **Unhide…**). The **Answer Key** and **Bonus Key**
+list every answer, and their *Live result* column runs a formula that confirms each chart reading. The **Chart Key** shows a
+reference version of every chart. The same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
@@ -659,7 +664,7 @@ A bar chart plots the first category next to the origin, which is the bottom of 
 
 1. Each bar is drawn up from the axis minimum, so its height is its rate minus 5%.
 2. (0.1836 − 0.05) ÷ (0.0639 − 0.05) = **9.6**.
-3. Fix the chart: double-click the vertical axis, and in **Format Axis → Axis Options → Bounds** set **Minimum** to `0` (or click **Reset** so Excel chooses 0). Turn off **Vary colors by point** (**Format Data Series → Fill**), delete the legend, add data labels, and give the chart a title that states the finding.
+3. Fix the chart: double-click the vertical axis, and in **Format Axis → Axis Options → Bounds** set **Minimum** to `0` (or click **Reset** so Excel chooses 0). Turn off **Vary colors by point** (**Format Data Series → Fill & Line → Fill**), delete the legend, add data labels, and give the chart a title that states the finding.
 
 
 The real ratio is 18.4% ÷ 6.4% = 2.9, but the truncated chart draws the Cardiovascular bar 9.6 times as tall. A bar's length is how readers judge its value, so every bar and column chart needs a value axis that starts at zero. Line charts are different: their message is in the slope, so a line chart's axis may start above zero as long as it's labeled. The other problems on the Makeover chart (rainbow colors and a legend that repeats the axis labels) add color without adding information. Cross-check with a formula: `=(MAX(tblReadmits[ReadmitRate])-0.05)/(MIN(tblReadmits[ReadmitRate])-0.05)`
@@ -683,7 +688,7 @@ Excel computes each slice's percentage itself: 4,198 ÷ 11,145 = 37.7%. The defa
 - **Solution:**
 
 1. On **Stays**, select **D1:D301** (the LOSDays column with its header).
-2. Choose **Insert → Insert Statistic Chart → Histogram** (Mac: **Insert → Statistical chart → Histogram**).
+2. Choose **Insert → Insert Statistic Chart → Histogram**. On a Mac, the same Statistic Chart button is on the Insert tab.
 3. Double-click the horizontal axis. Under **Axis Options → Bins**, choose **Bin width** `1`, tick **Overflow bin** and type `10`, and tick **Underflow bin** and type `1`.
 4. Hover over the last column, labeled **>10**.
 
