@@ -628,7 +628,11 @@ class Lesson:
                 sheet, rng = t.fill["range"].split("!")
                 sheet = sheet.strip("'")
                 target = wb[sheet]
-                cells = [c for row in target[rng.replace("$", "")] for c in row]
+                block = target[rng.replace("$", "")]
+                if not isinstance(block, tuple):
+                    cells = [block]
+                else:
+                    cells = [c for row in block for c in (row if isinstance(row, tuple) else (row,))]
                 if "values" in t.fill:
                     for c, v in zip(cells, t.fill["values"]):
                         c.value = v
@@ -843,3 +847,4 @@ def _add_dynamic_array_metadata(path: Path, cells: set[tuple[str, str]]):
         if "xl/metadata.xml" not in zin.namelist():
             zout.writestr("xl/metadata.xml", _METADATA_XML)
     shutil.move(str(tmp), str(path))
+    path.chmod(0o644)

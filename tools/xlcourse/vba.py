@@ -13,7 +13,9 @@ What works in LibreOffice (tested): Worksheets/ThisWorkbook/Range/Cells/Offset/R
 End(xlUp) last-row idiom, Worksheets.Add/Name, loops, Select Case, MsgBox suppressed, InStr/Left/Format,
 Application.WorksheetFunction.Sum/CountIf/…, user-defined functions called from cells.
 What does NOT work: CreateObject("Scripting.Dictionary") and other Windows COM objects, UserForms, Outlook,
-some formatting/printing members, ExportAsFixedFormat. A failure here is a hint to double-check the code,
+ListObjects, the Worksheet.Sort object (use Range.Sort in a smoke-test copy), Worksheet.AutoFilterMode = False,
+multi-area Range.Copy, Worksheet.Copy into a new workbook, ExportAsFixedFormat, and Debug.Print (raises error 91 in
+LibreOffice even though the rest of the macro ran — such errors are annotated in the result). A failure here is a hint to double-check the code,
 not proof that it fails in Excel — and a pass is strong (not absolute) evidence it works in Excel.
 """
 from __future__ import annotations
@@ -53,10 +55,11 @@ def run(workbook: str | Path, modules: list[str | Path], macros: list[str], read
         wb_path = ROOT / wb_path
     codes = []
     for m in modules:
-        p = Path(m) if not isinstance(m, Path) else m
-        if isinstance(m, str) and ("\n" in m or "Sub " in m or "Function " in m) and not p.suffix:
-            codes.append(_clean_module(m))
-        else:
+        if isinstance(m, str) and ("\n" in m or "Sub " in m or "Function " in m):
+            codes.append(_clean_module(m))  # inline code string
+            continue
+        p = Path(m)
+        if True:
             if not p.is_absolute():
                 p = ROOT / p
             codes.append(_clean_module(p.read_text(encoding="utf-8-sig")))
@@ -114,11 +117,13 @@ End Sub""")
             log = doc.Sheets.getByName("XlcLog")
             r = 0
             while log.getCellByPosition(0, r).getString() or (r == 0 and log.getCellByPosition(1, 0).getString()):
-                if not log.getCellByPosition(0, r).getString():
-                    r += 1
-                    continue
-                result["errors"].append(log.getCellByPosition(0, r).getString())
+                msg = log.getCellByPosition(0, r).getString()
                 r += 1
+                if not msg:
+                    continue
+                if ": error 91:" in msg:
+                    msg += " (if the macro uses Debug.Print, this is LibreOffice's known Debug.Print limitation — check the output cells)"
+                result["errors"].append(msg)
             doc.Sheets.removeByName("XlcLog")
             result["sheets"] = [doc.Sheets.getByIndex(i).Name for i in range(doc.Sheets.Count)]
             for sheet, addr in read:

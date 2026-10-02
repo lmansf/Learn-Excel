@@ -1,0 +1,5 @@
+*.bas -text
+*.cls -text
+*.frm -text
+*.xlsx binary
+*.xlsm binary

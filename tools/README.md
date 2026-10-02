@@ -144,6 +144,18 @@ without rereading.
   with 2–5 parts that is clearly harder: multi-step, realistic, combining skills.
 - `solution_lang="vba" | "m" | "dax"` renders the solution as a code block in the README.
 
+## Excel vs. LibreOffice pitfalls the verifier can't catch
+
+LibreOffice is only a stand-in for Excel, and a few behaviors differ. Write summaries and checks that are correct in **Excel**:
+
+- **`COUNTA(INDIRECT("'Missing'!A:A"))`** returns `#REF!` in LibreOffice but **1** in Excel, because COUNTA counts the
+  error value. To test whether a macro-created sheet exists, use `ISREF(INDIRECT("'Sheet'!A1"))` and wrap the summary:
+  `=IF(NOT(ISREF(INDIRECT("'HighAcuity'!A1"))),"",COUNTA(INDIRECT("'HighAcuity'!A:A"))-1)`.
+- **COUNT and COUNTA with error arguments** differ between the two apps. Don't pass possibly-erroring expressions to
+  them directly.
+- In VBA smoke tests, LibreOffice raises error 91 on `Debug.Print` and has no `Worksheet.Sort`, `ListObjects`, or
+  `Scripting.Dictionary`. See `xlcourse/vba.py` for the full list.
+
 ## Data sheets
 
 `lesson.add_table_sheet(name, rows, columns=[...], table="tblX", extra_cols=[...], formats={...}, widths={...})`
