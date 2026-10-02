@@ -416,9 +416,10 @@ def build() -> Lesson:
                          f"{sL['Minutes'] % 60} minutes. `[h]` shows *elapsed* hours. Plain `h:mm` would show "
                          f"`{(sL['Minutes'] // 60) % 24}:{sL['Minutes'] % 60:02d}`, the clock time, because ordinary hours roll back to "
                          "0 every 24 hours. Use `[h]:mm` for any duration that can pass a day: LOS, shift hours, ED boarding time."),
-        Task(f"Column G (LOS vs Expected) stores LOS minus the diagnosis's expected LOS, in days. Write a two-section custom format "
-             f"for G{S_FIRST}:G{S_LAST}: positive values in red with a plus sign and the word days (like +2.1 days), and negative "
-             f"values with a minus sign (like -0.4 days), each with one decimal. What does G{S_FIRST + neg_i} display?",
+        Task(f"Column G (LOS vs Expected) stores LOS minus the diagnosis's expected LOS, in days, so a positive value means the "
+             f"patient stayed longer than expected. Write a two-section custom format for G{S_FIRST}:G{S_LAST}: positive values in red "
+             f"with a plus sign and the word days (like +2.1 days), and negative values with a minus sign (like -0.4 days), each with "
+             f"one decimal. What does G{S_FIRST + neg_i} display?",
              answer=show_days_signed(sN["VsExpected"]), fmt="@", title="Two sections, a color, and a unit",
              solution=f"1. Select **Stays!G{S_FIRST}:G{S_LAST}** and press **Ctrl + 1** (Mac: **⌘ + 1**).\n"
                       f"2. Choose **Custom**, type `{DAYS_SIGNED}`, and click **OK**.\n"
@@ -452,10 +453,12 @@ def build() -> Lesson:
              f"(4) add All Borders to A{B_HDR}:F{B_TOTAL}; "
              f"(5) apply the Total cell style to A{B_TOTAL}:F{B_TOTAL}; (6) select A{B_HDR}:F{B_TOTAL} and AutoFit the columns "
              f"with Home → Format → AutoFit Column Width. "
-             f"Then zoom in on row {B_TOTAL}: what kind of line does the Total style draw along the bottom of the row?",
+             f"Then zoom in on row {B_TOTAL}: what kind of line does the Total style draw along the bottom of the row? "
+             f"Answer in a word or two.",
              answer="double", fmt="@",
              accept=["double line", "a double line", "double border", "a double border", "double bottom border",
-                     "double underline", "double-line", "two lines", "2 lines", "double lines"],
+                     "a double bottom border", "bottom double border", "double line border", "double underline",
+                     "double-line", "two lines", "2 lines", "double lines"],
              title="Style the report (Center Across Selection, header, borders, Total style)",
              solution=("1. **Title:** select **A1** and click **Home → Merge & Center** to unmerge it. Select **A1:F1**, press "
                        "**Ctrl + 1** (Mac: **⌘ + 1**), and on the **Alignment** tab set **Horizontal** to **Center Across Selection**.\n"
@@ -487,7 +490,8 @@ def build() -> Lesson:
     L.bonus_scenario = (
         "The Emergency Department director presents the December 2025 operating report to the CFO next week. Finance's style "
         "guide has five rules for department reports. Apply them on the Dec Report sheet, writing every custom format code "
-        "yourself, then type what each listed cell displays. When you finish, compare your sheet with the hidden Report Key sheet.\n\n"
+        "yourself. Then type what each listed Dec Report cell displays into the yellow cells on the Bonus sheet. When you finish, "
+        "compare your sheet with the hidden Report Key sheet.\n\n"
         "- Rule 1: Center the title across A1:I1 without merging. Make the header row bold white text on a dark blue fill, "
         "wrapped and centered. Give the Total row the Total cell style.\n"
         "- Rule 2: Show Dec Budget and Dec Actual in thousands with one decimal place, a dollar sign, and a K, so "
@@ -500,34 +504,38 @@ def build() -> Lesson:
         f"1,000,000 or more ({b2['YtdActual']:,} displays as {show_mk(b2['YtdActual'])}), and otherwise in thousands with no "
         "decimals and a K.")
     L.bonus = [
-        Task(f"Rule 2: what does {rcol['DecActual']}{b1_row} (Employee Benefits, Dec Actual) display?",
+        Task(f"Rule 2: on the Dec Report sheet, what does {rcol['DecActual']}{b1_row} (Employee Benefits, Dec Actual) display?",
              answer=show_k(b1["DecActual"], 1), fmt="@", title="Thousands with one decimal",
-             solution=f"Select **'Dec Report'!B{P_FIRST}:C{P_TOTAL}**, press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Custom**, "
-                      f"and type `{K1}`.",
+             solution=f"1. **Rule 1** uses the same steps as practice task 13: select **'Dec Report'!A1:I1** and set **Center Across "
+                      f"Selection** (**Ctrl + 1**, Mac: **⌘ + 1** → **Alignment** tab), style the header **A{P_HDR}:I{P_HDR}** (bold, white font, dark blue fill, "
+                      f"Wrap Text, Center), and apply **Home → Cell Styles → Total** to **A{P_TOTAL}:I{P_TOTAL}**.\n"
+                      f"2. **Rule 2:** select **'Dec Report'!B{P_FIRST}:C{P_TOTAL}**, press **Ctrl + 1** (Mac: **⌘ + 1**), choose "
+                      f"**Custom**, and type `{K1}`.\n"
+                      f"3. Read **{rcol['DecActual']}{b1_row}**.",
              live=f"=TEXT('Dec Report'!{rcol['DecActual']}{b1_row},{q(K1)})",
              hint="One comma after the last digit placeholder divides the display by 1,000",
              explanation=f"{b1['DecActual']:,} ÷ 1,000 = {b1['DecActual'] / 1000:,.3f}, shown with one decimal as "
                          f"`{show_k(b1['DecActual'], 1)}`. The comma between `#` and `##0` is the thousands separator. The comma after "
                          "`0.0` is the scaling comma."),
-        Task(f"Rule 3: what does {rcol['DecVar']}{b2_row} (Salaries & Wages, Dec Variance) display?",
+        Task(f"Rule 3: on the Dec Report sheet, what does {rcol['DecVar']}{b2_row} (Salaries & Wages, Dec Variance) display?",
              answer=show_k(b2["DecVar"], 1, paren=True), fmt="@", title="Negative variance: red, parentheses, thousands",
-             solution=f"Select **'Dec Report'!D{P_FIRST}:D{P_TOTAL}**, then Ctrl+click **H{P_FIRST}:H{P_TOTAL}**. Apply the custom "
-                      f"format `{K1_RED}`.",
+             solution=f"Select **'Dec Report'!D{P_FIRST}:D{P_TOTAL}**, then hold **Ctrl** (Mac: **⌘**) and drag over "
+                      f"**H{P_FIRST}:H{P_TOTAL}** to add the YTD Variance column. Apply the custom format `{K1_RED}`.",
              live=f"=TEXT('Dec Report'!{rcol['DecVar']}{b2_row},{q(K1_RED)})",
              hint="Two sections: positive;negative. Put the color first in the negative section",
              explanation=f"The first section formats positive variances (under budget). The second section starts with `[Red]` and "
                          f"wraps the same thousands pattern in parentheses, so {b2['DecVar']:,} shows as "
                          f"`{show_k(b2['DecVar'], 1, paren=True)}` in red. Because the format has a negative section, Excel adds no "
                          f"minus sign. In December, {n_red_dec} of the {len(rep) + 1} Dec Variance cells (including the total) turn red."),
-        Task(f"Rule 4: what does {rcol['YtdVarPct']}{b3_row} (Equipment & Maintenance, YTD Var %) display?",
+        Task(f"Rule 4: on the Dec Report sheet, what does {rcol['YtdVarPct']}{b3_row} (Equipment & Maintenance, YTD Var %) display?",
              answer=show_pct(b3["YtdVarPct"], 1, paren=True), fmt="@", title="Negative percentage in red parentheses",
-             solution=f"Select **'Dec Report'!E{P_FIRST}:E{P_TOTAL}** and Ctrl+click **I{P_FIRST}:I{P_TOTAL}**. Apply the custom "
-                      f"format `{PCT1_RED}`.",
+             solution=f"Select **'Dec Report'!E{P_FIRST}:E{P_TOTAL}**, then hold **Ctrl** (Mac: **⌘**) and drag over "
+                      f"**I{P_FIRST}:I{P_TOTAL}**. Apply the custom format `{PCT1_RED}`.",
              live=f"=TEXT('Dec Report'!{rcol['YtdVarPct']}{b3_row},{q(PCT1_RED)})",
              hint="A % in a custom code multiplies by 100, in every section where it appears",
              explanation=f"The cell stores {b3['YtdVarPct']:.6f}… Each section has its own `%`, so both multiply by 100. The negative "
                          f"section adds `[Red]` and parentheses: `{show_pct(b3['YtdVarPct'], 1, paren=True)}`."),
-        Task(f"Rule 5: what does {rcol['YtdActual']}{P_TOTAL} (the Total row's YTD Actual) display?",
+        Task(f"Rule 5: on the Dec Report sheet, what does {rcol['YtdActual']}{P_TOTAL} (the Total row's YTD Actual) display?",
              answer=show_mk(rep_total["YtdActual"]), fmt="@", title="Conditional format: millions",
              solution=f"Select **'Dec Report'!F{P_FIRST}:G{P_TOTAL}** and apply the custom format `{MK}`.",
              live=f"=TEXT('Dec Report'!{rcol['YtdActual']}{P_TOTAL},{q(MK)})",
@@ -536,7 +544,7 @@ def build() -> Lesson:
                          f"`[>=1000000]` sends {rep_total['YtdActual']:,} to the first section, where two scaling commas divide by "
                          f"1,000,000: `{show_mk(rep_total['YtdActual'])}`. This total matches the Emergency Department's 2025 actual on "
                          "the Budget sheet, because December closes the fiscal year."),
-        Task(f"Rule 5: what does {rcol['YtdBudget']}{b5_row} (Other Operating, YTD Budget) display?",
+        Task(f"Rule 5: on the Dec Report sheet, what does {rcol['YtdBudget']}{b5_row} (Other Operating, YTD Budget) display?",
              answer=show_mk(b5["YtdBudget"]), fmt="@", title="Conditional format: thousands",
              solution="Same format as the previous part. Check that values under 1,000,000 fall through to the K section.",
              live=f"=TEXT('Dec Report'!{rcol['YtdBudget']}{b5_row},{q(MK)})",
@@ -576,7 +584,9 @@ def build() -> Lesson:
             ws.column_dimensions[col].width = w
 
     BUDGET_HEAD = ["Service Line", "Department", "Budget", "Actual", "Variance", "Variance %"]
-    BUDGET_TITLE = "Bluestone Memorial Hospital · 2025 Operating Expense Budget vs Actual by Department"
+    # Kept short on purpose: a centered title wider than A:F spills off the left edge of column A and gets cut off,
+    # both in the Budget Key (Title style, 18 pt) and on the learner's sheet after task 13's AutoFit narrows the columns.
+    BUDGET_TITLE = "Bluestone Memorial Hospital · 2025 Expense Budget vs Actual"
     BUDGET_NOTE = ("Finance system export, 12/31/2025. Variance = Budget − Actual (negative = over budget). "
                    "Variance % = Variance ÷ Budget.")
     REPORT_TITLE = "Emergency Department · Monthly Operating Expense Report · December 2025"
@@ -615,6 +625,8 @@ def build() -> Lesson:
         # Practice answer column: a little wider so long display strings fit
         wb[lesson.practice_sheet].column_dimensions["D"].width = 26
         wb[lesson.bonus_sheet].column_dimensions["D"].width = 26
+        # Answer Key "Live result" column: wide enough for task 8's "Tue 11/25/2025 11:58 AM" (the library default is 16)
+        wb[lesson.key_sheet].column_dimensions["E"].width = 25
 
         # ------------------------------------------------------------------ Budget (raw, half-finished by someone else)
         ws = wb.create_sheet("Budget")

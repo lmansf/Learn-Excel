@@ -135,19 +135,21 @@ Healthcare models are full of **assumptions**: an overtime multiplier, a benefit
 such as **HPPD** (nursing hours per patient day). Put each assumption in its **own labeled cell** and point every formula at it
 with an absolute reference. This is the **rate-in-one-cell pattern**.
 
-Here's an example. Finance estimates each department's benefits cost as 28% of its salaries. The salaries are in column C, rows
-5–20. Type the label *Benefits rate* in A2 and the rate, 28%, in B2. Then type one formula in D5 and copy it down:
+You can try an example in the empty columns to the right of the Expenses sheet. Finance estimates each department's benefits
+cost as 28% of its salaries, which are in column C. Type the label *Benefits rate* in **M3** and the rate, 28%, in **N3**. Then
+type one formula in **M5** and copy it down to row 20:
 
 ```
-D5:  =C5*$B$2        ← C5 moves with the row, but $B$2 stays put
-D6:  =C6*$B$2
-D7:  =C7*$B$2
+M5:  =C5*$N$3        ← C5 moves with the row, but $N$3 stays put
+M6:  =C6*$N$3
+M7:  =C7*$N$3
 ```
 
-Compare that with typing the rate into every formula, as in `=C5*28%`. Both give the same answer today. But when the rate
-changes, the first version needs one edit and the second needs 16, one for each department. Numbers typed inside formulas are
-called **hard-coded** values, and they're one of the most common causes of stale, wrong spreadsheets. They're also invisible,
-because nobody reviewing the sheet can see which rate it assumes.
+The estimates land close to the actual Employee Benefits in column D, because Bluestone Memorial's benefits run at about 28% of
+salaries overall. Now compare the formula with typing the rate into every cell, as in `=C5*28%`. Both give the same answer today.
+But when the rate changes, the first version needs one edit and the second needs 16, one for each department. Numbers typed
+inside formulas are called **hard-coded** values, and they're one of the most common causes of stale, wrong spreadsheets. They're
+also invisible, because nobody reviewing the sheet can see which rate it assumes.
 
 The pattern also makes **what-if** questions fast. Change the assumption cell, read the new results, then change it back. To
 compare before and after, first copy the result you care about and paste it into a spare cell with **Paste Special → Values**
@@ -221,9 +223,11 @@ To decide where the `$` goes in any formula, ask two questions about each refere
 | A row of labels across the top | yes | no | `C$4` |
 | A column of labels down the side | no | yes | `$A5` |
 
-Mixed references are useful outside grids too. On the Oct sheet, `=C5/$J5` copied across and down shows each category's share of
-its *own department's* total. The ED spent 59.9% of its October total on Salaries & Wages. `=C5/C$21` shows each department's
-share of its *category's* hospital total. The ED accounts for 12.3% of the hospital's October Salaries & Wages.
+Mixed references are useful outside grids too. Try this in the empty columns of the Oct sheet: type `=C5/$J5` in **L5**, then
+copy it across to R5 and down to row 20, and format the block as a percentage. Each cell shows a category's share of its *own
+department's* total, because `$J5` always reads the Total column on the current row. The ED spent 59.9% of its October total on Salaries & Wages. With `=C5/C$21` instead,
+each cell shows a department's share of its *category's* hospital total, because `C$21` always reads the Hospital total row. The ED
+accounts for 12.3% of the hospital's October Salaries & Wages.
 
 **Three ways to fill a grid from one formula:**
 

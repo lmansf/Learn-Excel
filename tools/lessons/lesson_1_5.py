@@ -343,7 +343,7 @@ def build() -> Lesson:
         Task(f"On the Staffing Grid sheet, fill the yellow grid {G_C0}{G_FIRST}:{G_C1}{G_LAST} with ONE formula: nursing hours "
              f"needed per day = census (column A) × HPPD target (row {G_HDR}). Type it in B{G_FIRST}, copy it across to "
              f"{G_C1}{G_FIRST}, then down to row {G_LAST}. The gray cell adds up the whole grid.",
-             answer=grid_total, title="Staffing grid (mixed references)",
+             answer=grid_total, fmt="#,##0", title="Staffing grid (mixed references)",
              solution=f"=$A{G_FIRST}*B${G_HDR}",
              summary=f'=IF(COUNT({grid_rng})=0,"",SUM({grid_rng}))',
              fill={"range": grid_rng, "formula": f"=$A{G_FIRST}*B${G_HDR}"},
@@ -357,7 +357,7 @@ def build() -> Lesson:
                          "targets), which is how the key's live formula works."),
         Task(f"Using one 3-D reference, what did Oncology (row {onc} on the Oct, Nov, and Dec sheets) spend on Pharmaceuticals "
              f"(column {pharma_col}) in Q4 2025?",
-             answer=onc_pharma_q4,
+             answer=onc_pharma_q4, fmt="#,##0",
              solution=f"=SUM(Oct:Dec!{pharma_col}{onc})",
              hint="Type =SUM(, click the Oct tab, Shift+click the Dec tab, then click the cell",
              title="3-D SUM: Oncology pharmaceuticals in Q4",
@@ -367,7 +367,7 @@ def build() -> Lesson:
         Task(f"Fill the yellow grid on the Q4 Summary sheet ({C0}{FIRST}:{C1}{LAST}) with ONE 3-D formula that adds the same "
              f"cell on the Oct, Nov, and Dec sheets. Type it in {C0}{FIRST}, copy it across to {C1}{FIRST}, then down to row "
              f"{LAST}. The gray cell adds up your grid: what was Bluestone Memorial's Q4 operating expense?",
-             answer=q4_total, title="Q4 Summary built with a 3-D formula",
+             answer=q4_total, fmt="#,##0", title="Q4 Summary built with a 3-D formula",
              solution=f"=SUM(Oct:Dec!{C0}{FIRST})",
              summary=f'=IF(COUNT({q4_rng})=0,"",SUM({q4_rng}))',
              fill={"range": q4_rng, "formula": f"=SUM(Oct:Dec!{C0}{FIRST})"},
@@ -381,7 +381,7 @@ def build() -> Lesson:
              f"({TCOL}{TOT} is each month's hospital total.) Answer with a formula that uses ordinary sheet references, not a "
              "3-D reference, so it stays correct with the tabs in their usual order. If you test the move, drag Nov back "
              "between Oct and Dec afterwards.",
-             answer=moved_total,
+             answer=moved_total, fmt="#,##0",
              solution=f"=Oct!{TCOL}{TOT}+Dec!{TCOL}{TOT}",
              hint="A 3-D range is defined by tab positions, not by month names",
              title="3-D gotcha: a tab moved out of the range",
@@ -638,9 +638,8 @@ def build() -> Lesson:
         ws = wb.create_sheet("Plan 2026")
         ws.sheet_properties.tabColor = "BF9000"
         titled(ws, "Bluestone Memorial Hospital · 2026 operating expense plan ($)",
-               f"2026 = 2025 actual from the Expenses sheet (same cell) × (1 + price inflation in row {INF_ROW}) × "
-               f"(1 + volume growth in column {GROW_COL}). Blue cells are planning assumptions. Fill the yellow grid with ONE "
-               f"formula typed in {C0}{FIRST} (bonus task B1).")
+               f"2026 = 2025 actual (Expenses sheet, same cell) × (1 + inflation in row {INF_ROW}) × (1 + growth in column "
+               f"{GROW_COL}). Blue cells are assumptions. Fill the yellow grid with ONE formula typed in {C0}{FIRST} (bonus B1).")
         c = ws.cell(row=INF_ROW, column=1, value="Price inflation →")
         c.font = Font(bold=True)
         c.alignment = Alignment(horizontal="right")
@@ -722,7 +721,7 @@ def build() -> Lesson:
             a.alignment = WRAP_TOP
             b = ws.cell(row=r, column=3, value=text)
             b.alignment = WRAP_TOP
-            ws.row_dimensions[r].height = 15 * _estimate_lines(text, 100) + 3
+            ws.row_dimensions[r].height = 15 * _estimate_lines(text, 115) + 3
             r += 1
 
     return L
