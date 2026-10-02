@@ -1,0 +1,9 @@
+PayerID,PayerName,PayerType,AvgAllowedPctOfCharges,AvgDaysToPay,TimelyFilingDays
+PY01,Medicare,Government,0.31,14,365
+PY02,Silverline Medicare Advantage,Medicare Advantage,0.33,28,180
+PY03,State Medicaid,Government,0.24,35,365
+PY04,Keystone Health Partners,Commercial,0.52,24,90
+PY05,Evergreen Mutual Insurance,Commercial,0.48,30,120
+PY06,Summit Choice PPO,Commercial,0.55,21,90
+PY07,Self-Pay,Self-Pay,0.4,60,0
+PY08,Workers' Compensation,Workers' Comp,0.6,45,180
