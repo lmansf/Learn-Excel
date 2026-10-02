@@ -93,8 +93,9 @@ ignores you, along with every Data Table, scenario, and Goal Seek that depends o
 1. **Show Formulas.** Press **Ctrl + `** (Mac: **⌃ + `**) to display every formula instead of its result, and read down
    the calculation rows. Look for digits that aren't cell references. Press the shortcut again to switch back.
 2. **Trace Dependents.** Select an input and choose **Formulas → Trace Dependents**. Blue arrows point to every formula that
-   uses it. If Excel draws no arrows and says no formula refers to the active cell, that input is an orphan, and some
-   formula probably holds a typed-in copy of its value. **Formulas → Remove Arrows** clears the arrows.
+   uses it, and a dashed arrow to a small sheet icon means a formula on another sheet uses it. If Excel draws no arrows and
+   says no formula refers to the active cell, that input is an orphan, and some formula probably holds a typed-in copy of
+   its value. **Formulas → Remove Arrows** clears the arrows.
 3. **Go To Special.** Select the calculation cells (B42:B56) and choose **Home → Find & Select → Go To Special →
    Constants** (Windows: **F5 → Special…**). Excel selects every cell that holds a typed value instead of a formula. In a
    clean calculation section it finds nothing and says *No cells were found*.

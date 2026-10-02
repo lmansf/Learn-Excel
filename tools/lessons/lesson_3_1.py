@@ -240,7 +240,8 @@ def build() -> Lesson:
              "time in days, to 2 decimal places?",
              answer=avg_lead, fmt="0.00", solution=f"={TBL}[[#Totals],[LeadTimeDays]]",
              live=f"=AVERAGE({a1('LeadTimeDays')})",
-             hint="Table Design → Total Row (Windows: Ctrl + Shift + T), then use the dropdown in the Total Row cell",
+             hint="Table Design → Total Row (Windows: Ctrl + Shift + T; Mac: Table → Total Row), then use the dropdown in the "
+                  "Total Row cell",
              explanation="The Total Row's dropdown writes `=SUBTOTAL(101,[LeadTimeDays])`. Function number 101 means "
                          "AVERAGE of the visible rows only, ignoring rows hidden by a filter or hidden by hand "
                          "(109 = SUM, 103 = COUNTA, 104 = MAX). "
@@ -250,10 +251,12 @@ def build() -> Lesson:
              "formula to check.",
              answer=all_rows_with_totals, solution=f"=ROWS({TBL}[#All])", live=False,
              hint="#All is everything: which rows does it include that tblInventory[QtyOnHand] doesn't?",
-             explanation=f"`[#All]` covers the header row, the {n} data rows, and the Total Row: 1 + {n} + 1 = "
+             explanation=f"ROWS counts the rows a reference covers. `[#All]` covers the header row, the {n} data rows, and the "
+                         f"Total Row: 1 + {n} + 1 = "
                          f"{all_rows_with_totals}. `tblInventory[#Data]` (or just `tblInventory`) is the {n} "
                          f"data rows, `[#Headers]` is the header row alone, and `[#Totals]` is the Total Row alone."),
-        Task(f"Insert slicers for Facility and Category (Table Design → Insert Slicer). Select {SLICER_FACILITY} in "
+        Task(f"Insert slicers for Facility and Category (Table Design → Insert Slicer; Mac: Table → Insert Slicer). "
+             f"Select {SLICER_FACILITY} in "
              f"the Facility slicer and {SLICER_CATEGORY} in the Category slicer. Set the Total Row's ExtendedValue cell "
              f"to Sum. What value does it show? Type the number, then clear both slicers, because while they filter the "
              f"Table the Total Row (and task 6) only summarizes the visible rows.",
@@ -305,7 +308,7 @@ def build() -> Lesson:
                          "non-perishables drop out automatically. The formula reads like the policy, and when the "
                          "next snapshot arrives you only change the date in Settings!B2."),
         Task("Expired stock must be pulled from the shelves and written off. What's the total ExtendedValue of rows whose "
-             "ExpirationDate is before ReportDate?",
+             "ExpirationDate is before ReportDate? Enter it to the cent.",
              answer=round(expired_value, 2), fmt="#,##0.00",
              solution=f'=SUMIFS({TBL}[ExtendedValue],{TBL}[ExpirationDate],"<"&ReportDate)',
              live=f'=SUMPRODUCT(({a1("ExpirationDate")}<{report_cell})*({a1("ExpirationDate")}<>"")*{qty}*{cost})',
@@ -347,7 +350,7 @@ def build() -> Lesson:
              fill={"range": f"Inventory!{oc_letter}{first}:{oc_letter}{last}",
                    "formula": "=IF([@NeedsReorder],[@ReorderQty]*[@UnitCost],0)"},
              live=f"=SUMPRODUCT(({qty}<={rp})*{a1('ReorderQty')}*{cost})", table=TBL,
-             hint="IF can test a TRUE/FALSE column directly: IF([@NeedsReorder], …, 0)",
+             hint="IF can test a TRUE/FALSE column directly, with no comparison such as =TRUE",
              explanation=f"Typing in the first empty column next to a Table adds a column to it (Excel's "
                          f"*AutoExpansion*). `IF([@NeedsReorder],…)` reuses the calculated column you built in task 5 "
                          f"instead of repeating the comparison. The {needs_reorder} rows that need an order return their "
@@ -364,12 +367,14 @@ def build() -> Lesson:
                          f"INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. "
                          f"`=XLOOKUP(MAX({VTBL}[ReorderCost]),{VTBL}[ReorderCost],{VTBL}[Vendor])` works too in Excel "
                          f"2021 or Microsoft 365. {top_lines_note}"),
-        Task("What's the value of that vendor's purchase order?",
+        Task("What's the value of that vendor's purchase order, to the cent?",
              answer=round(top_amount, 2), fmt="#,##0.00", solution=f"=MAX({VTBL}[ReorderCost])",
              live=f'=SUMPRODUCT(({a1("Vendor")}="{top_vendor}")*({qty}<={rp})*{a1("ReorderQty")}*{cost})',
              hint="The largest value in tblVendors[ReorderCost]",
-             explanation=f"That's {top_amount / order_total:.0%} of the week's spend on a single purchase order. In "
-                         f"practice, a buyer would confirm implant orders with the OR schedule before sending them."),
+             explanation=f"MAX scans the ReorderCost column of {VTBL}, so it returns the largest vendor total, the same row that "
+                         f"INDEX/MATCH found in B2. That's {top_amount / order_total:.0%} of the week's spend on a single "
+                         f"purchase order. In practice, a buyer would confirm implant orders with the OR schedule before "
+                         f"sending them."),
         Task(f"The group purchasing contract gives a {DISCOUNT_PCT:.0%} discount on any single vendor order of "
              f"${DISCOUNT_MIN:,} or more. Define two named constants, DiscountMin (={DISCOUNT_MIN}) and DiscountPct "
              f"(={DISCOUNT_PCT}), then calculate the total discount on this week's orders, to the cent.",
@@ -377,7 +382,9 @@ def build() -> Lesson:
              solution=f'=SUMIFS({VTBL}[ReorderCost],{VTBL}[ReorderCost],">="&DiscountMin)*DiscountPct',
              live=False,
              hint="SUMIFS can use the same column as the sum range and the criteria range",
-             explanation=f"Orders from {vendors_discounted} vendors reach ${DISCOUNT_MIN:,}. Together they total "
+             explanation=f"The criteria range and the sum range are the same column, so SUMIFS adds only the vendor totals "
+                         f"that pass the test against DiscountMin. Orders from {vendors_discounted} vendors reach "
+                         f"${DISCOUNT_MIN:,}. Together they total "
                          f"${discount_base:,.2f}, and {DISCOUNT_PCT:.0%} of that is the discount. With the thresholds in "
                          f"named constants, Purchasing can test a new contract (say 3% at $15,000) by editing two names in "
                          f"Name Manager, and every formula that uses them updates."),
