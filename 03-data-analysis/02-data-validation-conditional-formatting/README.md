@@ -1,7 +1,7 @@
 # Lesson 3.2 · Data Validation & Conditional Formatting
 
 > **Level:** Intermediate · **Time:** about 55 minutes · **Workbook:** [`3.2-data-validation-conditional-formatting.xlsx`](3.2-data-validation-conditional-formatting.xlsx)
-> **Data:** A December 2025 Patient Access intake log with entry errors, STAT lab results from the three ICUs (Jul–Dec 2025), the system supply inventory (12/31/2025 snapshot), and Medical-Surgical 5 East's daily census (Nov–Dec 2025). The bonus adds a bed-huddle board for every inpatient unit.
+> **Data:** A December 2025 Patient Access intake log with entry errors, STAT lab results from the three ICUs (Jul–Dec 2025), the system supply inventory (12/31/2025 snapshot), and Medical-Surgical 5 East's daily census (Nov–Dec 2025). The bonus adds a bed-huddle board for every inpatient unit. Column definitions are in the [data dictionary](../../data/README.md).
 
 A registrar who types "Self Pay" instead of "Self-Pay" creates a claim that bounces weeks later. An MRN that lost its
 leading zero matches no patient, so a lab result lands in limbo. A charge nurse scrolling 300 ICU results can miss the one
@@ -113,7 +113,7 @@ Press **Alt + ↓** (Mac: **Option + ↓**) to open the list from the keyboard. 
 |---|---|---|
 | Typed list | `Medicare,State Medicaid,Self-Pay` | Quick for a few fixed items. Separate items with your regional list separator (a comma in the US, often a semicolon in Europe). Limit: 255 characters |
 | Range on the same or another sheet | `=Lists!$A$2:$A$9` | Click the range while the Source box is active. Other-sheet ranges work in Excel 2010 and later |
-| Named range | `=PayerList` | Easiest to read and reuse. Lesson 3.1 shows how to name a range |
+| Named range | `=PayerList` | Easiest to read and reuse. [Lesson 3.1](../01-tables-named-ranges/README.md) shows how to name a range |
 | Table column | `=INDIRECT("tblPayers[PayerName]")` | Excel won't accept a structured reference typed straight into Source, so wrap it in INDIRECT (or name the column). The list then grows when the Table grows |
 
 Worked example (task 1): the Lists sheet holds the eight contracted payers in **A2:A9**. Select **IntakeLog!F2:F51**, choose
@@ -158,14 +158,15 @@ More custom rules you can adapt:
 | Code must be typed in capitals | `=EXACT(A2, UPPER(A2))` |
 
 Notice the `$` signs in the duplicate rule. `$A$2:$A$51` must stay fixed for every cell, while `A2` must move to A3, A4, and
-so on. That's the same mixed-reference thinking you learned in Lesson 1.5.
+so on. That's the same mixed-reference thinking you learned in [Lesson 1.5](../../01-foundations/05-cell-references/README.md).
 
 ### 6. Dependent drop-down lists
 
-A **dependent drop-down** is a list whose items depend on the choice in another cell. In the intake log, the Department list
-should show only the departments of the facility chosen in the same row. Department names repeat across facilities
-("Emergency Department", "Intensive Care Unit"), so a single long list would let a registrar pick a department that doesn't
-exist at that hospital.
+A **dependent drop-down** is a list whose items depend on the choice in another cell. The cell that makes the first choice
+is the **parent**, and the cell whose list changes is the **child**. In the intake log, Facility is the parent and Department
+is the child, so the Department list should show only the departments of the facility chosen in the same row. Department
+names repeat across facilities ("Emergency Department", "Intensive Care Unit"), so a single long list would let a registrar
+pick a department that doesn't exist at that hospital.
 
 The classic method uses one named range per parent value and the **INDIRECT** function, which turns text into a reference.
 `=INDIRECT("Cedar_Ridge_Medical_Center")` returns whatever range that name points to.
@@ -198,16 +199,22 @@ The classic method uses one named range per parent value and the **INDIRECT** fu
 > but Create from Selection also changes anything else a name can't contain (a leading digit, `&`, `-`), so the name and the
 > SUBSTITUTE result would no longer match.
 
-**Without named ranges.** If the parent and child values sit in a two-column list sorted by parent, you can carve out the
-child list with OFFSET. OFFSET(start, rows, columns, height, width) returns a range that starts `rows` below `start` and is
-`height` cells tall:
+**Without named ranges.** The Lists sheet also holds every facility–department pair in long form: facilities in J2:J31 and
+their departments in K2:K31, grouped by facility. When the parent values are grouped like this, OFFSET can cut the child list
+straight out of the long list. OFFSET(start, rows, columns, height, width) returns a range that starts `rows` below `start`
+and is `height` cells tall (you met it in Lesson 3.1's dynamic named ranges). For the Department column, the Source would be:
 
 ```
-=OFFSET($B$11, MATCH($B$4,$A$12:$A$29,0), 0, COUNTIF($A$12:$A$29,$B$4), 1)
+=OFFSET(Lists!$K$1, MATCH($H2,Lists!$J$2:$J$31,0), 0, COUNTIF(Lists!$J$2:$J$31,$H2), 1)
 ```
 
-MATCH finds the first row for the chosen facility, and COUNTIF counts how many rows it has. You'll use this version in the
-bonus, where the unit list comes straight from the huddle board.
+Take a row whose facility is Ashby Falls Community Hospital. Its first pair is in J17, the 16th cell of J2:J31, so MATCH
+returns 16. COUNTIF returns 4 because Ashby Falls has four departments. OFFSET then starts 16 rows below K1, at K17, and
+returns the 4 cells K17:K20. The start is the header cell K1, not K2, because MATCH counts from 1.
+
+This version needs no names and no SUBSTITUTE, so it works for any facility name. The catch is that the long list must stay
+grouped by parent. If one Ashby Falls pair sat at the bottom of the list, OFFSET would miss it. The bonus asks you to adapt
+this formula to the huddle board.
 
 > 📋 **Microsoft 365:** for a single selector cell, such as a facility chosen in B4, you can also put
 > `=FILTER(Lists!$K$2:$K$31, Lists!$J$2:$J$31=$B$4)` in a helper cell (say X2) and set the child's Source to its spill
@@ -223,7 +230,9 @@ Because validation only checks new typing, you need a way to audit what's alread
 2. Fix the circled entries. A circle disappears when its cell becomes valid.
 3. Choose **Clear Validation Circles** when you're done. Circles also vanish when you save, and they never print.
 
-Excel draws at most 255 circles at a time, so fix the first batch and run it again on large sheets.
+Circle Invalid Data checks every validated cell on the sheet at once. After you've added rules to several columns, you'll
+see circles in all of them, so count only the column you're auditing. Excel draws at most 255 circles at a time, so on a
+large sheet fix the first batch and run it again.
 
 > 📋 **Circle Invalid Data is a desktop feature.** Excel for the web doesn't have it. If you can't find it in your version
 > (on a Mac, look under the arrow next to **Data Validation**), apply a temporary conditional formatting rule with the same
@@ -265,9 +274,12 @@ Worked example: on the Labs sheet, select **L2:L322** (TATMin) and choose **High
 60, and keep the light red fill. Excel highlights 80 results. Three results took exactly 60 minutes, and they stay plain
 because *Greater Than* is strict. If your target is "60 minutes or less," a result at 60 met it, so *Greater Than* is the right test.
 
-> 💡 **Tip:** Formatting doesn't filter or sort anything, but you can. Turn on the filter (**Ctrl + Shift + L**. Mac:
-> **⌘ + Shift + F**), click a column's arrow, and choose **Filter by Color** or **Sort by Color** (Lesson 1.6). The status bar
-> then shows how many rows are left.
+> 💡 **Tip:** Formatting doesn't filter or sort anything, but you can filter and sort by it. Click a column's filter arrow and
+> choose **Filter by Color** or **Sort by Color** ([Lesson 1.6](../../01-foundations/06-sorting-filtering/README.md)). The
+> menu lists every fill and font color your rules applied, and **Filter by Cell Icon** lists the icons from an icon set. The
+> status bar then shows how many rows are left. The data sheets in this workbook are Tables, so their filter arrows are
+> already on. (On a plain range, turn them on with **Ctrl + Shift + L**. Mac: **⌘ + Shift + F**. In a Table, the same
+> shortcut turns them off.) A data bar isn't a fill color, so count bars with a formula such as COUNTIF instead.
 
 > 📋 In Excel for Windows, selecting a range shows the **Quick Analysis** button (**Ctrl + Q**). Its **Formatting** tab
 > previews data bars, color scales, and icon sets as you hover.
@@ -340,6 +352,10 @@ The default 3-color scale uses **Lowest Value**, **Percentile 50**, and **Highes
 so the yellow midpoint marks a typical day for this data, not a target. To color against a target such as 85% occupancy,
 edit the rule and set the midpoint Type to **Number** and Value to **0.85**.
 
+You can also build a scale from scratch with **New Rule → Format all cells based on their values**. Choose **2-Color Scale**
+or **3-Color Scale** as the **Format Style**, then set the Type, Value, and Color of each point. It's the same dialog that
+**Edit Rule** opens.
+
 > ⚠️ Percent and Percentile sound alike but differ. *Percent* measures distance along the range from lowest to highest, so
 > one extreme value stretches every threshold. *Percentile* ranks the values, so it ignores how far the extremes are.
 
@@ -401,7 +417,7 @@ More row rules on the lesson data:
 
 | Highlight rows where… | Applies to | Formula |
 |---|---|---|
-| The unit is over capacity | Huddle!A12:G29 | `=$E12>$C12` |
+| The unit's midnight census was above its staffed beds | Census!A2:F62 | `=$E2>$B2` |
 | A STAT result missed a 60-minute target and was abnormal | Labs!A2:L322 | `=AND($L2>60, $K2<>"N")` |
 | A supply has expired | Supplies!A2:M258 | `=AND($L2<>"", $L2<=ReportDate)` |
 
@@ -416,12 +432,14 @@ More row rules on the lesson data:
 > on exactly the rows you expect. Then copy it into the rule and delete the test column.
 
 > 💡 **Tip:** While you edit a rule formula, the arrow keys may insert cell references instead of moving the cursor. Press
-> **F2** to switch to Edit mode. **F4** (Mac: **⌘ + T**) cycles a reference through `$K$2`, `K$2`, `$K2`, and `K2`.
+> **F2** (Mac: **F2** with the fn key) to switch to Edit mode. **F4** (Mac: **⌘ + T**) cycles a reference through `$K$2`,
+> `K$2`, `$K2`, and `K2`.
 
 ### 14. Managing rules: order, conflicts, and Stop If True
 
-**Home → Conditional Formatting → Manage Rules** (Windows: **Alt, H, L, R**) opens the **Rules Manager**. Set **Show
-formatting rules for** to **This Worksheet** to see every rule on the sheet, not just the ones on the selected cells.
+**Home → Conditional Formatting → Manage Rules** (Windows: **Alt, H, L, R**) opens the Conditional Formatting **Rules
+Manager**. Every "Manage Rules" step in this lesson means this dialog. Set **Show formatting rules for** to **This
+Worksheet** to see every rule on the sheet, not just the ones on the selected cells.
 
 | Column or button | What it does |
 |---|---|
@@ -498,10 +516,10 @@ Part A (tasks 1–6) uses the IntakeLog and Lists sheets. Add each validation ru
 | 5 | IntakeLog, MRN (C2:C51): an MRN must be exactly 8 characters, and all of them digits. Select the column with C2 as the active cell and add a Custom validation rule that is TRUE only for a valid MRN. How many MRN cells are circled? | Combine a LEN test with an ISNUMBER(--C2) test inside AND, written for the active cell C2 |
 | 6 | Dependent drop-down: on the Lists sheet, name each department column after its facility (Formulas → Create from Selection → Top row, one column at a time: E1:E16, F1:F5, G1:G6, H1:H7). Give IntakeLog Facility (H2:H51) a List validation from Lists!$C$2:$C$5. Then give Department (I2:I51) a List validation whose Source is =INDIRECT(SUBSTITUTE($H2," ","_")). How many Department cells are circled? | Names can't contain spaces, so Create from Selection uses underscores |
 | 7 | Labs sheet: the lab interface re-sent some results, so a few LabResultIDs appear more than once. Select A2:A322 and apply Highlight Cells Rules → Duplicate Values. How many cells are highlighted? | Home → Conditional Formatting → Highlight Cells Rules |
-| 8 | Labs, TATMin (L2:L322): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → Top 10 Items. What is the smallest TAT that your rule highlights? | Ties with the 10th value are highlighted too. LARGE gives the k-th largest |
-| 9 | Supplies, PctOfPar (K2:K258) = QtyOnHand ÷ ParLevel. Add Data Bars, then edit the rule so Minimum is Number 0 and Maximum is Number 1. A full bar now means "stocked to par." How many items show a completely full bar? | Values at or above the Maximum get a full bar |
+| 8 | Labs, TATMin (L2:L322): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → Top 10 Items. What is the smallest TAT that your rule highlights? Enter it in minutes. | Ties with the 10th value are highlighted too. LARGE gives the k-th largest |
+| 9 | Supplies, PctOfPar (K2:K258) is QtyOnHand ÷ ParLevel. Add Data Bars, then edit the rule so Minimum is Type Number, Value 0 and Maximum is Type Number, Value 1. A full bar now means "stocked to par or above." How many items show a full bar? | Every value at or above the Maximum gets a full bar. Filter by Color can't see bars, but COUNTIF can count them |
 | 10 | Census sheet (Medical-Surgical 5 East, Nov–Dec 2025): apply the Red - Yellow - Green Color Scale to Occupancy (F2:F62) so the fullest days are red. In Manage Rules → Edit Rule you'll see the midpoint is the 50th percentile. Which occupancy gets the pure yellow midpoint color? Enter it as a percentage to 1 decimal place. | The 50th percentile has a more common name |
-| 11 | Labs, TATMin: apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green below 45). How many cells show a yellow light? | Each icon's test is ">=". The default Type is Percent, not Number |
+| 11 | Labs, TATMin (L2:L322): apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green below 45). How many cells show a yellow light? | Each icon's test is ">=". The default Type is Percent, not Number. Filter by Color → Filter by Cell Icon counts icons |
 | 12 | Labs: highlight the entire row of every critical result (AbnormalFlag HH or LL). Select A2:L322 with A2 active, choose New Rule → "Use a formula to determine which cells to format," and set a red fill. How many rows are highlighted? | Lock the column with $, not the row |
 | 13 | Supplies: add two formula rules to A2:M258. Rule 1 (red fill): the item has expired, meaning ExpirationDate is not blank and is on or before ReportDate. Rule 2 (amber fill): ExpirationDate is not blank and is on or before ReportDate + ExpiringWindowDays. ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Excel puts each new rule at the top of the list, so open Manage Rules and move the red rule above the amber rule. How many rows are amber? | A blank cell counts as 0, which is "on or before" any date. The rule higher in Manage Rules wins the fill |
 <!-- END GENERATED: practice -->
@@ -594,7 +612,7 @@ LEN catches the 7- and 9-character MRNs and the MRN that was stored as a number 
 - **Answer:** 4
 - **Solution:**
 
-1. On **Lists**, select **E1:E16** and choose **Formulas → Create from Selection**, tick only **Top row**, and click **OK**. Repeat for **F1:F5**, **G1:G6**, **H1:H7**. **Formulas → Name Manager** (Ctrl + F3) now lists four names such as `Cedar_Ridge_Medical_Center`.
+1. On **Lists**, select **E1:E16** and choose **Formulas → Create from Selection**, tick only **Top row**, and click **OK**. Repeat for **F1:F5**, **G1:G6**, **H1:H7**. **Formulas → Name Manager** (Windows: Ctrl + F3) now includes four new names, such as `Cedar_Ridge_Medical_Center`.
 2. Select **H2:H51** on IntakeLog → **Data Validation** → **List**, Source `=Lists!$C$2:$C$5`.
 3. Select **I2:I51** with **I2** active → **Data Validation** → **List**, Source `=INDIRECT(SUBSTITUTE($H2," ","_"))`. Click **OK**.
 4. Click the arrow on **Data → Data Validation**, then **Circle Invalid Data**. (**Clear Validation Circles** removes them.) You see **4** circles.
@@ -640,7 +658,7 @@ Top 10 Items highlights the 10 largest values plus any cell tied with the 10th, 
 1. On **Supplies**, select **K2:K258**.
 2. **Home → Conditional Formatting → Data Bars** and pick any fill.
 3. **Conditional Formatting → Manage Rules → Edit Rule**. Set **Minimum** Type = **Number**, Value = 0, and **Maximum** Type = **Number**, Value = 1. Click **OK** twice.
-4. Count the full bars: **78**.
+4. A data bar isn't a fill color, so Filter by Color can't find the full ones. Count them with the formula below instead, because every value of 1 (100%) or more gets a full bar: **78**.
 
 Equivalent formula: `=COUNTIF(Supplies!K2:K258,">=1")`
 
@@ -655,11 +673,12 @@ With the default Automatic settings, the longest bar belongs to the largest valu
 1. On **Census**, select **F2:F62**.
 2. **Home → Conditional Formatting → Color Scales → Red - Yellow - Green Color Scale**. The first color in the name goes to the highest values, so high occupancy is red.
 3. **Conditional Formatting → Manage Rules → Edit Rule** shows Minimum = Lowest Value, Midpoint = Percentile 50, Maximum = Highest Value.
+4. Percentile 50 is the median, so the formula below gives the occupancy that gets pure yellow.
 
 Equivalent formula: `=MEDIAN(Census!F2:F62)`
 
 
-The 50th percentile is the median, the middle value when you sort the days by occupancy. Here 17 days have exactly that occupancy, so they show pure yellow. So the default color scale's middle color marks a typical day for this unit, not a target. To color against a target such as 85%, change the midpoint Type to Number (you'll do that in the bonus).
+The 50th percentile is the median, the middle value when you sort the days by occupancy. Here 17 days have exactly that occupancy, so they all show pure yellow. The default color scale's middle color therefore marks a typical day for this unit, not a target. To color against a target such as 85%, change the midpoint Type to Number (you'll do that in the bonus).
 
 **11. Traffic-light icons on turnaround time (yellow count)**
 
@@ -669,6 +688,7 @@ The 50th percentile is the median, the middle value when you sort the days by oc
 1. Select **L2:L322** → **Home → Conditional Formatting → Icon Sets → 3 Traffic Lights (Unrimmed)**.
 2. **Manage Rules → Edit Rule**. Click **Reverse Icon Order** so red is on top.
 3. Red: **>=**, Value **60**, Type **Number**. Yellow: **>=**, Value **45**, Type **Number**. Green covers everything below 45. Click **OK** twice.
+4. Click the TATMin filter arrow → **Filter by Color** → **Filter by Cell Icon** → the yellow light, and read the count on the status bar: **79**. Clear the filter afterward.
 
 Equivalent formula: `=COUNTIFS(Labs!L2:L322,">=45",Labs!L2:L322,"<60")`
 
@@ -683,6 +703,7 @@ The default thresholds are Percent 67 and 33. They split the span between the lo
 1. On **Labs**, type **A2:L322** in the Name Box and press **Enter**. The rows are selected and A2 is the active cell.
 2. **Home → Conditional Formatting → New Rule → Use a formula to determine which cells to format**.
 3. Formula: `=OR($K2="HH",$K2="LL")`. Click **Format → Fill**, pick red, then **OK** twice.
+4. Filter any column from B to K by that red fill (no earlier rule colors those columns) and read the count on the status bar: **14**.
 
 Equivalent formula: `=COUNTIF(Labs!K2:K322,"HH")+COUNTIF(Labs!K2:K322,"LL")`
 
@@ -698,6 +719,7 @@ You write the rule for the active cell's row (row 2), and Excel shifts it for ev
 2. **New Rule → Use a formula**: `=AND($L2<>"",$L2<=ReportDate)` with a red fill → **OK**.
 3. With the same range selected, add a second rule: `=AND($L2<>"",$L2<=ReportDate+ExpiringWindowDays)` with an amber (light orange) fill → **OK**.
 4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**. The amber rule is on top because Excel adds each new rule at the top of the list. Select the red rule and click **▲** (Move Up) so it sits above the amber rule, then click **OK**.
+5. Filter column A by the amber fill and read the count on the status bar: **7**.
 
 Equivalent formula: `=COUNTIFS(Supplies!L2:L258,">"&ReportDate,Supplies!L2:L258,"<="&ReportDate+ExpiringWindowDays)`
 
@@ -710,14 +732,14 @@ Rule 2 is TRUE for 17 rows, because every expired item also expires before Repor
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-It's 7 a.m. on Wednesday, November 26, 2025, the day before Thanksgiving. The house supervisor runs the system bed huddle from the Huddle sheet: one row per inpatient unit, with the midnight census for 11/24 and 11/25, the overnight change, and occupancy. Make the board readable at a glance, then build the unit selector that drives the gray unit card (B6:B9). The card reads the NovCensus sheet (every unit, Nov 1–25). The board's data is in rows 12–29.
+It's 7 a.m. on Wednesday, November 26, 2025, the day before Thanksgiving. The house supervisor runs the system bed huddle from the Huddle sheet: one row per inpatient unit, with the midnight census for 11/24 and 11/25, the overnight change, and occupancy. Make the board readable at a glance, then build the unit selector that drives the gray unit card (Huddle!B6:B9). The card reads the NovCensus sheet (every unit, Nov 1–25). The board's data is in rows 12–29. Build every rule and the selector on the Huddle sheet, and type your answers on the Bonus sheet.
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Apply a 3-color scale to Occupancy (G12:G29): Minimum = Lowest Value (green), Midpoint = Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded on the red side of yellow (occupancy above 85%)? *(Hint: New Rule → Format all cells based on their values → 3-Color Scale)*
-- **B2.** Apply Icon Sets → 3 Arrows (Colored) to Change (F12:F29). Edit the rule so both Types are Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How many units show an up arrow? *(Hint: Type = Number, not the default Percent)*
-- **B3.** Add two formula rules to the whole board (A12:G29): a red fill when the 11/25 census is above staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the overflow rule above the amber rule. How many rows end up amber? *(Hint: Both rules are TRUE for an overflow unit, and the rule on top wins the fill)*
-- **B4.** Build the unit selector. Give B4 a List validation from the Hospitals list (I12:I14). Give B5 a dependent List built from the board's own Facility and Unit columns, with no named ranges. Then choose Cedar Ridge Medical Center → Intensive Care Unit. The gray cell shows the card's Nov 1–25 occupancy. What is it? *(Hint: OFFSET(start, rows down, 0, height, 1) with MATCH for the first row and COUNTIF for the height)*
+- **B1.** On Huddle, apply a 3-color scale to Occupancy (G12:G29): Minimum = Lowest Value (green), Midpoint = Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded on the red side of yellow (occupancy above 85%)? *(Hint: New Rule → Format all cells based on their values → 3-Color Scale)*
+- **B2.** On Huddle, apply Icon Sets → 3 Arrows (Colored) to Change (F12:F29). Edit the rule so both Types are Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How many units show an up arrow? *(Hint: Type = Number, not the default Percent)*
+- **B3.** On Huddle, add two formula rules to the whole board (A12:G29): a red fill when the 11/25 census is above staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the overflow rule above the amber rule. How many rows end up amber? *(Hint: Both rules are TRUE for an overflow unit, and the rule on top wins the fill)*
+- **B4.** On Huddle, build the unit selector. Give B4 a List validation from the Hospitals list (I12:I14). Give B5 a dependent List built from the board's own Facility and Unit columns, with no named ranges. Then pick Cedar Ridge Medical Center in B4 and Intensive Care Unit in B5. The gray answer cell on the Bonus sheet copies the card's Nov 1–25 occupancy (Huddle!B8), so it fills in and turns ✔ when your selector works. *(Hint: Adapt the OFFSET example in guide section 6: MATCH finds the facility's first row and COUNTIF its height)*
 <!-- END GENERATED: bonus -->
 
 When you finish, unhide the **Huddle Key** sheet to compare your board with a finished one. It has every rule and both
@@ -778,13 +800,15 @@ There are 2 overflow units, and both rules are TRUE for them. The overflow rule 
 
    `=OFFSET($B$11,MATCH($B$4,$A$12:$A$29,0),0,COUNTIF($A$12:$A$29,$B$4),1)`
 
-   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board is sorted by facility, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 first.
-3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. Read the card.
+   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board lists each facility's units together, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 first.
+3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. The card fills in, and the gray answer cell on the Bonus sheet shows its occupancy.
 
-If you prefer INDIRECT, copy each hospital's units into its own column under the hospital's name (like the Lists sheet in task 6), name the columns with Create from Selection, and use `=INDIRECT(SUBSTITUTE($B$4," ","_"))`. The result is the same.
+The guide's version starts at Lists!K1 and uses $H2, because every intake row has its own facility. Here the start is the board's Unit header (B11) and the parent is the single cell $B$4.
+
+An INDIRECT version would need a second set of named lists that hold only the inpatient units. The names from task 6 (such as `Cedar_Ridge_Medical_Center`) already point at every department on the Lists sheet, so new names would have to differ from them. OFFSET skips that setup because it reads the board itself.
 
 
-Three hospitals each have an Intensive Care Unit, so the unit name alone is ambiguous. The dependent list forces a facility first and then offers only that facility's units, and the card's SUMIFS uses both cells. The OFFSET version needs no named ranges, so it keeps working when you add a unit to the board (as long as the board stays sorted by facility).
+Three hospitals each have an Intensive Care Unit, so the unit name alone is ambiguous. The dependent list forces a facility first and then offers only that facility's units, and the card's SUMIFS uses both cells. The OFFSET version needs no named ranges. If you insert a new unit's row inside its facility's block, the board ranges in the formula grow to include it, so the list keeps working.
 
 </details>
 <!-- END GENERATED: bonus-answers -->
@@ -797,8 +821,8 @@ Three hospitals each have an Intensive Care Unit, so the unit name alone is ambi
   formula.
 - Validation doesn't check data that was already there or data that arrives by paste. Audit with **Circle Invalid Data** (or
   an equivalent formula).
-- A dependent drop-down pairs named ranges with `INDIRECT(SUBSTITUTE(parent," ","_"))`. Changing the parent doesn't clear the
-  child, so audit it too.
+- A dependent drop-down pairs named ranges with `INDIRECT(SUBSTITUTE(parent," ","_"))`, or uses OFFSET to cut the child list
+  out of a long list grouped by parent. Changing the parent doesn't clear the child, so audit it too.
 - Fix thresholds with **Type: Number** when they mean something (par level, an 85% target, a 60-minute TAT). The defaults
   (Automatic, Percent, Percentile) only describe the spread of today's data.
 - To color whole rows, lock the column and leave the row free (`$K2`), and guard date tests against blanks.

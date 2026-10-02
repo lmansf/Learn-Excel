@@ -414,7 +414,8 @@ def build() -> Lesson:
              solution=("1. On **Lists**, select " + ", then ".join(f"**{b}**" for b in block_ranges[:1]) +
                        " and choose **Formulas → Create from Selection**, tick only **Top row**, and click **OK**. "
                        "Repeat for " + ", ".join(f"**{b}**" for b in block_ranges[1:]) + ". "
-                       "**Formulas → Name Manager** (Ctrl + F3) now lists four names such as `Cedar_Ridge_Medical_Center`.\n"
+                       "**Formulas → Name Manager** (Windows: Ctrl + F3) now includes four new names, such as "
+                       "`Cedar_Ridge_Medical_Center`.\n"
                        f"2. Select **{ic('Facility')}** on IntakeLog → **Data Validation** → **List**, Source `={fac_rng}`.\n"
                        f"3. Select **{ic('Department')}** with **I2** active → **Data Validation** → **List**, Source "
                        "`=INDIRECT(SUBSTITUTE($H2,\" \",\"_\"))`. Click **OK**.\n"
@@ -444,7 +445,7 @@ def build() -> Lesson:
                          f"{dup_ids} repeated IDs: five appear twice and one appears three times, so {dup_cells} cells light up even though only "
                          f"{extra_rows} rows are extra. When you clean the feed, you delete {extra_rows} rows, not {dup_cells}."),
         Task(f"Labs, TATMin ({lc('TATMin')}): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → "
-             "Top 10 Items. What is the smallest TAT that your rule highlights?",
+             "Top 10 Items. What is the smallest TAT that your rule highlights? Enter it in minutes.",
              answer=tenth, title="Top 10 turnaround times (smallest highlighted value)",
              hint="Ties with the 10th value are highlighted too. LARGE gives the k-th largest",
              solution=(f"1. Select **{lc('TATMin')}**.\n"
@@ -458,16 +459,17 @@ def build() -> Lesson:
                              f"{tenth} minutes. " if top_cells > 10 else
                              f"Here there's no tie at the boundary, so exactly 10 cells are highlighted. ")
                           + "Either way, the smallest highlighted value is LARGE(range,10).")),
-        Task(f"Supplies, PctOfPar ({sup.rng('PctOfPar', absolute=False, sheet=False)}) = QtyOnHand ÷ ParLevel. Add Data Bars, "
-             "then edit the rule so Minimum is Number 0 and Maximum is Number 1. A full bar now means \"stocked to par.\" "
-             "How many items show a completely full bar?",
+        Task(f"Supplies, PctOfPar ({sup.rng('PctOfPar', absolute=False, sheet=False)}) is QtyOnHand ÷ ParLevel. Add Data Bars, "
+             "then edit the rule so Minimum is Type Number, Value 0 and Maximum is Type Number, Value 1. A full bar now means "
+             "\"stocked to par or above.\" How many items show a full bar?",
              answer=full_bars, title="Data bars on % of par (full bars)",
-             hint="Values at or above the Maximum get a full bar",
+             hint="Every value at or above the Maximum gets a full bar. Filter by Color can't see bars, but COUNTIF can count them",
              solution=(f"1. On **Supplies**, select **{sup.rng('PctOfPar', absolute=False, sheet=False)}**.\n"
                        "2. **Home → Conditional Formatting → Data Bars** and pick any fill.\n"
                        "3. **Conditional Formatting → Manage Rules → Edit Rule**. Set **Minimum** Type = **Number**, Value = 0, "
                        "and **Maximum** Type = **Number**, Value = 1. Click **OK** twice.\n"
-                       f"4. Count the full bars: **{full_bars}**.\n\n"
+                       "4. A data bar isn't a fill color, so Filter by Color can't find the full ones. Count them with the formula "
+                       f"below instead, because every value of 1 (100%) or more gets a full bar: **{full_bars}**.\n\n"
                        f"Equivalent formula: `=COUNTIF({sr('PctOfPar')},\">=1\")`"),
              live=f"=COUNTIF({sr('PctOfPar')},\">=1\")",
              explanation=f"With the default Automatic settings, the longest bar belongs to the largest value (about "
@@ -484,23 +486,27 @@ def build() -> Lesson:
                        "2. **Home → Conditional Formatting → Color Scales → Red - Yellow - Green Color Scale**. The first color "
                        "in the name goes to the highest values, so high occupancy is red.\n"
                        "3. **Conditional Formatting → Manage Rules → Edit Rule** shows Minimum = Lowest Value, "
-                       "Midpoint = Percentile 50, Maximum = Highest Value.\n\n"
+                       "Midpoint = Percentile 50, Maximum = Highest Value.\n"
+                       "4. Percentile 50 is the median, so the formula below gives the occupancy that gets pure yellow.\n\n"
                        f"Equivalent formula: `=MEDIAN({rr(cen, 'Occupancy')})`"),
              live=f"=MEDIAN({rr(cen, 'Occupancy')})",
              explanation="The 50th percentile is the median, the middle value when you sort the days by occupancy. "
-                         + (f"Here {median_days} days have exactly that occupancy, so they show pure yellow. "
+                         + (f"Here {median_days} days have exactly that occupancy, so they all show pure yellow. "
                             if median_days > 1 else "Exactly one day has that value and shows pure yellow. ")
-                         + "So the default color scale's middle color marks a typical day for this unit, not a target. "
+                         + "The default color scale's middle color therefore marks a typical day for this unit, not a target. "
                            "To color against a target such as 85%, change the midpoint Type to Number (you'll do that in the bonus)."),
-        Task(f"Labs, TATMin: apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon Order, set both "
-             "Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green below 45). "
-             "How many cells show a yellow light?",
+        Task(f"Labs, TATMin ({lc('TATMin')}): apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon "
+             "Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green "
+             "below 45). How many cells show a yellow light?",
              answer=yellow, title="Traffic-light icons on turnaround time (yellow count)",
-             hint="Each icon's test is \">=\". The default Type is Percent, not Number",
+             hint="Each icon's test is \">=\". The default Type is Percent, not Number. Filter by Color → Filter by Cell Icon "
+                  "counts icons",
              solution=(f"1. Select **{lc('TATMin')}** → **Home → Conditional Formatting → Icon Sets → 3 Traffic Lights (Unrimmed)**.\n"
                        "2. **Manage Rules → Edit Rule**. Click **Reverse Icon Order** so red is on top.\n"
                        "3. Red: **>=**, Value **60**, Type **Number**. Yellow: **>=**, Value **45**, Type **Number**. "
-                       "Green covers everything below 45. Click **OK** twice.\n\n"
+                       "Green covers everything below 45. Click **OK** twice.\n"
+                       "4. Click the TATMin filter arrow → **Filter by Color** → **Filter by Cell Icon** → the yellow light, and "
+                       f"read the count on the status bar: **{yellow}**. Clear the filter afterward.\n\n"
                        f"Equivalent formula: `=COUNTIFS({lr('TATMin')},\">=45\",{lr('TATMin')},\"<60\")`"),
              live=f"=COUNTIFS({lr('TATMin')},\">=45\",{lr('TATMin')},\"<60\")",
              explanation="The default thresholds are Percent 67 and 33. They split the span between the lowest and highest TAT "
@@ -515,7 +521,9 @@ def build() -> Lesson:
              solution=(f"1. On **Labs**, type **A2:{last_lab_col}{lab.last_row}** in the Name Box and press **Enter**. "
                        "The rows are selected and A2 is the active cell.\n"
                        "2. **Home → Conditional Formatting → New Rule → Use a formula to determine which cells to format**.\n"
-                       "3. Formula: `=OR($K2=\"HH\",$K2=\"LL\")`. Click **Format → Fill**, pick red, then **OK** twice.\n\n"
+                       "3. Formula: `=OR($K2=\"HH\",$K2=\"LL\")`. Click **Format → Fill**, pick red, then **OK** twice.\n"
+                       "4. Filter any column from B to K by that red fill (no earlier rule colors those columns) and read the "
+                       f"count on the status bar: **{crit_rows}**.\n\n"
                        f"Equivalent formula: `=COUNTIF({lr('AbnormalFlag')},\"HH\")+COUNTIF({lr('AbnormalFlag')},\"LL\")`"),
              live=f"=COUNTIF({lr('AbnormalFlag')},\"HH\")+COUNTIF({lr('AbnormalFlag')},\"LL\")",
              explanation=f"You write the rule for the active cell's row (row 2), and Excel shifts it for every other cell in the "
@@ -535,7 +543,8 @@ def build() -> Lesson:
                        "with an amber (light orange) fill → **OK**.\n"
                        "4. **Conditional Formatting → Manage Rules**, set **Show formatting rules for: This Worksheet**. The amber "
                        "rule is on top because Excel adds each new rule at the top of the list. Select the red rule and click "
-                       "**▲** (Move Up) so it sits above the amber rule, then click **OK**.\n\n"
+                       "**▲** (Move Up) so it sits above the amber rule, then click **OK**.\n"
+                       f"5. Filter column A by the amber fill and read the count on the status bar: **{amber}**.\n\n"
                        f"Equivalent formula: `=COUNTIFS({sr('ExpirationDate')},\">\"&ReportDate,{sr('ExpirationDate')},"
                        f"\"<=\"&ReportDate+ExpiringWindowDays)`"),
              live=(f"=COUNTIFS({sr('ExpirationDate')},\">\"&ReportDate,{sr('ExpirationDate')},"
@@ -564,6 +573,8 @@ def build() -> Lesson:
     sel = [r for r in nov if r["Facility"] == pick_fac and r["Unit"] == pick_unit]
     card_occ = sum(r["MidnightCensus"] for r in sel) / sum(r["StaffedBeds"] for r in sel)
     nr = lambda col: f"NovCensus!${novsd.col(col)}${novsd.first_row}:${novsd.col(col)}${novsd.last_row}"
+    hosp_names = list(dict.fromkeys(r["Facility"] for r in board))
+    hosp_last = H_FIRST + len(hosp_names) - 1
     unit_src = f"=OFFSET($B${H_FIRST - 1},MATCH($B$4,$A${H_FIRST}:$A${H_LAST},0),0,COUNTIF($A${H_FIRST}:$A${H_LAST},$B$4),1)"
 
     L.bonus_title = "Bonus: The 7 a.m. bed huddle board"
@@ -571,12 +582,12 @@ def build() -> Lesson:
         "It's 7 a.m. on Wednesday, November 26, 2025, the day before Thanksgiving. The house supervisor runs the system bed "
         "huddle from the Huddle sheet: one row per inpatient unit, with the midnight census for 11/24 and 11/25, the "
         "overnight change, and occupancy. Make the board readable at a glance, then build the unit selector that drives the "
-        f"gray unit card (B6:B9). The card reads the NovCensus sheet (every unit, Nov 1–25). The board's data is in rows "
-        f"{H_FIRST}–{H_LAST}.")
+        f"gray unit card (Huddle!B6:B9). The card reads the NovCensus sheet (every unit, Nov 1–25). The board's data is in "
+        f"rows {H_FIRST}–{H_LAST}. Build every rule and the selector on the Huddle sheet, and type your answers on the Bonus sheet.")
     L.bonus = [
-        Task(f"Apply a 3-color scale to Occupancy ({hb('G').replace('Huddle!', '')}): Minimum = Lowest Value (green), Midpoint = "
-             "Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded on the red "
-             "side of yellow (occupancy above 85%)?",
+        Task(f"On Huddle, apply a 3-color scale to Occupancy ({hb('G').replace('Huddle!', '')}): Minimum = Lowest Value (green), "
+             "Midpoint = Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded "
+             "on the red side of yellow (occupancy above 85%)?",
              answer=above85, title="Color scale with an 85% target midpoint",
              hint="New Rule → Format all cells based on their values → 3-Color Scale",
              solution=(f"1. Select **{hb('G').replace('Huddle!', '')}** on Huddle → **Conditional Formatting → New Rule → "
@@ -587,9 +598,9 @@ def build() -> Lesson:
              live=f"=COUNTIF({hb('G')},\">0.85\")",
              explanation="With a Number midpoint, yellow means \"exactly at target\" instead of \"a typical unit.\" Every unit "
                          "above 85% shades from yellow toward red, and the reddest cell is simply the fullest unit."),
-        Task(f"Apply Icon Sets → 3 Arrows (Colored) to Change ({hb('F').replace('Huddle!', '')}). Edit the rule so both Types are "
-             "Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How many units show "
-             "an up arrow?",
+        Task(f"On Huddle, apply Icon Sets → 3 Arrows (Colored) to Change ({hb('F').replace('Huddle!', '')}). Edit the rule so "
+             "both Types are Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How "
+             "many units show an up arrow?",
              answer=up, title="Arrows on the overnight census change",
              hint="Type = Number, not the default Percent",
              solution=(f"1. Select **{hb('F').replace('Huddle!', '')}** → **Conditional Formatting → Icon Sets → 3 Arrows (Colored)**.\n"
@@ -600,9 +611,9 @@ def build() -> Lesson:
              explanation=f"Census rose overnight on {up} units, held steady on {flat}, and fell on {down}. Number thresholds keep "
                          "the arrows honest on any day. The default Percent thresholds depend on the day's smallest and largest "
                          "change, so a unit that gained one patient could show a sideways arrow on a busier day."),
-        Task(f"Add two formula rules to the whole board (A{H_FIRST}:G{H_LAST}): a red fill when the 11/25 census is above "
-             "staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the overflow rule "
-             "above the amber rule. How many rows end up amber?",
+        Task(f"On Huddle, add two formula rules to the whole board (A{H_FIRST}:G{H_LAST}): a red fill when the 11/25 census "
+             "is above staffed beds (overflow), and an amber fill when occupancy is at least 90%. In Manage Rules, put the "
+             "overflow rule above the amber rule. How many rows end up amber?",
              answer=amber_b, title="Overflow (red) above near-capacity (amber) row rules",
              hint="Both rules are TRUE for an overflow unit, and the rule on top wins the fill",
              solution=(f"1. Select **A{H_FIRST}:G{H_LAST}** with A{H_FIRST} active.\n"
@@ -619,34 +630,41 @@ def build() -> Lesson:
                          if at90 >= 2 else
                          f"There are {overflow} overflow units, and both rules are TRUE for them. The overflow rule is on top, so "
                          f"those rows stay red, and {amber_b} rows are amber."),
-        Task("Build the unit selector. Give B4 a List validation from the Hospitals list (I12:I14). Give B5 a dependent List "
-             "built from the board's own Facility and Unit columns, with no named ranges. Then choose Cedar Ridge Medical "
-             "Center → Intensive Care Unit. The gray cell shows the card's Nov 1–25 occupancy. What is it?",
+        Task(f"On Huddle, build the unit selector. Give B4 a List validation from the Hospitals list (I{H_FIRST}:I{hosp_last}). "
+             "Give B5 a dependent List built from the board's own Facility and Unit columns, with no named ranges. Then pick "
+             "Cedar Ridge Medical Center in B4 and Intensive Care Unit in B5. The gray answer cell on the Bonus sheet copies the card's "
+             "Nov 1–25 occupancy (Huddle!B8), so it fills in and turns ✔ when your selector works.",
              answer=card_occ, fmt="0.0%", title="Dependent unit selector driving the card",
-             hint="OFFSET(start, rows down, 0, height, 1) with MATCH for the first row and COUNTIF for the height",
-             solution=("1. Select **B4** on Huddle → **Data Validation → List**, Source `=$I$12:$I$14`.\n"
+             hint="Adapt the OFFSET example in guide section 6: MATCH finds the facility's first row and COUNTIF its height",
+             solution=(f"1. Select **B4** on Huddle → **Data Validation → List**, Source `=$I${H_FIRST}:$I${hosp_last}`.\n"
                        f"2. Select **B5** → **Data Validation → List**, Source:\n\n"
                        f"   `{unit_src}`\n\n"
-                       "   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board is sorted "
-                       "by facility, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, "
+                       "   MATCH finds the facility's first row on the board, and COUNTIF counts its units. The board lists each "
+                       "facility's units together, so OFFSET returns exactly that facility's block of unit names. If B4 is still empty, "
                        "Excel warns that the source currently evaluates to an error. Click **Yes**, or pick a facility in B4 "
                        "first.\n"
-                       "3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. Read the card.\n\n"
-                       "If you prefer INDIRECT, copy each hospital's units into its own column under the hospital's name (like "
-                       "the Lists sheet in task 6), name the columns with Create from Selection, and use "
-                       "`=INDIRECT(SUBSTITUTE($B$4,\" \",\"_\"))`. The result is the same."),
+                       "3. Pick **Cedar Ridge Medical Center** in B4, then **Intensive Care Unit** in B5. The card fills in, "
+                       "and the gray answer cell on the Bonus sheet shows its occupancy.\n\n"
+                       "The guide's version starts at Lists!K1 and uses $H2, because every intake row has its own facility. Here "
+                       "the start is the board's Unit header (B11) and the parent is the single cell $B$4.\n\n"
+                       "An INDIRECT version would need a second set of named lists that hold only the inpatient units. The names "
+                       "from task 6 (such as `Cedar_Ridge_Medical_Center`) already point at every department on the Lists sheet, "
+                       "so new names would have to differ from them. OFFSET skips that setup because it reads the board itself."),
              summary='=IF(Huddle!$B$8="","",Huddle!$B$8)',
              fill={"range": "Huddle!B4:B5", "values": [pick_fac, pick_unit]},
              live=(f"=SUMIFS({nr('MidnightCensus')},{nr('Facility')},\"{pick_fac}\",{nr('Unit')},\"{pick_unit}\")"
                    f"/SUMIFS({nr('StaffedBeds')},{nr('Facility')},\"{pick_fac}\",{nr('Unit')},\"{pick_unit}\")"),
              explanation="Three hospitals each have an Intensive Care Unit, so the unit name alone is ambiguous. The dependent list "
                          "forces a facility first and then offers only that facility's units, and the card's SUMIFS uses both "
-                         "cells. The OFFSET version needs no named ranges, so it keeps working when you add a unit to the board "
-                         "(as long as the board stays sorted by facility)."),
+                         "cells. The OFFSET version needs no named ranges. If you insert a new unit's row inside its facility's block, "
+                         "the board ranges in the formula grow to include it, so the list keeps working."),
     ]
 
     L.start_notes = [
-        "Part A of the practice uses IntakeLog and Lists. Part B uses Labs, Supplies, and Census. The bonus uses Huddle and NovCensus.",
+        "Part A of the practice uses IntakeLog and Lists (the drop-down source lists). Part B uses Labs, Supplies, and Census. "
+        "The bonus uses Huddle (the board you format) and NovCensus (the data behind its unit card).",
+        "The data sheets are Excel Tables, so their filter arrows are already on. Use them to filter by color and count "
+        "what your rules highlight.",
         "ReportDate (12/31/2025) and ExpiringWindowDays (90) are named cells on the Lists sheet. Use the names in your rules.",
         "Circle Invalid Data circles disappear when you save or close the file. They are a checking tool, not formatting.",
     ]
@@ -696,7 +714,8 @@ def build() -> Lesson:
         ws["E19"] = ("Departments by facility, one column per facility. Task 6: name each column with Formulas → Create from "
                      "Selection (Top row).")
         ws["E19"].font = Font(italic=True, color="595959")
-        ws["J34"] = "The same pairs in long form (used by the answer key's check formula)."
+        ws["J34"] = ("The same pairs in long form, grouped by facility (used by the guide's OFFSET example and the answer "
+                     "key's check formula).")
         ws["J34"].font = Font(italic=True, color="595959")
         for col, w in {"A": 30, "B": 3, "C": 32, "D": 3, "E": 30, "F": 32, "G": 30, "H": 32, "I": 3, "J": 32, "K": 32,
                        "L": 3, "M": 22, "N": 12}.items():
@@ -757,7 +776,7 @@ def build() -> Lesson:
             hs[f"I{H_FIRST - 1}"] = "Hospitals"
             hs[f"I{H_FIRST - 1}"].font = bold_white
             hs[f"I{H_FIRST - 1}"].fill = HEADER_FILL
-            hospitals = list(dict.fromkeys(r["Facility"] for r in board))
+            hospitals = hosp_names
             for k, hname in enumerate(hospitals):
                 hs[f"I{H_FIRST + k}"] = hname
                 hs[f"I{H_FIRST + k}"].border = BOX

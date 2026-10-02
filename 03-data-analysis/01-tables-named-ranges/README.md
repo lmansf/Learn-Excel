@@ -6,10 +6,10 @@
 Bluestone's supply chain team gets a fresh inventory snapshot every week. Today it has 257 stock rows, and next Monday it will
 have a few more or a few less. A formula like `=SUM(Inventory!J2:J258)` still stops at row 258 when next week's extra rows
 are pasted below it. It quietly misses them, and nobody notices until a unit runs out of saline flushes. **Excel Tables** fix
-this because they grow with the data, and their formulas read like the question you're asking: `=SUM(tblInventory[QtyOnHand])`. **Named ranges** do the
-same for the settings a report depends on, such as the report date and the 90-day expiry window. In this lesson you turn a raw
-inventory export into a Table, use it to find stockouts, expired stock, and overdue counts, and then build a reorder report
-that updates itself.
+this because they grow with the data, and their formulas read like the question you're asking:
+`=SUM(tblInventory[QtyOnHand])`. **Named ranges** do the same for the settings a report depends on, such as the report date
+and the 90-day expiry window. In this lesson you turn a raw inventory export into a Table, use it to find stockouts, expired
+stock, and overdue counts, and then build a reorder report that updates itself.
 
 ## What you'll learn
 
@@ -42,7 +42,8 @@ shifts. Keep plain ranges for small blocks that aren't lists, such as the two-ro
 ### 2. Turn a range into a Table
 
 1. Click any single cell inside the data. On the Inventory sheet, A2 works.
-2. Press **Ctrl + T** (Mac: **Control + T**), or choose **Insert → Table**. On Windows, **Ctrl + L** does the same thing.
+2. Press **Ctrl + T** (Mac: **Control + T** or **⌘ + T**), or choose **Insert → Table**. On Windows, **Ctrl + L** does the
+   same thing.
 3. Excel guesses the range from the block of filled cells around your cell and shows it in the dialog, for example
    `=$A$1:$S$258`. Check it.
 4. Make sure **My table has headers** is ticked, then click **OK**.
@@ -493,7 +494,7 @@ Tables and names work together. In the practice tasks, Table columns supply the 
 
 | Action | Windows | Mac |
 |---|---|---|
-| Create a Table | Ctrl + T (or Ctrl + L) | Control + T |
+| Create a Table | Ctrl + T (or Ctrl + L) | Control + T (or ⌘ + T) |
 | Toggle the Total Row | Ctrl + Shift + T | **Table → Total Row** |
 | Toggle the filter buttons | Ctrl + Shift + L | ⌘ + Shift + F |
 | Open a header's filter menu | Alt + ↓ | ⌥ + ↓ |

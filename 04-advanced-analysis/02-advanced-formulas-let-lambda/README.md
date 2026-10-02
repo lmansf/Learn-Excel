@@ -3,8 +3,8 @@
 > **Level:** Advanced · **Time:** about 65 minutes · **Workbook:** [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx)
 > **Data:** All 5,586 inpatient stays at Bluestone's three hospitals, Jan 2024–Dec 2025 (with the Readmit30 flag removed so you can rebuild it), the diagnosis lookup with benchmark LOS, 1,018 lab results from Ashby Falls stays discharged Jul–Dec 2025, and the Bluestone Memorial ICU's daily census for 2024–2025.
 
-The quality director wants 30-day readmission rates by hospital, calculated with CMS-style exclusions, and she wants them
-to update every month without anyone rebuilding a PivotTable. That question can't be answered with SUMIFS alone. Each stay has to be
+The quality director wants 30-day readmission rates by hospital, calculated with the exclusions that **CMS** (the Centers for
+Medicare & Medicaid Services) uses, and she wants them to update every month without anyone rebuilding a PivotTable. That question can't be answered with SUMIFS alone. Each stay has to be
 compared with every *other* stay of the same patient, some stays have to be excluded, and the result has to be divided
 hospital by hospital. In this lesson you'll learn the formula tools that make questions like this a single, readable,
 reusable formula: boolean array logic, **LET** for naming the steps, **LAMBDA** for turning the steps into your own
@@ -49,7 +49,7 @@ The tasks use two definitions throughout:
 Compare a whole column with a value and Excel returns an **array**: one result per row, held in memory. Here's what two
 comparisons return for the first five stays on the Stays sheet:
 
-| Row | FacilityID | DischargeDisposition | `(FacilityID="F01")` | `(Disposition="Home/Self-Care")` | `A*B` (AND) | `A+B` (OR) |
+| Row | FacilityID | DischargeDisposition | A: `(FacilityID="F01")` | B: `(Disposition="Home/Self-Care")` | `A*B` (AND) | `A+B` (OR) |
 |:-:|:-:|---|:-:|:-:|:-:|:-:|
 | 2 | F01 | Home Health | TRUE | FALSE | 0 | 1 |
 | 3 | F03 | Home/Self-Care | FALSE | TRUE | 0 | 1 |
@@ -57,7 +57,8 @@ comparisons return for the first five stays on the Stays sheet:
 | 5 | F01 | Home/Self-Care | TRUE | TRUE | **1** | **2** |
 | 6 | F03 | Home/Self-Care | FALSE | TRUE | 0 | 1 |
 
-Arithmetic turns TRUE into 1 and FALSE into 0. That one rule gives you **boolean math**:
+Arithmetic turns TRUE into 1 and FALSE into 0. You used that rule in Lessons 2.1 and 2.4 to count with
+`SUMPRODUCT(--(condition))`. Combining several conditions this way is called **boolean math**:
 
 | Expression | Result | Use it for |
 |---|---|---|
@@ -75,9 +76,9 @@ with a 1 on every F01 stay that went home, and `SUM` or `SUMPRODUCT` of that arr
 > returns a single TRUE or FALSE. Inside array formulas, use `*` for AND and `+` for OR. Section 7 shows how MAP and BYROW
 > let you use AND and OR safely.
 
-> ⚠️ **Numbers never equal text.** `YEAR(tblStays[DischargeDateTime])` returns numbers, so `YEAR(…)="2025"` is FALSE on
-> every row. Write `YEAR(…)=2025` without quotes. COUNTIFS accepts `"2025"` because it converts criteria strings, but a
-> plain `=` comparison doesn't. Task 13 is a bug like this.
+> ⚠️ **Numbers never equal text.** `MONTH(tblStays[AdmitDateTime])` returns numbers, so `MONTH(…)="12"` is FALSE on every
+> row, even for December admissions. Write `MONTH(…)=12` without quotes. COUNTIFS accepts a criterion like `"12"` because it
+> converts criteria strings to numbers, but a plain `=` comparison doesn't convert anything.
 
 > 💡 **Tip:** To see a short array, type a test formula such as `=SUM((Stays!C2:C6="F01")*1)`, select the part
 > `Stays!C2:C6="F01"` in the formula bar, and press **F9** (Mac: **Fn + F9**). Excel shows `{TRUE;FALSE;FALSE;TRUE;FALSE}`.
@@ -107,8 +108,8 @@ The result is **51**. Add the charges column as a second argument and the same c
 =SUMPRODUCT((tblStays[FacilityID]="F03")*(YEAR(tblStays[DischargeDateTime])=2025)*(tblStays[DischargeDisposition]="Skilled Nursing Facility"), tblStays[TotalCharges])
 ```
 
-You met COUNTIFS and SUMIFS in Lesson 2.5. They're faster and simpler when they can do the job, so use SUMPRODUCT when
-they can't:
+You met SUMPRODUCT in Lesson 2.4 and COUNTIFS and SUMIFS in Lesson 2.5. COUNTIFS and SUMIFS are faster and simpler when
+they can do the job, so use SUMPRODUCT when they can't:
 
 | Situation | COUNTIFS / SUMIFS | SUMPRODUCT |
 |---|---|---|
@@ -140,6 +141,24 @@ in 2025 is **$73,787.82**:
 ```
 
 That repeats the conditions twice, which is exactly the problem LET solves in section 5.
+
+**Testing against a list.** To ask whether each row's value is one of several values, MATCH the whole column against an
+**array constant**, a list typed between braces (Lesson 2.5). MATCH returns a position for every value it finds and `#N/A` for
+every value it doesn't, so ISNUMBER and ISNA turn its result into TRUE/FALSE:
+
+| Test | TRUE on rows whose value is… |
+|---|---|
+| `ISNUMBER(MATCH(column, {list}, 0))` | on the list |
+| `ISNA(MATCH(column, {list}, 0))` | **not** on the list |
+
+Of the 2,905 stays discharged in 2025, **2,402** went home (Home/Self-Care or Home Health) and the other **503** didn't:
+
+```
+=SUMPRODUCT(ISNUMBER(MATCH(tblStays[DischargeDisposition], {"Home/Self-Care","Home Health"}, 0))*(YEAR(tblStays[DischargeDateTime])=2025))
+=SUMPRODUCT(ISNA(MATCH(tblStays[DischargeDisposition], {"Home/Self-Care","Home Health"}, 0))*(YEAR(tblStays[DischargeDateTime])=2025))
+```
+
+A list is shorter than one comparison per value, and you can add a value to it without touching the rest of the formula.
 
 > 📋 **SUM or SUMPRODUCT?** In Microsoft 365 and Excel 2021+, `=SUM((condition1)*(condition2))` works too, because these
 > versions evaluate arrays in any formula. In Excel 2019 and earlier, SUM needed **Ctrl + Shift + Enter** (Mac: **⌘ + Shift +
@@ -223,14 +242,30 @@ Bluestone hospital." To test one row, you count the rows that meet three conditi
 
 A count above 0 means the stay was followed by a readmission. In a Table, `[@PatientID]` means "this row's PatientID," so the
 criteria come from the current row. Criteria such as `">"&[@DischargeDateTime]` join a comparison operator to a value, as in
-Lesson 2.5.
+Lesson 2.5. Type the formula in the first cell of an empty Table column and Excel fills it down every row as a **calculated
+column** (Lesson 3.1).
+
+**Every row in one formula.** COUNTIFS also accepts a whole column as a *criteria* argument. It then counts once for each value
+in that column and returns an array with one count per stay. On the Sandbox sheet,
+`=COUNTIFS(tblStays[PatientID], tblStays[PatientID])` spills 5,586 numbers: how many stays each row's patient has. Test the
+array and add it up to get one answer:
+
+```
+=SUM(--(COUNTIFS(tblStays[PatientID], tblStays[PatientID])>1))
+```
+
+The result is **4,414**, the stays that belong to patients with more than one stay. Criteria that you build with `&` work the
+same way: `">"&tblStays[DischargeDateTime]` is an array of 5,586 criteria strings, one for each stay. Only the *criteria*
+arguments can be arrays. The *range* arguments must still be real ranges, such as Table columns (section 5 shows how this
+plays out inside LET).
 
 > ⚠️ **Dates, not date-times.** The rule counts calendar days. If you test `AdmitDateTime <= DischargeDateTime + 30`, a patient
 > discharged at 10:00 and readmitted at 15:00 on day 30 is missed, because 15:00 is later than 10:00. `INT()` puts both sides
 > on whole dates.
 
 > 📋 **Performance:** a COUNTIFS column on 5,586 rows compares every row with every other row, about 31 million comparisons
-> per criterion. Excel handles that in a second or two. On much larger tables, consider Power Query (Lesson 4.3) instead.
+> per criterion, and the one-formula version does the same work. Excel handles that in a second or two. On much larger tables,
+> consider Power Query (Lesson 4.3) instead.
 
 #### 4d. CHOOSE, and why INDEX beats OFFSET and INDIRECT
 
@@ -341,7 +376,8 @@ than the benchmark. Divide the totals rather than averaging each stay's ratio, s
 
 **LAMBDA** turns a calculation into a function with **parameters** (named inputs). You build one in three steps.
 
-**Step 1. Write the calculation as a LET**, with the inputs as names. You already did this for LOS.
+**Step 1. Write the calculation as a LET**, with the inputs as names. You already did this for LOS. The whole LET then
+becomes the LAMBDA's calculation, for example `LAMBDA(weight_lb, height_in, LET(bmi, 703*weight_lb/height_in^2, ROUND(bmi, 1)))`.
 
 **Step 2. Test it in a cell.** A LAMBDA on its own returns `#CALC!`, because nothing has called it yet. Add the arguments in a
 second pair of parentheses right after it:
@@ -353,7 +389,8 @@ second pair of parentheses right after it:
 
 **Step 3. Save it in the Name Manager** so you can call it by name anywhere in the workbook:
 
-1. Choose **Formulas → Name Manager → New** (Windows: **Ctrl + F3**, then New. Mac: **Fn + ⌃ + F3**, or **Formulas → Define Name**).
+1. Choose **Formulas → Name Manager** (Windows: **Ctrl + F3**) and click **New**. On a Mac, **Formulas → Define Name** opens the
+   same fields.
 2. Type the function's name in **Name**, for example `MIDNIGHTS`. The same rules as LET names apply.
 3. Leave **Scope** as *Workbook*.
 4. In **Comment**, describe the inputs and the result. Excel shows the comment as a tooltip when you type the function.
@@ -480,7 +517,9 @@ stays that ended in death or hospice by looping over a list of dispositions:
 =REDUCE(0, {"Expired","Hospice"}, LAMBDA(total, dispo, total + COUNTIF(tblStays[DischargeDisposition], dispo)))
 ```
 
-The result is **165**. `{"Expired","Hospice"}` is an **array constant**: a list typed between braces, separated by commas.
+The result is **165**. `{"Expired","Hospice"}` is an array constant like the ones in section 3. Commas separate items across
+a row, and semicolons separate items down a column, so `{"F01";"F02";"F03"}` (used by MAKEARRAY below) is a vertical list of
+three facility IDs. REDUCE, MAP, and SCAN accept either shape.
 
 #### MAKEARRAY
 
@@ -522,7 +561,13 @@ A long formula that returns a believable number can still be wrong. These tools 
 1. Select the cell, then choose **Formulas → Evaluate Formula** (in the Formula Auditing group).
 2. The part Excel will calculate next is underlined. Click **Evaluate** to replace it with its result.
 3. Keep clicking. When a part refers to another formula cell, **Step In** shows that cell's formula and **Step Out** returns.
-4. When an array turns all FALSE, or a number looks wrong, you've found the step to fix. **Restart** begins again.
+4. Stop at any step whose result can't be right, such as an error, a number that looks wrong, or a comparison between different
+   data types. That's the step to fix. **Restart** begins again.
+
+> ⚠️ **You can only read the start of a long array.** On a Table column, Evaluate Formula shows thousands of values, and the
+> first ones may not be typical. The Stays sheet starts in January 2024, so a correct test for 2025 shows FALSE on every value
+> you can see. Look at the data types instead. Text appears in quotes, such as `"F02"`, and numbers and dates appear without
+> quotes. To check a whole condition, count its TRUE values (see *Count each condition on its own* below).
 
 > 📋 Evaluate Formula is in every Windows version of Excel, but Excel for Mac doesn't have it. On a Mac, copy pieces of the
 > formula into Sandbox cells and let them spill, or select a piece in the formula bar and press **Fn + F9** (then **Esc**).
@@ -540,6 +585,19 @@ A long formula that returns a believable number can still be wrong. These tools 
 **Debugging a LET.** Temporarily replace the last argument with one of the names. If the average looks wrong, change
 `SUM(los*keep)/SUM(keep)` to `SUM(keep)` and press Enter. For the heart failure example in section 5 you should see 36. If you see 0,
 one of the conditions in `keep` is never TRUE. Put the calculation back when you're done.
+
+**Count each condition on its own.** When a count with several conditions looks wrong, type each condition into its own
+`SUM(--(…))` on the Sandbox sheet. For the heart failure example in section 5:
+
+| Formula | Result |
+|---|:-:|
+| `=SUM(--(tblStays[FacilityID]="F02"))` | 701 |
+| `=SUM(--(tblStays[PrimaryDxCode]="I50.9"))` | 447 |
+| `=SUM(--(YEAR(tblStays[DischargeDateTime])=2025))` | 2,905 |
+| All three conditions multiplied together | 36 |
+
+A condition that returns 0 is never TRUE, so that's the one to fix. The combined count can't be larger than the smallest single
+count, so a combined count above 447 here would also point to a mistake.
 
 A checklist for any long formula:
 

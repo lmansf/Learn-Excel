@@ -25,7 +25,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.formula import ArrayFormula
 
 from xlcourse import Lesson, Task, data
-from xlcourse.lesson import INPUT_BORDER, INPUT_FILL, NAVY
+from xlcourse.lesson import INPUT_BORDER, INPUT_FILL, NAVY, WRAP_TOP, _estimate_lines, _plain
 from xlcourse.xlfn import to_file_formula
 
 CODE = "4.1"
@@ -105,7 +105,10 @@ ANCHORS = {
     "N6": ("Bonus · Unit leaderboard", "Header row, then data ↓ (4 columns)"),
 }
 WIDTHS = {"A": 2, "B": 31, "C": 2, "D": 26, "E": 2, "F": 12, "G": 12, "H": 2, "I": 13, "J": 26, "K": 10, "L": 14,
-          "M": 2, "N": 32, "O": 32, "P": 12, "Q": 14}
+          "M": 2, "N": 32, "O": 32, "P": 12, "Q": 14, "R": 3, "S": 13, "T": 2, "U": 13, "V": 30, "W": 10}
+# Scratch area for the guide's try-it formulas (README section 1 uses S6; section 12 uses U6 and W6). No yellow cells:
+# nothing here is graded.
+GUIDE_AREA = ("S4:W4", "Guide examples (not graded)", "Try the lesson guide's formulas here ↓ (S6, U6, W6)")
 OBSTRUCTION = ("D11", "draft")
 LAST_WS_ROW = 60  # summaries read anchor:row60, far more than any spill here needs
 
@@ -265,6 +268,10 @@ def build() -> Lesson:
         col = re.match(r"[A-Z]+", anchor).group(0)
         return f"{WS}!{anchor}:{col}{LAST_WS_ROW}"
 
+    def ws_error(where):
+        """Text a gray summary shows while the learner's spill is an error (#SPILL!, #CALC!, …)."""
+        return f'"Workspace!{where} shows an error. Fix it there."'
+
     # ------------------------------------------------------------------ practice tasks
     spill_fills = {}  # task -> (anchor, formula) written as a real multi-cell array in the self-test copy
 
@@ -287,7 +294,7 @@ def build() -> Lesson:
                "names from the Payer column of tblEncounters. The gray cell counts the names in your list.",
         answer=len(payers), title="Distinct payers (Workspace!B6)",
         solution=f_payers, hint="UNIQUE of one Table column",
-        summary=f'=IF(ISBLANK({WS}!B6),"",COUNTA({ws_rng("B6")}))',
+        summary=f'=IF(ISBLANK({WS}!B6),"",IF(ISERROR({WS}!B6),{ws_error("B6")},COUNTA({ws_rng("B6")})))',
         live=f"=ROWS(UNIQUE({TE}[Payer]))",
         explanation="UNIQUE returns each payer once, in the order it first appears in the table. Only B6 holds the "
                     "formula, and the other names spill into B7, B8, and so on. Click one of them and the formula bar shows "
@@ -297,14 +304,14 @@ def build() -> Lesson:
     t2 = ws_task(
         [("D6", f_lines)],
         prompt="In Workspace!D6, enter one formula that spills the distinct ServiceLine values from tblEncounters sorted "
-               "A to Z. It shows #SPILL! at first. Find out why, fix the problem without moving your formula, and the gray "
-               "cell summarizes your list.",
+               "A to Z. When you press Enter, D6 shows #SPILL!. Find out why and fix the problem without moving your "
+               "formula. The gray cell then summarizes your list.",
         answer=lines_answer, title="Sorted service lines and a #SPILL! fix (Workspace!D6)",
         solution=f_lines, hint="SORT(UNIQUE(…)). Then click the warning icon next to the error",
         # IFERROR: while D6 shows #SPILL!, say where to look instead of echoing the error into the Practice sheet.
         summary=(f'=IF(ISBLANK({WS}!D6),"",IFERROR(COUNTA({ws_rng("D6")})&" service lines · first: "&{WS}!D6'
                  f'&" · last: "&INDEX({ws_rng("D6")},COUNTA({ws_rng("D6")})),'
-                 f'"Workspace!D6 shows an error. Fix it there."))'),
+                 f'{ws_error("D6")}))'),
         live=(f'=ROWS(UNIQUE({TE}[ServiceLine]))&" service lines · first: "&INDEX(SORT(UNIQUE({TE}[ServiceLine])),1)'
               f'&" · last: "&INDEX(SORT(UNIQUE({TE}[ServiceLine]),,-1),1)'),
         explanation=f"A leftover note ('{OBSTRUCTION[1]}') sits in {OBSTRUCTION[0]}, inside the range the list needs. Excel "
@@ -369,7 +376,7 @@ def build() -> Lesson:
                     "'January or February'.",
     )
     t8 = Task(
-        "What is the combined TotalCharges of the five most expensive Emergency encounters?",
+        "What is the combined TotalCharges of the five most expensive Emergency encounters? Enter dollars and cents.",
         answer=round(ed_top5, 2), fmt="#,##0.00", title="Top five ED charges (TAKE)",
         solution=f"=SUM(TAKE(SORT(FILTER({TE}[TotalCharges],{is_ed}),,-1),5))",
         hint="SORT the ED charges largest first, TAKE the first 5, then add them",
@@ -419,19 +426,20 @@ def build() -> Lesson:
     t12 = ws_task(
         [("F6", f_months), ("G6", f_counts)],
         prompt="On the Workspace sheet, make F6 spill the first day of each month of 2025 (01/01/2025 through 12/01/2025) "
-               "using SEQUENCE. Then, in G6, write ONE COUNTIFS formula that refers to your month list with the spill "
-               "operator (F6#) and spills the number of encounters admitted in each month. The gray cell checks both "
-               "columns.",
+               "using SEQUENCE. Column F is formatted to show them as Jan 2025, Feb 2025, and so on. Then, in G6, write ONE "
+               "COUNTIFS formula that refers to your month list with the spill operator (F6#) and spills the number of "
+               "encounters admitted in each month. The gray cell checks both columns.",
         answer=months_answer, title="Month calendar with SEQUENCE and F6# (Workspace!F6:G6)",
         solution=f"1. In **F6**: `{f_months}`\n2. In **G6**: `{f_counts_learner}`",
         hint="DATE accepts an array of months. Count AdmitDate ≥ each month start and < the next month's start",
-        summary=f'=IF(ISBLANK({WS}!F6),"",COUNT({ws_rng("F6")})&" months · "&SUM({ws_rng("G6")})&" encounters")',
+        summary=(f'=IF(ISBLANK({WS}!F6),"",IF(OR(ISERROR({WS}!F6),ISERROR({WS}!G6)),{ws_error("F6 or G6")},'
+                 f'COUNT({ws_rng("F6")})&" months · "&SUM({ws_rng("G6")})&" encounters"))'),
         live=(f'=LET(starts,DATE(2025,SEQUENCE(12),1),counts,COUNTIFS({TE}[AdmitDate],">="&starts,{TE}[AdmitDate],'
               f'"<"&DATE(YEAR(starts),MONTH(starts)+1,1)),ROWS(starts)&" months · "&SUM(counts)&" encounters")'),
         explanation=f"SEQUENCE(12) spills 1 to 12, and DATE turns each number into that month's first day. In G6, F6# means "
                     f"'the whole spill that starts in F6', so COUNTIFS receives 12 start dates and returns 12 counts. The "
                     f"upper bound DATE(YEAR(F6#),MONTH(F6#)+1,1) is the next month's first day (month 13 rolls into January "
-                    f"2026). If you change F6 to 24 months, G6 grows with it automatically. {MONTH_NAMES[busiest_month]} is the "
+                    f"2026). If you change SEQUENCE(12) in F6 to SEQUENCE(24), G6 grows to 24 counts automatically. {MONTH_NAMES[busiest_month]} is the "
                     f"busiest month ({busiest_n} encounters).",
     )
     worklist_answer = (f"{len(worklist)} stays · longest: {worklist[0]['EncounterID']} ({worklist[0]['LOSDays']} d) · "
@@ -446,8 +454,9 @@ def build() -> Lesson:
         answer=worklist_answer, title="One-formula long-stay worklist (Workspace!I6)",
         solution=f_worklist,
         hint="VSTACK(header, SORT(CHOOSECOLS(FILTER(tblEncounters, …), …), …))",
-        summary=(f'=IF(ISBLANK({WS}!I6),"",(COUNTA({wl})-1)&" stays · longest: "&{WS}!I7&" ("&{WS}!K7&" d) · shortest: "'
-                 f'&INDEX({wl},COUNTA({wl}))&" ("&INDEX({k_col},COUNTA({wl}))&" d)")'),
+        summary=(f'=IF(ISBLANK({WS}!I6),"",IF(ISERROR({WS}!I6),{ws_error("I6")},(COUNTA({wl})-1)&" stays · longest: "'
+                 f'&{WS}!I7&" ("&{WS}!K7&" d) · shortest: "&INDEX({wl},COUNTA({wl}))&" ("&INDEX({k_col},COUNTA({wl}))'
+                 f'&" d)"))'),
         live=(f'=LET(keep,{cedar_long},ids,FILTER({TE}[EncounterID],keep),days,FILTER({TE}[LOSDays],keep),'
               f'srt,SORTBY(HSTACK(ids,days),days,-1),nrows,ROWS(srt),nrows&" stays · longest: "&INDEX(srt,1,1)&" ("'
               f'&INDEX(srt,1,2)&" d) · shortest: "&INDEX(srt,nrows,1)&" ("&INDEX(srt,nrows,2)&" d)")'),
@@ -465,9 +474,10 @@ def build() -> Lesson:
         "The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least "
         f"{LEADERBOARD_MIN} encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), "
         "where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those "
-        "encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. LET "
-        "(previewed in the guide) makes it much easier to read. Then answer the questions below with formulas that refer "
-        "to your leaderboard through N6#."
+        "encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. "
+        "Section 12 of the lesson guide shows how to lift COUNTIFS and AVERAGEIFS over a two-column list, and LET "
+        "(previewed there) keeps the formula readable. "
+        "Then answer the questions below with formulas that refer to your leaderboard through N6#."
     )
     board_ref = f"{WS}!N6#"
     b1 = Task(
@@ -529,7 +539,8 @@ def build() -> Lesson:
         ws["A1"] = "Workspace: spill your dynamic-array formulas here"
         ws["A1"].font = Font(bold=True, size=16, color=NAVY)
         ws["A2"] = ("Type each formula in its yellow anchor cell and press Enter. Leave the cells below and to the right "
-                    "empty so the results can spill. The gray cells on the Practice sheet read these results.")
+                    "empty so the results can spill. The gray cells on the Practice sheet read these results. Columns S–W "
+                    "are a scratch area for trying the guide's examples.")
         ws["A2"].font = Font(italic=True, color="404040")
         for col, w in WIDTHS.items():
             ws.column_dimensions[col].width = w
@@ -551,6 +562,15 @@ def build() -> Lesson:
                 for c in row:
                     c.fill = label_fill
                     c.font = label_font
+        g_rng, g_label, g_note = GUIDE_AREA
+        g_first = ws[g_rng.split(":")[0]]
+        g_first.value = g_label
+        for row in ws[g_rng]:
+            for c in row:
+                c.fill = PatternFill("solid", fgColor="7F7F7F")
+                c.font = label_font
+        g_note_cell = ws.cell(row=5, column=g_first.column, value=g_note)
+        g_note_cell.font = Font(italic=True, color="595959", size=9)
         for r in range(6, LAST_WS_ROW + 1):
             ws[f"F{r}"].number_format = "mmm yyyy"
             ws[f"L{r}"].number_format = "#,##0.00"
@@ -572,11 +592,58 @@ def build() -> Lesson:
         ws.page_setup.fitToHeight = 0
         ws.sheet_properties.pageSetUpPr.fitToPage = True
 
-        # The text summaries are longer than the answer column is wide, so let them wrap.
+        # The text summaries (and the "shows an error" message any summary can show) are longer than the answer
+        # column is wide, so let them wrap.
         practice = wb[lesson.practice_sheet]
         for t in lesson.tasks:
-            if t.summary and t.kind() == "text":
-                practice[t.answer_cell].alignment = Alignment(wrap_text=True, vertical="top", horizontal="left")
+            if t.summary:
+                practice[t.answer_cell].alignment = Alignment(
+                    wrap_text=True, vertical="top", horizontal="left" if t.kind() == "text" else "right")
+
+        # Answer keys: show multi-step (Markdown) solutions as plain text, and wrap the text live results.
+        for sheet_name, tasks in ((lesson.key_sheet, lesson.tasks), (lesson.bonus_key_sheet, lesson.bonus)):
+            ks = wb[sheet_name]
+            for i, t in enumerate(tasks):
+                if t.solution and not t.is_formula:
+                    ks.cell(row=5 + i, column=4).value = _plain(t.solution)
+                if t.kind() == "text":
+                    ks.cell(row=5 + i, column=5).alignment = Alignment(wrap_text=True, vertical="top")
+
+        # Start Here: the library lists only the data sheets. Describe every sheet the learner uses instead.
+        n_spill = [t.number for t in lesson.tasks if id(t) in spill_fills]
+        spill_list = ", ".join(n_spill[:-1]) + f", and {n_spill[-1]}"
+        sheet_lines = [
+            (lesson.practice_sheet, f"{len(lesson.tasks)} tasks. Each yellow answer cell needs a formula that returns ONE "
+                                    f"value. Gray cells read the spills you build on the Workspace sheet (tasks "
+                                    f"{spill_list})."),
+            (WS, f"Yellow anchor cells for the spill tasks ({spill_list}) and the bonus leaderboard, plus a gray "
+                 "Guide examples area (columns S–W) for trying the guide's formulas."),
+            ("Encounters", f"Data: {len(enc):,} rows in the Excel Table 'tblEncounters' ({len(ENC_COLUMNS)} columns)."),
+            ("Providers", f"Data: {len(provs):,} rows in the Excel Table 'tblProviders'."),
+            ("Departments", f"Data: {len(depts):,} rows in the Excel Table 'tblDepartments'."),
+            (lesson.bonus_sheet, f"{len(lesson.bonus)} harder questions about a one-formula unit leaderboard that you build "
+                                 "in Workspace!N6."),
+        ]
+        start = wb["Start Here"]
+        hdr_row = next(r for r in range(1, start.max_row + 1)
+                       if start.cell(row=r, column=2).value == "Sheets in this workbook")
+        tail = {}
+        for r in range(hdr_row + 1, start.max_row + 1):
+            label = start.cell(row=r, column=2).value
+            if label in ("About the data", "Disclaimer"):
+                tail[label] = start.cell(row=r, column=3).value
+            for col in (2, 3):
+                start.cell(row=r, column=col).value = None
+            start.row_dimensions[r].height = None
+        r = hdr_row + 1
+        for label, text in sheet_lines + [(k, tail[k]) for k in ("About the data", "Disclaimer") if tail.get(k)]:
+            a = start.cell(row=r, column=2, value=label)
+            a.font = Font(bold=True)
+            a.alignment = WRAP_TOP
+            b = start.cell(row=r, column=3, value=text)
+            b.alignment = WRAP_TOP
+            start.row_dimensions[r].height = 15 * _estimate_lines(text, 100) + 3
+            r += 1
 
         if not selftest:
             return

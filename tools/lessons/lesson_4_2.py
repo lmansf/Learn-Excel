@@ -167,6 +167,8 @@ def build() -> Lesson:
 
     # T13 audit fix: F02, 2025 discharges to Home Health
     t13 = sum(1 for e in d25 if e["FacilityID"] == "F02" and e["DischargeDisposition"] == "Home Health")
+    t13_f02 = sum(1 for e in stays if e["FacilityID"] == "F02")  # each condition counted alone (audit technique)
+    t13_hh = sum(1 for e in stays if e["DischargeDisposition"] == "Home Health")
 
     # ------------------------------------------------------------------ formulas
     los_let = (f"=LET(\n  adm, {ADM},\n  dis, {DIS},\n  nights, INT(dis)-INT(adm),\n  los, IF(nights<1, 1, nights),\n")
@@ -256,7 +258,7 @@ def build() -> Lesson:
                          "average without a helper column. `AVERAGE(FILTER(los, keep))` is an equally good last step."),
         Task("The LOS index (observed ÷ expected) compares actual LOS days with the benchmark ExpectedLOS of each stay's diagnosis "
              "(Diagnoses sheet). Calculate it for Cedar Ridge (F03) stays discharged in 2025: total LOS days ÷ total ExpectedLOS. "
-             "Keep full precision (the check accepts 2 decimal places).",
+             "Enter the ratio to at least 2 decimal places.",
              answer=t7, fmt="0.00", title="LOS index (O/E) for Cedar Ridge in 2025 (LET + XLOOKUP)",
              solution=(los_let + f"  explos, XLOOKUP({DX}, tblDx[DxCode], tblDx[ExpectedLOS]),\n"
                        f'  keep, ({FAC}="F03")*(YEAR(dis)=2025),\n  SUM(los*keep)/SUM(explos*keep)\n)'),
@@ -312,7 +314,8 @@ def build() -> Lesson:
                          "day it adds 1, and on any other day it resets to 0. The result is one running count per day, so its MAX is "
                          "the longest streak. A streak depends on the previous row's result, which SUMPRODUCT and COUNTIFS can't "
                          "express without a helper column."),
-        Task("The four HRRP conditions in the data are AMI (I21.4), heart failure (I50.9), pneumonia (J18.9), and COPD (J44.1). "
+        Task("Medicare's Hospital Readmissions Reduction Program (HRRP) tracks readmissions after heart attack (AMI, I21.4), heart "
+             "failure (I50.9), pneumonia (J18.9), and COPD (chronic obstructive pulmonary disease, J44.1), among other conditions. "
              'Using REDUCE to loop over the array {"I21.4","I50.9","J18.9","J44.1"}, count Bluestone Memorial (F01) stays '
              "discharged in 2025 with any of these primary diagnoses.",
              answer=t12, title="HRRP-condition stays at F01 in 2025 (REDUCE)",
@@ -326,16 +329,19 @@ def build() -> Lesson:
                          "diagnosis), so adding is safe. `SUM(COUNTIFS(…, {codes}, …))` gives the same answer. REDUCE earns its keep "
                          "when each step needs more logic than one function call."),
         Task("The Audit sheet has a colleague's formula that should count Ashby Falls (F02) stays discharged in 2025 to Home Health, "
-             "but it returns 0. Step through it with Evaluate Formula (Windows; on a Mac, test its pieces on the Sandbox sheet), "
+             "but it returns 0. Step through it with Evaluate Formula (on a Mac, test its pieces on the Sandbox sheet instead), "
              "fix the bug, and enter the correct count.",
              answer=t13, title="Audit: fix the colleague's formula",
              solution=audit_fixed,
-             hint="Watch what YEAR returns and what it is compared with.",
-             explanation="YEAR returns the number 2025, but the formula compares it with the text \"2025\". In Excel a number never "
-                         "equals text, so that array is all FALSE and every product is 0. Evaluate Formula shows the YEAR step as "
-                         "numbers and the comparison as all FALSE (on a Mac, `=YEAR(tblStays[DischargeDateTime])=\"2025\"` on the "
-                         "Sandbox sheet spills a column of FALSE). COUNTIFS would have accepted \"2025\" because it converts criteria "
-                         "strings, and that habit is how this bug usually gets in."),
+             hint="Check the data type on each side of every comparison. Text shows in quotes. Count each condition's TRUE values with SUM(--(…)).",
+             explanation=f"YEAR returns the number 2025, but the formula compares it with the text \"2025\" (in quotes). In Excel a "
+                         f"number never equals text, so that comparison is FALSE on every row and every product is 0. In Evaluate "
+                         f"Formula the clue is the data types: the YEAR step shows plain numbers such as 2024, and they're compared "
+                         f"with \"2025\" in quotes. Counting each condition on the Sandbox sheet proves it: "
+                         f"`=SUM(--(tblStays[FacilityID]=\"F02\"))` returns {t13_f02}, the Home Health test returns {t13_hh}, but "
+                         f"`=SUM(--(YEAR(tblStays[DischargeDateTime])=\"2025\"))` returns 0. Without the quotes it returns "
+                         f"{len(d25):,}. COUNTIFS would have accepted \"2025\" because it converts criteria strings, and that habit is "
+                         f"how this bug usually gets in."),
     ]
 
     # ------------------------------------------------------------------ bonus
@@ -365,8 +371,9 @@ def build() -> Lesson:
     hrrp_arr = "{" + ",".join(f'"{c}"' for c in HRRP) + "}"
     L.bonus_title = "Bonus: CMS-style readmission rates in one formula"
     L.bonus_scenario = (
-        "Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built with CMS-style rules "
-        "(simplified: CMS also risk-adjusts its rates and ignores planned readmissions). Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of "
+        "Bluestone's quality committee wants 30-day all-cause readmission rates by hospital, built with simplified versions of the "
+        "rules used by CMS (the Centers for Medicare & Medicaid Services, which also risk-adjusts its rates and ignores planned "
+        "readmissions). Index stays are inpatient stays discharged from 01/01/2025 through 11/30/2025, so every stay has a full 30 days of "
         "follow-up in the data. Exclude stays that ended in death (Expired), a transfer (Transfer to Another Hospital), or a "
         "discharge against medical advice (Left AMA). A readmission is any later inpatient admission of the same patient, at any "
         "Bluestone hospital, with an admit date 0–30 days after the index discharge date (the Task 5 rule). "
@@ -381,7 +388,8 @@ def build() -> Lesson:
         Task("Write one LET formula that returns the readmission rate for Bluestone Memorial (F01). Enter it as a percentage "
              "(1 decimal place is enough).", answer=rates["F01"], fmt="0.0%", title="Readmission rate for F01",
              solution=rate_let("F01"),
-             hint="Name readmit (the Task 5 test for every row at once), eligible, and keep, then divide SUM(keep*readmit) by SUM(keep).",
+             hint="Name readmit (the Task 5 test for every row at once, as in guide section 4c), eligible, and keep. Then divide "
+                  "SUM(keep*readmit) by SUM(keep).",
              explanation=f"`readmit` hands COUNTIFS whole columns as criteria, so it returns one count per stay (5,586 of them), and "
                          f"`>0` turns those counts into TRUE/FALSE. LET calculates that expensive array once. `keep` narrows the "
                          f"index stays to F01 ({sum(1 for e in idx if e['FacilityID'] == 'F01'):,} stays). If you finished Task 5, "
@@ -440,36 +448,39 @@ def build() -> Lesson:
         ws["B7"]._style.quotePrefix = 1
         ws.row_dimensions[7].height = 32
         steps = [
-            "1. Select B6, then choose Formulas → Evaluate Formula (Formula Auditing group). Evaluate Formula is in Excel for Windows only.",
+            "1. Select B6, then choose Formulas → Evaluate Formula (Formula Auditing group). Evaluate Formula is in Excel for "
+            "Windows only.",
             "2. Click Evaluate repeatedly. Watch the underlined part of the formula turn into its result.",
-            "3. Stop when an array turns all FALSE. Which comparison did that?",
-            "4. Fix the formula in B6 and check that the result is believable.",
-            "5. Enter the corrected count in the matching task on the Practice sheet.",
-            "On a Mac (no Evaluate Formula)? Type one piece, such as =YEAR(tblStays[DischargeDateTime]), into a cell on "
-            "the Sandbox sheet and let it spill. Then try the comparison from the formula on its own.",
+            "3. At each comparison, check the data type on both sides. Text appears in quotes, such as \"F02\", and numbers "
+            "appear without quotes. Only the first values of an array fit on screen, and the first rows are 2024 stays, so "
+            "FALSE at the start of the 2025 test is normal.",
+            "4. To test one condition on all 5,586 rows, count its TRUE values on the Sandbox sheet, for example "
+            "=SUM(--(tblStays[FacilityID]=\"F02\")). A condition that counts 0 is never TRUE.",
+            "5. Fix the formula in B6 and check that the result is believable.",
+            "6. Enter the corrected count in Task 13 on the Practice sheet.",
+            "On a Mac (no Evaluate Formula)? Skip steps 1–3 and use step 4 on each of the three conditions in the formula.",
         ]
         ws["A9"] = "How to audit"
         for i, s in enumerate(steps):
             c = ws.cell(row=9 + i, column=2, value=s)
             c.alignment = Alignment(wrap_text=True, vertical="top")
+            ws.row_dimensions[9 + i].height = 15 * max(1, -(-len(s) // 100))
         for r in (3, 4, 6, 7, 9):
             ws.cell(row=r, column=1).font = Font(bold=True)
             ws.cell(row=r, column=1).alignment = Alignment(vertical="top")
         for r in (3, 4):
             ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True, vertical="top")
-        ws.row_dimensions[4].height = 32
-        ws.row_dimensions[9].height = 32
-        ws.row_dimensions[9 + len(steps) - 1].height = 32
+        ws.row_dimensions[4].height = 30
 
         sb = wb.create_sheet("Sandbox")
         sb.sheet_properties.tabColor = "7F7F7F"
-        sb.column_dimensions["A"].width = 125
+        sb.column_dimensions["A"].width = 22  # the notes overflow into the empty cells to the right
         sb["A1"] = "Sandbox: try array formulas here"
         sb["A1"].font = Font(bold=True, size=14, color=NAVY)
         notes = [
             "Answer cells on the Practice and Bonus sheets must return ONE value, so build and inspect your array formulas here first.",
             "Type a formula in A10 (or any cell with empty cells below it) and watch it spill. Examples to try:",
-            "   =INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])       (LOS nights for every stay)",
+            "   =INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])       (midnights for every stay)",
             "   =SCAN(0, tblCensus[Admissions], LAMBDA(total, x, total + x))       (running total of ICU admissions)",
             "When the spill looks right, wrap it in SUM, MAX, or INDEX and copy the formula to the Practice sheet.",
         ]

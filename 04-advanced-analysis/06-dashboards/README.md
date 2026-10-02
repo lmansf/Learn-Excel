@@ -95,8 +95,10 @@ A few more planning rules:
 - **Keep it short.** Five to nine KPIs fit on one page. If everything is on the dashboard, nothing stands out.
 - **Separate volume from performance.** ED visits and discharges give context, but more isn't better or worse, so they get
   no target and no red or green.
-- **Mix leading and lagging KPIs.** Door-to-provider time responds within days, so it's *leading*. Readmissions show up a
-  month later, so they're *lagging*. Leaders need both.
+- **Mix leading and lagging KPIs.** A *leading* KPI measures a process that drives later results, so it warns you early:
+  long door-to-provider times come before patients leave without being seen and before poor survey scores. A *lagging*
+  KPI reports an outcome after the fact: a month's readmission rate isn't final until 30 days after the month ends.
+  Leaders need both.
 - **Sketch the layout on paper first.** Draw boxes for the selectors, cards, and charts. Moving a box on paper is much
   cheaper than moving a chart in Excel.
 
@@ -117,7 +119,8 @@ Dashboard workbooks that last are built in three layers, each on its own sheet:
 | **Dashboard** | Selectors, cards, charts, and text | Cells hold short formulas that point at the model or the data. No typed-in numbers |
 
 This separation pays off every month. When new data arrives, you append rows to `tblKPI`, and the dashboard updates itself
-because it only reads the tables and the selectors. Open the **Calc** sheet. Its gray cells already turn the selectors into
+because it only reads the tables and the selectors. (Add the new month to the Month list on **Lists** too, so the dropdown
+offers it.) Open the **Calc** sheet. Its gray cells already turn the selectors into
 the pieces that formulas need:
 
 | Calc cell | Formula | Shows (default selection) |
@@ -131,8 +134,8 @@ the pieces that formulas need:
 
 Open **KPI_Monthly**. Each row is one hospital in one month, and the columns come in two kinds.
 
-An **additive measure** can be summed across rows and still mean something: 473 ED visits plus 79 plus 79 is 631 ED visits
-for the system. A **non-additive measure**, such as a rate, an average, or a median, can't. Adding three LWBS rates gives a
+An **additive measure** can be summed across rows and still mean something: in January 2025, 473 ED visits plus 79 plus 79
+is 631 ED visits for the system. A **non-additive measure**, such as a rate, an average, or a median, can't. Adding three LWBS rates gives a
 meaningless number.
 
 | Columns in `tblKPI` | Meaning | Additive? |
@@ -233,8 +236,8 @@ position back into text with `INDEX`, as Calc!C13 does:
 =INDEX(Lists!$A$2:$A$5, Calc!C12)
 ```
 
-> 📋 Form Controls are a desktop feature. Excel for the web says it doesn't support interacting with them, so use
-> data-validation dropdowns if your dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the
+> 📋 Form Controls are a desktop feature. Excel for the web doesn't support them, so use data-validation dropdowns if your
+> dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the
 > Insert menu), because they're Windows-only and often blocked by security settings.
 
 ### 6. Selector-driven formulas
@@ -252,6 +255,7 @@ everything a dashboard needs:
 | A window of months | Two criteria on Month: `">="&EDATE(SelMonth,-2)` and `"<="&SelMonth` |
 | Year to date | `">="&DATE(YEAR(SelMonth),1,1)` and `"<="&SelMonth` |
 | "All facilities" | `IF(SelFacility="All facilities","*",SelFacility)` as the Facility criterion |
+| An average over detail rows | `=AVERAGEIFS(tblEDWaits[DoorToProviderMin],tblEDWaits[Facility],SelFacility, …date window…)` |
 | A median across hospitals or months | `=MEDIAN(FILTER(tblEDWaits[DoorToProviderMin], conditions))` |
 | Missing or immature data | Wrap the formula in `IFERROR(…,"n/a")` |
 
@@ -277,6 +281,11 @@ criteria text that SUMIFS understands.
 finds the row where both conditions are TRUE, because TRUE × TRUE = 1 (Lesson 4.2). Don't SUMIFS a rate or median column.
 It happens to work for one row, but it silently adds the values together as soon as the selection covers several rows.
 
+**AVERAGEIFS belongs on detail rows.** `AVERAGEIFS` takes the same criteria as SUMIFS and returns the mean of the matching
+cells, so it's the right tool for a mean wait over the visits in `tblEDWaits`. Pointed at a rate column it goes wrong:
+`=AVERAGEIFS(tblKPI[LWBSRate],tblKPI[Month],SelMonth)` gives every hospital equal weight and returns 2.53% for January 2025
+instead of the true 1.74% (section 4).
+
 **The "All facilities" trick.** No row in `tblKPI` says *All facilities*, so `SUMIFS(…,tblKPI[Facility],SelFacility,…)`
 returns 0 when it's selected. SUMIFS criteria accept wildcards, and `"*"` matches any text, so swapping the selector for
 `IF(SelFacility="All facilities","*",SelFacility)` makes the same formula add up all three hospitals. Calc!C9 holds exactly
@@ -297,6 +306,8 @@ on that day. To limit the median to one hospital as well, multiply in a third co
 > 📋 **Older versions.** FILTER, XLOOKUP, and LET need Microsoft 365 or Excel 2021 or later. In Excel 2010–2019, use
 > `=AGGREGATE(17,6,values/(conditions),2)` for a conditional median (function 17 is QUARTILE.INC, quartile 2 is the median,
 > and option 6 skips the `#DIV/0!` errors that the division creates for rows that don't match), and INDEX/MATCH for lookups.
+> A multi-condition lookup such as `=INDEX(tblKPI[MedianDTP],MATCH(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),0))`
+> must be confirmed with **Ctrl + Shift + Enter** (Mac: **⌃ + Shift + Return**) in those versions.
 
 **Name the pieces with LET.** Card formulas get long because the same SUMIFS appears more than once. `LET` names each piece
 once and then uses the names:
@@ -365,9 +376,9 @@ FALSE into 1 and 0, so `=SUM(statuses)` counts the KPIs on target and `=COUNT(st
 ```
 
 There's a second way that keeps the cell numeric: a **custom number format** with the arrows inside it. Select the cell,
-press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Number → Custom**, and type a format with up to three sections, separated by
-semicolons, for positive, negative, and zero values. The example card on the Dashboard sheet uses the first row of this
-table:
+press **Ctrl + 1** (Mac: **⌘ + 1**), choose **Number → Custom**, and type the format. A custom format has up to four
+sections separated by semicolons: positive numbers; negative numbers; zero; text. The arrow formats below use the first
+three. The example card on the Dashboard sheet uses the first row of this table:
 
 | Format code | Shows | Use it for |
 |---|---|---|
@@ -383,7 +394,8 @@ readable green than `[Green]`.
 **Color the status with conditional formatting**, not by hand. Select the status cell, choose **Home → Conditional
 Formatting → New Rule → Use a formula to determine which cells to format**, and enter a rule such as `=LEFT($F$10,1)="✔"`
 with a green fill. Add a second rule for ✘ with a red fill. To color a value cell by direction instead, use the
-direction-aware test as the rule: `=IF($R11="Lower is better",$O11<=$Q11,$O11>=$Q11)`.
+direction-aware test as the rule: `=IF($R11="Lower is better",$O11<=$Q11,$O11>=$Q11)`. (Both rules come from the hidden
+Dashboard Key: F10 is its LWBS status cell, and row 11 of its model area holds the LWBS value, target, and direction.)
 
 > ⚠️ **Color has to mean the same thing everywhere.** Red means "off target, act". Don't color volumes (more ED visits isn't
 > bad), and don't color an arrow red just because it points down, because a falling LWBS % is good news.
@@ -423,7 +435,8 @@ spill keeps a fixed range, so if a spill can change size, chart it through a def
 
 **Make the title dynamic.** Build the title text in a cell, for example
 `="ED visits, 12 months to "&TEXT(SelMonth,"mmm yyyy")&" · "&SelFacility`. Then click the chart title, type `=` in the
-formula bar, click that cell, and press **Enter**. Now the title follows the selectors too.
+formula bar, click that cell, and press **Enter**. Now the title follows the selectors too. Both charts on the hidden
+Dashboard Key work this way: their titles point at cells O19 and O20 of its model area.
 
 **Handle gaps.** If the window reaches back before the data starts, SUMIFS returns 0 and the line plunges to zero. Return
 `NA()` instead: `=IF(COUNTIFS(tblKPI[Facility],SelFacility,tblKPI[Month],B17)=0,NA(),SUMIFS(…))`. Excel doesn't plot `#N/A`
@@ -457,9 +470,10 @@ you choose between formulas and pivots:
 | | Formula cards (SUMIFS, XLOOKUP) | PivotTables with slicers |
 |---|---|---|
 | Layout | Exactly where you put each number | The pivot decides, and it grows or shrinks as filters change |
-| Updates | Immediately when data or selectors change | Only after a refresh |
+| When a selector changes | Updates immediately | Updates immediately (slicers and timelines) |
+| When the data changes | Updates immediately | Only after a refresh |
 | Building | Slower, one formula per number | Fast, drag and drop |
-| Rates and medians | Any definition you can write | Calculated fields sum first, then divide. No medians |
+| Rates and medians | Any definition you can write | Calculated fields sum first, then divide. No Median summary (except through the Data Model and DAX) |
 | Drill-down | No | Double-click any value |
 
 **Connect one slicer to several pivots.** A slicer starts out filtering only the pivot you inserted it from.
@@ -603,7 +617,8 @@ was built in four steps:
 
 The card has no target and no color, because discharges are a volume: more isn't better or worse. Now change the Facility
 selector to Bluestone Memorial Hospital and the Month to Jan 2025. All three numbers change, and the arrow may flip, without
-anyone touching a formula. That's the whole idea of an interactive dashboard.
+anyone touching a formula. That's the whole idea of an interactive dashboard. Set the selectors back to Cedar Ridge Medical
+Center and Nov 2025 before you start the practice tasks, because they're checked against that selection.
 
 ### 14. Shortcuts and version notes
 
@@ -708,7 +723,7 @@ tblKPI has exactly one row per hospital per month, so SUMIFS with both criteria 
 ```
 
 
-80 visits this year against 86 in Nov 2024. Comparing with the same month last year removes seasonality, which a month-over-month change can't do: November always differs from October in an ED. EDATE moves a date by whole months and keeps it on the first of the month, so it matches the Month column exactly. Subtracting 365 days would not.
+80 visits this year against 86 in Nov 2024. Comparing with the same month last year removes seasonality, which a month-over-month change can't do: an ED's November differs from its October for seasonal reasons alone. EDATE moves a date by whole months and keeps it on the first of the month, so it matches the Month column for every selection. Subtracting 365 days happens to work for Nov 2025, but it lands a day late whenever a February 29 falls in between: 1/1/2025 − 365 days is 1/2/2024, which matches no row, while EDATE returns 1/1/2024.
 
 **5. Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays)…**
 
@@ -852,7 +867,7 @@ The hidden Dashboard Key sheet is a finished reference build. Compare your numbe
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** Set your Board dashboard to All facilities and Oct 2025. What is the system-wide 30-day readmission rate? Enter it as a percentage. *(Hint: Swap "All facilities" for the asterisk wildcard in the Facility criterion)*
-- **B2.** With All facilities and Oct 2025 still selected, how many of the seven KPIs are on target? *(Hint: Give each card a status cell that returns 1 or 0, then SUM them. Remember which KPIs are higher-is-better)*
+- **B2.** With All facilities and Oct 2025 still selected, how many of the seven KPIs are on target? Use the Targets sheet's rule: on target means at or below a lower-is-better target, or at or above a higher-is-better one, so a value exactly equal to its target counts as on target. *(Hint: Give each card a status cell that returns 1 or 0, then SUM them. Remember which KPIs are higher-is-better)*
 - **B3.** Keep Oct 2025 and switch the Facility dropdown to each hospital in turn. Which hospital has the fewest KPIs on target? *(Hint: Your scorecard line answers this. Change only the Facility dropdown)*
 - **B4.** Back on All facilities and Oct 2025, your 12-month LWBS % trend runs Nov 2024–Oct 2025. In which month was the system-wide LWBS % highest? Enter the first day of that month as a date. *(Hint: INDEX(months, MATCH(MAX(rates), rates, 0)) on your trend block, or just read the chart's peak)*
 <!-- END GENERATED: bonus -->

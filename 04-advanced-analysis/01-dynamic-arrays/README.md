@@ -1,7 +1,7 @@
 # Lesson 4.1 · Dynamic Arrays: FILTER, SORT, UNIQUE & More
 
 > **Level:** Advanced · **Time:** about 60 minutes · **Workbook:** [`4.1-dynamic-arrays.xlsx`](4.1-dynamic-arrays.xlsx)
-> **Data:** 2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with facility, department, attending, diagnosis category, and payer names already joined in. Also includes the provider roster (147) and the department list (31, with StaffedBeds 0 for departments that have no inpatient beds).
+> **Data:** 2,000 encounters sampled from Bluestone Health System's 2025 activity at all four facilities, with facility, department, attending, diagnosis category, and payer names already joined in. Also includes the provider roster (147) and the department list (31, with StaffedBeds 0 for departments that have no inpatient beds). Column definitions are in the [data dictionary](../../data/README.md#encounterscsv).
 
 A case manager asks for *"every Cedar Ridge patient who stayed a week or longer, longest first."* A revenue-cycle lead
 wants *"each payer type's encounter count, biggest first."* In older Excel, each request meant filtering, copying,
@@ -21,8 +21,9 @@ leaderboard from 2,000 Bluestone encounters.
 
 The examples use three Excel Tables from the lesson workbook: **tblEncounters** (Encounters sheet), **tblProviders**
 (Providers sheet), and **tblDepartments** (Departments sheet). Structured references such as
-`tblEncounters[TotalCharges]` (Lesson 3.1) are the natural partner for dynamic arrays, because a Table grows when you
-paste in new rows and every formula that refers to it sees the new rows automatically.
+`tblEncounters[TotalCharges]` ([Lesson 3.1](../../03-data-analysis/01-tables-named-ranges/README.md)) are the natural
+partner for dynamic arrays, because a Table grows when you paste in new rows and every formula that refers to it sees
+the new rows automatically.
 
 > 📋 **Version check:** this lesson needs **Microsoft 365** (Windows, Mac, or Excel for the web) or **Excel 2024**.
 > Excel 2021 has FILTER, SORT, SORTBY, UNIQUE, SEQUENCE, XLOOKUP, and LET, but not VSTACK, HSTACK, TAKE, DROP, or
@@ -30,7 +31,7 @@ paste in new rows and every formula that refers to it sees the new rows automati
 
 ### 1. One formula, many results: spilling
 
-Click cell S6 on the Workspace sheet (any empty cell with room below it works) and type:
+Click cell S6 on the Workspace sheet (the **Guide examples** area, or any empty cell with room below it) and type:
 
 ```
 =UNIQUE(tblEncounters[EncounterType])
@@ -71,9 +72,10 @@ B6, then:
 | `=COUNTIFS(tblEncounters[Payer], B6#)` | One count per payer, spilling next to the list |
 | `=Workspace!B6#` | The same reference from another sheet |
 
-Use the **spill range operator** `#` instead of a fixed range like `B6:B13`. When a new payer appears in the data,
-the list in B6 grows to B14, and every formula that uses `B6#` grows with it. You don't have to type the
-`#`: while writing a formula, select the spill range with the mouse and Excel writes `B6#` for you.
+The `#` is the **spill range operator**, and a reference such as `B6#` is a **spill reference**. Use a spill reference
+instead of a fixed range like `B6:B13`. When a new payer appears in the data, the list in B6 grows to B14, and every
+formula that uses `B6#` grows with it. You don't have to type the `#`: while writing a formula, select the spill range
+with the mouse and Excel writes `B6#` for you.
 
 Spill references also work outside formulas:
 
@@ -136,7 +138,12 @@ you deliberately want the formula to spill.
 | `exactly_once` | `TRUE` returns only values that appear **exactly once** | `FALSE` (every distinct value) |
 
 UNIQUE returns values in the order they **first appear** in the data. Wrap it in SORT when you want them in order.
-Here's what it does with the lesson data:
+
+To set a later optional argument without changing an earlier one, **leave the earlier one empty**. In
+`UNIQUE(tblEncounters[Attending],,TRUE)` the two commas in a row skip `by_col`, so Excel uses its default (`FALSE`) and
+`TRUE` goes to `exactly_once`. The same trick works in every function in this lesson.
+
+Here's what UNIQUE does with the lesson data:
 
 | Formula | Result |
 |---|---|
@@ -204,6 +211,13 @@ comes first, starting with Medical-Surgical (28 beds), Labor & Delivery (10), an
 This returns only the department **names**, ordered by bed count. The beds column decides the order but isn't part of
 the result. SORT can't do this because its key must be a column of the array it returns.
 
+```
+=SORT(tblEncounters[TotalCharges],,-1)
+```
+
+To sort a single column, skip `sort_index` with an empty argument (section 5). Excel then sorts by column 1, the only
+column there is, and `-1` puts the largest charge (250,917.29) at the top of the 2,000 values.
+
 > ⚠️ `sort_index` counts columns of the array **you pass in**, not worksheet columns. In
 > `SORT(tblDepartments[[Department]:[StaffedBeds]], 5, -1)` the 5 is StaffedBeds even though StaffedBeds is column F
 > on the sheet.
@@ -213,7 +227,7 @@ the result. SORT can't do this because its key must be a column of the array it 
 > tblDepartments stores a real 0 for departments without beds. With your own data, remove the empty rows with FILTER
 > (section 7) before you sort: `SORT(FILTER(array, sort_column<>""), …)`.
 
-> 💡 When two rows tie on the sort key, add a second key so the order is predictable, for example
+> 💡 **Tip:** When two rows tie on the sort key, add a second key so the order is predictable, for example
 > `SORT(…, {3,4}, {-1,-1})` sorts by column 3 and breaks ties with column 4.
 
 ### 7. FILTER: keep the rows that match
@@ -238,7 +252,8 @@ This spills a 3 × 2 block: the Intensive Care Unit at Bluestone Memorial, Ashby
 `tblDepartments[UnitType]="Critical Care"` compares all 31 rows at once and produces 31 TRUE/FALSE values. FILTER keeps
 the rows that are TRUE.
 
-**Several conditions** use arithmetic on those TRUE/FALSE arrays. TRUE behaves like 1 and FALSE like 0 (Lesson 2.1):
+**Several conditions** use arithmetic on those TRUE/FALSE arrays. TRUE behaves like 1 and FALSE like 0
+([Lesson 2.1](../../02-formulas-functions/01-logical-functions/README.md)):
 
 | Logic | Write it as | Why it works |
 |---|---|---|
@@ -257,15 +272,24 @@ Worked example: Ashby Falls' 30-day readmissions.
 ```
 
 It spills 12 encounter IDs, starting with ENC111983. Swap the first argument for `tblEncounters` and you get all 16
-columns of those 12 rows.
+columns of those 12 rows. A bare Table name such as `tblEncounters` means every data row and every column of the
+Table, without the header row.
 
 **Handling "no matches."** Ashby Falls has no outpatient clinics, so this returns `#CALC!`:
 
 ```
-=FILTER(tblEncounters[EncounterID], (tblEncounters[Facility]="Ashby Falls Community Hospital")*(tblEncounters[EncounterType]="Outpatient"))
+=FILTER(tblEncounters[EncounterID],
+        (tblEncounters[Facility]="Ashby Falls Community Hospital")*(tblEncounters[EncounterType]="Outpatient"))
 ```
 
-Add a third argument to show a message instead: `…, "No matching encounters")`.
+Add the third argument, `if_empty`, to show a message instead. The formula then returns the text "No matching
+encounters" in one cell:
+
+```
+=FILTER(tblEncounters[EncounterID],
+        (tblEncounters[Facility]="Ashby Falls Community Hospital")*(tblEncounters[EncounterType]="Outpatient"),
+        "No matching encounters")
+```
 
 > ⚠️ **AND() and OR() don't work inside FILTER.** `AND(range1="x", range2="y")` collapses all the rows into a single
 > TRUE or FALSE, and FILTER returns `#VALUE!`. Use `*` and `+`.
@@ -290,6 +314,16 @@ formulas from the inside out. When you need a single answer, finish with a funct
 | A total or average | `SUM(…)`, `AVERAGE(…)`, `MAX(…)` | `=AVERAGE(FILTER(tblEncounters[TotalCharges], tblEncounters[EncounterType]="Observation"))` |
 | The *n*th item | `INDEX(…, n)` | `=INDEX(SORT(UNIQUE(tblEncounters[Payer])), 1)` is the first payer A to Z |
 | The first item | `TAKE(…, 1)` | `=TAKE(SORTBY(…), 1)` |
+
+**Math works item by item.** When two arrays have the same number of rows, `array1*array2` multiplies the first item
+by the first item, the second by the second, and so on. Wrap the result in SUM to add up the products. A TRUE/FALSE
+test counts as 1 or 0 here too, so this formula adds up only the beds of the three critical-care units (40):
+
+```
+=SUM(tblDepartments[StaffedBeds]*(tblDepartments[UnitType]="Critical Care"))
+```
+
+Lesson 4.2 builds on this kind of array math with SUMPRODUCT.
 
 > ⚠️ `ROWS(FILTER(…))` returns `#CALC!` when nothing matches, because FILTER has nothing to count. Use
 > `IFERROR(ROWS(FILTER(…)), 0)` or COUNTIFS if zero matches is possible.
@@ -330,7 +364,7 @@ These functions cut, pick, and glue arrays. A negative number counts from the en
 | Function | Syntax | What it does | Example |
 |---|---|---|---|
 | **TAKE** | `TAKE(array, rows, [columns])` | Keeps the first (or, with a negative number, last) rows or columns | `TAKE(SORT(…,,-1), 10)` gives a top 10 |
-| **DROP** | `DROP(array, rows, [columns])` | Removes the first (or last) rows or columns | `DROP(B6#, 1)` removes a header row |
+| **DROP** | `DROP(array, rows, [columns])` | Removes the first (or last) rows or columns | `DROP(I6#, 1)` removes the header row of a report that spills from I6 |
 | **CHOOSECOLS** | `CHOOSECOLS(array, col1, [col2], …)` | Keeps the listed columns, in the order you list them | `CHOOSECOLS(tblDepartments, 2, 6)` gives Department and StaffedBeds |
 | **CHOOSEROWS** | `CHOOSEROWS(array, row1, [row2], …)` | Keeps the listed rows | `CHOOSEROWS(B6#, 1, -1)` gives the first and last items |
 | **VSTACK** | `VSTACK(array1, [array2], …)` | Stacks arrays on top of each other | `VSTACK({"Unit","Beds"}, …)` puts a header row on top |
@@ -358,13 +392,14 @@ semicolon moves to the next row, so `{"Unit";"Beds"}` would stack the two labels
 > 📋 In regions where Excel separates function arguments with semicolons, the separators inside array constants differ
 > too. If `{"Unit","Beds"}` is rejected, check which separators your Excel uses.
 
-> 💡 CHOOSECOLS(tblEncounters, …) takes column **numbers**. tblEncounters has 16 columns: EncounterID is 1,
+> 💡 **Tip:** CHOOSECOLS(tblEncounters, …) takes column **numbers**. tblEncounters has 16 columns: EncounterID is 1,
 > LOSDays is 5, Facility is 7, Department is 8, and TotalCharges is 15. Click a cell in the Table and count from the
 > left, or use `XMATCH("LOSDays", tblEncounters[#Headers])` to look a position up.
 
 ### 11. XLOOKUP with arrays
 
-XLOOKUP (Lesson 2.6) also works with arrays in two directions.
+XLOOKUP ([Lesson 2.6](../../02-formulas-functions/06-lookup-functions/README.md)) also works with arrays in two
+directions.
 
 **Return several columns at once.** Point `return_array` at more than one column and the result spills across:
 
@@ -390,8 +425,9 @@ visits. In older Excel this needed a helper column of lookups.
 
 ### 12. Building one-formula reports
 
-**Lifting** is what makes summary tables possible. Functions such as COUNTIFS, SUMIFS, and AVERAGEIFS normally take one
-criterion. Give them an **array** of criteria and they run once per item and return an array of results:
+Functions such as COUNTIFS, SUMIFS, and AVERAGEIFS normally take one criterion and return one number. Give them an
+**array** of criteria instead, and Excel runs the function once per item and returns an array of results. This is
+called **lifting**, and it is what turns these functions into one-formula summary tables:
 
 ```
 =COUNTIFS(tblEncounters[PayerType], UNIQUE(tblEncounters[PayerType]))
@@ -406,7 +442,9 @@ HSTACK and sort by the count:
       2, -1)
 ```
 
-| | |
+The result is a 5 × 2 block with no header row yet:
+
+| Payer type (column 1) | Count (column 2) |
 |---|---:|
 | Government | 842 |
 | Commercial | 729 |
@@ -418,6 +456,42 @@ Add a header with `VSTACK({"Payer type","Encounters"}, …)`, or a share column 
 `ROWS(tblEncounters[PayerType])`. The same pattern sorts a list by a total it never shows:
 `SORTBY(UNIQUE(names), SUMIFS(amounts, names_column, UNIQUE(names)), -1)`.
 
+**Criteria you build with `&` lift too.** In
+[Lesson 2.5](../../02-formulas-functions/05-conditional-aggregation/README.md) you wrote criteria such as
+`">="&DATE(2025,7,1)`. Join an operator to an array and you get one criterion per item, so this formula returns three
+counts across a row: 416 encounters with a LOSDays of at least 3, 107 with at least 7, and 12 with at least 14.
+
+```
+=COUNTIFS(tblEncounters[LOSDays], ">="&{3,7,14})
+```
+
+The list after `&` can be an array constant, a spill reference, or another function's result.
+
+**Two criteria lists at once.** When you lift two criteria at the same time, COUNTIFS pairs the lists up item by item:
+the first item of one list goes with the first item of the other, the second with the second, and so on. The lists
+must have the same number of rows. Try it in the Workspace's Guide examples area. In U6, spill every encounter type
+and facility pair that occurs:
+
+```
+=UNIQUE(tblEncounters[[EncounterType]:[Facility]])
+```
+
+Then, in W6, split that two-column spill with CHOOSECOLS and count each pair:
+
+```
+=COUNTIFS(tblEncounters[EncounterType], CHOOSECOLS(U6#, 1),
+          tblEncounters[Facility],      CHOOSECOLS(U6#, 2))
+```
+
+W6 spills 10 counts, one per pair, that add up to 2,000. The first three are 386 (Inpatient at Bluestone Memorial
+Hospital), 498 (Emergency at Bluestone Memorial), and 679 (Outpatient at the Bluestone Outpatient Pavilion). SUMIFS
+and AVERAGEIFS pair their criteria lists the same way.
+
+> ⚠️ **Only the criteria can be arrays.** The range arguments of COUNTIFS, SUMIFS, and AVERAGEIFS (the columns they
+> test and add up) must be real cell ranges: a Table column, an ordinary range, or a spill reference such as `U6#`.
+> If you pass a calculated array there, as in `COUNTIFS(FILTER(…), "Y")`, Excel refuses the formula with a
+> "There's a problem with this formula" message. Filter first and count with ROWS, or add another criteria pair.
+
 **Preview: naming the pieces with LET.** The formula above calls `UNIQUE(tblEncounters[PayerType])` twice. LET lets
 you calculate it once, give it a name, and reuse the name:
 
@@ -427,9 +501,9 @@ you calculate it once, give it a name, and reuse the name:
      VSTACK({"Payer type","Encounters"}, SORT(HSTACK(types, n), 2, -1)))
 ```
 
-LET takes pairs of *name, value*, and its last argument is the result. Lesson 4.2 covers LET in depth. For now, use it
-whenever the same piece appears more than once in a report formula. It makes the formula shorter, easier to read, and
-faster.
+LET takes pairs of *name, value*, and its last argument is the result.
+[Lesson 4.2](../02-advanced-formulas-let-lambda/README.md) covers LET in depth. For now, use it whenever the same piece
+appears more than once in a report formula. It makes the formula shorter, easier to read, and faster.
 
 > 💡 **Build from the inside out.** Write the innermost piece in a spare cell and check that it spills what you expect.
 > Then wrap it in the next function and check again. Long formulas are easier to read with line breaks: press
@@ -447,12 +521,12 @@ faster.
 
 | Action | Windows | Mac |
 |---|---|---|
-| Create a Table from a range | Ctrl + T | ⌘ + T |
+| Create a Table from a range | Ctrl + T | ⌃ + T (or ⌘ + T) |
 | Edit the active cell | F2 | ⌃ + U |
 | Accept a function or Table name from AutoComplete | Tab | Tab |
 | Expand or collapse the formula bar | Ctrl + Shift + U | ⌃ + Shift + U |
 | Line break inside a formula | Alt + Enter | ⌃ + ⌥ + Return |
-| Show formulas instead of results | Ctrl + ` | ⌃ + ` |
+| Show formulas instead of results | Ctrl + `` ` `` (grave accent) | ⌃ + `` ` `` |
 | Undo (for example, a value that blocks a spill) | Ctrl + Z | ⌘ + Z |
 | Enter a legacy array formula (Excel 2019 and earlier) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
 
@@ -469,7 +543,8 @@ pasted as values (**Home → Paste → Values**) when you know your audience run
 ## 🧪 Hands-on practice
 
 Download [`4.1-dynamic-arrays.xlsx`](4.1-dynamic-arrays.xlsx) and open the **Practice** sheet. Type a formula in each
-yellow cell (or in the yellow anchor cells on the **Workspace** sheet), and the **Check** column turns green when you're right.
+yellow cell (or in the yellow anchor cells on the **Workspace** sheet), and the **Check** column turns green when you're
+right.
 
 <!-- BEGIN GENERATED: practice -->
 Tasks 1, 2, 12, and 13 are spill exercises: build them in the yellow anchor cells on the Workspace sheet, and the gray cells here read your results. Every other answer cell needs a formula that returns ONE value, so wrap spilling functions in ROWS, SUM, AVERAGE, INDEX, or TAKE(…,1). Refer to the data with structured references such as tblEncounters[TotalCharges].
@@ -477,17 +552,17 @@ Tasks 1, 2, 12, and 13 are spill exercises: build them in the yellow anchor cell
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Go to the Workspace sheet. In the yellow cell B6, enter one formula that spills the list of distinct payer names from the Payer column of tblEncounters. The gray cell counts the names in your list. | UNIQUE of one Table column |
-| 2 | In Workspace!D6, enter one formula that spills the distinct ServiceLine values from tblEncounters sorted A to Z. It shows #SPILL! at first. Find out why, fix the problem without moving your formula, and the gray cell summarizes your list. | SORT(UNIQUE(…)). Then click the warning icon next to the error |
+| 2 | In Workspace!D6, enter one formula that spills the distinct ServiceLine values from tblEncounters sorted A to Z. When you press Enter, D6 shows #SPILL!. Find out why and fix the problem without moving your formula. The gray cell then summarizes your list. | SORT(UNIQUE(…)). Then click the warning icon next to the error |
 | 3 | Department names repeat across hospitals (each hospital has its own 'Emergency Department'). How many distinct Facility + Department combinations (units) appear in tblEncounters? | UNIQUE over two adjacent columns, then count the rows |
 | 4 | How many patients (PatientID) have exactly one encounter in this extract? | UNIQUE has an optional third argument |
 | 5 | This one uses tblDepartments (on the Departments sheet), but the formula still goes in the yellow cell here. Using FILTER, how many departments have UnitType "Inpatient" and 20 or more StaffedBeds? | Multiply the two conditions with *, then count the rows FILTER returns |
 | 6 | How many different attending providers (Attending) treated Emergency encounters? | FILTER first, then UNIQUE, then count |
 | 7 | Flu-season review: what were the total charges of Emergency encounters admitted in January or February 2025 whose DxCategory is Respiratory or Infectious? Enter dollars and cents. | AND with *, OR with +. Wrap the OR part in its own parentheses |
-| 8 | What is the combined TotalCharges of the five most expensive Emergency encounters? | SORT the ED charges largest first, TAKE the first 5, then add them |
+| 8 | What is the combined TotalCharges of the five most expensive Emergency encounters? Enter dollars and cents. | SORT the ED charges largest first, TAKE the first 5, then add them |
 | 9 | Outliers distort averages. What is the average TotalCharges of Inpatient encounters after dropping the 10 most expensive stays? Enter dollars and cents. | Sort largest first, then DROP the first 10 rows |
 | 10 | Which attending provider's encounters add up to the highest TotalCharges? Enter the name exactly as it appears (Last, First). | SORTBY the UNIQUE names by a SUMIFS that uses those same names as its criteria |
 | 11 | Look up the specialty of the attending on every Inpatient encounter (tblProviders has a Specialty for each Provider name). How many distinct specialties appear? | XLOOKUP accepts a whole array of lookup values |
-| 12 | On the Workspace sheet, make F6 spill the first day of each month of 2025 (01/01/2025 through 12/01/2025) using SEQUENCE. Then, in G6, write ONE COUNTIFS formula that refers to your month list with the spill operator (F6#) and spills the number of encounters admitted in each month. The gray cell checks both columns. | DATE accepts an array of months. Count AdmitDate ≥ each month start and < the next month's start |
+| 12 | On the Workspace sheet, make F6 spill the first day of each month of 2025 (01/01/2025 through 12/01/2025) using SEQUENCE. Column F is formatted to show them as Jan 2025, Feb 2025, and so on. Then, in G6, write ONE COUNTIFS formula that refers to your month list with the spill operator (F6#) and spills the number of encounters admitted in each month. The gray cell checks both columns. | DATE accepts an array of months. Count AdmitDate ≥ each month start and < the next month's start |
 | 13 | Build a long-stay worklist in Workspace!I6 with ONE formula: a header row (EncounterID, Department, LOSDays, TotalCharges) on top of every Cedar Ridge Medical Center encounter with LOSDays of 7 or more, showing only those four columns, sorted by LOSDays from longest to shortest. | VSTACK(header, SORT(CHOOSECOLS(FILTER(tblEncounters, …), …), …)) |
 <!-- END GENERATED: practice -->
 
@@ -617,7 +692,7 @@ FILTER returns 529 attending names, one per inpatient stay. XLOOKUP looks up eac
 2. In **G6**: `=COUNTIFS(tblEncounters[AdmitDate],">="&F6#,tblEncounters[AdmitDate],"<"&DATE(YEAR(F6#),MONTH(F6#)+1,1))`
 
 
-SEQUENCE(12) spills 1 to 12, and DATE turns each number into that month's first day. In G6, F6# means 'the whole spill that starts in F6', so COUNTIFS receives 12 start dates and returns 12 counts. The upper bound DATE(YEAR(F6#),MONTH(F6#)+1,1) is the next month's first day (month 13 rolls into January 2026). If you change F6 to 24 months, G6 grows with it automatically. December is the busiest month (221 encounters).
+SEQUENCE(12) spills 1 to 12, and DATE turns each number into that month's first day. In G6, F6# means 'the whole spill that starts in F6', so COUNTIFS receives 12 start dates and returns 12 counts. The upper bound DATE(YEAR(F6#),MONTH(F6#)+1,1) is the next month's first day (month 13 rolls into January 2026). If you change SEQUENCE(12) in F6 to SEQUENCE(24), G6 grows to 24 counts automatically. December is the busiest month (221 encounters).
 
 **13. One-formula long-stay worklist (Workspace!I6)**
 
@@ -637,7 +712,7 @@ Build it from the inside out. FILTER(tblEncounters, …) returns all 16 columns 
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least 50 encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. LET (previewed in the guide) makes it much easier to read. Then answer the questions below with formulas that refer to your leaderboard through N6#.
+The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least 50 encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. Section 12 of the lesson guide shows how to lift COUNTIFS and AVERAGEIFS over a two-column list, and LET (previewed there) keeps the formula readable. Then answer the questions below with formulas that refer to your leaderboard through N6#.
 
 Work on the **Bonus** sheet of the workbook.
 
@@ -706,7 +781,8 @@ DROP(N6#,1) removes the header so only numbers remain. CHOOSECOLS pulls out the 
 
 - A dynamic array formula lives in one **anchor cell** and **spills** its results into the cells around it. Leave
   room, because anything in the way causes `#SPILL!`.
-- `A2#` refers to a whole spill and resizes with it. Use it in formulas, drop-down lists, and charts.
+- A **spill reference** such as `A2#` refers to a whole spill and resizes with it. Use it in formulas, drop-down
+  lists, and charts.
 - **UNIQUE**, **SORT**/**SORTBY**, and **FILTER** replace copy-paste-dedupe routines with live lists. In FILTER, `*`
   means AND and `+` means OR.
 - Wrap a spill in **ROWS**, **SUM**, **AVERAGE**, **INDEX**, or **TAKE(…,1)** when you need one number.

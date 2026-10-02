@@ -11,7 +11,8 @@ for medians (EDWaits), and a KPI dictionary (Targets). Customize hooks add the d
   Lists          the dropdown sources (facilities incl. "All facilities", 24 months).
   Board          a blank canvas for the bonus build.
   Dashboard Key  (hidden, protected without a password) a finished, formula-driven reference dashboard with eight
-                 KPI cards, direction-aware status colors, two openpyxl charts, and its model area. It is set to the
+                 KPI cards, direction-aware status colors, two openpyxl charts with cell-linked (dynamic) titles, and
+                 its model area. It is set to the
                  bonus selection, and the Bonus Key's live formulas for B3/B4 read it.
 
 Practice tasks 1-9 are formulas typed on the Practice sheet that refer to SelFacility and SelMonth (pre-set to
@@ -23,9 +24,13 @@ from __future__ import annotations
 
 import statistics
 from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 
 from openpyxl.chart import BarChart, LineChart, Reference
+from openpyxl.chart.data_source import StrData, StrRef, StrVal
+from openpyxl.chart.text import RichText, Text
+from openpyxl.chart.title import Title
+from openpyxl.drawing.text import CharacterProperties, Paragraph, ParagraphProperties
 from openpyxl.formatting.rule import FormulaRule
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Protection, Side
 from openpyxl.workbook.defined_name import DefinedName
@@ -94,6 +99,10 @@ TARGET_BY_KPI = {t[0]: t for t in TARGETS}
 # ---------------------------------------------------------------------------------------------------------- data
 def _month(d) -> date:
     return date(d.year, d.month, 1)
+
+
+def _mdy(d: date) -> str:
+    return f"{d.month}/{d.day}/{d.year}"
 
 
 def wait_rows() -> list[dict]:
@@ -380,9 +389,12 @@ def build() -> Lesson:
              hint="EDATE(SelMonth,-12) is the same month one year earlier",
              explanation=f"{t1} visits this year against {by[(SEL_FAC, ly_m)]['EDVisits']} in "
                          f"{ly_m.strftime('%b %Y')}. Comparing with the same month last year removes seasonality, which a "
-                         "month-over-month change can't do: November always differs from October in an ED. EDATE moves a "
-                         "date by whole months and keeps it on the first of the month, so it matches the Month column "
-                         "exactly. Subtracting 365 days would not."),
+                         "month-over-month change can't do: an ED's November differs from its October for seasonal reasons "
+                         "alone. EDATE moves a date by whole months and keeps it on the first of the month, so it matches "
+                         "the Month column for every selection. Subtracting 365 days happens to work for "
+                         f"{SEL_MONTH.strftime('%b %Y')}, but it lands a day late whenever a February 29 falls in between: "
+                         f"{_mdy(date(2025, 1, 1))} − 365 days is {_mdy(date(2025, 1, 1) - timedelta(days=365))}, which "
+                         f"matches no row, while EDATE returns {_mdy(date(2024, 1, 1))}."),
         Task("Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays) with the previous "
              "month's. Return ▲ with UNICHAR(9650) if it rose, ▼ with UNICHAR(9660) if it fell, or ▬ with "
              "UNICHAR(9644) if it didn't change.",
@@ -585,7 +597,9 @@ def build() -> Lesson:
                          f"{b1:.2%}. No row in tblKPI says \"All facilities\", so SUMIFS with that text returns 0. The "
                          "wildcard `*` matches any text, so the same SUMIFS adds all three hospitals. Every additive "
                          "component works this way, and every rate is then rebuilt as total ÷ total."),
-        Task(f"With All facilities and {B_LABEL} still selected, how many of the seven KPIs are on target?",
+        Task(f"With All facilities and {B_LABEL} still selected, how many of the seven KPIs are on target? Use the "
+             "Targets sheet's rule: on target means at or below a lower-is-better target, or at or above a "
+             "higher-is-better one, so a value exactly equal to its target counts as on target.",
              answer=b2, title=f"Scorecard, All facilities, {B_LABEL}", live=b2_live,
              hint="Give each card a status cell that returns 1 or 0, then SUM them. Remember which KPIs are "
                   "higher-is-better",
@@ -939,6 +953,14 @@ CARDS = [  # (title, model row, value format, kind)
 CARD_COLS = [("B", "C"), ("E", "F"), ("H", "I"), ("K", "L")]
 
 
+def _dynamic_title(ref: str, cached: str) -> Title:
+    """A chart title linked to a cell (what you get by typing =cell in the formula bar with the title selected).
+    The cached text is what the cell shows for the default selection; Excel refreshes it on open."""
+    rpr = CharacterProperties(sz=1100, b=True)
+    return Title(tx=Text(strRef=StrRef(f=ref, strCache=StrData(ptCount=1, pt=[StrVal(idx=0, v=cached)]))),
+                 overlay=False, txPr=RichText(p=[Paragraph(pPr=ParagraphProperties(defRPr=rpr), endParaRPr=rpr, r=[])]))
+
+
 def _dashboard_key(wb, lesson):
     ws = wb.create_sheet("Dashboard Key")
     ws.sheet_properties.tabColor = "C00000"
@@ -1028,6 +1050,15 @@ def _dashboard_key(wb, lesson):
     for col in "NOP":
         ws[f"{col}18"].font = Font(bold=True)
         ws[f"{col}18"].border = BOX
+
+    # Chart titles: built in cells, then linked to each chart's title (see _dynamic_title), so they follow the selectors.
+    ws["N19"] = "Chart title: ED visits"
+    sf("O19", f'="ED visits, 12 months to "&TEXT($O$4,"mmm yyyy")&" · "&$C$4')
+    ws["N20"] = "Chart title: LWBS %"
+    sf("O20", f'="LWBS % vs target, 12 months to "&TEXT($O$4,"mmm yyyy")&" · "&$C$4')
+    for r in (19, 20):
+        ws[f"N{r}"].border = BOX
+        ws[f"N{r}"].font = Font(italic=True, color="595959")
 
     # 12-month trend block
     ws["N21"] = "12-month trend (selected facility)"
@@ -1159,7 +1190,7 @@ def _dashboard_key(wb, lesson):
     cats = Reference(ws, min_col=14, min_row=23, max_row=34)
     bar = BarChart()
     bar.type = "col"
-    bar.title = "ED visits, last 12 months"
+    bar.title = _dynamic_title("'Dashboard Key'!$O$19", f"ED visits, 12 months to {B_MONTH:%b %Y} · {ALL}")
     bar.add_data(Reference(ws, min_col=15, min_row=22, max_row=34), titles_from_data=True)
     bar.set_categories(cats)
     bar.legend = None
@@ -1175,7 +1206,7 @@ def _dashboard_key(wb, lesson):
     ws.add_chart(bar, "B19")
 
     line = LineChart()
-    line.title = "LWBS % vs target, last 12 months"
+    line.title = _dynamic_title("'Dashboard Key'!$O$20", f"LWBS % vs target, 12 months to {B_MONTH:%b %Y} · {ALL}")
     line.add_data(Reference(ws, min_col=16, max_col=17, min_row=22, max_row=34), titles_from_data=True)
     line.set_categories(cats)
     line.y_axis.scaling.min = 0

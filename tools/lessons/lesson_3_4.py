@@ -296,11 +296,13 @@ def build() -> Lesson:
     # ------------------------------------------------------------------ practice tasks
     L.practice_intro = (
         f"Every task uses {TBL} on the Encounters sheet: all {n:,} encounters that began in 2025. Build each PivotTable on a "
-        "new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. Then type the number "
-        "the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot cell, because a "
-        "reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the exception.")
+        "new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. When you reuse a pivot, "
+        "make it match the layout the task lists: remove leftover fields and clear filters the task doesn't mention. Then "
+        "type the answer the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot "
+        "cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the "
+        "exception.")
     L.start_notes = [
-        "You'll create several PivotTable sheets as you work. That's expected; delete the ones you no longer need, or keep "
+        "You'll create several PivotTable sheets as you work. That's expected. Delete the ones you no longer need, or keep "
         "rearranging one pivot.",
         "The hidden 'Pivot Key' sheet shows each finished pivot in full, so you can compare your whole layout, not just one "
         "number. Unhide it the same way as the Answer Key.",
@@ -322,8 +324,8 @@ def build() -> Lesson:
                          f"row is one encounter, so the Grand Total ({n:,}) equals the number of rows in the Table. That's a "
                          "quick check that the pivot sees all of the data. " + cross(f1)),
         Task(f"Rearrange the pivot. Remove FacilityName, put EncounterType in Filters and select Inpatient, put ServiceLine in "
-             f"Rows, and put TotalCharges in Values. What were the total charges for {T2_SERVICE_LINE} inpatient stays? "
-             "Enter the amount to the cent.",
+             f"Rows, and put TotalCharges in Values in place of EncounterID. What were the total charges for "
+             f"{T2_SERVICE_LINE} inpatient stays? Enter the amount to the cent.",
              answer=t2, fmt="#,##0.00", hint="The filter button for the Filters area appears above the pivot",
              solution="1. Uncheck **FacilityName** in the field list (or drag it out of Rows).\n"
                       "2. Drag **EncounterType** to **Filters**. Open the filter button that appears in B1, pick **Inpatient**, "
@@ -333,9 +335,9 @@ def build() -> Lesson:
              explanation="TotalCharges contains only numbers, so Excel sums it by default. The Filters area filters the whole "
                          "pivot without adding rows or columns, which keeps the layout simple when you only need one slice. "
                          + cross(f2)),
-        Task(f"Drill down: double-click the {T2_SERVICE_LINE} total in that pivot. Excel lists the stays behind the number on a "
-             "new sheet. Sort that list by TotalCharges, largest first. What is the EncounterID of the most expensive "
-             f"{T2_SERVICE_LINE} inpatient stay?",
+        Task(f"Drill down: in that pivot, double-click the Sum of TotalCharges value on the {T2_SERVICE_LINE} row. Excel lists "
+             "the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the "
+             f"EncounterID of the most expensive {T2_SERVICE_LINE} inpatient stay?",
              answer=t3, hint="Double-click a value cell (Show Details)",
              solution=f"1. Double-click the *Sum of TotalCharges* cell for {T2_SERVICE_LINE}. Excel inserts a new sheet with a "
                       f"Table of the {len(t2_rows)} matching rows.\n2. Right-click any TotalCharges value in that Table and "
@@ -374,12 +376,14 @@ def build() -> Lesson:
                          "is the number of readmissions, and Average (Sum ÷ Count) is the readmission rate: "
                          f"{sum(t5_vals)} ÷ {len(t5_vals):,} for {T5_SERVICE_LINE}. Average ignores blanks, so the "
                          "non-inpatient rows can't dilute the rate. " + cross(f5)),
-        Task("Build an ED payer-mix pivot: PayerName in Rows, EncounterType in Columns, and EncounterID in Values. Show the "
-             f"values as % of Column Total. What percentage of Emergency encounters were billed to {T6_PAYER}? "
-             "Enter it to 1 decimal place.",
+        Task("Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows, EncounterType in Columns, and "
+             "EncounterID in Values. Show the values as % of Column Total. What percentage of ED visits (the Emergency "
+             f"column) were billed to {T6_PAYER}? Enter it to 1 decimal place.",
              answer=t6, fmt="0.0%", hint="Value Field Settings → Show Values As",
-             solution="1. Clear the EncounterType filter (or start a new pivot). Put **PayerName** in **Rows**, "
-                      "**EncounterType** in **Columns**, and **EncounterID** in **Values**.\n2. Right-click a number → "
+             solution="1. Start a new pivot. If you reuse the last one instead, clear the EncounterType filter first: a field "
+                      "moved from Filters to Columns can keep its old selection and hide the Emergency column. Put "
+                      "**PayerName** in **Rows**, **EncounterType** in **Columns**, and **EncounterID** in **Values**.\n"
+                      "2. Right-click a number → "
                       "**Show Values As → % of Column Total**.\n"
                       f"3. Read the {T6_PAYER} row in the Emergency column.",
              live=f6,
@@ -403,10 +407,11 @@ def build() -> Lesson:
                          "month labels keeps calendar order) before you compare one month with the next. "
                          + cross(f7_one) + f" returns {fewest[0]}. Repeat it for each month, or see the key's live "
                          "formula, which checks all twelve at once."),
-        Task("In the same pivot, add EncounterID to Values a second time and show it as Difference From the (previous) "
-             "month. By how many visits did December's ED volume differ from November's? Type a negative number if "
-             "December was lower.",
-             answer=t8, hint="Show Values As → Difference From, Base item (previous)",
+        Task("In the same pivot, first sort the months back into calendar order (Jan at the top). Then add EncounterID to "
+             "Values a second time and show it as Difference From the (previous) month. By how many visits did December's "
+             "ED volume differ from November's? Type a negative number if December was lower.",
+             answer=t8, hint="Right-click a month → Sort → Sort A to Z. Then Show Values As → Difference From, Base item "
+                             "(previous)",
              solution="1. Sort the months back into calendar order (right-click a month → **Sort → Sort A to Z**).\n"
                       "2. Drag **EncounterID** into **Values** again. Right-click one of the new numbers → **Show Values As → "
                       "Difference From…**\n3. Base field: the field that shows the months (**AdmitDate**, or "
@@ -673,9 +678,12 @@ def build() -> Lesson:
         ws["A1"] = "🔑 Pivot Key — Lesson 3.4"
         ws["A1"].font = Font(bold=True, size=16, color="7B2C2C")
         ws["A2"] = ("Each block is a finished PivotTable from the practice, typed out as values so you can compare your whole "
-                    "layout with it. Your pivot may list rows in a different order, and Excel's number formats may differ.")
-        ws["A2"].font = Font(italic=True, color="595959")
-        r = 4
+                    "layout with it.")
+        ws["A3"] = ("Your pivot may list rows in a different order, use other number formats, and name a second copy of a "
+                    "value field differently (Excel calls it Count of EncounterID2 until you rename it).")
+        for note in ("A2", "A3"):
+            ws[note].font = Font(italic=True, color="595959")
+        r = 5
         title_font = Font(bold=True, size=12, color=NAVY)
         hdr_font = Font(bold=True, color="FFFFFF")
         total_font = Font(bold=True)

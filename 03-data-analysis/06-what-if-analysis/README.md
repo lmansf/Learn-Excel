@@ -582,7 +582,7 @@ The table jumps in steps of 5, so it brackets the break-even point instead of fi
 - **Answer:** 40,342
 - **Solution:** `=Model!J29`
 
-A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand. The base case is 200 visits at $142 (−$8,619), so the cell at 200 visits and $140 should be about $3,032 lower: $2 less on each of the 37.6% of visits that are commercial, after the 4% fee. With swapped input cells that cell would show 140 visits a day at $200, a far bigger loss.
+A two-variable table has exactly one formula, in its top-left corner. Excel substitutes each top-row value into the **row** input cell (C17) and each left-column value into the **column** input cell (B8), and fills every intersection. If you swap the two input cells, the table still fills without any warning, but with wrong numbers. So check one cell by hand. The base case is 200 visits at $142 (−$8,619), so the cell at 200 visits and $140 should be about $3,032 lower, because the clinic's 1,579 commercial visits a month each pay $2 less, minus the 4% fee on those dollars. With swapped input cells that cell would show 140 visits a day at $200, a far bigger loss.
 
 **9. Two-variable Data Table: profitable combinations**
 

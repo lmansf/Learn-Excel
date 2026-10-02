@@ -71,8 +71,11 @@ whole Table as it grows, so new rows appear the next time you refresh. A pivot b
 `Encounters!$A$1:$R$11146` ignores anything added below row 11,146 until you change its source.
 
 The Encounters sheet in this lesson's workbook is already a Table named **tblEncounters**: one row per encounter, 18
-columns, and no blank headers. The **Data Dictionary** sheet explains every column. Four of them deserve a note now:
+columns, and no blank headers. The **Data Dictionary** sheet explains every column. Five of them deserve a note now:
 
+- **EncounterType** has four items: Emergency, Inpatient, Observation, and Outpatient. An Emergency encounter is an ED visit
+  that ended without an inpatient or observation stay. A patient admitted from the ED appears as Inpatient or Observation
+  instead. This lesson calls Emergency encounters **ED visits**.
 - **ReadmitFlag** is 1 when an inpatient stay was followed by another inpatient admission within 30 days, 0 when it wasn't,
   and blank on every row that isn't an inpatient stay. Section 5 shows why this one column gives you three useful numbers.
 - **LOSDays** is DischargeDate − AdmitDate in days, so a same-day visit has 0.
@@ -90,7 +93,8 @@ columns, and no blank headers. The **Data Dictionary** sheet explains every colu
 3. In the dialog (called *PivotTable from table or range* or *Create PivotTable*, depending on your version), check that
    **Table/Range** shows `tblEncounters`.
 4. Under where to place it, choose **New Worksheet**.
-5. Leave **Add this data to the Data Model** unticked (the Data Model is Lesson 4.4), and click **OK**.
+5. If the dialog shows **Add this data to the Data Model** (Windows only), leave it unticked. The Data Model is Lesson 4.4.
+   Click **OK**.
 
 Excel inserts a new sheet with an empty pivot starting at A3 and opens the **PivotTable Fields** pane on the right. Rows 1
 and 2 stay empty to make room for filters.
@@ -109,8 +113,8 @@ Whenever a cell inside a pivot is selected, two extra ribbon tabs appear. This l
 > 💡 **Tip:** **Insert → Recommended PivotTables** previews several pivots that Excel thinks suit your data. Pick one as a
 > starting point, then rearrange it like any other pivot.
 
-> 📋 Excel for the web can create and edit PivotTables, but some tools in this lesson, such as calculated fields, are missing
-> or limited there. Use desktop Excel for Windows or Mac for the practice.
+> 📋 Excel for the web can create and edit PivotTables, but some tools in this lesson may be missing or limited there,
+> depending on your version. Use desktop Excel for Windows or Mac for the practice.
 
 ### 4. Build the layout in the PivotTable Fields pane
 
@@ -376,6 +380,11 @@ button, with a **Select field** box at the top of its menu that chooses which fi
 | **Value Filters** | Items whose summary passes a number rule (greater than, between…) | Payer types with at least 30 index stays |
 | **Value Filters → Top 10** | The top or bottom N items, the top N percent, or the items that make up a chosen sum | The top 5 ED diagnoses |
 | **Filters** area | Records that match, for the whole pivot | EncounterType = Emergency |
+
+A value filter's dialog has three boxes. The first picks the value field to test, which matters when the pivot has more than
+one. The second holds the rule, such as *is greater than or equal to*, and the third holds the number. To remove a filter,
+open the same button and choose **Clear Filter From "FieldName"**. On Windows, **PivotTable Analyze → Clear → Clear
+Filters** removes every filter from the pivot at once.
 
 **Worked example: top 5 ED diagnoses.** Put EncounterType in Filters (select Emergency), DxDescription in Rows, and
 EncounterID in Values. Open **Row Labels → Value Filters → Top 10…**, change 10 to 5, keep *Items* and *Count of
@@ -648,18 +657,18 @@ step, and tasks 7–9 reuse one monthly pivot. Type each answer in the yellow ce
 you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses tblEncounters on the Encounters sheet: all 11,145 encounters that began in 2025. Build each PivotTable on a new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. Then type the number the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the exception.
+Every task uses tblEncounters on the Encounters sheet: all 11,145 encounters that began in 2025. Build each PivotTable on a new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. When you reuse a pivot, make it match the layout the task lists: remove leftover fields and clear filters the task doesn't mention. Then type the answer the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the exception.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Create a PivotTable from tblEncounters on a new worksheet. Put FacilityName in Rows and EncounterID in Values. How many 2025 encounters did Cedar Ridge Medical Center have? | Insert → PivotTable, then drag fields into the four areas |
-| 2 | Rearrange the pivot. Remove FacilityName, put EncounterType in Filters and select Inpatient, put ServiceLine in Rows, and put TotalCharges in Values. What were the total charges for Cardiovascular inpatient stays? Enter the amount to the cent. | The filter button for the Filters area appears above the pivot |
-| 3 | Drill down: double-click the Cardiovascular total in that pivot. Excel lists the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the EncounterID of the most expensive Cardiovascular inpatient stay? | Double-click a value cell (Show Details) |
+| 2 | Rearrange the pivot. Remove FacilityName, put EncounterType in Filters and select Inpatient, put ServiceLine in Rows, and put TotalCharges in Values in place of EncounterID. What were the total charges for Cardiovascular inpatient stays? Enter the amount to the cent. | The filter button for the Filters area appears above the pivot |
+| 3 | Drill down: in that pivot, double-click the Sum of TotalCharges value on the Cardiovascular row. Excel lists the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the EncounterID of the most expensive Cardiovascular inpatient stay? | Double-click a value cell (Show Details) |
 | 4 | Build a pivot of average ED charges by payer type: EncounterType = Emergency in Filters, PayerType in Rows, and TotalCharges in Values. Change the summary from Sum to Average. What was the average charge for a Self-Pay ED visit? Round to 2 decimal places. | Right-click a value → Summarize Values By, or Value Field Settings |
 | 5 | Build a readmission pivot: EncounterType = Inpatient in Filters, ServiceLine in Rows, and ReadmitFlag in Values. Notice which summary Excel picks, then change it to Average and format it as a percentage. What was the 30-day readmission rate for the Medicine service line? Enter it as a percentage to 1 decimal place. | Average of a 1/0 column is the share of 1s |
-| 6 | Build an ED payer-mix pivot: PayerName in Rows, EncounterType in Columns, and EncounterID in Values. Show the values as % of Column Total. What percentage of Emergency encounters were billed to State Medicaid? Enter it to 1 decimal place. | Value Field Settings → Show Values As |
+| 6 | Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows, EncounterType in Columns, and EncounterID in Values. Show the values as % of Column Total. What percentage of ED visits (the Emergency column) were billed to State Medicaid? Enter it to 1 decimal place. | Value Field Settings → Show Values As |
 | 7 | Group dates by month: EncounterType = Emergency in Filters, AdmitDate in Rows, and EncounterID in Values. Group AdmitDate by Months. Which month of 2025 had the fewest ED visits? Type the month's three-letter name as the pivot shows it (for example, Mar). | Right-click a date → Group…, then sort by the count |
-| 8 | In the same pivot, add EncounterID to Values a second time and show it as Difference From the (previous) month. By how many visits did December's ED volume differ from November's? Type a negative number if December was lower. | Show Values As → Difference From, Base item (previous) |
+| 8 | In the same pivot, first sort the months back into calendar order (Jan at the top). Then add EncounterID to Values a second time and show it as Difference From the (previous) month. By how many visits did December's ED volume differ from November's? Type a negative number if December was lower. | Right-click a month → Sort → Sort A to Z. Then Show Values As → Difference From, Base item (previous) |
 | 9 | Change the EncounterType filter to Inpatient, and change the second value field to Running Total In the months field. How many inpatient stays began from January 1 through June 30, 2025 (the running total on the Jun row)? | Show Values As → Running Total In |
 | 10 | Group numbers into bands: EncounterType = Inpatient in Filters, AgeAtAdmit in Rows, and EncounterID in Values. Group AgeAtAdmit starting at 0, ending at 99, by 10. How many inpatient stays were for patients aged 70–79? | Right-click an age → Group… (Starting at, Ending at, By) |
 | 11 | Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID in Values. Insert a slicer for PayerType and a timeline for AdmitDate. In the slicer, select both Government and Medicare Advantage. In the timeline, switch to QUARTERS and select Q4 2025. How many Emergency encounters does Cedar Ridge Medical Center show? | PivotTable Analyze → Insert Slicer and Insert Timeline. Ctrl+click (Mac: ⌘+click) picks a second button |
@@ -703,7 +712,7 @@ EncounterID is text, so Excel summarizes it with Count, which adds 1 for every n
 
 TotalCharges contains only numbers, so Excel sums it by default. The Filters area filters the whole pivot without adding rows or columns, which keeps the layout simple when you only need one slice. Cross-check without a pivot: `=SUMIFS(tblEncounters[TotalCharges],tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],"Cardiovascular")`
 
-**3. Drill down: double-click the Cardiovascular total in that pivot. Excel lists the stays…**
+**3. Drill down: in that pivot, double-click the Sum of TotalCharges value on the…**
 
 - **Answer:** ENC114841
 - **Solution:**
@@ -740,12 +749,12 @@ Average divides the sum of the charges by the number of visits in each row (219 
 
 Excel picks **Count** because ReadmitFlag has blank cells (every non-inpatient row), and a pivot only defaults to Sum when a column is 100% numbers. Count of ReadmitFlag is the number of index stays, Sum is the number of readmissions, and Average (Sum ÷ Count) is the readmission rate: 252 ÷ 1,562 for Medicine. Average ignores blanks, so the non-inpatient rows can't dilute the rate. Cross-check without a pivot: `=AVERAGEIFS(tblEncounters[ReadmitFlag],tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],"Medicine")`
 
-**6. Build an ED payer-mix pivot: PayerName in Rows, EncounterType in Columns, and…**
+**6. Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows,…**
 
 - **Answer:** 19.3%
 - **Solution:**
 
-1. Clear the EncounterType filter (or start a new pivot). Put **PayerName** in **Rows**, **EncounterType** in **Columns**, and **EncounterID** in **Values**.
+1. Start a new pivot. If you reuse the last one instead, clear the EncounterType filter first: a field moved from Filters to Columns can keep its old selection and hide the Emergency column. Put **PayerName** in **Rows**, **EncounterType** in **Columns**, and **EncounterID** in **Values**.
 2. Right-click a number → **Show Values As → % of Column Total**.
 3. Read the State Medicaid row in the Emergency column.
 
@@ -764,7 +773,7 @@ Excel picks **Count** because ReadmitFlag has blank cells (every non-inpatient r
 
 Aug had 259 ED visits, just below Apr with 263. Grouping sorts 3,774 ED visits into 12 monthly buckets without a helper column. Sorting by value reorders the months, so remember to sort back (**Sort A to Z** on the month labels keeps calendar order) before you compare one month with the next. Cross-check without a pivot: `=COUNTIFS(tblEncounters[EncounterType],"Emergency",tblEncounters[AdmitDate],">="&DATE(2025,8,1),tblEncounters[AdmitDate],"<"&DATE(2025,9,1))` returns 259. Repeat it for each month, or see the key's live formula, which checks all twelve at once.
 
-**8. In the same pivot, add EncounterID to Values a second time and show it as Difference…**
+**8. In the same pivot, first sort the months back into calendar order (Jan at the top).…**
 
 - **Answer:** 44
 - **Solution:**
