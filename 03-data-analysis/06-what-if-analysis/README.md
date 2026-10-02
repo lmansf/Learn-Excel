@@ -91,7 +91,7 @@ workers' comp claims, and the RN rate of \$42.73 is the median hourly rate of Bl
 `=VisitsPerDay*21`. It gives the right answer today, so nothing looks wrong. But change ClinicDays to 22 and that formula
 ignores you, along with every Data Table, scenario, and Goal Seek that depends on it. Three ways to hunt for one:
 
-1. **Show Formulas.** Press **Ctrl + `` ` ``** (Mac: **⌃ + `` ` ``**), or choose **Formulas → Show Formulas**, to display
+1. **Show Formulas.** Press **Ctrl + `` ` ``** (Mac: **Control + `` ` ``**), or choose **Formulas → Show Formulas**, to display
    every formula instead of its result. The `` ` `` is the grave accent key, left of 1. Read down the calculation rows and
    look for digits that aren't cell references. Press the shortcut again to switch back.
 2. **Trace Dependents.** Select an input and choose **Formulas → Trace Dependents**. Blue arrows point to every formula that
@@ -400,7 +400,7 @@ satisfied*.
 **The Solver Results box** appears when Solver finishes:
 
 - **Keep Solver Solution** leaves the new values in the variable cells. **Restore Original Values** puts the old ones back.
-- **Reports** lists *Answer*, *Sensitivity*, and *Limits*. Select one or more (Ctrl-click, or ⌘-click on a Mac) before you
+- **Reports** lists *Answer*, *Sensitivity*, and *Limits*. Select one or more (Ctrl + click, or ⌘ + click on a Mac) before you
   click **OK**, and Excel adds each report as a new sheet.
 - **Save Scenario…** stores the solution as a scenario (section 4).
 
@@ -481,18 +481,20 @@ A practical order of work for any what-if question:
 5. **Use Scenario Manager** to present a handful of realistic combined cases.
 6. **Use Solver** when several inputs interact and the answer must follow rules.
 
+### 9. Shortcuts and version notes
+
 | Action | Windows | Mac |
 |---|---|---|
-| Show or hide formulas | Ctrl + `` ` `` | ⌃ + `` ` `` |
-| Goal Seek | Alt, A, W, G | Data → What-If Analysis → Goal Seek |
-| Scenario Manager | Alt, A, W, S | Data → What-If Analysis → Scenario Manager |
-| Data Table | Alt, A, W, T | Data → What-If Analysis → Data Table |
-| Solver | Data → Solver | Data → Solver |
+| Show or hide formulas | Ctrl + `` ` `` | Control + `` ` `` |
+| Goal Seek | Alt, A, W, G | **Data → What-If Analysis → Goal Seek** |
+| Scenario Manager | Alt, A, W, S | **Data → What-If Analysis → Scenario Manager** |
+| Data Table | Alt, A, W, T | **Data → What-If Analysis → Data Table** |
+| Solver | **Data → Solver** | **Data → Solver** |
 | Recalculate (with *Automatic Except for Data Tables*) | F9 | ⌘ + = |
 | Select cells that aren't next to each other | Ctrl + click | ⌘ + click |
-| Name Manager | Ctrl + F3 | Formulas → Name Manager |
+| Name Manager | Ctrl + F3 | **Formulas → Name Manager** |
 
-> 📋 **Version notes:** Goal Seek, Scenario Manager, and Data Tables are in every current desktop version of Excel for
+> 📋 **Version note:** Goal Seek, Scenario Manager, and Data Tables are in every current desktop version of Excel for
 > Windows and Mac. The Solver with the Simplex LP, GRG Nonlinear, and Evolutionary methods is included with Excel 2010 and
 > later for Windows and Excel 2016 and later for Mac. Scenarios and Solver settings are saved inside the workbook, so a
 > regular `.xlsx` file keeps them, and no macros are needed.
@@ -511,15 +513,15 @@ Every task uses the Model and Staffing sheets. Tasks 1 and 2 read your Model liv
 | 1 | On the Model sheet, complete the yellow Operating income cell (B59): net patient revenue minus total operating expenses. The gray cell here reads your formula. What is the clinic's base-case operating income per month? | An output should only point at calculation cells |
 | 2 | Complete the yellow Operating margin cell (B60): operating income as a share of net patient revenue. What is the base-case operating margin? The cell is already formatted as a percentage. | Margin = income ÷ revenue |
 | 3 | Audit the model. One formula in the CALCULATIONS section (rows 42–56) has a number typed into it instead of a reference to its input cell. Type that cell's address (for example B99). Then fix the formula so it points to the input. Task 10 depends on the fix. | Show Formulas, or Trace Dependents on each input |
-| 4 | On the Model sheet, use Goal Seek to find the break-even volume: set Operating income (B59) to 0 by changing Visits per day (B8). How many visits per day does the clinic need? Round to 1 decimal place, then click Cancel to restore 200. | Data → What-If Analysis → Goal Seek |
+| 4 | On the Model sheet, use Goal Seek to find the break-even volume: set Operating income (B59) to 0 by changing Visits per day (B8). How many visits per day does the clinic need? Round to 1 decimal place, then click Cancel to restore 200. | **Data → What-If Analysis → Goal Seek** |
 | 5 | The CFO is renegotiating commercial contracts. On the Model sheet, use Goal Seek to set Operating margin (B60) to 5% (type 0.05) by changing the Commercial \$ per visit (C17). What commercial reimbursement per visit is needed? Round to the nearest dollar, then click Cancel to restore \$142. | The Set cell must contain a formula, so use the margin cell |
 | 6 | Build the one-variable Data Table in Model!F8:H17: put =B59 in G8 and =B60 in H8, select F8:H17, and use Column input cell B8. What operating margin does your table show at 190 visits per day? Enter it as a percentage to 1 decimal place. | The visits run down a column, so use the Column input cell |
 | 7 | Look down the Operating income column of your one-variable table. What is the lowest visits-per-day value in the table at which the clinic makes a profit (operating income above 0)? | Read the table, or let MINIFS find it |
 | 8 | Build the two-variable Data Table: put =B59 in the corner cell F22, select F22:K31, and use Row input cell C17 (commercial \$ across row 22) and Column input cell B8 (visits per day down column F). What operating income does the table show at 210 visits per day and \$160 per commercial visit? Round to the nearest dollar. | Row input = the input whose values run across the top row |
 | 9 | How many of the 45 combinations in your two-variable table (G23:K31) are profitable (operating income above 0)? Use a formula. | COUNTIF with ">0" |
-| 10 | Open Scenario Manager on the Model and add three scenarios that change B8, B16, B17 and B36. Base plan: visits per day 200, Medicaid share 14.9%, Commercial share 37.6%, billing fee 4.0%. Downside: visits per day 190, Medicaid share 17.9%, Commercial share 34.6%, billing fee 5.0%. Upside: visits per day 206, Medicaid share 12.9%, Commercial share 39.6%, billing fee 3.5%. Create a Scenario Summary with result cells B59 and B60. What is operating income in the Downside scenario? Round to the nearest dollar. | Data → What-If Analysis → Scenario Manager |
+| 10 | Open Scenario Manager on the Model and add three scenarios that change B8, B16, B17 and B36. Base plan: visits per day 200, Medicaid share 14.9%, Commercial share 37.6%, billing fee 4.0%. Downside: visits per day 190, Medicaid share 17.9%, Commercial share 34.6%, billing fee 5.0%. Upside: visits per day 206, Medicaid share 12.9%, Commercial share 39.6%, billing fee 3.5%. Create a Scenario Summary with result cells B59 and B60. What is operating income in the Downside scenario? Round to the nearest dollar. | **Data → What-If Analysis → Scenario Manager** |
 | 11 | From the same Scenario Summary, what operating margin does the Upside scenario produce? Enter it as a percentage to 1 decimal place. | Same summary, different column |
-| 12 | On the Staffing sheet, use Solver to minimize the monthly staff cost (B31) by changing the RN, LPN, and CNA FTEs (B18:B20), subject to the three constraints in rows 25–27 (leave out the CNA cap in row 28). Keep Make Unconstrained Variables Non-Negative ticked and choose Simplex LP. What is the minimum monthly cost? Round to the nearest dollar, and type the number rather than a link to B31, because the bonus runs Solver on this sheet again. | Data → Solver (enable the Solver add-in first) |
+| 12 | On the Staffing sheet, use Solver to minimize the monthly staff cost (B31) by changing the RN, LPN, and CNA FTEs (B18:B20), subject to the three constraints in rows 25–27 (leave out the CNA cap in row 28). Keep Make Unconstrained Variables Non-Negative ticked and choose Simplex LP. What is the minimum monthly cost? Round to the nearest dollar, and type the number rather than a link to B31, because the bonus runs Solver on this sheet again. | **Data → Solver** (enable the Solver add-in first) |
 | 13 | Run Solver again (same setup) and select Sensitivity under Reports before you click OK. On the Sensitivity Report sheet, what is the Shadow Price of the Total support hours constraint (Staffing!B25)? Enter it in dollars to 2 decimal places. | Shadow price = cost change per one-unit increase in the constraint's right-hand side |
 <!-- END GENERATED: practice -->
 
@@ -531,7 +533,7 @@ and Solver tasks, the key's *Live result* column checks the answer with algebra 
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Operating income (Model!B59)**
 
@@ -616,7 +618,7 @@ Ordinary formulas can read a Data Table's results, so you can count them, chart 
 - **Answer:** -41,824
 - **Solution:**
 
-1. Select B8, then Ctrl-click (Mac: ⌘-click) B16:B17 and B36.
+1. Select B8, then Ctrl + click (Mac: ⌘ + click) B16:B17 and B36.
 2. **Data → What-If Analysis → Scenario Manager → Add…**. Name it *Base plan* and click **OK**. The values box shows the current values, so click **OK** again.
 3. Click **Add…** again for *Downside* and *Upside*. Type the values in the order B8, B16, B17, B36 (decimals like 0.179 for 17.9%).
 4. Click **Summary…**, choose **Scenario summary**, set **Result cells** to `B59,B60`, and click **OK**. Read the Downside column on the new Scenario Summary sheet.
@@ -665,7 +667,7 @@ Requiring one more support hour raises the minimum cost by \$25.01. That's one C
 <!-- BEGIN GENERATED: bonus -->
 Bluestone wants the Primary Care Clinic to grow to 220 visits per day in 2026 by adding a fourth advanced practice provider (APP: a nurse practitioner or physician assistant). Capacity rises from 208 to 226 visits per day. HR hires whole people, so every role needs a whole number of 1.0-FTE staff. Only 6 CNA positions are approved (Staffing!B12). Find the cheapest staffing plan, then test the full plan in the Model's P&L.
 
-Work on the **Bonus** sheet of the workbook.
+Run Solver on the **Staffing** sheet and add the scenarios on the **Model** sheet, then type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** On the Staffing sheet, change B6 to 220. Re-run Solver with two more constraints: B18:B20 = int (integer) and B28 <= D28 (the CNA cap). In Solver Options, set Integer Optimality (%) to 0. What is the minimum monthly staff cost? Round to the nearest dollar. *(Hint: In Add Constraint, pick int from the middle list. Integer Optimality is on the All Methods tab of Options)*
 - **B2.** How many RNs does that plan hire? *(Hint: Read Staffing!B18. The RN rule in row 27 should still say OK)*
@@ -675,7 +677,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Integer staffing plan: minimum cost**
 
@@ -711,7 +713,7 @@ The fractional plan needs 10.5 licensed FTEs, and 11 whole people already cover 
 - **Solution:**
 
 1. On the Model, open **Scenario Manager**, select *Base plan*, and click **Show**. Close the dialog.
-2. Select B8, B10, and B21:B23 (Ctrl-click, or ⌘-click on a Mac).
+2. Select B8, B10, and B21:B23 (Ctrl + click, or ⌘ + click on a Mac).
 3. **Scenario Manager → Add…** *Today*: 200, 3, 5, 3, 8.
 4. **Add…** *Growth 2026*: 220, 4, 7, 4, 6.
 5. **Summary…** with result cells `B59,B60`, or select Growth 2026, click **Show**, read B59, then **Show** Today to restore the base case.

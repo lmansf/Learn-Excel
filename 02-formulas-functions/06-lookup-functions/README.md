@@ -283,7 +283,7 @@ matches, one for the row and one for the column. INDEX takes both:
    Medical Supplies budget.
 
 You can type the formula on one line. The line breaks above only make it easier to read. In Excel, **Alt + Enter** (Mac:
-**⌃ + ⌥ + Return**) adds a line break inside the formula bar.
+**Control + Option + Return**) adds a line break inside the formula bar.
 
 > ⚠️ The pieces have to line up. The header range (`D1:J1`) must start in the same column as the grid (`D2:J32`), and the row-label
 > range (`A2:A32`) must start on the same row as the grid. If they're offset by one, you get the neighbor's number.
@@ -558,7 +558,7 @@ Most of the time you'll add a lookup as a new column, such as a payer name next 
 
 *Question: what happened in encounter ENC110776, in words a care manager can read?*
 
-1. Find the encounter. Press **Ctrl + F** (Mac: **⌃ + F**) on the Encounters sheet and search for ENC110776. It's row 3. Type
+1. Find the encounter. Press **Ctrl + F** (Mac: **Control + F**) on the Encounters sheet and search for ENC110776. It's row 3. Type
    the formulas below in empty cells of column N on the Encounters sheet.
 2. Patient: `=XLOOKUP(B3,Patients!$A$2:$A$186,Patients!$C$2:$C$186)&" "&XLOOKUP(B3,Patients!$A$2:$A$186,Patients!$D$2:$D$186)`
    returns Christine Miller.
@@ -592,11 +592,11 @@ small charge (\$304.68) both make sense. If a lookup had returned a cardiac surg
 | Shortcut | Windows | Mac |
 |---|---|---|
 | Toggle `$` in a reference | **F4** | **⌘ + T** |
-| Edit the active cell (shows each range in color) | **F2** | **⌃ + U** |
+| Edit the active cell (shows each range in color) | **F2** | **Control + U** |
 | Fill the selection down | **Ctrl + D** | **⌘ + D** |
-| Find an ID on a sheet | **Ctrl + F** | **⌃ + F** |
-| Show formulas instead of results (the `` ` `` key is the grave accent, left of 1) | **Ctrl + \`** | **⌃ + \`** |
-| Line break inside a formula | **Alt + Enter** | **⌃ + ⌥ + Return** |
+| Find an ID on a sheet | **Ctrl + F** | **Control + F** |
+| Show formulas instead of results (the `` ` `` key is the grave accent, left of 1) | **Ctrl + \`** | **Control + \`** |
+| Line break inside a formula | **Alt + Enter** | **Control + Option + Return** |
 
 ## 🧪 Hands-on practice
 
@@ -631,7 +631,7 @@ runs each sample formula, so you can see it working. The same answers are below,
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Encounter ENC110900 is on row 9 of the Encounters sheet. Use VLOOKUP with its…**
 
@@ -737,7 +737,7 @@ XLOOKUP's if_not_found argument replaces #N/A with your own text, but only when 
 <!-- BEGIN GENERATED: bonus -->
 Dr. Nguyen's care manager answers the same questions all day: who is this encounter's patient, how old were they, what were they treated for, who was the attending, who pays, and where does the claim stand? Build a reusable lookup card on the Card sheet. Each card is one column: it takes an EncounterID in row 5 and returns ten facts in rows 6 to 15. Rows 6 and 7 are helper cells (PatientID and Attending ProviderID) that the other rows reuse. Card 1 (column B) holds ENC117295. Card 2 (column C) holds ENC119O88, an ID copied from a handwritten note, and every row of Card 2 must show Not found instead of an error. Write every formula in column B, then copy B6:B15 and paste it into C6:C15. Refer to the ID as B\$5, with no \$ before the B, so it becomes C\$5 in column C. The \$ before the 5 keeps it on row 5 if you copy a formula down to start the next row. Use Copy (Ctrl + C, Mac: ⌘ + C) and Paste (Ctrl + V, Mac: ⌘ + V) rather than dragging the fill handle, because dragging to the right shifts Table references such as tblEncounters[PatientID] to the next Table column. Keep both IDs in place while you check your answers. The gray cells on the Bonus sheet read your card.
 
-Work on the **Bonus** sheet of the workbook.
+Build the card on the **Card** sheet, and check your progress on the **Bonus** sheet.
 
 - **B1.** Card 1 (ENC117295): what does your Patient name row (Card!B8) show? Format: First Last. *(Hint: Chain two lookups: first EncounterID to PatientID (row 6), then PatientID to the names. Join them with &" "&)*
 - **B2.** Card 1: how old was the patient, in completed years, on the encounter's AdmitDate (Card!B9)? *(Hint: Look up DOB and AdmitDate, then DATEDIF(…, …, "Y") from Lesson 2.3)*
@@ -748,7 +748,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Card 1 · Patient name (First Last)**
 

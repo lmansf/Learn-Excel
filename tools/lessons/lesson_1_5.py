@@ -359,7 +359,7 @@ def build() -> Lesson:
              f"(column {pharma_col}) in Q4 2025?",
              answer=onc_pharma_q4, fmt="#,##0",
              solution=f"=SUM(Oct:Dec!{pharma_col}{onc})",
-             hint="Type =SUM(, click the Oct tab, Shift+click the Dec tab, then click the cell",
+             hint="Type =SUM(, click the Oct tab, Shift + click the Dec tab, then click the cell",
              title="3-D SUM: Oncology pharmaceuticals in Q4",
              explanation=f"Oct:Dec! means every sheet from the Oct tab through the Dec tab, so the formula adds {pharma_col}{onc} on all "
                          f"three. It's the same as =Oct!{pharma_col}{onc}+Nov!{pharma_col}{onc}+Dec!{pharma_col}{onc}, but it stays "
@@ -495,6 +495,12 @@ def build() -> Lesson:
     ]
     L.sheet_order = ["Start Here", "Practice", "Expenses", "4 West OT", "Staffing Grid", "Q4 Summary", "Oct", "Nov", "Dec",
                      "Bonus", "Plan 2026", "Answer Key", "Bonus Key"]
+    # Four tasks fill yellow cells on another sheet, and a gray cell on Practice reads them, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{', '.join(fills[:-1])}, and {fills[-1]}, fill the yellow cells on the Expenses, 4 West OT, Staffing "
+                      "Grid, or Q4 Summary sheet instead, and the task's gray cell on Practice reads them.")
+    L.bonus_where = "Build the plan on the **Plan 2026** sheet, and type your answers in the yellow cells on the **Bonus** sheet."
 
     # ================================================================== layout sheets & styling
     def header_row(ws, row, labels, start_col=1):
@@ -677,33 +683,42 @@ def build() -> Lesson:
                     ks.cell(row=5 + i, column=4).value = _plain(t.solution)
 
         # ---------------------------------------------------------- Start Here: describe every sheet
-        # The library lists only the data sheets ("Data: 17 rows", which counts the total row). Replace that
-        # list with one line per sheet that says what it holds and which tasks use it.
+        # The library describes data sheets only as "Data: 17 rows" (which counts the total row) and puts sheets
+        # from this hook before Bonus. Replace that list with one line per visible sheet, in tab order, that says
+        # what it holds and which tasks use it.
         num = {t.title: t.number for t in lesson.tasks + lesson.bonus}
 
         def tasks_for(*prefixes):
             ns = [num[next(k for k in num if k.startswith(p))] for p in prefixes]
             return ("task " if len(ns) == 1 else "tasks ") + (ns[0] if len(ns) == 1 else f"{ns[0]}–{ns[-1]}")
 
-        sheet_lines = [
-            (lesson.practice_sheet, f"{len(lesson.tasks)} tasks. Type answers in the yellow cells. Gray cells check work you "
-                                    "do on the other sheets."),
-            ("Expenses", f"Bluestone Memorial's 2025 operating expense: {len(f01)} departments (rows {FIRST}–{LAST}) × "
-                         f"{len(CATS)} categories (columns {C0}–{C1}), with totals in column {TCOL} and row {TOT}. You fill the "
-                         f"yellow % of Total column {SCOL} ({tasks_for('% of Total')})."),
-            ("4 West OT", f"December 2025 overtime for {len(ot_rows)} hourly staff on Medical-Surgical 4 West, with the overtime "
-                          f"multiplier in {MULT_CELL}. You fill the yellow OTPay column {OT_PAY} "
-                          f"({tasks_for('Overtime pay', 'What-if')})."),
-            ("Staffing Grid", f"Census values down column A × HPPD targets across row {G_HDR}. You fill the yellow grid with "
-                              f"one formula ({tasks_for('Staffing grid')})."),
-            ("Q4 Summary", "Same layout as Oct, Nov, and Dec. You fill the yellow grid with one 3-D formula "
-                           f"({tasks_for('Q4 Summary')})."),
-            ("Oct · Nov · Dec", "Monthly actuals for October, November, and December 2025, in the same layout as Expenses "
-                                f"({tasks_for('3-D SUM', '3-D gotcha')})."),
-            (lesson.bonus_sheet, f"{len(lesson.bonus)} harder tasks that build and test a 2026 expense plan."),
-            ("Plan 2026", f"The 2026 plan, with blue planning assumptions: price inflation in row {INF_ROW} and volume growth "
-                          f"in column {GROW_COL}. You fill the yellow grid with one formula (bonus task B1)."),
-        ]
+        month_uses = tasks_for('3-D SUM', '3-D gotcha')
+        desc = {
+            lesson.practice_sheet: f"{len(lesson.tasks)} tasks. Type answers in the yellow cells. Gray cells check work you "
+                                   "do on the other sheets.",
+            "Expenses": f"Bluestone Memorial's 2025 operating expense: {len(f01)} departments (rows {FIRST}–{LAST}) × "
+                        f"{len(CATS)} categories (columns {C0}–{C1}), with totals in column {TCOL} and row {TOT}. You fill the "
+                        f"yellow % of Total column {SCOL} ({tasks_for('% of Total')}).",
+            "4 West OT": f"December 2025 overtime for {len(ot_rows)} hourly staff on Medical-Surgical 4 West, with the overtime "
+                         f"multiplier in {MULT_CELL}. You fill the yellow OTPay column {OT_PAY} "
+                         f"({tasks_for('Overtime pay', 'What-if')}).",
+            "Staffing Grid": f"Census values down column A × HPPD targets across row {G_HDR}. You fill the yellow grid with "
+                             f"one formula ({tasks_for('Staffing grid')}).",
+            "Q4 Summary": "Same layout as Oct, Nov, and Dec. You fill the yellow grid with one 3-D formula "
+                          f"({tasks_for('Q4 Summary')}).",
+            "Oct": f"October 2025 actuals, in the same layout as Expenses. The first tab of the Oct:Dec range ({month_uses}).",
+            "Nov": f"November 2025 actuals, same layout. Keep this tab between Oct and Dec ({month_uses}).",
+            "Dec": f"December 2025 actuals, same layout. The last tab of the Oct:Dec range ({month_uses}).",
+            lesson.bonus_sheet: f"{len(lesson.bonus)} harder tasks that build and test a 2026 expense plan on the Plan 2026 "
+                                "sheet. Type your answers here.",
+            "Plan 2026": f"The 2026 plan, with blue planning assumptions: price inflation in row {INF_ROW} and volume growth "
+                         f"in column {GROW_COL}. You fill the yellow grid with one formula (bonus task B1).",
+        }
+        # The key sheets are hidden after the hooks run, so leave them out by name.
+        not_listed = {"Start Here", lesson.key_sheet, lesson.bonus_key_sheet}
+        visible = [n for n in lesson.sheet_order if n not in not_listed]
+        assert set(visible) == set(desc) == set(wb.sheetnames) - not_listed, (visible, sorted(desc), wb.sheetnames)
+        sheet_lines = [(n, desc[n]) for n in visible]
         ws = wb["Start Here"]
         hdr_row = next(r for r in range(1, ws.max_row + 1) if ws.cell(row=r, column=2).value == "Sheets in this workbook")
         tail = {}

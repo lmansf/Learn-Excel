@@ -106,7 +106,7 @@ them, and the result in the original cell never changes.
 
 ### 4. F4: add the \$ signs for you
 
-You can type the `$` signs, but **F4** (Mac: **⌘ + T**, or **fn + F4**) is faster. While you're typing or editing a formula, put the
+You can type the `$` signs, but **F4** (Mac: **⌘ + T**, or **Fn + F4**) is faster. While you're typing or editing a formula, put the
 cursor in or just after a reference and press it. Each press cycles to the next form:
 
 ```
@@ -122,12 +122,12 @@ A few details help:
 - F4 changes only the reference the cursor is in. To change several at once, select them all in the formula bar first, and F4
   cycles every selected reference together.
 - A range counts as one reference. With the cursor in `C5:C20`, F4 gives `$C$5:$C$20`.
-- To fix a formula that's already in a cell, press **F2** (Mac: **⌃ + U**) to edit it, click into the reference, and press F4.
+- To fix a formula that's already in a cell, press **F2** (Mac: **Control + U**) to edit it, click into the reference, and press F4.
 
 > ⚠️ On Windows, F4 outside a formula means **Repeat last action**. If you press it while you're not editing, Excel may re-apply
 > your last format, insert, or delete. Press **Ctrl + Z** (Mac: **⌘ + Z**) to undo it.
 
-> 💡 **Tip:** On many laptops the F-keys control volume or brightness. Hold **fn** while you press F4, or use **⌘ + T** on a Mac.
+> 💡 **Tip:** On many laptops the F-keys control volume or brightness. Hold **Fn** while you press F4, or use **⌘ + T** on a Mac.
 
 ### 5. The rate-in-one-cell pattern
 
@@ -325,7 +325,7 @@ not by label:
 > 💡 **Tip:** Some analysts add two empty "bookend" sheets, such as **First** and **Last**, and write `=SUM(First:Last!C5)`. Any
 > monthly sheet dropped between the bookends is included automatically, and the bookends make the range visible in the tab bar.
 
-> ⚠️ **Grouped sheets.** Shift+clicking tabs while you're *not* typing a formula **groups** the sheets: the title bar shows "Group,"
+> ⚠️ **Grouped sheets.** Shift + clicking tabs while you're *not* typing a formula **groups** the sheets: the title bar shows "Group,"
 > and anything you type or delete then happens on every grouped sheet at once. Right-click any tab and choose **Ungroup Sheets**
 > before you edit again.
 
@@ -354,8 +354,8 @@ You can't see a copying mistake by looking at results. These tools show the form
 
 | Tool | How | What it shows |
 |---|---|---|
-| **Show Formulas** | **Ctrl + `` ` ``** (Mac: **⌃ + `` ` ``**), or **Formulas → Show Formulas** | Every formula instead of its result. Press it again to switch back |
-| **Edit mode** | **F2** (Mac: **⌃ + U**) | Each reference in a different color, with a matching colored box around the cells it uses |
+| **Show Formulas** | **Ctrl + `` ` ``** (Mac: **Control + `` ` ``**), or **Formulas → Show Formulas** | Every formula instead of its result. Press it again to switch back |
+| **Edit mode** | **F2** (Mac: **Control + U**) | Each reference in a different color, with a matching colored box around the cells it uses |
 | **Trace Precedents** | **Formulas → Trace Precedents** | Arrows from the cells a formula uses. A dashed arrow with a small sheet icon means the source is on another sheet |
 | **Trace Dependents** | **Formulas → Trace Dependents** | Arrows to the formulas that use the selected cell. Clear them with **Remove Arrows** |
 
@@ -365,7 +365,25 @@ are identical in every cell and the moving parts step by one. A cell that breaks
 > 📋 **Excel Tables use a different system.** In an Excel Table (Lesson 3.1), formulas use *structured references* such as
 > `[@OTHours]`, which point at columns by name and don't use `$` signs. That's why this lesson's data sheets are plain ranges.
 
-> 📋 **Version note:** Everything in this lesson works the same in Excel 2016 and later and Microsoft 365, on Windows and Mac.
+### 11. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Cycle a reference through its `$` forms while typing or editing a formula | F4 | ⌘ + T (or Fn + F4) |
+| Edit the active cell and color-code its references | F2 | Control + U |
+| Fill down / fill right | Ctrl + D / Ctrl + R | ⌘ + D / ⌘ + R |
+| Copy / paste | Ctrl + C / Ctrl + V | ⌘ + C / ⌘ + V |
+| Cut, to move a formula without adjusting its references | Ctrl + X | ⌘ + X |
+| Enter the same formula in every selected cell | Ctrl + Enter | ⌘ + Return |
+| Show or hide formulas on the whole sheet | Ctrl + `` ` `` | Control + `` ` `` |
+| Pick the last sheet of a 3-D range while building the formula | Shift + click its tab | Shift + click its tab |
+| Cancel an edit / undo | Esc / Ctrl + Z | Esc / ⌘ + Z |
+
+| Feature | Version |
+|---|---|
+| Relative, absolute, and mixed references, references to other sheets, and 3-D references | Excel 2016 and later and Microsoft 365, on Windows and Mac |
+| **Formulas → Show Formulas**, **Trace Precedents**, and **Trace Dependents** | Every current desktop version, Windows and Mac |
+| **Data → Workbook Links** | Microsoft 365. Older versions use **Data → Edit Links** |
 
 ## 🧪 Hands-on practice
 
@@ -387,7 +405,7 @@ Tasks 1, 4, and 8 ask you to predict a formula or reference. Type your answer as
 | 7 | Finance asks what December's overtime would have cost at double time. Change '4 West OT'!B3 to 2, read task 6's gray cell, and type that amount here as a number. Then set B3 back to 1.5. | One edit updates the whole column. That's the point of the rate cell |
 | 8 | A grid has labels across row 2 and down column A, and cell B3 holds =B\$2*\$A3. If you copy B3 to D6, what formula will D6 contain? Type it without the =. | A \$ freezes only the part right after it |
 | 9 | On the Staffing Grid sheet, fill the yellow grid B6:H12 with ONE formula: nursing hours needed per day = census (column A) × HPPD target (row 5). Type it in B6, copy it across to H6, then down to row 12. The gray cell adds up the whole grid. | Lock the column of the census and the row of the HPPD |
-| 10 | Using one 3-D reference, what did Oncology (row 11 on the Oct, Nov, and Dec sheets) spend on Pharmaceuticals (column F) in Q4 2025? | Type =SUM(, click the Oct tab, Shift+click the Dec tab, then click the cell |
+| 10 | Using one 3-D reference, what did Oncology (row 11 on the Oct, Nov, and Dec sheets) spend on Pharmaceuticals (column F) in Q4 2025? | Type =SUM(, click the Oct tab, Shift + click the Dec tab, then click the cell |
 | 11 | Fill the yellow grid on the Q4 Summary sheet (C5:I20) with ONE 3-D formula that adds the same cell on the Oct, Nov, and Dec sheets. Type it in C5, copy it across to I5, then down to row 20. The gray cell adds up your grid: what was Bluestone Memorial's Q4 operating expense? | 3-D references copy like ordinary relative references |
 | 12 | A colleague drags the Nov tab to the right of the Dec tab. What would =SUM(Oct:Dec!J21) return then? (J21 is each month's hospital total.) Answer with a formula that uses ordinary sheet references, not a 3-D reference, so it stays correct with the tabs in their usual order. If you test the move, drag Nov back between Oct and Dec afterwards. | A 3-D range is defined by tab positions, not by month names |
 <!-- END GENERATED: practice -->
@@ -400,7 +418,7 @@ by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Predict: J5 copied to J14**
 
@@ -499,7 +517,7 @@ Oct:Dec! means "Oct, Dec, and whatever tabs sit between them right now." Once No
 <!-- BEGIN GENERATED: bonus -->
 Finance needs a first-draft 2026 operating expense plan for Bluestone Memorial. The rule: each 2026 cell = the 2025 actual for the same department and category (Expenses sheet) × (1 + that category's price inflation in row 3 of the Plan 2026 sheet) × (1 + that department's volume growth in column B). The Plan 2026 sheet uses the same rows and columns as the Expenses sheet. Column J and row 21 of Plan 2026 already total whatever you put in the grid.
 
-Work on the **Bonus** sheet of the workbook.
+Build the plan on the **Plan 2026** sheet, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Fill the yellow grid on the Plan 2026 sheet (C5:I20) with ONE formula typed in C5 and copied across and down. The gray cell adds up your grid: what is the 2026 plan total? (Don't round inside the formula.) *(Hint: The 2025 actual moves both ways, the inflation row is locked, and the growth column is locked)*
 - **B2.** What is the 2026 plan for Laboratory · Medical Supplies (Plan 2026, row 18, column E)? Reference the cell in your grid. *(Hint: Check it by hand: 2025 amount × (1 + inflation) × (1 + growth))*
@@ -510,7 +528,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. 2026 plan grid (three kinds of reference in one formula)**
 
@@ -570,7 +588,7 @@ Only the Pharmaceuticals column reads that input, so only those 16 cells change.
 - Put every assumption in its own labeled cell and point formulas at it with an absolute reference. One edit then updates the whole
   model, which makes what-if questions fast.
 - One formula with mixed references (`=$A5*B$4`) fills an entire two-way grid. Check it with Show Formulas
-  (**Ctrl + `` ` ``**, Mac: **⌃ + `` ` ``**).
+  (**Ctrl + `` ` ``**, Mac: **Control + `` ` ``**).
 - Other sheets are `Sheet!A1`, with single quotes for names that need them: `'4 West OT'!B3`. Build them by clicking.
 - `=SUM(Oct:Dec!C5)` adds the same cell across a stack of identically laid-out sheets, but the stack is defined by tab
   *positions*, so moving a tab can silently change the total.

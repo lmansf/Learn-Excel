@@ -466,8 +466,22 @@ def build() -> Lesson:
         "Encounters and Claims are Excel Tables. If you select a whole Table column while writing a formula, Excel may write "
         "it as tblEncounters[EncounterType] instead of Encounters!C2:C2725. Both give the same result.",
         f"{unbilled} encounters from 2025 had not been billed by 12/31/2025, so the Claims sheet has {len(claim_rows):,} rows.",
-        "Practice task 12 is filled on the Payer Mix sheet, and the bonus scorecard on the Scorecard sheet. Their gray "
-        "cells are pre-filled totals and checks.",
+    ]
+    # Task 12 and bonus parts B1-B2 are worked on other sheets and read by gray cells, so Start Here, the Bonus sheet's
+    # how-to line, and the README's bonus line say where. Start Here lists Practice, Encounters, Claims, these, then Bonus.
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For task 12, fill the yellow "
+                      "grid on the Payer Mix sheet instead, and the task's gray cell on Practice reads it.")
+    L.bonus_instructions = (
+        "Type a formula or value in each yellow cell. For B1 and B2, fill the yellow cells on the Claims and Scorecard sheets "
+        "instead, and their gray cells here read your work. The Check column turns green when your answer matches. Stuck? Read the "
+        f"hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Fill the DaysToPay column on the **Claims** sheet and the scorecard on the **Scorecard** sheet, and type "
+                     "your answers to B3–B5 in the yellow cells on the **Bonus** sheet.")
+    L.sheet_notes = [
+        ("Payer Mix", "The payer × encounter-type grid you fill with one COUNTIFS formula (task 12). Its gray cells total "
+                      "each row and check it with COUNTIF."),
+        (SC, "The bonus inpatient claims scorecard by payer. Fill columns B–D in task B2 and column E in task B5. The "
+             "Bonus sheet's gray cell reads column D."),
     ]
     L.sheet_order = ["Start Here", "Practice", "Encounters", "Claims", "Payer Mix", "Bonus", SC, "Answer Key", "Bonus Key"]
 

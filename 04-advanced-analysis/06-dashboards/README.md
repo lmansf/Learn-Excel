@@ -7,7 +7,7 @@ Every month, Bluestone Health's leaders ask the same questions. Are ED patients 
 the next admission? Are payers denying more claims? An analyst can answer each one with a fresh report, or build a
 **dashboard** once and let the leaders answer the questions themselves: pick a hospital and a month, and every number,
 status color, and chart on the page changes together. This lesson shows you how to plan a dashboard around the people who'll
-read it, build the formulas behind KPI cards, wire dropdowns, slicers, and charts so that one click updates everything, and
+read it, build the formulas behind KPI cards, wire drop-down lists, slicers, and charts so that one click updates everything, and
 then polish the result so it's fast, protected, and readable at a glance.
 
 ## What you'll learn
@@ -28,7 +28,7 @@ The workbook is laid out the way a real dashboard workbook should be, so you can
 | **KPI_Monthly** | Table `tblKPI`: one row per hospital per month, January 2024 – December 2025 |
 | **EDWaits** | Table `tblEDWaits`: every ED visit that was seen by a provider, with its door-to-provider minutes |
 | **Targets** | Table `tblTargets`: the KPI dictionary, with each KPI's question, definition, direction, target, and owner |
-| **Lists** | The dropdown sources: four facility choices (including *All facilities*) and 24 months |
+| **Lists** | The sources for the drop-down lists: four facility choices (including *All facilities*) and 24 months |
 | **Board** | A blank canvas for the bonus |
 | **Dashboard Key** *(hidden)* | A finished reference dashboard. Unhide it after the bonus, or whenever you want to see a technique in action |
 
@@ -44,7 +44,7 @@ definition rules out a lot of things people call dashboards:
 | Refreshed | Every period, same layout | Every period | Once |
 | Reader's time | Seconds | Minutes | An hour |
 
-An **interactive dashboard** adds **selectors**: input cells or controls, such as a facility dropdown, that every number on
+An **interactive dashboard** adds **selectors**: input cells or controls, such as a facility drop-down list, that every number on
 the page reads. Instead of 36 copies of the same page (3 hospitals × 12 months), you build one page that can become any of
 them.
 
@@ -119,8 +119,8 @@ Dashboard workbooks that last are built in three layers, each on its own sheet:
 | **Dashboard** | Selectors, cards, charts, and text | Cells hold short formulas that point at the model or the data. No typed-in numbers |
 
 This separation pays off every month. When new data arrives, you append rows to `tblKPI`, and the dashboard updates itself
-because it only reads the tables and the selectors. (Add the new month to the Month list on **Lists** too, so the dropdown
-offers it.) Open the **Calc** sheet. Its gray cells already turn the selectors into
+because it only reads the tables and the selectors. (Add the new month to the Month list on **Lists** too, so the drop-down
+list offers it.) Open the **Calc** sheet. Its gray cells already turn the selectors into
 the pieces that formulas need:
 
 | Calc cell | Formula | Shows (default selection) |
@@ -179,23 +179,23 @@ A median depends on every individual value, so a roll-up median has to come from
 > back, and its claims columns are blank because most claims are still pending. A blank makes a rate divide by zero, so cards
 > should show *n/a* (with `IFERROR`) rather than 0%, which would look like a perfect month.
 
-### 5. Selectors: dropdowns, names, and combo boxes
+### 5. Selectors: drop-down lists, names, and combo boxes
 
 Excel offers several kinds of selector. [Lesson 3.2](../../03-data-analysis/02-data-validation-conditional-formatting/README.md)
-taught dropdowns, and [Lesson 3.4](../../03-data-analysis/04-pivottables/README.md) taught slicers and timelines. This table
+taught drop-down lists, and [Lesson 3.4](../../03-data-analysis/04-pivottables/README.md) taught slicers and timelines. This table
 compares them as dashboard controls:
 
 | Selector | How you add it | What formulas can read | Strengths | Watch out for |
 |---|---|---|---|---|
-| Data-validation dropdown | **Data → Data Validation → List** | The cell's value (text or a date) | Simple, and works in every version of Excel, including the web | Someone can paste over it, so protect the sheet (section 11) |
+| Data-validation drop-down list | **Data → Data Validation → List** | The cell's value (text or a date) | Simple, and works in every version of Excel, including the web | Someone can paste over it, so protect the sheet (section 11) |
 | Form Controls combo box | **Developer → Insert → Combo Box** | Its *cell link*: the chosen item's position number | Floats above the grid, so it can't be typed over | Returns a number, not text. Doesn't run in Excel for the web |
 | Slicer on a PivotTable | **PivotTable Analyze → Insert Slicer** | Nothing directly. It filters pivots | Buttons show what's selected, and one slicer can filter many pivots | Pivots need refreshing. Formulas such as SUMIFS don't see the selection |
 | Timeline | **PivotTable Analyze → Insert Timeline** | Nothing directly. It filters pivots by date | Click or drag across months, quarters, or years | Works only with PivotTables and date fields |
 | Slicer on a Table | **Table Design → Insert Slicer** | Nothing directly. It hides rows | Fast filtering for people browsing the table | SUMIFS still counts the hidden rows. Only SUBTOTAL and AGGREGATE skip them |
 
-For formula-driven cards, use dropdowns or combo boxes. Use slicers and timelines with PivotTables (section 9).
+For formula-driven cards, use drop-down lists or combo boxes. Use slicers and timelines with PivotTables (section 9).
 
-**Build a dropdown selector.** Dashboard!C4 and C5 are already set up this way. You'll repeat these steps for the bonus
+**Build a drop-down list selector.** Dashboard!C4 and C5 are already set up this way. You'll repeat these steps for the bonus
 dashboard.
 
 1. Put the choices in a list on a helper sheet. On **Lists**, A2:A5 holds *All facilities* and the three hospital names, and
@@ -207,7 +207,7 @@ dashboard.
 Select the cell and press **Alt + ↓** (Mac: **Option + ↓**) to open the list from the keyboard.
 
 > 💡 **Tip:** Store months as real dates, not text like "Nov 2025". A date list formatted as *mmm yyyy* shows friendly labels
-> in the dropdown but puts a real date in the cell, so `EDATE` and `SUMIFS` can work with it.
+> in the drop-down list but puts a real date in the cell, so `EDATE` and `SUMIFS` can work with it.
 
 > ⚠️ A data-validation **Source** can't be a Table reference such as `=tblKPI[Facility]`. Point it at a plain range, at a
 > defined name that refers to the column, or (in Microsoft 365 and Excel 2021 or later) at a spill: put
@@ -221,7 +221,8 @@ every name with **Formulas → Name Manager** (Windows: Ctrl + F3).
 **Add a Form Controls combo box.** Form Controls live on the **Developer** tab, which is hidden by default:
 
 - **Windows:** **File → Options → Customize Ribbon**, tick **Developer** in the right-hand list, then **OK**.
-- **Mac:** **Excel → Preferences** (or **Settings**) **→ Ribbon & Toolbar**, tick **Developer** under Main Tabs, then **Save**.
+- **Mac:** **Excel → Settings → Ribbon & Toolbar** (older versions say Preferences), tick **Developer** under Main Tabs, then
+  **Save**.
 
 Then:
 
@@ -239,7 +240,7 @@ position back into text with `INDEX`, as Calc!C13 does:
 =INDEX(Lists!$A$2:$A$5, Calc!C12)
 ```
 
-> 📋 Form Controls are a desktop feature. Excel for the web doesn't support them, so use data-validation dropdowns if your
+> 📋 Form Controls are a desktop feature. Excel for the web doesn't support them, so use data-validation drop-down lists if your
 > dashboard will be opened in a browser. Avoid **ActiveX** controls (the other half of the Insert menu), because they're
 > Windows-only and often blocked by security settings.
 
@@ -324,7 +325,7 @@ With a hospital selected, only that hospital's visits pass. With *All facilities
 every row, so every visit in the month passes. The bonus needs this version, because its median card has to work both
 ways.
 
-> 📋 **Older versions.** FILTER, XLOOKUP, and LET need Microsoft 365 or Excel 2021 or later. In Excel 2010–2019, use
+> 📋 **Version note:** FILTER, XLOOKUP, and LET need Microsoft 365 or Excel 2021 or later. In Excel 2010–2019, use
 > `=AGGREGATE(17,6,values/(conditions),2)` for a conditional median (function 17 is QUARTILE.INC, quartile 2 is the median,
 > and option 6 skips the `#DIV/0!` errors that the division creates for rows that don't match), and INDEX/MATCH for lookups.
 > A multi-condition lookup such as `=INDEX(tblKPI[MedianDTP],MATCH(1,(tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth),0))`
@@ -340,7 +341,7 @@ once and then uses the names:
      IF(cur>prev, "up", "down"))
 ```
 
-> 💡 **Tip:** Break a long formula over several lines in the formula bar with **Alt + Enter** (Mac: **⌃ + Option +
+> 💡 **Tip:** Break a long formula over several lines in the formula bar with **Alt + Enter** (Mac: **Control + Option +
 > Return**). Excel ignores the line breaks when it calculates.
 
 ### 7. KPI cards: value, context, status, and trend
@@ -658,11 +659,11 @@ Center and Nov 2025 before you start the practice tasks, because they're checked
 
 | Action | Windows | Mac |
 |---|---|---|
-| Open a dropdown list | Alt + ↓ | Option + ↓ |
+| Open a drop-down list | Alt + ↓ | Option + ↓ |
 | Format Cells (custom formats, Locked) | Ctrl + 1 | ⌘ + 1 |
 | Name Manager | Ctrl + F3 | **Formulas → Name Manager** |
 | Insert a default chart next to the data | Alt + F1 | **Insert → Charts** |
-| Line break inside a formula | Alt + Enter | ⌃ + Option + Return |
+| Line break inside a formula | Alt + Enter | Control + Option + Return |
 | Refresh all PivotTables | Ctrl + Alt + F5 | **Data → Refresh All** |
 | Recalculate the workbook | F9 | ⌘ + = |
 | Select several slicer buttons | Ctrl + click | ⌘ + click |
@@ -700,10 +701,10 @@ The yellow selectors on the Dashboard sheet are named SelFacility (Dashboard!C4)
 | 7 | Occupancy trend arrow. Compare the selected month's occupancy (PatientDays ÷ BedDays) with the previous month's. Return ▲ with UNICHAR(9650) if it rose, ▼ with UNICHAR(9660) if it fell, or ▬ with UNICHAR(9644) if it didn't change. | LET(cur, …, prev, …, IF(cur>prev, UNICHAR(9650), …)). EDATE(SelMonth,-1) is the previous month |
 | 8 | Status cell for median door-to-provider: return the text On target or Off target for the selection. Read the target and the Direction of "Median door-to-provider" from tblTargets, so the same pattern works for any KPI. A median isn't additive, so look up the hospital's MedianDTP value instead of adding it up. | LET + XLOOKUP(1, (tblKPI[Facility]=SelFacility)*(tblKPI[Month]=SelMonth), tblKPI[MedianDTP]). Then IF on the direction |
 | 9 | System-wide median door-to-provider, in minutes, for the selected month. Medians can't be added or averaged across hospitals, so compute it from the visit-level table: the MEDIAN of DoorToProviderMin for every tblEDWaits visit whose ArrivalDateTime falls in the selected month. Keep one decimal place. | MEDIAN(FILTER(…)) with ArrivalDateTime >= SelMonth and < EDATE(SelMonth,1) |
-| 10 | Insert a Form Controls combo box on the Dashboard. In Format Control, set its Input range to Lists!\$A\$2:\$A\$5 and its Cell link to Calc!\$C\$12. Then choose Ashby Falls Community Hospital in the combo box. The gray cell shows the number your combo box writes to the cell link. | Developer → Insert → Combo Box (Form Control), then right-click it → Format Control → Control tab |
+| 10 | Insert a Form Controls combo box on the Dashboard. In Format Control, set its Input range to Lists!\$A\$2:\$A\$5 and its Cell link to Calc!\$C\$12. Then choose Ashby Falls Community Hospital in the combo box. The gray cell shows the number your combo box writes to the cell link. | **Developer → Insert → Combo Box (Form Control)**, then right-click it → **Format Control** → **Control** tab |
 | 11 | On the Calc sheet, fill the yellow 12-month trend block. In B17:B28, return the 12 months ending at SelMonth, oldest first (use EDATE). In C17:C28, return ED visits for SelFacility in each of those months. Then select B16:C28, insert a line chart, and move it to the Dashboard. The gray cell totals your block: the trailing-12-month ED visits. | EDATE(SelMonth,-11) is the oldest month. A counter such as ROWS(B\$17:B17) lets one formula step forward as you copy it down |
-| 12 | Insert a new sheet named Pivots. Build PivotTable 1 from tblKPI with Month in Rows and Sum of EDVisits in Values. Insert a Facility slicer and a Month timeline for it. Select Ashby Falls Community Hospital in the slicer, and select 2025 Q3 in the timeline (switch it to QUARTERS). What is PivotTable 1's grand total? | PivotTable Analyze → Insert Slicer, and PivotTable Analyze → Insert Timeline |
-| 13 | On the Pivots sheet, build PivotTable 2 from tblKPI with Facility in Rows, plus Sum of LWBS and Sum of EDVisits in Values. Connect the slicer and the timeline to it (Report Connections). Then add a calculated field LWBSPct = LWBS / EDVisits. With Ashby Falls and 2025 Q3 still selected, what LWBS % does PivotTable 2 show? Enter it as a percentage. | Select the slicer → Slicer → Report Connections. Then PivotTable Analyze → Fields, Items & Sets → Calculated Field |
+| 12 | Insert a new sheet named Pivots. Build PivotTable 1 from tblKPI with Month in Rows and Sum of EDVisits in Values. Insert a Facility slicer and a Month timeline for it. Select Ashby Falls Community Hospital in the slicer, and select 2025 Q3 in the timeline (switch it to QUARTERS). What is PivotTable 1's grand total? | **PivotTable Analyze → Insert Slicer**, and **PivotTable Analyze → Insert Timeline** |
+| 13 | On the Pivots sheet, build PivotTable 2 from tblKPI with Facility in Rows, plus Sum of LWBS and Sum of EDVisits in Values. Connect the slicer and the timeline to it (Report Connections). Then add a calculated field LWBSPct = LWBS / EDVisits. With Ashby Falls and 2025 Q3 still selected, what LWBS % does PivotTable 2 show? Enter it as a percentage. | Select the slicer → **Slicer → Report Connections**. Then **PivotTable Analyze → Fields, Items & Sets → Calculated Field** |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -714,7 +715,7 @@ answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Write a formula that returns the number of ED visits for the selected facility and…**
 
@@ -846,7 +847,7 @@ A combo box writes the position of the chosen item, not its text: Ashby Falls Co
 5. Change the selectors on the Dashboard and watch the line redraw.
 
 
-The chart's series points at formula cells, and those cells point at the selectors, so one dropdown redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 and Excel 2021 or later you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). In Microsoft 365 and Excel 2024, a chart built from a spill resizes with it. In Excel 2021, the chart keeps a fixed range, so chart the spill through a defined name that refers to it (for example =Calc!\$B\$17#). If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
+The chart's series points at formula cells, and those cells point at the selectors, so one drop-down list redraws the chart. The block for Cedar Ridge Medical Center runs Dec 2024–Nov 2025 and peaks at 87 visits in Feb 2025. In Microsoft 365 and Excel 2021 or later you can instead spill the months with =EDATE(SelMonth,SEQUENCE(12,1,-11)). In Microsoft 365 and Excel 2024, a chart built from a spill resizes with it. In Excel 2021, the chart keeps a fixed range, so chart the spill through a defined name that refers to it (for example =Calc!\$B\$17#). If you pick an early month, the window reaches back before January 2024 and SUMIFS returns 0. Wrapping it as IF(COUNTIFS(…)=0,NA(),SUMIFS(…)) makes the line chart leave a gap instead of plunging to zero.
 
 **12. PivotTable 1 with a slicer and a timeline**
 
@@ -862,7 +863,7 @@ The chart's series points at formula cells, and those cells point at the selecto
 Formula twin: `=SUMIFS(tblKPI[EDVisits],tblKPI[Facility],"Ashby Falls Community Hospital",tblKPI[Month],">="&DATE(2025,7,1),tblKPI[Month],"<="&DATE(2025,9,1))`
 
 
-A slicer is a selector made of buttons, and a timeline is a selector for dates. Both filter the pivot they were inserted from. Visible selections are what make pivots dashboard-friendly: a Filters-area dropdown hides what's selected, but a slicer shows it. The formula twin proves the number: ED visits at Ashby Falls in July, August, and September 2025.
+A slicer is a selector made of buttons, and a timeline is a selector for dates. Both filter the pivot they were inserted from. Visible selections are what make pivots dashboard-friendly: a Filters-area drop-down list hides what's selected, but a slicer shows it. The formula twin proves the number: ED visits at Ashby Falls in July, August, and September 2025.
 
 **13. PivotTable 2 connected to the same slicer and timeline**
 
@@ -887,25 +888,25 @@ Report Connections is what lets one slicer filter several pivots. If you skipped
 <!-- BEGIN GENERATED: bonus -->
 Each month the COO presents one page to the board's Quality & Operations Committee. It must answer three questions at a glance: Are we on target? Where are we missing? Which way are things heading? Build it on the Board sheet to this spec:
 
-1. Facility and Month dropdowns fed by the Lists sheet, named BoardFacility and BoardMonth. Facility must allow All facilities.
+1. Facility and Month drop-down lists fed by the Lists sheet, named BoardFacility and BoardMonth. Facility must allow All facilities.
 2. One card for each of the seven KPIs in tblTargets, showing the value, the target, a status colored by conditional formatting, and an arrow versus the same month last year. Every card must work for All facilities, so rebuild rates from their components and compute the median door-to-provider from tblEDWaits.
 3. A scorecard line that counts the KPIs on target, such as '6 of 7 KPIs on target'.
-4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.
-5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one landscape page when printed.
+4. A 12-month LWBS % trend block and a line chart that follow both drop-down lists.
+5. Polish: gridlines and headings off, only the two drop-down lists unlocked, the sheet protected, and one landscape page when printed.
 
 Sketch the layout on paper first, and build the model cells before the cards. Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a finished reference build, so compare your numbers with it when you're done.
 
-Work on the **Bonus** sheet of the workbook.
+Build the dashboard on the **Board** sheet, and type your answers to B1–B4 in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Set your Board dashboard to All facilities and Oct 2025. What is the system-wide 30-day readmission rate? Enter it as a percentage. *(Hint: Swap "All facilities" for the asterisk wildcard in the Facility criterion)*
 - **B2.** With All facilities and Oct 2025 still selected, how many of the seven KPIs are on target? Use the Targets sheet's rule: on target means at or below a lower-is-better target, or at or above a higher-is-better one, so a value exactly equal to its target counts as on target. *(Hint: Give each card a status cell that returns 1 or 0, then SUM them. Remember which KPIs are higher-is-better)*
-- **B3.** Keep Oct 2025 and switch the Facility dropdown to each hospital in turn. Which hospital has the fewest KPIs on target? *(Hint: Your scorecard line answers this. Change only the Facility dropdown)*
+- **B3.** Keep Oct 2025 and switch the Facility drop-down list to each hospital in turn. Which hospital has the fewest KPIs on target? *(Hint: Your scorecard line answers this. Change only the Facility drop-down list)*
 - **B4.** Back on All facilities and Oct 2025, your 12-month LWBS % trend runs Nov 2024–Oct 2025. In which month was the system-wide LWBS % highest? Enter the first day of that month as a date. *(Hint: INDEX(months, MATCH(MAX(rates), rates, 0)) on your trend block, or just read the chart's peak)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. System-wide readmission rate, Oct 2025**
 

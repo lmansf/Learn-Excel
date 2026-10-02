@@ -36,8 +36,6 @@ def build() -> Lesson:
         "Answer cells must hold ONE value. Wrap array results in SUM, MAX, or INDEX, and use the Sandbox sheet to watch arrays spill.",
         "The Stays sheet has 5,586 rows, and some of these formulas compare every row with every other row. "
         "Excel may pause for a second or two while it recalculates.",
-        "Two extra sheets: 'Audit' holds a colleague's broken formula for Task 13, and 'Sandbox' is blank space for "
-        "watching array formulas spill.",
     ]
 
     # ------------------------------------------------------------------ data
@@ -273,7 +271,7 @@ def build() -> Lesson:
              answer=t8, title="LOSDAYS named LAMBDA: total LOS days for F02 in 2025",
              solution=f'=SUM(LOSDAYS({ADM},{DIS})*({FAC}="F02")*(YEAR({DIS})=2025))',
              live=False, self_test=False,
-             hint="Formulas → Name Manager → New. Test the LAMBDA in a cell first, for example =LAMBDA(…)(Stays!E2,Stays!F2).",
+             hint="**Formulas → Name Manager → New**. Test the LAMBDA in a cell first, for example =LAMBDA(…)(Stays!E2,Stays!F2).",
              explanation=f"Define LOSDAYS as `=LAMBDA(admit, discharge, LET(nights, INT(discharge)-INT(admit), IF(nights<1, 1, nights)))`. "
                          f"Called with two whole columns, it returns 5,586 LOS values, and the two conditions keep the "
                          f"{len(t8_set)} F02 stays from 2025. Use IF for the minimum, not MAX. `MAX(1, INT(discharge)-INT(admit))` "
@@ -288,7 +286,7 @@ def build() -> Lesson:
              live=False, self_test=False,
              hint="MAP can take several same-size arrays and passes one value from each to your LAMBDA. Wrap the result in SUM.",
              explanation="MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, "
-                         "AND(...) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version "
+                         "AND(…) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version "
                          "`=SUMPRODUCT((tblStays[FacilityID]=\"F01\")*(YEAR(tblStays[DischargeDateTime])=2025)"
                          "*(INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])<2))` gives the same count. MAP is "
                          "worth it when the per-row logic reads better with AND, OR, or MAX."),
@@ -489,6 +487,18 @@ def build() -> Lesson:
         sb["A9"] = "Your workspace ↓"
         sb["A9"].font = Font(bold=True, color=NAVY)
 
+    # Task 5 fills a yellow column on the Stays sheet, and a gray cell on Practice reads it, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    assert fills == ["5"], fills
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For task "
+                      f"{fills[0]}, fill the yellow Readmit30 column on the Stays sheet instead, and the task's gray cell on "
+                      "Practice reads it.")
+    # Start Here lists Practice, the data sheets, these two, then Bonus. Sandbox serves both Practice and Bonus.
+    L.sheet_notes = [
+        ("Audit", "A colleague's formula that returns 0 by mistake, with step-by-step audit instructions (task 13)."),
+        ("Sandbox", "Blank space for building array formulas and watching them spill before you wrap them in SUM, MAX, "
+                    "or INDEX for an answer cell."),
+    ]
     L.sheet_order = ["Start Here", "Practice", "Stays", "Diagnoses", "Labs", "Census", "Audit", "Sandbox", "Bonus",
                      "Answer Key", "Bonus Key"]
     return L

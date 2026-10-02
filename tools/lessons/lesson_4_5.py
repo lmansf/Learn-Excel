@@ -250,7 +250,7 @@ def datasets() -> dict:
 def build() -> Lesson:
     L = Lesson(
         code=CODE, module_dir="04-advanced-analysis", slug="05-statistics-forecasting",
-        title="Statistics & Forecasting", level="Advanced", minutes=70,
+        title="Statistics & Forecasting", level="Advanced", minutes=150,
         objectives=[
             "Summarize distributions with the Analysis ToolPak and histograms",
             "Measure relationships with correlation and linear regression",
@@ -422,9 +422,10 @@ def build() -> Lesson:
         return 5 + k
 
     L.tasks = [
-        Task("Run Data Analysis → Descriptive Statistics on LOSDays for all 400 stays (tick Summary statistics). What "
-             "Skewness does the output report? Enter it to 2 decimal places, or use the worksheet function that "
+        Task("Run **Data → Data Analysis → Descriptive Statistics** on LOSDays for all 400 stays (tick Summary statistics). "
+             "What Skewness does the output report? Enter it to 2 decimal places, or use the worksheet function that "
              "calculates it.",
+             title="Skewness of LOSDays (Descriptive Statistics)",
              answer=los_skew, fmt="0.00",
              solution=f"=SKEW({LOSr})",
              hint="The ToolPak's Skewness row is the SKEW function",
@@ -480,9 +481,10 @@ def build() -> Lesson:
                          f"`=TREND({LOSr},{AGEr},{PRED_AGE})` and "
                          f"`=INTERCEPT({LOSr},{AGEr})+SLOPE({LOSr},{AGEr})*{PRED_AGE}` give the same result. The older "
                          "`FORECAST` function does too."),
-        Task("Is the age effect from Task 5 real, or could it be chance? Run Regression (Data Analysis) with LOSDays as the Y "
-             "range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it "
+        Task("Is the age effect from Task 5 real, or could it be chance? Run **Data → Data Analysis → Regression** with "
+             "LOSDays as the Y range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it "
              "report for the Age coefficient? Enter it to 4 decimal places.",
+             title="p-value of the Age slope (Regression tool or LINEST)",
              answer=p_age, fmt="0.0000", tol=0.00006,
              solution=(f"=LET(fit,{linest},tstat,INDEX(fit,1,1)/INDEX(fit,2,1),"
                        f"T.DIST.2T(ABS(tstat),INDEX(fit,4,2)))"),
@@ -639,9 +641,11 @@ def build() -> Lesson:
         f"January 2024 to December 2025 (Monthly sheet, rows {mf}–{ml}). For each month, n = IndexStays (inpatient discharges "
         "of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total "
         "index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of "
-        "this sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much "
-        "easier. Put them in empty columns to the right of the Monthly table."
+        "the Bonus sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much "
+        "easier. Put them in empty columns to the right of the Monthly Table."
     )
+    L.bonus_where = ("Enter your answers on the **Bonus** sheet of the workbook, and build any helper columns on the "
+                     "**Monthly** sheet.")
     L.bonus = [
         Task("What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal places.",
              answer=pbar, fmt="0.00%",

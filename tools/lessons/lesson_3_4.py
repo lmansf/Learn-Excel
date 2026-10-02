@@ -296,7 +296,7 @@ def build() -> Lesson:
     # ------------------------------------------------------------------ practice tasks
     L.practice_intro = (
         f"Every task uses {TBL} on the Encounters sheet: all {n:,} encounters that began in 2025. Build each PivotTable on a "
-        "new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. When you reuse a pivot, "
+        "new worksheet (**Insert → PivotTable**, then **New Worksheet**), or rearrange the one you already have. When you reuse a pivot, "
         "make it match the layout the task lists: remove leftover fields and clear filters the task doesn't mention. Then "
         "type the answer the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot "
         "cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the "
@@ -306,8 +306,10 @@ def build() -> Lesson:
         "rearranging one pivot.",
         "The hidden 'Pivot Key' sheet shows each finished pivot in full, so you can compare your whole layout, not just one "
         "number. Unhide it the same way as the Answer Key.",
-        "The Data Dictionary sheet explains every column in tblEncounters.",
     ]
+    L.practice_how = ("Go to the 'Practice' sheet. Build each PivotTable on a new worksheet (or rearrange one you already "
+                      "have), then type what it shows into the task's yellow cell. Task 13 asks for a GETPIVOTDATA formula.")
+    L.bonus_where = "Build the pivots on new sheets, and type your answers in the yellow cells on the **Bonus** sheet."
 
     steps_new = ("Click any cell in tblEncounters on the Encounters sheet, then choose **Insert → PivotTable** "
                  "(Microsoft 365 for Windows: **Insert → PivotTable → From Table/Range**). Check that Table/Range says "
@@ -316,7 +318,7 @@ def build() -> Lesson:
     L.tasks = [
         Task(f"Create a PivotTable from {TBL} on a new worksheet. Put FacilityName in Rows and EncounterID in Values. "
              f"How many 2025 encounters did {T1_FACILITY} have?",
-             answer=t1, hint="Insert → PivotTable, then drag fields into the four areas",
+             answer=t1, hint="**Insert → PivotTable**, then drag fields into the four areas",
              solution=f"1. {steps_new}\n2. In the PivotTable Fields pane, drag **FacilityName** to **Rows** and **EncounterID** "
                       f"to **Values**. Excel names the value field *Count of EncounterID*.\n3. Read the {T1_FACILITY} row.",
              live=f1,
@@ -338,7 +340,7 @@ def build() -> Lesson:
         Task(f"Drill down: in that pivot, double-click the Sum of TotalCharges value on the {T2_SERVICE_LINE} row. Excel lists "
              "the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the "
              f"EncounterID of the most expensive {T2_SERVICE_LINE} inpatient stay?",
-             answer=t3, hint="Double-click a value cell (Show Details)",
+             answer=t3, hint="Double-click a value cell (**Show Details**)",
              solution=f"1. Double-click the *Sum of TotalCharges* cell for {T2_SERVICE_LINE}. Excel inserts a new sheet with a "
                       f"Table of the {len(t2_rows)} matching rows.\n2. Right-click any TotalCharges value in that Table and "
                       "choose **Sort → Sort Largest to Smallest** (or use the TotalCharges filter button).\n3. Read the "
@@ -352,7 +354,7 @@ def build() -> Lesson:
         Task("Build a pivot of average ED charges by payer type: EncounterType = Emergency in Filters, PayerType in Rows, and "
              "TotalCharges in Values. Change the summary from Sum to Average. What was the average charge for a "
              f"{T4_PAYER_TYPE} ED visit? Round to 2 decimal places.",
-             answer=t4, fmt="#,##0.00", hint="Right-click a value → Summarize Values By, or Value Field Settings",
+             answer=t4, fmt="#,##0.00", hint="Right-click a value → **Summarize Values By**, or **Value Field Settings**",
              solution="1. Set the **EncounterType** filter to **Emergency** and put **PayerType** in **Rows** and "
                       "**TotalCharges** in **Values**.\n2. Right-click any number in the pivot and choose **Summarize Values "
                       "By → Average** (or **Value Field Settings → Summarize Values By → Average**).\n3. Click **Number "
@@ -379,7 +381,7 @@ def build() -> Lesson:
         Task("Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows, EncounterType in Columns, and "
              "EncounterID in Values. Show the values as % of Column Total. What percentage of ED visits (the Emergency "
              f"column) were billed to {T6_PAYER}? Enter it to 1 decimal place.",
-             answer=t6, fmt="0.0%", hint="Value Field Settings → Show Values As",
+             answer=t6, fmt="0.0%", hint="**Value Field Settings → Show Values As**",
              solution="1. Start a new pivot. If you reuse the last one instead, clear the EncounterType filter first: a field "
                       "moved from Filters to Columns can keep its old selection and hide the Emergency column. Put "
                       "**PayerName** in **Rows**, **EncounterType** in **Columns**, and **EncounterID** in **Values**.\n"
@@ -395,7 +397,7 @@ def build() -> Lesson:
              "AdmitDate by Months. Which month of 2025 had the fewest ED visits? Type the month's three-letter name as the "
              "pivot shows it (for example, Mar).",
              answer=t7, accept=[MONTHS_LONG[t7_idx], str(t7_idx + 1)],
-             hint="Right-click a date → Group…, then sort by the count",
+             hint="Right-click a date → **Group…**, then sort by the count",
              solution="1. Set the **EncounterType** filter to **Emergency**, put **AdmitDate** in **Rows**, and put "
                       "**EncounterID** in **Values**.\n2. If you see individual dates, right-click one → **Group…**, select "
                       "**Months** only, and click **OK**. (Excel 2016 and later may group by month automatically.)\n"
@@ -410,8 +412,8 @@ def build() -> Lesson:
         Task("In the same pivot, first sort the months back into calendar order (Jan at the top). Then add EncounterID to "
              "Values a second time and show it as Difference From the (previous) month. By how many visits did December's "
              "ED volume differ from November's? Type a negative number if December was lower.",
-             answer=t8, hint="Right-click a month → Sort → Sort A to Z. Then Show Values As → Difference From, Base item "
-                             "(previous)",
+             answer=t8, hint="Right-click a month → **Sort → Sort A to Z**. Then **Show Values As → Difference From**, Base "
+                             "item (previous)",
              solution="1. Sort the months back into calendar order (right-click a month → **Sort → Sort A to Z**).\n"
                       "2. Drag **EncounterID** into **Values** again. Right-click one of the new numbers → **Show Values As → "
                       "Difference From…**\n3. Base field: the field that shows the months (**AdmitDate**, or "
@@ -423,7 +425,7 @@ def build() -> Lesson:
                          f"show the same change as a percentage ({t8 / ed_by_month[10]:.1%}). " + cross(f8)),
         Task("Change the EncounterType filter to Inpatient, and change the second value field to Running Total In the months "
              "field. How many inpatient stays began from January 1 through June 30, 2025 (the running total on the Jun row)?",
-             answer=t9, hint="Show Values As → Running Total In",
+             answer=t9, hint="**Show Values As → Running Total In**",
              solution="1. Set the **EncounterType** filter to **Inpatient**.\n2. Right-click a number in the second value "
                       "column → **Show Values As → Running Total In…** → Base field: the months field → **OK**.\n"
                       "3. Read the Jun row.",
@@ -434,22 +436,24 @@ def build() -> Lesson:
         Task("Group numbers into bands: EncounterType = Inpatient in Filters, AgeAtAdmit in Rows, and EncounterID in Values. "
              f"Group AgeAtAdmit starting at 0, ending at {max_age}, by 10. How many inpatient stays were for patients aged "
              f"{lo_age}–{hi_age}?",
-             answer=t10, hint="Right-click an age → Group… (Starting at, Ending at, By)",
+             answer=t10, hint="Right-click an age → **Group…** (Starting at, Ending at, By)",
              solution="1. Set the **EncounterType** filter to **Inpatient**, put **AgeAtAdmit** in **Rows**, and "
                       "**EncounterID** in **Values**.\n2. Right-click any age → **Group…** → Starting at **0**, Ending at "
                       f"**{max_age}**, By **10** → **OK**.\n3. Read the **{lo_age}-{hi_age}** row.",
              live=f10,
-             explanation=f"Grouping turns {len({r['AgeAtAdmit'] for r in ip})} distinct ages into ten bands labelled "
+             explanation=f"Grouping turns {len({r['AgeAtAdmit'] for r in ip})} distinct ages into ten bands labeled "
                          f"0-9, 10-19, … {max_age - 9}-{max_age}. Each band includes both ends, so {lo_age}-{hi_age} means "
                          f"ages {lo_age} through {hi_age}. It's the busiest band for inpatient care. " + cross(f10)),
         Task("Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID in Values. Insert a slicer "
              "for PayerType and a timeline for AdmitDate. In the slicer, select both "
              f"{T11_PAYER_TYPES[0]} and {T11_PAYER_TYPES[1]}. In the timeline, switch to QUARTERS and select "
              f"Q{T11_QUARTER} {YEAR}. How many Emergency encounters does {T11_FACILITY} show?",
-             answer=t11, hint="PivotTable Analyze → Insert Slicer and Insert Timeline. Ctrl+click (Mac: ⌘+click) picks a second button",
+             answer=t11,
+             hint="**PivotTable Analyze → Insert Slicer** and **Insert Timeline**. Ctrl + click (Mac: ⌘ + click) picks a "
+                  "second button",
              solution="1. Build the pivot on a new sheet: **FacilityName** in **Rows**, **EncounterType** in **Columns**, "
                       "**EncounterID** in **Values**.\n2. **PivotTable Analyze → Insert Slicer** → tick **PayerType** → "
-                      f"**OK**. Click **{T11_PAYER_TYPES[0]}**, then Ctrl+click (Mac: ⌘+click) **{T11_PAYER_TYPES[1]}**.\n"
+                      f"**OK**. Click **{T11_PAYER_TYPES[0]}**, then Ctrl + click (Mac: ⌘ + click) **{T11_PAYER_TYPES[1]}**.\n"
                       "3. **PivotTable Analyze → Insert Timeline** → tick **AdmitDate** → **OK**. Change the time level "
                       f"(top right of the timeline) to **QUARTERS** and click **Q{T11_QUARTER}**.\n"
                       f"4. Read the {T11_FACILITY} row in the Emergency column.",
@@ -461,7 +465,7 @@ def build() -> Lesson:
         Task("Add a calculated field named ChargesPerDay with the formula =TotalCharges/LOSDays. Use a pivot with "
              "EncounterType = Inpatient in Filters, FacilityName in Rows, and ChargesPerDay in Values. What is ChargesPerDay "
              f"for {T12_FACILITY}? Round to 2 decimal places.",
-             answer=t12, fmt="#,##0.00", hint="PivotTable Analyze → Fields, Items, & Sets → Calculated Field",
+             answer=t12, fmt="#,##0.00", hint="**PivotTable Analyze → Fields, Items, & Sets → Calculated Field**",
              solution="1. Click inside a pivot built from tblEncounters that no slicer or timeline is filtering (or build a "
                       "new one). A leftover slicer selection from task 11 would change the result.\n2. **PivotTable Analyze → "
                       "Fields, Items, & Sets → Calculated Field…**\n3. Name: `ChargesPerDay`. Formula: `=TotalCharges/LOSDays` "
@@ -479,7 +483,7 @@ def build() -> Lesson:
              "Then click this task's yellow cell, type =, switch to the pivot sheet, click the "
              f"{T13_FACILITY} × {T13_TYPE} cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? "
              "Leave the formula in the cell.",
-             answer=t13, fmt="#,##0.00", hint="If you get a plain reference such as =Sheet7!D8 instead, turn Generate GetPivotData back on",
+             answer=t13, fmt="#,##0.00", hint="If you get a plain reference such as =Sheet7!D8 instead, turn **Generate GetPivotData** back on",
              solution="1. Build the pivot on a new sheet (Excel names it something like *Sheet7*).\n2. Click the yellow answer "
                       "cell on the Practice sheet and type `=`.\n"
                       f"3. Switch to the pivot sheet, click the {T13_FACILITY} × {T13_TYPE} cell, and press **Enter**. "
@@ -517,7 +521,9 @@ def build() -> Lesson:
              "in Values twice: once as Count (rename it Index stays) and once as Average (rename it Readmit rate, formatted "
              f"as a percentage). Add a value filter on PayerType that keeps only rows with at least {B_MIN_STAYS} index "
              "stays. How many service line × payer type combinations remain?",
-             answer=b1, hint="PayerType's filter menu → Value Filters → Greater Than Or Equal To. Tabular Form makes rows easy to count",
+             answer=b1,
+             hint="PayerType's filter menu → **Value Filters → Greater Than Or Equal To**. Tabular Form makes rows easy "
+                  "to count",
              solution="1. New pivot: **EncounterType** in **Filters** (select **Inpatient**); **ServiceLine** then "
                       "**PayerType** in **Rows**.\n2. Drag **ReadmitFlag** to **Values** twice. In **Value Field Settings**, "
                       "set the first to **Count** with Custom Name `Index stays`, and the second to **Average** with Custom "
@@ -531,8 +537,8 @@ def build() -> Lesson:
              explanation="A value filter on the inner row field is applied within each service line, so it keeps or hides "
                          f"each service line × payer type cell separately. {len(stats)} combinations exist in the data, and "
                          f"{len(stats) - b1} of them have fewer than {B_MIN_STAYS} index stays. Custom names keep the two "
-                         "ReadmitFlag fields apart and make the filter dialog readable. The key's cross-check uses Microsoft 365 "
-                         "functions you'll meet in Lessons 4.1 and 4.2: " + f"`{fb1}`"),
+                         "ReadmitFlag fields apart and make the filter dialog readable. The key's cross-check uses dynamic-array "
+                         "functions (Microsoft 365 and Excel 2021 or later) that you'll meet in Lessons 4.1 and 4.2: " + f"`{fb1}`"),
         Task("Among the remaining combinations, which has the highest readmission rate? Type it as ServiceLine, PayerType "
              "(for example: Medicine, Commercial).",
              answer=b2, accept=combo_variants, hint="Sort the Readmit rate column, or scan it with a color scale",
@@ -557,7 +563,7 @@ def build() -> Lesson:
              f"ReadmitFlag in Values as Sum, which is the number of readmissions. Apply a Top 10 filter that keeps the top "
              f"{B_TOP_N} items. Which diagnosis has the third-highest number of readmissions? Type the description exactly "
              "as it appears.",
-             answer=b4, accept=[b4_code], hint="Row Labels filter → Value Filters → Top 10…",
+             answer=b4, accept=[b4_code], hint="**Row Labels** filter → **Value Filters → Top 10…**",
              solution="1. New pivot: **EncounterType** in **Filters** (**Inpatient**), **DxDescription** in **Rows**, "
                       "**ReadmitFlag** in **Values** (change it to **Sum**).\n2. Open the **Row Labels** filter button → "
                       f"**Value Filters → Top 10…** → **Top** `{B_TOP_N}` **Items** by *Sum of ReadmitFlag* → **OK**.\n"
@@ -566,7 +572,8 @@ def build() -> Lesson:
              explanation="Sum of a 1/0 flag counts the 1s, so Sum of ReadmitFlag is the number of readmissions. The Top 10 "
                          "filter keeps the top N items by any value field, not just 10. The top three are "
                          + ", ".join(f"{d} ({c})" for d, c in dx_ranked[:B_TOP_N])
-                         + f", and fourth place has {dx_ranked[B_TOP_N][1]}. Cross-check (Microsoft 365): `{fb4}`"),
+                         + f", and fourth place has {dx_ranked[B_TOP_N][1]}. Cross-check (Microsoft 365 and Excel 2021 or later): "
+                         f"`{fb4}`"),
         Task(f"What share of all {YEAR} inpatient readmissions do those {WORDS[B_TOP_N]} diagnoses account for together? Enter it "
              "as a percentage to 1 decimal place.",
              answer=b5, fmt="0.0%", hint="With the Top 3 filter on, the Grand Total adds only the visible rows",
@@ -579,7 +586,7 @@ def build() -> Lesson:
                          f"The true denominator is all {total_readmits} readmissions, so about {b5:.0%} of readmissions come "
                          "from just three diagnoses. Pneumonia, COPD, and heart failure are also conditions in Medicare's "
                          "Hospital Readmissions Reduction Program, so quality teams watch them closely. "
-                         f"Cross-check (Microsoft 365): `{fb5}`"),
+                         f"Cross-check (Microsoft 365 and Excel 2021 or later): `{fb5}`"),
     ]
 
     # ------------------------------------------------------------------ Pivot Key (hidden reference pivots)
@@ -730,6 +737,13 @@ def build() -> Lesson:
             sheet.page_setup.fitToWidth = 1
             sheet.page_setup.fitToHeight = 0
             sheet.sheet_properties.pageSetUpPr.fitToPage = True
+
+        # Start Here lists every data sheet as "Data: N rows". Say what the dictionary holds instead.
+        start = wb["Start Here"]
+        hdr = next(r for r in range(1, start.max_row + 1) if start.cell(row=r, column=2).value == "Sheets in this workbook")
+        dd_row = next(r for r in range(hdr + 1, start.max_row + 1) if start.cell(row=r, column=2).value == "Data Dictionary")
+        start.cell(row=dd_row, column=3).value = (f"What each of the {len(DICTIONARY)} columns in {TBL} means, with an "
+                                                  "example value.")
 
         # Answer keys: show the Markdown steps and explanations as plain text in Excel.
         for key_name in (lesson.key_sheet, lesson.bonus_key_sheet):

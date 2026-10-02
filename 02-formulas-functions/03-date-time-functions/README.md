@@ -20,9 +20,9 @@ to calculate ages, lengths of stay, business-day deadlines, ED waits, and shift 
 ## 📖 Guide
 
 The examples use the lesson workbook. On the **Stays** sheet, column E is DOB, F is EDArrivalDateTime, G is AdmitDateTime, and H
-is DischargeDateTime. On **Claims**, E is ServiceDate, F is SubmitDate, and G is PaidDate. On **ED**, B is ESILevel, C is ArrivalDateTime, D is
-TriageDateTime, E is ProviderSeenDateTime, and F is DepartureDateTime. On **Shifts**, F is ClockIn and G is ClockOut. **Settings!B2**
-holds the report date, 12/31/2025, and **Holidays!A2:A19** lists the business office's holidays.
+is DischargeDateTime. On **Claims**, E is ServiceDate, F is SubmitDate, and G is PaidDate. On **ED**, B is ESILevel, C is
+ArrivalDateTime, D is TriageDateTime, E is ProviderSeenDateTime, and F is DepartureDateTime. On **Shifts**, F is ClockIn and G is
+ClockOut. **Settings!B2** holds the report date, 12/31/2025, and **Holidays!A2:A19** lists the business office's holidays.
 
 Many examples use **Stays row 5**: a patient born 09/01/1947 who arrived in the ED on Friday, January 3, 2025 at 12:51, was admitted
 at 15:42, and went home on January 9 at 16:47. Open the workbook and try each example as you read. Type it on the sheet it
@@ -73,8 +73,9 @@ fixed values that never change, which makes them useful as time stamps.
 > 📋 **The 1904 date system.** Excel for Mac 2008 and earlier counted days from January 1, 1904, and any workbook can still be set
 > to that system. On Windows the setting is **File → Options → Advanced → Use 1904 date system**. On a Mac it's under
 > **Excel → Settings → Calculation**, called **Preferences** in older versions. Dates copied between a 1900 workbook and a 1904
-> workbook shift by 1,462 days, which is four years and a day. If pasted dates jump by four years, check that setting. Excel also treats 1900 as a leap year, a bug kept for compatibility with Lotus 1-2-3, so serial numbers
-> before March 1, 1900 are off by one day. That never affects modern dates. Dates before 1900 can't be stored as dates at all.
+> workbook shift by 1,462 days, which is four years and a day. If pasted dates jump by four years, check that setting. Excel also
+> treats 1900 as a leap year, a bug kept for compatibility with Lotus 1-2-3, so serial numbers before March 1, 1900 are off by one
+> day. That never affects modern dates. Dates before 1900 can't be stored as dates at all.
 
 ### 2. Times are fractions of a day
 
@@ -555,7 +556,7 @@ runs a one-cell version of each solution, so you can watch it calculate. The sam
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Stays!G2 shows the first admission of 2025: 01/01/2025 21:09. What number does Excel…**
 
@@ -656,7 +657,7 @@ Shift SH915484 clocked in at 18:48 and out at 08:20. 08:20 − 18:48 is negative
 <!-- BEGIN GENERATED: bonus -->
 Ashby Falls' utilization review nurse is preparing for a Medicare audit. Under the CMS two-midnight benchmark, an inpatient admission is generally expected to span at least two midnights of hospital care. This bonus uses a simplified, educational version (not billing guidance): count the midnights between two date-times by comparing their dates, not the hours between them. The nurse also wants to know whether the day of the week a patient is admitted affects how long they stay. Fill the yellow Midnights, BenchMidnights, and AdmitDay columns on the Stays sheet as you go. B2, B4, and B5 also use your LOSDays column from task 7.
 
-Work on the **Bonus** sheet of the workbook.
+Fill the Midnights, BenchMidnights, and AdmitDay columns on the **Stays** sheet, and answer the questions on the **Bonus** sheet.
 
 - **B1.** Fill the Midnights column with the number of midnights each stay crossed between AdmitDateTime and DischargeDateTime. Start in K2. The gray cell counts your rows with 2 or more. How many stays crossed at least two midnights? *(Hint: INT strips the time from a date-time. Subtract the two dates)*
 - **B2.** How many stays crossed two or more midnights even though they lasted LESS than 48 hours? *(Hint: Two conditions on two of your columns: multiply the TRUE/FALSE lists. 48 hours is 2 days)*
@@ -667,7 +668,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Midnights column (stays with 2 or more midnights)**
 
@@ -695,7 +696,7 @@ The IF picks the start of care for each row, and INT turns it into a date. 23 ED
 - **Answer:** 108.3
 - **Solution:** `=ROUND(AVERAGEIF(Stays!M2:M370,"Friday",Stays!J2:J370)*24,1)`
 
-Fill AdmitDay with `=TEXT(G2,"dddd")`, which returns full weekday names. AVERAGEIF averages the LOSDays values on rows where AdmitDay is "Friday", and × 24 converts days to hours. The array formula from Lesson 2.1, `=ROUND(AVERAGE(IF(Stays!M2:M370="Friday",Stays!J2:J370))*24,1)`, also works. Microsoft 365 and Excel 2021 calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). TEXT returns weekday names in your Office language, so a German Excel shows "Freitag".
+Fill AdmitDay with `=TEXT(G2,"dddd")`, which returns full weekday names. AVERAGEIF averages the LOSDays values on rows where AdmitDay is "Friday", and × 24 converts days to hours. The array formula from Lesson 2.1, `=ROUND(AVERAGE(IF(Stays!M2:M370="Friday",Stays!J2:J370))*24,1)`, also works. Microsoft 365 and Excel 2021 or later calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). TEXT returns weekday names in your Office language, so a German Excel shows "Freitag".
 
 **B5. Which weekday of admission has the LONGEST average length of stay? Type the weekday name.**
 

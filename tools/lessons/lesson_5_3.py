@@ -471,7 +471,7 @@ def _snippets_module() -> str:
         "' For each snippet: predict what it prints (or which error it stops",
         "' with), type your prediction on the Practice sheet, THEN click inside",
         "' the Sub and press F5 to check. Debug.Print writes to the Immediate",
-        "' window (Ctrl+G; Mac: View > Immediate Window).",
+        "' window (Ctrl + G; Mac: View > Immediate Window).",
         "' =====================================================================",
         "",
     ]
@@ -542,67 +542,34 @@ def _lines(text: str, width: int) -> int:
     return max(1, -(-len(text) // width))
 
 
-def _fix_generic_text(wb, n_rows: int = N_SAMPLE):
-    """The library's how-to lines are written for formula lessons ("type a formula in each yellow cell", "tasks marked
-    'See key'"). Here tasks 1-6 are yellow predictions and tasks 7-12 plus the whole bonus are gray cells that read macro
-    output, so say that instead. Also list the helper sheets (Snippets, Output, PacketTemplate) under "Sheets in this
-    workbook", which by default lists only the data sheets."""
+def _describe_sheets(wb, lesson, n_rows: int = N_SAMPLE):
+    """Start Here lists Practice, the data sheets, the sheet_notes entries (Snippets, Output, PacketTemplate) and Bonus.
+    The library describes Practice, Encounters and Bonus generically ("Data: 2,000 rows"), so say what they hold here."""
     st = wb["Start Here"]
-    label_row = {st.cell(row=r, column=2).value: r for r in range(1, st.max_row + 1)}
-
-    def put(r, label, text):
-        a, b = st.cell(row=r, column=2), st.cell(row=r, column=3)
-        a.value, b.value = label, text
-        a.font = Font(bold=True)
-        a.alignment = b.alignment = Alignment(wrap_text=True, vertical="top")
-        a.fill = b.fill = PatternFill(fill_type=None)
-        st.row_dimensions[r].height = 15 * _lines(text, 100) + 3
-
-    put(label_row["2. Practice"], "2. Practice",
-        "Go to the 'Practice' sheet. Type your predictions for tasks 1–6 in the yellow cells. For tasks 7–12, complete and "
-        "run your macros, and the gray cells fill in by themselves.")
-    put(label_row["3. Check yourself"], "3. Check yourself",
-        "The Check column shows ✔ Correct (green) or ✘ Not yet (red). Every task is checked automatically.")
-
-    top = label_row["Sheets in this workbook"]
-    about = st.cell(row=label_row["About the data"], column=3).value
-    disclaimer = st.cell(row=label_row["Disclaimer"], column=3).value
+    top = next(r for r in range(1, st.max_row + 1) if st.cell(row=r, column=2).value == "Sheets in this workbook")
+    better = {
+        lesson.practice_sheet: f"Tasks 1–{len(lesson.tasks)}. Yellow cells take your predictions (tasks 1–6), and gray cells "
+                               "read what your macros create (tasks 7–12).",
+        "Encounters": f"Data: {n_rows:,} rows in columns A:K, a plain range like a raw EHR export. Task 12 fills the yellow "
+                      "LOSDays column (L).",
+        lesson.bonus_sheet: f"The bonus challenge ({len(lesson.bonus)} parts): one inpatient packet per month. Its gray cells "
+                            "read the sheets BuildMonthlyPackets creates.",
+    }
+    seen = set()
     for r in range(top + 1, st.max_row + 1):
-        for col in (2, 3):
-            st.cell(row=r, column=col).value = None
-    entries = [
-        ("Practice", "Tasks 1–12. Yellow cells take your predictions (tasks 1–6), and gray cells read what your macros "
-                     "create (tasks 7–12)."),
-        ("Snippets", "The code for tasks 1–6. The same code is in starter/Snippets.bas."),
-        ("Encounters", f"Data: {n_rows:,} rows in columns A:K, a plain range like a raw EHR export. Task 12 fills the yellow "
-                       "LOSDays column (L)."),
-        ("Facilities", "Data: 4 rows, an Excel Table named tblFacilities."),
-        ("Output", "The blue cells your macros write results to. The Practice and Bonus sheets read them."),
-        ("Bonus", "The bonus challenge: one inpatient packet per month."),
-        ("PacketTemplate", "The template the bonus macro copies once per month. Leave it as it is."),
-        ("About the data", about),
-        ("Disclaimer", disclaimer),
-    ]
-    for i, (label, text) in enumerate(entries, top + 1):
-        put(i, label, text)
-
-    for sheet, text in (
-        ("Practice", "Type your predictions for tasks 1–6 in the yellow cells. The gray cells for tasks 7–12 fill in when your "
-                     "macros run. The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson "
-                     "guide. Answers: right-click a sheet tab → Unhide… → 'Answer Key'."),
-        ("Bonus", "There's nothing to type on this sheet: the gray cells fill in when BuildMonthlyPackets has run. The Check "
-                  "column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: "
-                  "right-click a sheet tab → Unhide… → 'Bonus Key'."),
-    ):
-        ws = wb[sheet]
-        for r in range(2, 5):
-            c = ws.cell(row=r, column=1)
-            if isinstance(c.value, str) and c.value.startswith("Type a formula or value in each yellow cell"):
-                c.value = text
-                ws.row_dimensions[r].height = 15 * _lines(text, 150) + 4
-                break
-        else:
-            raise AssertionError(f"generic instruction line not found on {sheet}")
+        label = st.cell(row=r, column=2).value
+        if not label:
+            continue
+        assert label not in seen, f"Start Here lists {label} twice"
+        seen.add(label)
+        text = better.get(label)
+        if text:
+            st.cell(row=r, column=3).value = text
+            st.row_dimensions[r].height = 15 * _lines(text, 100) + 3
+    # The keys are hidden after the customize hooks run, so leave them out by name.
+    listed = {ws.title for ws in wb.worksheets if ws.sheet_state == "visible"} - {"Start Here", lesson.key_sheet,
+                                                                                 lesson.bonus_key_sheet}
+    assert listed <= seen, f"Start Here doesn't list {sorted(listed - seen)}"
 
 
 def _crlf(text: str) -> bytes:
@@ -779,14 +746,34 @@ def build() -> Lesson:
         "Macros can't be saved in an .xlsx file. Before you write any code, choose File → Save As and pick "
         "'Excel Macro-Enabled Workbook (*.xlsm)'.",
         "Import starter/EncounterMacros.bas and starter/Snippets.bas from the lesson folder: open the Visual Basic Editor with "
-        "Alt + F11 (Mac: Developer → Visual Basic), then choose File → Import File…",
+        "Alt + F11 (Mac: Option + F11, or Developer → Visual Basic), then choose File → Import File…",
         "Snippets shows the code for tasks 1–6. Your macros add sheets (TypeSummary, F01–F04, 2025-01…) and write to the "
         "Output sheet. The gray cells on Practice and Bonus read those, so they stay blank until the macro has run.",
     ]
     L.practice_intro = (
-        "Save the workbook as .xlsm, then import starter/EncounterMacros.bas and starter/Snippets.bas (VBE → File → "
-        "Import File…). Tasks 1–6 ask what the code on the Snippets sheet prints: type your prediction, then run the snippet "
+        "Save the workbook as .xlsm, then import starter/EncounterMacros.bas and starter/Snippets.bas (**File → Import File…** "
+        "in the VBE). Tasks 1–6 ask what the code on the Snippets sheet prints: type your prediction, then run the snippet "
         "to check it. In tasks 7–12 you complete macros, and the gray cells read the sheets and cells your macros create.")
+    # Tasks 1-6 are yellow predictions, while tasks 7-12 and the whole bonus are gray cells that read macro output, so the
+    # generic "type a formula or value in each yellow cell" lines don't fit.
+    L.practice_how = ("Go to the 'Practice' sheet. Type your predictions for tasks 1–6 in the yellow cells. For tasks 7–12, "
+                      "complete and run your macros, and the gray cells fill in by themselves.")
+    L.practice_instructions = (
+        "Type your predictions for tasks 1–6 in the yellow cells. The gray cells for tasks 7–12 fill in when your macros run. "
+        "The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "There's nothing to type on this sheet. The gray cells fill in once BuildMonthlyPackets has run, and the Check column "
+        "turns green when they match. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Complete BuildMonthlyPackets in the EncounterMacros module and run it. It adds the monthly packet sheets "
+                     "and writes to the **Output** sheet, and the gray cells on the **Bonus** sheet read your results.")
+    # Start Here lists Practice, Encounters, Facilities, these (the customize hook creates them), then Bonus.
+    L.sheet_notes = [
+        ("Snippets", "The code for the predict-the-output tasks 1–6. The same code is in starter/Snippets.bas."),
+        ("Output", "The blue cells your macros write results to. The Practice and Bonus sheets read them."),
+        ("PacketTemplate", "The bonus template that BuildMonthlyPackets copies once per month. Leave it as it is."),
+    ]
 
     sum_type = (f'=IF({exists(SUMMARY_SHEET)},IFERROR(INDEX(INDIRECT("\'{SUMMARY_SHEET}\'!C1:C50"),'
                 f'MATCH("Inpatient",INDIRECT("\'{SUMMARY_SHEET}\'!A1:A50"),0)),"Inpatient row not found"),"")')
@@ -813,7 +800,8 @@ def build() -> Lesson:
                       f"A1:{get_column_letter(n_cols)}{last} (the LOSDays header in {enc.col(LOS_COL)}1 makes the block "
                       f"{n_cols} columns wide). `Offset(1)` shifts the block down one row, and `Resize(Rows.Count - 1)` trims the "
                       f"row that fell off the bottom: **{ans_b}**.",
-             hint="CurrentRegion is the whole block around E50 (Go To Special → Current region shows it). The last two steps drop the header row",
+             hint="CurrentRegion is the whole block around E50 (**Go To Special → Current region** shows it). The last two steps drop "
+                  "the header row",
              title="Snippet B: the data-body idiom",
              explanation="This **data-body idiom** gives you the data without its header, however many rows the export has. "
                          "It works from any cell inside the block, which is why the snippet starts in E50. CurrentRegion stops at the "
@@ -831,7 +819,7 @@ def build() -> Lesson:
              answer=ans_c3, answer_display=str(ans_c3), title="Snippet C, line 3: End(xlDown)", live=False,
              solution=f"F1 and F2 are both filled and F{first_blank_row} is empty, so End(xlDown) stops at the end of that first "
                       f"block: row **{ans_c3}**.",
-             hint="End(xlDown) works like Ctrl + ↓: it stops at the last filled cell before a gap",
+             hint="End(xlDown) works like Ctrl + ↓ (Mac: ⌘ + ↓): it stops at the last filled cell before a gap",
              explanation="`Range(\"F1\").End(xlDown)` is the top-down version of the idiom, and it fails on the first blank cell. "
                          "On a column with no gaps it gives the same answer as End(xlUp), which is why it seems to work until "
                          "the day a blank appears. Start from the bottom and go up with `Cells(Rows.Count, col).End(xlUp)`."),
@@ -1157,7 +1145,7 @@ def build() -> Lesson:
             sheet.page_setup.orientation = "landscape"
             sheet.page_setup.fitToWidth, sheet.page_setup.fitToHeight = 1, 0
 
-        _fix_generic_text(wb, n)
+        _describe_sheets(wb, lesson, n)
 
         if not selftest:
             return

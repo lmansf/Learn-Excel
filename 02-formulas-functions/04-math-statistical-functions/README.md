@@ -269,14 +269,14 @@ SUMPRODUCT multiplies matching rows of two or more ranges and adds up the produc
 > ⚠️ `=SUM(H2:H389)*SUM(I2:I389)` is not the same thing. Multiplying two totals pairs every order's doses with every other order's
 > price, and gives a meaningless, much larger number.
 
-> 📋 In Microsoft 365 and Excel 2021 or later, `=SUM(H2:H389*I2:I389)` also works, because Excel calculates the range math
-> automatically. SUMPRODUCT works everywhere.
+> 📋 **Version note:** In Microsoft 365 and Excel 2021 or later, `=SUM(H2:H389*I2:I389)` also works, because Excel calculates
+> the range math automatically. SUMPRODUCT works everywhere.
 
 ### 7. Precision versus display
 
 Formatting and rounding look alike but do different things (Lesson 1.3):
 
-| | Number format (Home → Decrease Decimal) | ROUND function |
+| | Number format (**Home → Decrease Decimal**) | ROUND function |
 |---|---|---|
 | Changes | What the cell *shows* | What the cell *stores* |
 | `AVERAGE(I2:I574)` formatted to 1 decimal | Shows 4.7, stores 4.71553… | `=ROUND(AVERAGE(I2:I574),1)` shows and stores 4.7 |
@@ -287,14 +287,14 @@ cost centers and each cell shows \$33.33, yet their total shows \$100.00, not th
 wrong. Decide which you need: round each piece with ROUND (and then put the leftover cent somewhere on purpose), or keep full
 precision and accept that the displayed pieces may not add up exactly.
 
-> ⚠️ Avoid **Set precision as displayed** (File → Options → Advanced → *When calculating this workbook*, or on a Mac, Excel →
-> Settings → Calculation, called Preferences in older versions). It permanently rounds every stored number to its displayed format, and Undo can't bring the decimals
-> back.
+> ⚠️ Avoid **Set precision as displayed** (**File → Options → Advanced**, under *When calculating this workbook*, or on a Mac,
+> **Excel → Settings → Calculation**, called Preferences in older versions). It permanently rounds every stored number to its
+> displayed format, and Undo can't bring the decimals back.
 
 Excel stores numbers in binary with about 15 significant digits, so some decimals can't be stored exactly. Row 11's difference
-from expected, 3 − 4.6, is stored as -1.5999999999999996 even though every display shows -1.6. This almost never matters. It can matter when a
-result sits exactly on a boundary, such as an equality test or INT on a value that should be a whole number. In those cases ROUND
-first, for example `=ROUND(I11-H11,1)=-1.6`.
+from expected, 3 − 4.6, is stored as -1.5999999999999996 even though every display shows -1.6. This almost never matters. It can
+matter when a result sits exactly on a boundary, such as an equality test or INT on a value that should be a whole number. In
+those cases ROUND first, for example `=ROUND(I11-H11,1)=-1.6`.
 
 ### 8. The center: mean, median, mode, and trimmed mean
 
@@ -527,16 +527,21 @@ standard screen for skewed data like LOS and charges. The 3-standard-deviation r
 > ⚠️ An outlier isn't an error. A 34-day stay is probably a real patient with complications. Flag outliers for review and report
 > them separately, but don't delete them.
 
-### 13. Working efficiently, and version notes
+### 13. Shortcuts and version notes
 
 - **Find functions by category:** **Formulas → Math & Trig** lists ROUND, MROUND, SUMPRODUCT, and the rest of sections 1–6.
   **Formulas → More Functions → Statistical** lists sections 8–11.
-- **AutoSum's dropdown** (**Home → AutoSum ▾**) inserts Average, Count Numbers, Max, and Min. **Alt + =** (Mac: **⌘ + Shift + T**)
-  inserts SUM directly.
-- **Shift + F3** opens the Insert Function dialog on Windows or the Formula Builder on a Mac, with a box for each argument.
+- **AutoSum's drop-down arrow** (**Home → AutoSum ▾**) inserts Average, Count Numbers, Max, and Min.
 - **Check your formula against the status bar.** Select a range and the status bar shows its Average, Count, and Sum. Right-click
-  the status bar (Mac: Control-click) to add Minimum, Maximum, and Numerical Count.
+  the status bar (Mac: Control + click) to add Minimum, Maximum, and Numerical Count.
 - **The Analysis ToolPak** can produce a whole table of descriptive statistics at once. Lesson 4.5 covers it.
+
+| Action | Windows | Mac |
+|---|---|---|
+| Insert a SUM formula (AutoSum) | Alt + = | ⌘ + Shift + T |
+| Insert Function (Windows) or Formula Builder (Mac), with a box for each argument | Shift + F3 | Shift + F3 (Fn + Shift + F3 on a laptop) |
+| Lock a range with `$` before you fill a RANK.EQ formula down | F4 | ⌘ + T |
+| Enter a legacy array formula (SUMPRODUCT never needs it) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
 
 | Functions | Available in |
 |---|---|
@@ -550,7 +555,8 @@ Microsoft 365, Excel 2021 and later, and Excel for the web have every function i
 ## 🧪 Hands-on practice
 
 Download [`2.4-math-statistical-functions.xlsx`](2.4-math-statistical-functions.xlsx) and open the **Practice** sheet. Type each
-answer in the yellow cell, as a formula wherever possible. The **Check** column turns green when you're right.
+answer in the yellow cell, as a formula wherever possible. The **Check** column turns green when you're right. For task 10 (gray
+answer cell), you fill the yellow AgeBand column on the Stays sheet and the gray cell summarizes your work.
 
 <!-- BEGIN GENERATED: practice -->
 Tasks use three data sheets. Stays holds 573 inpatient stays (rows 2–574), ED holds 785 visits (rows 2–786), and Meds holds 388 medication orders (rows 2–389). Reference a column's data rows, like Stays!J2:J574, rather than a whole column like J:J, because the header text in row 1 breaks the row-by-row math in SUMPRODUCT. Structured references such as tblStays[TotalCharges] work too. When a task asks you to round, round with a function so the stored value matches, not just the display.
@@ -579,7 +585,7 @@ runs each sample formula, so you can see it working. The same answers are below,
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. What is the most common ESI triage level among the ED visits?**
 
@@ -691,7 +697,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Calculate the upper outlier fence with the IQR rule: Q3 + 1.5 × (Q3 − Q1), using…**
 

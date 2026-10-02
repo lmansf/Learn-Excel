@@ -179,8 +179,9 @@ braces yourself. Given a list as its criteria, COUNTIFS returns a list of counts
 COVID-19 stays), and SUM adds them up. The pattern works in every version of Excel without Ctrl + Shift + Enter, and it grows easily:
 `{"J18.9","U07.1","J96.01"}`. Adding is safe here because no row can have two different codes at once.
 
-> 📋 In Microsoft 365, `=COUNTIFS(C2:C2725,"Inpatient",J2:J2725,{"J18.9","U07.1"})` without SUM spills the two counts into two cells
-> side by side. Older versions show only the first count. Wrap it in SUM whenever you want one total.
+> 📋 **Version note:** In Microsoft 365 and Excel 2021 or later, `=COUNTIFS(C2:C2725,"Inpatient",J2:J2725,{"J18.9","U07.1"})`
+> without SUM spills the two counts into two cells side by side. Older versions show only the first count. Wrap it in SUM whenever
+> you want one total.
 
 **Conditions on different columns.** Now both conditions can be true for the same row, so adding the counts would count those rows
 twice. Subtract the overlap once:
@@ -285,7 +286,7 @@ These work like SUMIFS: the column to search comes first, then the range/criteri
 | `=MAXIFS(K2:K2667,C2:C2667,"Medicare")` (Claims sheet) | 12/31/2025 | The most recent Medicare payment |
 
 Dates are numbers, so MAXIFS finds the latest date and MINIFS finds the earliest. The result may show as a serial number (46022).
-Format the cell as a date with **Ctrl + Shift + #** (Mac: **⌃ + Shift + #**) or **Home → Number Format → Short Date**.
+Format the cell as a date with **Ctrl + Shift + #** (Mac: **Control + Shift + #**) or **Home → Number Format → Short Date**.
 
 > ⚠️ **No match returns 0, not an error.** `=MAXIFS(I2:I2725,D2:D2725,"Bluestone Outpatient Pavilion")` returns 0, which looks like a
 > real answer ("the longest stay was 0 days"). When nothing might match, count first:
@@ -389,7 +390,7 @@ for the outcome itself.
 
 The denial rate counts Appealed claims as denials, because every appeal starts with a denial. It leaves Pending claims out of the
 denominator, because the insurer hasn't decided them yet. That gives 282 denials out of 2,387 decided claims. To show a rate as a
-percentage, press **Ctrl + Shift + %** (Mac: **⌃ + Shift + %**), then add a decimal place with **Home → Increase Decimal**.
+percentage, press **Ctrl + Shift + %** (Mac: **Control + Shift + %**), then add a decimal place with **Home → Increase Decimal**.
 
 > ⚠️ **The denominator must be the right population.** If it includes rows that could never have the outcome, the rate comes out too
 > low. A clinic visit can't be followed by a readmission (Readmit30 applies only to inpatient stays), so clinic visits don't belong in
@@ -478,18 +479,18 @@ Check a finished grid three ways:
 3. **Spot check.** Filter the Encounters sheet to one hospital, Inpatient, and one month, then compare the row count in the status bar
    with that cell.
 
-> 💡 **Tip (Microsoft 365):** If you give COUNTIFS a whole column of labels for one criterion and a whole row of labels for another,
-> one formula spills the entire grid. With hospital names in A5:A7 and encounter types in B4:E4,
+> 💡 **Tip:** In Microsoft 365 and Excel 2021 or later, if you give COUNTIFS a whole column of labels for one criterion and a whole
+> row of labels for another, one formula spills the entire grid. With hospital names in A5:A7 and encounter types in B4:E4,
 > `=COUNTIFS(Encounters!D2:D2725,A5:A7,Encounters!C2:C2725,B4:E4)` fills a 3 × 4 block. The copy-and-lock method above works in every
 > version, so the practice task uses it.
 
 Where do the labels come from? You can type them, copy the column and use **Data → Remove Duplicates** on the copy, or, in Microsoft
-365, use the UNIQUE function (Lesson 4.1).
+365 and Excel 2021 or later, use the UNIQUE function (Lesson 4.1).
 
 > 📋 A PivotTable (Lesson 3.4) builds a grid like this by drag and drop. Formula grids are still worth knowing, because they keep a
 > fixed layout from month to month, can mix counts, sums, and rates in one table, and recalculate without a Refresh.
 
-### 12. Quick reference and version notes
+### 12. Quick reference
 
 | Function | Syntax | Available in |
 |---|---|---|
@@ -523,8 +524,8 @@ Keyboard shortcuts for this lesson:
 | Extend a reference to the last filled row while typing a formula | Ctrl + Shift + ↓ | ⌘ + Shift + ↓ |
 | Enter the same formula in every selected cell | Ctrl + Enter | ⌘ + Return |
 | Fill down or fill right | Ctrl + D or Ctrl + R | ⌘ + D or ⌘ + R |
-| Open the Insert Function dialog (Formula Builder on a Mac) | Shift + F3 | Shift + F3 |
-| Format as a percentage or a date | Ctrl + Shift + % or Ctrl + Shift + # | ⌃ + Shift + % or ⌃ + Shift + # |
+| Open the Insert Function dialog (Formula Builder on a Mac) | Shift + F3 | Shift + F3 (Fn + Shift + F3 on a laptop) |
+| Format as a percentage or a date | Ctrl + Shift + % or Ctrl + Shift + # | Control + Shift + % or Control + Shift + # |
 
 ## 🧪 Hands-on practice
 
@@ -559,7 +560,7 @@ each sample formula, so you can see it working. The same answers are below, coll
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Emergency visits**
 
@@ -685,7 +686,7 @@ The numerator is the denominator plus one extra condition (Readmit30 = Y). That'
 <!-- BEGIN GENERATED: bonus -->
 Bluestone's revenue cycle director is preparing for contract talks and wants a 2025 scorecard of inpatient claims by payer. Use these definitions. An **adjudicated** claim is any claim whose ClaimStatus is not Pending (the payer has made a decision). A **denied** claim is one whose ClaimStatus is Denied or Appealed, because an appealed claim was denied first. **Denial rate** = denied ÷ adjudicated. **Days to pay** = PaidDate − SubmitDate for every claim that has a PaidDate. Build the scorecard on the Scorecard sheet, one row per payer, using only claims whose EncounterType is Inpatient.
 
-Work on the **Bonus** sheet of the workbook.
+Fill the DaysToPay column on the **Claims** sheet and the scorecard on the **Scorecard** sheet, and type your answers to B3–B5 in the yellow cells on the **Bonus** sheet.
 
 - **B1.** On the Claims sheet, fill the yellow DaysToPay column (L2:L2667) with PaidDate − SubmitDate, or an empty text string ("") when PaidDate is blank. Type one formula in L2. Claims is a Table, so Excel fills it down the whole column for you. If you click cells instead of typing their addresses, Excel writes [@PaidDate], which means the PaidDate on the same row. The gray cell averages your column across all claim types. *(Hint: IF(PaidDate="", "", PaidDate − SubmitDate))*
 - **B2.** On the Scorecard sheet, fill columns B (adjudicated inpatient claims), C (denied inpatient claims), and D (denial rate) for all 8 payers, one formula per column copied down. A payer with no adjudicated inpatient claims must show n/a in column D instead of #DIV/0!. The gray cell shows the highest rate in your column D. (If it shows #DIV/0!, a row still needs the guard.) *(Hint: Column B: "<>Pending". Column C: the OR pattern from guide section 4. Column D: test column B for 0 before you divide)*
@@ -696,7 +697,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. DaysToPay helper column**
 

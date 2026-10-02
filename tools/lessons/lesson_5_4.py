@@ -596,7 +596,7 @@ Option Explicit
 ' Read a snippet and type your prediction on the Practice sheet FIRST.
 ' Then click inside the snippet's Sub and press F5 to run it (Mac:
 ' Run > Run Sub/UserForm). Debug.Print writes to the Immediate window
-' (View > Immediate Window; Ctrl+G on Windows). Snippet D stops with a
+' (View > Immediate Window; Ctrl + G on Windows). Snippet D stops with a
 ' run-time error on purpose: note the number, then click End.
 ' =====================================================================''']
     for key, s in SNIPPETS.items():
@@ -1152,14 +1152,22 @@ def build() -> Lesson:
         "Macros can't be saved in an .xlsx file. Before you write any code, choose File → Save As and pick "
         "'Excel Macro-Enabled Workbook (*.xlsm)'.",
         "Download the four .bas files in the lesson's starter/ folder (on GitHub, open each file and click Download raw "
-        "file). Open the Visual Basic Editor with Alt + F11 (Mac: Option + F11), then choose File → Import File… for each "
-        "one. HealthUDFs.bas is for tasks 1–6, ClaimDictionaries.bas for tasks 8–10, Snippets.bas for tasks 7 and 11–13, "
-        "and PayerSummary.bas for the bonus.",
+        "file). Open the Visual Basic Editor with Alt + F11 (Mac: Option + F11, or Developer → Visual Basic), then choose "
+        "File → Import File… for each one. HealthUDFs.bas is for tasks 1–6, ClaimDictionaries.bas for tasks 8–10, "
+        "Snippets.bas for tasks 7 and 11–13, and PayerSummary.bas for the bonus.",
         "Scripting.Dictionary works only in Excel for Windows. On a Mac, use the Collection techniques from the guide. "
         "The solutions/ folder has Mac versions of every macro.",
-        "The Output sheet is where your macros write their results. The Snippets sheet shows the code for the "
-        "predict-the-output tasks. The bonus macro creates a PayerSummary sheet.",
+        "The bonus macro creates a PayerSummary sheet. The gray cells on the Bonus sheet read it, so they stay blank until "
+        "the macro has run.",
     ]
+    # Output and Snippets are made in the customize hook, so list them under "Sheets in this workbook" here.
+    # PayerSummary isn't listed: it doesn't exist until the learner's bonus macro creates it.
+    L.sheet_notes = [
+        ("Output", "Your macros for tasks 8–10 write their results here. The gray cells on Practice read them."),
+        ("Snippets", "The code for the predict-the-output tasks 7 and 11–13 (the same code as starter/Snippets.bas)."),
+    ]
+    L.bonus_where = ("Write the macro in the VBE. It creates the **PayerSummary** sheet, and the gray cells on the "
+                     "workbook's **Bonus** sheet read it, so there's nothing to type there.")
     # The library's generic how-to lines say "type a formula or value into each yellow cell". Here 7 of the 13 Practice
     # answers and every auto-checked Bonus answer are gray cells fed by UDF columns or macros, so say that instead.
     L.practice_how = ("Go to the 'Practice' sheet. Type your answers for tasks 1, 6, 7, and 11–13 in the yellow cells. For "
@@ -1319,8 +1327,9 @@ def build() -> Lesson:
                          f"`.Count` is the number of different patients. {len(claims):,} claims come from {n_patients} "
                          f"patients because {repeat_patients} patients had more than one claim. `Dim patients As Object` with "
                          f"`CreateObject` is **late binding**: it needs no reference to the Scripting Runtime library, so "
-                         f"the file works on any Windows PC. In Microsoft 365 the key's `=ROWS(UNIQUE(…))` gives the same "
-                         f"answer, but the dictionary pattern scales to jobs a formula can't do, like the bonus."),
+                         f"the file works on any Windows PC. In Microsoft 365 and Excel 2021 or later, the key's "
+                         f"`=ROWS(UNIQUE(…))` gives the same answer, but the dictionary pattern scales to jobs a formula "
+                         f"can't do, like the bonus."),
         Task("Complete TopDeniedPayer: build one dictionary that maps PayerID → PayerName (from the Payers sheet) and another "
              "that counts the claims with ClaimStatus \"Denied\" for each PayerID (Mac: a Collection for the names, and "
              "SlotFor plus an array for the counts). Write the PayerName with the most denied claims to Output!B6 and its "
@@ -1457,7 +1466,7 @@ def build() -> Lesson:
         Task("Test the error handling. (1) Rename the Claims sheet to Claims_old and run BuildPayerSummary: you should get your "
              "friendly message, not a run-time error. (2) Rename it back. (3) Temporarily change the header text in the Claims "
              "sheet's BilledAmount cell (E1) to Billed and run the macro again: the Fail handler should report the missing "
-             "column, and Formulas → Calculation Options should still show Automatic afterwards. (4) Put the header back and "
+             "column, and **Formulas → Calculation Options** should still show Automatic afterwards. (4) Put the header back and "
              "run the macro once more.",
              answer=None, check="manual", title="Robustness test",
              solution="1. With Claims renamed, `SheetExists(\"Claims\")` is False, so the macro shows the friendly MsgBox and "

@@ -7,7 +7,7 @@ Option Explicit
 ' Read a snippet and type your prediction on the Practice sheet FIRST.
 ' Then click inside the snippet's Sub and press F5 to run it (Mac:
 ' Run > Run Sub/UserForm). Debug.Print writes to the Immediate window
-' (View > Immediate Window; Ctrl+G on Windows). Snippet D stops with a
+' (View > Immediate Window; Ctrl + G on Windows). Snippet D stops with a
 ' run-time error on purpose: note the number, then click End.
 ' =====================================================================
 

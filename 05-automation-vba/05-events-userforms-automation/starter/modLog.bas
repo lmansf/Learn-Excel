@@ -21,7 +21,7 @@ Public Sub WriteLog(ByVal eventName As String, ByVal detail As String)
     ws.Cells(nextRow, 4).Value = Application.UserName
 End Sub
 
-' Run this (Alt+F8 > EventsOn > Run) if an error left events switched off.
+' Run this (Alt + F8 > EventsOn > Run) if an error left events switched off.
 Public Sub EventsOn()
     Application.EnableEvents = True
     Application.ScreenUpdating = True

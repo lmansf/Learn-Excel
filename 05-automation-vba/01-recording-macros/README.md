@@ -111,8 +111,8 @@ Excel's startup folder, XLSTART, is one by default. Keep the list short, and nev
 > in Protected View (click **Enable Editing**). Unblock it right after you download it (steps 2–3 above) so the .xlsm you save from it
 > starts clean. If your .xlsm ever shows the red bar, unblock it the same way.
 
-**Version notes:** Mark-of-the-Web blocking arrived in Microsoft 365 for Windows in 2022 and was added to Office 2016–2021 through
-updates. Older or un-updated versions show the yellow bar for downloaded files instead.
+> 📋 **Version note:** Mark-of-the-Web blocking arrived in Microsoft 365 for Windows in 2022 and was added to Office 2016–2021
+> through updates. Older or un-updated versions show the yellow bar for downloaded files instead.
 
 ### 4. Save in a format that can hold macros
 
@@ -307,9 +307,9 @@ Some details matter in practice:
 - **Shapes and Form Control buttons** work on Windows and Mac. Avoid **ActiveX** controls, which are Windows-only and less reliable.
   To select a shape button without running it, Ctrl + click it (Mac: ⌘ + click) or right-click it.
 - **The QAT** can be hidden in recent Microsoft 365 versions. If you don't see it, right-click the ribbon → **Show Quick Access
-  Toolbar**. A QAT
-  button remembers which workbook holds the macro and opens that file if it isn't open. In Excel for Mac, look under
-  **Excel → Settings → Ribbon & Toolbar → Quick Access Toolbar**. If *Macros* isn't offered there in your version, use a sheet button.
+  Toolbar**. A QAT button remembers which workbook holds the macro and opens that file if it isn't open. In Excel for Mac, look
+  under **Excel → Settings → Ribbon & Toolbar → Quick Access Toolbar**. If *Macros* isn't offered there in your version, use a
+  sheet button.
 - **Macros you can't see** in the Macro dialog are usually in a workbook that isn't open, or the *Macros in:* box is set to a
   different workbook. Set it to **All Open Workbooks**.
 
@@ -318,10 +318,10 @@ Some details matter in practice:
 
 ### 9. Read the recorded code
 
-Open the VBE with **Alt + F11** (Mac: **Option + F11**) or **Developer → Visual Basic**. On the left, the **Project Explorer**
-(**View → Project Explorer** if it's hidden; Windows: Ctrl + R) lists every open workbook as a *VBAProject*. Expand yours, then **Modules**, and double-click
-**Module1**. A **module** is a container for code, and the recorder puts your macros in a standard module named Module1. After
-you reopen the file, new recordings may go into Module2.
+Open the VBE with **Alt + F11** (Mac: **Option + F11**, or **Developer → Visual Basic**). On the left, the **Project Explorer**
+(**View → Project Explorer** if it's hidden; Windows: Ctrl + R) lists every open workbook as a *VBAProject*. Expand yours, then
+**Modules**, and double-click **Module1**. A **module** is a container for code, and the recorder puts your macros in a standard
+module named Module1. After you reopen the file, new recordings may go into Module2.
 
 ```vba
 Sub FormatCensusReport()                 ' the macro starts: Sub + its name + ()
@@ -357,8 +357,8 @@ Here is what the lines you'll meet most often mean:
 | `Sheets.Add After:=ActiveSheet` | Insert a new sheet after the current one |
 | `ActiveSheet.Paste` and `Application.CutCopyMode = False` | Paste, then clear the moving border around the copied cells |
 | `ActiveSheet.Range("$A$1:$J$81").AutoFilter Field:=5, Criteria1:="<=2"` | Filter the 5th column of A1:J81 to values ≤ 2 |
-| `Selection.AutoFilter` | Data → Filter: turn the filter arrows on, or off if they're already on |
-| `….Sort.SortFields.Add2 Key:=Range("E2:E21")` … `.Apply` | Data → Sort with the levels you chose in the dialog |
+| `Selection.AutoFilter` | **Data → Filter**: turn the filter arrows on, or off if they're already on |
+| `….Sort.SortFields.Add2 Key:=Range("E2:E21")` … `.Apply` | **Data → Sort** with the levels you chose in the dialog |
 | `ActiveWindow.FreezePanes = True` | Freeze panes |
 
 **What the recorder over-records.**
@@ -468,10 +468,37 @@ function main(workbook: ExcelScript.Workbook) {
 
 Lesson 5.5 returns to Office Scripts and Power Automate.
 
-**Version notes:** VBA and the recorder are in every desktop version of Excel for Windows and in Excel 2011 or later for Mac
-(Excel 2008 for Mac had no VBA). Microsoft 365 records sorts with `SortFields.Add2`, and older versions record
-`SortFields.Add`. Both work in current Excel, but `Add2` doesn't exist in older versions, so use `.Add` in code that must run
-everywhere.
+### 13. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Open the VBE, or switch back to Excel | Alt + F11 | Option + F11 (Fn + Option + F11 on a laptop), or **Developer → Visual Basic** |
+| Open the Macro dialog (Run, Edit, Delete, Options…) | Alt + F8 | Option + F8 |
+| Run a macro whose shortcut key is an uppercase R | Ctrl + Shift + R | Option + ⌘ + Shift + R |
+| Save As (to choose .xlsm) | F12 | ⌘ + Shift + S |
+| Save | Ctrl + S | ⌘ + S |
+| Jump to the last filled cell below | Ctrl + ↓ | ⌘ + ↓ |
+| Extend the selection to the last filled cell | Ctrl + Shift + ↓ (or →) | ⌘ + Shift + ↓ (or →) |
+| Put the same formula in every selected cell | Ctrl + Enter | ⌘ + Return |
+| Select the whole row | Shift + Space | Shift + Space |
+| Go back to A1 | Ctrl + Home | Control + Home, or Control + Fn + ← |
+| Format Cells | Ctrl + 1 | ⌘ + 1 |
+| Percent Style | Ctrl + Shift + % | Control + Shift + % |
+| Select a shape button without running its macro | Ctrl + click | ⌘ + click |
+| Run the macro the cursor is in (VBE) | F5 | **Run → Run Sub/UserForm** |
+| Show the Project Explorer (VBE) | Ctrl + R | **View → Project Explorer** |
+| Find and replace in the code (VBE) | Ctrl + H | **Edit → Replace** |
+
+| Feature | Version |
+|---|---|
+| VBA and the macro recorder | Every desktop version of Excel for Windows, and Excel 2011 or later for Mac (Excel 2008 for Mac had no VBA) |
+| Running or editing VBA macros | Desktop Excel only. Excel for the web, iPad, iPhone, and Android can open an .xlsm but can't run its macros |
+| Mark-of-the-Web blocking (the red bar) | Microsoft 365 for Windows since 2022, and Office 2016–2021 through updates |
+| `SortFields.Add2` in recorded sorts | Microsoft 365 records `.Add2`, and older versions record `.Add`. Both work in current Excel, but `Add2` doesn't exist in older versions, so use `.Add` in code that must run everywhere |
+| Hidden Quick Access Toolbar | Recent Microsoft 365 versions. Right-click the ribbon → **Show Quick Access Toolbar** |
+| **Excel → Settings** on a Mac | Older versions call it **Excel → Preferences** |
+| Office Scripts (**Automate → Record Actions**) | Excel for the web and current desktop Excel, with a Microsoft 365 work or school account |
+| MINIFS and MAXIFS (the Bonus Key's live formulas for B2–B4) | Excel 2019 or later, Microsoft 365, and Excel for the web |
 
 ## 🧪 Hands-on practice
 
@@ -484,17 +511,17 @@ Tasks 1–6, 9 and 13 are quick checks: type your answer in the yellow cell. Tas
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | This workbook is an .xlsx file, which can't store macros. Which file extension does the Excel Macro-Enabled Workbook format use, the format you save it in before you record? Type the extension, like .xlsx | File → Save As shows each format's extension in the Save as type list |
-| 2 | A colleague emails you Census_Report.xlsm. When you open it, a red bar says Microsoft has blocked macros because the source of this file is untrusted. Which is the safe way to run its macros? Type the letter.<br>A: Change the Trust Center to Enable VBA macros.<br>B: Confirm with the colleague that they sent it, save it to your computer, then right-click the file → Properties → tick Unblock.<br>C: Click Enable Content on the red bar.<br>D: Rename the file to .xlsx. | The red bar has no Enable button. Look at the file's Properties |
-| 3 | Which function key do you press with Alt (Mac: Option) to open the Visual Basic Editor? Type just the key, like F5. | It's also on the Developer tab: Visual Basic |
+| 1 | This workbook is an .xlsx file, which can't store macros. Which file extension does the Excel Macro-Enabled Workbook format use, the format you save it in before you record? Type the extension, like .xlsx | **File → Save As** shows each format's extension in the Save as type list |
+| 2 | A colleague emails you Census_Report.xlsm. When you open it, a red bar says Microsoft has blocked macros because the source of this file is untrusted. Which is the safe way to run its macros? Type the letter.<br>A: Change the Trust Center to Enable VBA macros.<br>B: Confirm with the colleague that they sent it, save it to your computer, then right-click the file → **Properties** → tick **Unblock**.<br>C: Click Enable Content on the red bar.<br>D: Rename the file to .xlsx. | The red bar has no Enable button. Look at the file's Properties |
+| 3 | Which function key do you press with Alt (Mac: Option) to open the Visual Basic Editor? Type just the key, like F5. | It's also on the ribbon: **Developer → Visual Basic** |
 | 4 | On Windows, what is the file name (with extension) of the Personal Macro Workbook, the hidden workbook that makes a macro available in every workbook you open? | It's a binary workbook stored in the XLSTART folder |
 | 5 | With Use Relative References OFF, you click Record Macro, click cell B3, type Verified, press Enter, and stop recording. Later you select H10 and run the macro. Which cell receives Verified? Type the address, like A1. | Absolute recording stores the address you clicked |
 | 6 | This time A1 is selected when you click Record Macro. You turn ON Use Relative References, click B3, type Verified, press Enter, and stop. Later you select H10 and run the macro. Which cell receives Verified? | Count how far you moved from A1 to B3, then make the same move from H10 |
-| 7 | Record the FormatCensusReport macro on the Census_Nov sheet by following the recipe in Guide section 7 (TOTAL row recorded with relative references, shortcut Ctrl + Shift + R). The gray cell finds the row your macro labeled TOTAL and reads its MidnightCensus cell, which should equal November's patient days. | Guide section 7 has the click-by-click recipe |
+| 7 | Record the FormatCensusReport macro on the Census_Nov sheet by following the recipe in Guide section 7 (TOTAL row recorded with relative references, shortcut Ctrl + Shift + R, Mac: Option + ⌘ + Shift + R). The gray cell finds the row your macro labeled TOTAL and reads its MidnightCensus cell, which should equal November's patient days. | Guide section 7 has the click-by-click recipe |
 | 8 | Step 10 of the recipe in Guide section 7 put the month's occupancy in column H of your TOTAL row on Census_Nov: total patient days divided by total staffed-bed days, formatted as a percentage with 1 decimal place. The gray cell reads that cell. | Patient days are in column G, staffed-bed days in column D |
-| 9 | In the Record Macro dialog you typed an uppercase R in the Shortcut key box. Which key combination runs the macro on Windows? Type it like Ctrl+Alt+X. | An uppercase letter adds a key |
-| 10 | Add two more ways to run FormatCensusReport: (a) a button on the Census_Dec sheet labeled Build report, and (b) a button on the Quick Access Toolbar. Don't click them yet. | Right-click a shape → Assign Macro |
-| 11 | Go to Census_Dec and run your macro (Ctrl + Shift + R or your button). December has 31 days. The gray cell finds your TOTAL row and counts the daily rows above it. It should show all 31 days. | If it shows 30, your TOTAL row overwrote a day |
+| 9 | In the Record Macro dialog you typed an uppercase R in the Shortcut key box. Which key combination runs the macro on Windows? Type it like Ctrl + Alt + X. | An uppercase letter adds a key |
+| 10 | Add two more ways to run FormatCensusReport: (a) a button on the Census_Dec sheet labeled Build report, and (b) a button on the Quick Access Toolbar. Don't click them yet. | Right-click a shape → **Assign Macro…** |
+| 11 | Go to Census_Dec and run your macro (Ctrl + Shift + R, Mac: Option + ⌘ + Shift + R, or your button). December has 31 days. The gray cell finds your TOTAL row and counts the daily rows above it. It should show all 31 days. | If it shows 30, your TOTAL row overwrote a day |
 | 12 | On Census_Dec, the gray cell reads the MidnightCensus total in your TOTAL row. It should equal December's patient days (all 31 days). | Did you anchor the first row with a \$ when you typed the SUM? |
 | 13 | Read this recorded line: ActiveCell.FormulaR1C1 = "=SUM(R[-31]C[-1]:R[-1]C[-1])". If it runs while H33 is the active cell, which range does the SUM add up? Type it like A1:A9. | Square brackets count from the formula's own cell: R for rows, C for columns |
 <!-- END GENERATED: practice -->
@@ -510,12 +537,12 @@ are also below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. This workbook is an .xlsx file, which can't store macros. Which file extension does…**
 
 - **Answer:** .xlsm
-- **Solution:** **.xlsm**: File → Save As (F12; Mac: ⌘ + Shift + S) → *Save as type:* **Excel Macro-Enabled Workbook (*.xlsm)**.
+- **Solution:** **.xlsm**: **File → Save As** (F12; Mac: ⌘ + Shift + S) → *Save as type:* **Excel Macro-Enabled Workbook (*.xlsm)**.
 
 An .xlsx file can't contain VBA code. If you save a workbook that has macros as .xlsx, Excel warns you that the *VB project* can't be saved, and if you click **Yes** it throws the code away. .xlsb, .xltm, .xlam and the old .xls can hold macros too, but .xlsm is the everyday format for a workbook with macros. Save as .xlsm now, before you record, so nothing gets lost.
 
@@ -529,7 +556,7 @@ Email attachments and downloads carry the **Mark of the Web**, so Excel blocks t
 **3. Which function key do you press with Alt (Mac: Option) to open the Visual Basic…**
 
 - **Answer:** F11
-- **Solution:** **F11**: Alt + F11 on Windows, Option + F11 on a Mac (add Fn if your top-row keys control brightness and volume).
+- **Solution:** **F11**: Alt + F11 (Mac: Option + F11, or **Developer → Visual Basic**). On a Mac laptop, add Fn if your top-row keys control brightness and volume.
 
 Alt + F11 opens the Visual Basic Editor (VBE), where the recorder puts your code. Pressing it again flips back to Excel. Alt + F8 (Mac: Option + F8) opens the Macro dialog instead.
 
@@ -614,16 +641,16 @@ This is what the recorder writes for the recipe. Your code may differ in small w
 **8. Census_Nov TOTAL row occupancy**
 
 - **Answer:** 89.9%
-- **Solution:** In H32 type `=G32/D32`, then Percent Style and Increase Decimal once. The recorder stores it as `"=RC[-1]/RC[-4]"`: same row, 1 and 4 columns to the left.
+- **Solution:** In H32 type `=G32/D32`, then click **Home → Percent Style** and **Increase Decimal** once. The recorder stores it as `"=RC[-1]/RC[-4]"`: same row, 1 and 4 columns to the left.
 
 Total patient days ÷ total staffed-bed days is the unit's occupancy for the month. The formula only refers to cells in its own row, so in R1C1 notation it is the same on every sheet and works on December too.
 
 **9. In the Record Macro dialog you typed an uppercase R in the Shortcut key box. Which key…**
 
-- **Answer:** Ctrl+Shift+R
+- **Answer:** Ctrl + Shift + R
 - **Solution:** **Ctrl + Shift + R** (Mac: Option + ⌘ + Shift + R).
 
-A lowercase letter gives Ctrl + letter, which replaces Excel's own shortcut while this workbook is open (Ctrl + r would stop doing Fill Right). An uppercase letter adds Shift, which collides with far fewer built-in shortcuts. Change it later in Alt + F8 → select the macro → Options…
+A lowercase letter gives Ctrl + letter, which replaces Excel's own shortcut while this workbook is open (Ctrl + r would stop doing Fill Right). An uppercase letter adds Shift, which collides with far fewer built-in shortcuts. Change it later with **Macros** (Alt + F8; Mac: Option + F8) → select the macro → **Options…**
 
 **10. Button on the sheet and on the Quick Access Toolbar**
 
@@ -650,9 +677,9 @@ A shape button belongs to one sheet and travels with the workbook. A Quick Acces
 **11. Run on Census_Dec (days above the TOTAL row)**
 
 - **Answer:** 31
-- **Solution:** Click the **Census_Dec** tab and press **Ctrl + Shift + R**. `Selection.End(xlDown)` finds the last date (row 32) and `ActiveCell.Offset(1, 0)` steps to row 33.
+- **Solution:** Click the **Census_Dec** tab and press **Ctrl + Shift + R** (Mac: **Option + ⌘ + Shift + R**). `Selection.End(xlDown)` finds the last date (row 32) and `ActiveCell.Offset(1, 0)` steps to row 33.
 
-If you recorded the TOTAL steps with relative references off, the code says Range("A32").Select, so on December it types TOTAL over 12/31/2025 in row 32 and the gray cell shows 30. Ctrl + Down plus a relative one-row move finds the first empty row on any month. Macros can't be undone, so close without saving (or reopen your saved copy), fix the recording, and run it again.
+If you recorded the TOTAL steps with relative references off, the code says Range("A32").Select, so on December it types TOTAL over 12/31/2025 in row 32 and the gray cell shows 30. Ctrl + ↓ (Mac: ⌘ + ↓) plus a relative one-row move finds the first empty row on any month. Macros can't be undone, so close without saving (or reopen your saved copy), fix the recording, and run it again.
 
 **12. Census_Dec TOTAL patient days**
 
@@ -681,11 +708,11 @@ Cedar Ridge's ED medical director reviews every high-acuity visit (ESI 1 or 2) e
 3. Sort that sheet by ESILevel (smallest first), then ArrivalDateTime (oldest first), and AutoFit the columns.
 4. Go back to the export and turn its filter off.
 
-Recording tips: Check that Use Relative References is off. Click A1 and turn the filter on with Data → Filter, then use the ESILevel filter arrow → Number Filters → Less Than Or Equal To → 2 → OK. Select the data with Ctrl + Shift + → and then Ctrl + Shift + ↓ (Mac: ⌘ + Shift + arrows), and copy it with Ctrl + C (Mac: ⌘ + C). Add a sheet with the + (New sheet) button next to the sheet tabs, paste with Ctrl + V (Mac: ⌘ + V), and rename the sheet by double-clicking its tab. In Data → Sort (Lesson 1.6), sort by ESILevel (Smallest to Largest), then click Add Level and pick ArrivalDateTime (Oldest to Newest). AutoFit every column: click the Select All button (the triangle where the row and column headings meet), then double-click any column boundary. Finish by clicking the ED_Nov tab, then A1, then Data → Filter again.
+Recording tips: Check that Use Relative References is off. Click A1 and turn the filter on with **Data → Filter**, then use the ESILevel filter arrow → **Number Filters → Less Than Or Equal To** → 2 → **OK**. Select the data with Ctrl + Shift + → and then Ctrl + Shift + ↓ (Mac: ⌘ + Shift + arrows), and copy it with Ctrl + C (Mac: ⌘ + C). Add a sheet with the + (New sheet) button next to the sheet tabs, paste with Ctrl + V (Mac: ⌘ + V), and rename the sheet by double-clicking its tab. In **Data → Sort** (Lesson 1.6), sort by ESILevel (Smallest to Largest), then click **Add Level** and pick ArrivalDateTime (Oldest to Newest). AutoFit every column: click the Select All button (the triangle where the row and column headings meet), then double-click any column boundary. Finish by clicking the ED_Nov tab, then A1, then **Data → Filter** again.
 
-Record it on ED_Nov (80 visits) as ExtractHighAcuity (shortcut Ctrl + Shift + H). Then delete the HighAcuity sheet it made (right-click its tab → Delete), open the VBE, and edit the code so it works on ED_Dec (93 visits). Guide section 9 lists the edits recorded code usually needs and what to do if the macro stops with a run-time error. Run it on ED_Dec. The gray cells read the HighAcuity sheet your macro builds from December, so they stay blank until it exists. While the sheet from your November recording is still there, they show ✘ Not yet or stay blank.
+Record it on ED_Nov (80 visits) as ExtractHighAcuity (shortcut Ctrl + Shift + H, Mac: Option + ⌘ + Shift + H). Then delete the HighAcuity sheet it made (right-click its tab → **Delete**), open the VBE with Alt + F11 (Mac: Option + F11, or **Developer → Visual Basic**), and edit the code so it works on ED_Dec (93 visits). Guide section 9 lists the edits recorded code usually needs and what to do if the macro stops with a run-time error. Run it on ED_Dec. The gray cells read the HighAcuity sheet your macro builds from December, so they stay blank until it exists. While the sheet from your November recording is still there, they show ✘ Not yet or stay blank.
 
-Work on the **Bonus** sheet of the workbook.
+Record the macro on the **ED_Nov** sheet and run your edited version on **ED_Dec**. The gray cells on the **Bonus** sheet check the HighAcuity sheet it builds.
 
 - **B1.** How many visits (data rows, not counting the header) are on the HighAcuity sheet built from ED_Dec? *(Hint: COUNTIF on ED_Dec's ESILevel column gives you a target to compare with)*
 - **B2.** Which EDVisitID is in the first data row (A2) of HighAcuity? *(Hint: It should be the earliest ESI 1 arrival in December)*
@@ -696,7 +723,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Visits on HighAcuity (from ED_Dec)**
 
@@ -728,7 +755,7 @@ Sub ExtractHighAcuity()
     ActiveSheet.Name = "HighAcuity"                     ' EDIT: was Sheets("Sheet1").Select / .Name
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Clear
     ' EDIT: keys were Range("E2:E21") and Range("C2:C21"). One cell is enough
-    ' to name the key column. (.Add works in Excel 2007 and later; Excel 365 records .Add2.)
+    ' to name the key column. (.Add works in Excel 2007 and later; Microsoft 365 records .Add2.)
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("E1"), _
         SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("C1"), _
@@ -785,7 +812,7 @@ December has 26 high-acuity visits, so the list ends in row 27. A sort range rec
 - **Answer:** 93
 - **Solution:** End the macro with `Sheets("ED_Dec").Select`, `Range("A1").Select`, `Selection.AutoFilter`. That toggles the filter off, so all 93 visits show again.
 
-The recording ends with Sheets("ED_Nov").Select, so on December it toggles a filter ON on ED_Nov and leaves ED_Dec showing only 26 rows. A good macro leaves the source data the way it found it. Selection.AutoFilter is a toggle (like Data → Filter), so it turns the filter off only when one is on.
+The recording ends with Sheets("ED_Nov").Select, so on December it toggles a filter ON on ED_Nov and leaves ED_Dec showing only 26 rows. A good macro leaves the source data the way it found it. Selection.AutoFilter is a toggle (like **Data → Filter**), so it turns the filter off only when one is on.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

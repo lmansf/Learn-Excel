@@ -4,12 +4,12 @@ The builder turns the raw CSVs into a monthly KPI fact table (KPI_Monthly: one r
 additive components such as LWBS and EDVisits next to the non-additive rates and medians), a visit-level ED table
 for medians (EDWaits), and a KPI dictionary (Targets). Customize hooks add the dashboard layers:
 
-  Dashboard      the practice canvas: two yellow selectors named SelFacility / SelMonth (data-validation dropdowns),
+  Dashboard      the practice canvas: two yellow selectors named SelFacility / SelMonth (data-validation drop-down lists),
                  a finished example card (Inpatient discharges), and space for the learner's chart and combo box.
   Calc           the model layer: selection helpers, the combo-box link cell (task 10), and the 12-month trend block
                  the learner fills and charts (task 11).
-  Lists          the dropdown sources (facilities incl. "All facilities", 24 months).
-  Board          a blank canvas for the bonus build.
+  Lists          the drop-down list sources (facilities incl. "All facilities", 24 months).
+  Board          a blank canvas for the bonus build (its tab sits right after Bonus).
   Dashboard Key  (hidden, protected without a password) a finished, formula-driven reference dashboard with eight
                  KPI cards, direction-aware status colors, two openpyxl charts with cell-linked (dynamic) titles, and
                  its model area. It is set to the
@@ -457,7 +457,7 @@ def build() -> Lesson:
              summary=f'=IF(Calc!{LINK_CELL}="","",Calc!{LINK_CELL})',
              fill={"range": f"Calc!{LINK_CELL}:{LINK_CELL}", "values": [t10]},
              live=f'=MATCH("{COMBO_PICK}",Lists!$A$2:$A$5,0)',
-             hint="Developer → Insert → Combo Box (Form Control), then right-click it → Format Control → Control tab",
+             hint="**Developer → Insert → Combo Box (Form Control)**, then right-click it → **Format Control** → **Control** tab",
              solution=("1. Show the **Developer** tab if you haven't (see the guide).\n"
                        "2. **Developer → Insert → Combo Box (Form Control)** (Mac: **Developer → Combo Box**), then drag "
                        "a box onto the Dashboard.\n"
@@ -491,7 +491,7 @@ def build() -> Lesson:
                        "keeps pointing at Calc.\n"
                        "5. Change the selectors on the Dashboard and watch the line redraw."),
              explanation=f"The chart's series points at formula cells, and those cells point at the selectors, so one "
-                         f"dropdown redraws the chart. The block for {SEL_FAC} runs "
+                         f"drop-down list redraws the chart. The block for {SEL_FAC} runs "
                          f"{trend_months[0].strftime('%b %Y')}–{trend_months[-1].strftime('%b %Y')} and peaks at "
                          f"{by[(SEL_FAC, t11_peak)]['EDVisits']} visits in {t11_peak.strftime('%b %Y')}. In Microsoft "
                          "365 and Excel 2021 or later you can instead spill the months with "
@@ -506,7 +506,7 @@ def build() -> Lesson:
              "slicer, and select 2025 Q3 in the timeline (switch it to QUARTERS). What is PivotTable 1's grand total?",
              answer=t12, title="PivotTable 1 with a slicer and a timeline",
              live=f"=SUMIFS(tblKPI[EDVisits],{q3_crit})",
-             hint="PivotTable Analyze → Insert Slicer, and PivotTable Analyze → Insert Timeline",
+             hint="**PivotTable Analyze → Insert Slicer**, and **PivotTable Analyze → Insert Timeline**",
              solution=("1. Click in tblKPI → **Insert → PivotTable** → **New Worksheet** → **OK**. Rename the sheet "
                        "**Pivots**.\n"
                        "2. Drag **Month** to Rows and **EDVisits** to Values (Sum of EDVisits). Excel may group the "
@@ -519,7 +519,7 @@ def build() -> Lesson:
                        f"Formula twin: `=SUMIFS(tblKPI[EDVisits],{q3_crit})`"),
              explanation="A slicer is a selector made of buttons, and a timeline is a selector for dates. Both filter "
                          "the pivot they were inserted from. Visible selections are what make pivots dashboard-friendly: "
-                         "a Filters-area dropdown hides what's selected, but a slicer shows it. The formula twin proves "
+                         "a Filters-area drop-down list hides what's selected, but a slicer shows it. The formula twin proves "
                          "the number: ED visits at Ashby Falls in July, August, and September 2025."),
         Task("On the Pivots sheet, build PivotTable 2 from tblKPI with Facility in Rows, plus Sum of LWBS and Sum of "
              "EDVisits in Values. Connect the slicer and the timeline to it (Report Connections). Then add a calculated "
@@ -527,8 +527,8 @@ def build() -> Lesson:
              "2 show? Enter it as a percentage.",
              answer=t13, fmt="0.00%", title="PivotTable 2 connected to the same slicer and timeline",
              live=f"=SUMIFS(tblKPI[LWBS],{q3_crit})/SUMIFS(tblKPI[EDVisits],{q3_crit})",
-             hint="Select the slicer → Slicer → Report Connections. Then PivotTable Analyze → Fields, Items & Sets → "
-                  "Calculated Field",
+             hint="Select the slicer → **Slicer → Report Connections**. Then **PivotTable Analyze → Fields, Items & Sets → "
+                  "Calculated Field**",
              solution=("1. Click in tblKPI → **Insert → PivotTable** → **Existing Worksheet**, pick a cell on Pivots a "
                        "few columns right of PivotTable 1 → **OK**.\n"
                        "2. Drag **Facility** to Rows, then **LWBS** and **EDVisits** to Values.\n"
@@ -552,14 +552,14 @@ def build() -> Lesson:
         "Each month the COO presents one page to the board's Quality & Operations Committee. It must answer three "
         "questions at a glance: Are we on target? Where are we missing? Which way are things heading? Build it on the "
         "Board sheet to this spec:\n\n"
-        "1. Facility and Month dropdowns fed by the Lists sheet, named BoardFacility and BoardMonth. Facility must "
+        "1. Facility and Month drop-down lists fed by the Lists sheet, named BoardFacility and BoardMonth. Facility must "
         "allow All facilities.\n"
         "2. One card for each of the seven KPIs in tblTargets, showing the value, the target, a status colored by "
         "conditional formatting, and an arrow versus the same month last year. Every card must work for All "
         "facilities, so rebuild rates from their components and compute the median door-to-provider from tblEDWaits.\n"
         "3. A scorecard line that counts the KPIs on target, such as '6 of 7 KPIs on target'.\n"
-        "4. A 12-month LWBS % trend block and a line chart that follow both dropdowns.\n"
-        "5. Polish: gridlines and headings off, only the two dropdowns unlocked, the sheet protected, and one "
+        "4. A 12-month LWBS % trend block and a line chart that follow both drop-down lists.\n"
+        "5. Polish: gridlines and headings off, only the two drop-down lists unlocked, the sheet protected, and one "
         "landscape page when printed.\n\n"
         "Sketch the layout on paper first, and build the model cells before the cards. "
         "Then use your finished Board dashboard to answer B1–B4 below. The hidden Dashboard Key sheet is a "
@@ -624,11 +624,11 @@ def build() -> Lesson:
                          f"lands at exactly {sys_vals['HCAHPS top-box %']:.1%}: on target with >=, off target with >. "
                          "Decide ties in the KPI dictionary, not in each formula. Status cells that return 1 or 0 (not "
                          "text) make the scorecard a plain SUM and make conditional formatting rules simple."),
-        Task(f"Keep {B_LABEL} and switch the Facility dropdown to each hospital in turn. Which hospital has the fewest "
+        Task(f"Keep {B_LABEL} and switch the Facility drop-down list to each hospital in turn. Which hospital has the fewest "
              "KPIs on target?",
              answer=b3, accept=[b3.replace(" Hospital", "")], title=f"Hospital with the fewest KPIs on target, {B_LABEL}",
              live=f"={DK}!$O$46",
-             hint="Your scorecard line answers this. Change only the Facility dropdown",
+             hint="Your scorecard line answers this. Change only the Facility drop-down list",
              solution=("Read the scorecard line after each switch:\n\n| Hospital | On target |\n|---|---|\n" + hosp_lines
                        + "\n\nThe Dashboard Key's model area has this comparison table (columns N–V), with "
                          "`=INDEX(N42:N44,MATCH(MIN(V42:V44),V42:V44,0))` picking the lowest."),
@@ -655,16 +655,28 @@ def build() -> Lesson:
     ]
 
     # ------------------------------------------------------------------ workbook extras
+    # Board is used only by the bonus, so its tab sits right after Bonus. Dashboard, Calc, Lists, and Board are built in
+    # the customize hook, so Start Here lists them through sheet_notes.
     L.sheet_order = ["Start Here", "Practice", "Dashboard", "Calc", "KPI_Monthly", "EDWaits", "Targets", "Lists",
-                     "Board", "Bonus", "Answer Key", "Bonus Key", "Dashboard Key"]
+                     "Bonus", "Board", "Answer Key", "Bonus Key", "Dashboard Key"]
+    L.sheet_notes = [
+        ("Dashboard", "The practice canvas: the yellow selectors SelFacility (C4) and SelMonth (C5), a finished example "
+                      "card, and room for your task 10 combo box and task 11 chart."),
+        ("Calc", f"The model layer: helper cells that read the selectors, the combo box cell link for task 10 "
+                 f"({LINK_CELL}), and the yellow 12-month trend block for task 11 (B{TREND_FIRST}:C{TREND_LAST})."),
+        ("Lists", "Sources for the drop-down lists: four facility choices (including All facilities) and 24 months."),
+        ("Board", "A blank canvas for the bonus. Build the board dashboard here, then answer B1–B4 on the Bonus sheet."),
+    ]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks 10 and 11, "
+                      "build on the Dashboard and Calc sheets instead, and the task's gray cell on Practice reads your "
+                      "work. For tasks 12 and 13, build PivotTables on a new Pivots sheet and type the number they show.")
+    L.bonus_where = ("Build the dashboard on the **Board** sheet, and type your answers to B1–B4 in the yellow cells on "
+                     "the **Bonus** sheet.")
     L.start_notes = [
         f"The Dashboard sheet's yellow selectors are named SelFacility (Dashboard!C4) and SelMonth (Dashboard!C5). "
         f"They start at {SEL_FAC} and {month_label}. Tasks 1–9 and 11 are checked against that selection, so set it back "
         "if you've been exploring.",
-        "The other sheets are the dashboard's layers. Dashboard is the practice canvas, with the selectors and a "
-        "finished example card. Calc is the model layer, where you work on tasks 10 and 11. Lists holds the dropdown "
-        "sources. Board is a blank canvas for the bonus.",
-        "Needs Microsoft 365 or Excel 2021+ for XLOOKUP, LET, and FILTER. The guide shows alternatives for older "
+        "XLOOKUP, LET, and FILTER need Microsoft 365 or Excel 2021 or later. The guide shows alternatives for older "
         "versions. Form Controls (task 10) need Excel for Windows or Mac, not Excel for the web.",
         "Dashboard Key (hidden) is a finished reference dashboard set to the bonus selection. It's protected without a "
         "password so its selectors are the only cells you can change. Review → Unprotect Sheet lets you edit it.",
@@ -755,10 +767,10 @@ def _lists(wb):
         c.number_format = MONTH_FMT
         c.border = BOX
         c.alignment = Alignment(horizontal="left")
-    ws["E1"] = "Dropdown sources. The Dashboard's selectors use Data Validation lists that point here:"
+    ws["E1"] = "Sources for the drop-down lists. The Dashboard's selectors use Data Validation lists that point here:"
     ws["E2"] = "Facility: =Lists!$A$2:$A$5      Month: =Lists!$C$2:$C$25"
-    ws["E3"] = ("The month cells hold real dates (the first of each month) formatted as mmm yyyy, so the dropdown "
-                "shows 'Nov 2025' but the selector stores a date that SUMIFS can match.")
+    ws["E3"] = ("The month cells hold real dates (the first of each month) formatted as mmm yyyy, so the drop-down "
+                "list shows 'Nov 2025' but the selector stores a date that SUMIFS can match.")
     for c in ("E1", "E2", "E3"):
         ws[c].font = NOTE_FONT
     ws.column_dimensions["A"].width = 32
@@ -794,7 +806,7 @@ def _selector(ws, cell, value, fmt=None, list_ref=None, width_note=None):
         c.number_format = fmt
     if list_ref:
         dv = DataValidation(type="list", formula1=list_ref, allow_blank=False, showErrorMessage=True,
-                            errorTitle="Pick from the list", error="Choose a value from the dropdown list.")
+                            errorTitle="Pick from the list", error="Choose a value from the drop-down list.")
         ws.add_data_validation(dv)
         dv.add(cell)
 
@@ -940,11 +952,11 @@ def _board(wb):
     ws["B1"].font = Font(bold=True, size=18, color=NAVY)
     lines = [
         "Build the one-page board dashboard here. The Bonus sheet has the full spec. A layout that works:",
-        "Rows 1–2: title and a dynamic subtitle (facility · month).   Rows 4–5: the two dropdowns (name them "
+        "Rows 1–2: title and a dynamic subtitle (facility · month).   Rows 4–5: the two drop-down lists (name them "
         "BoardFacility and BoardMonth).",
         "Rows 7–17: two rows of four cards.   Rows 19–33: the trend chart.   Columns N onward: your model cells "
         "(helpers, the KPI table, the 12-month block).",
-        "Delete these notes when you're done, then hide gridlines and headings, unlock the dropdowns, protect the "
+        "Delete these notes when you're done, then hide gridlines and headings, unlock the drop-down lists, protect the "
         "sheet, and set it to print on one landscape page.",
     ]
     for i, t in enumerate(lines, 2):

@@ -22,7 +22,7 @@ filter, group, merge, and unpivot the results, and a denial dashboard updates it
 The examples use the CSV files in this lesson's `data` folder. Section 2 shows how to get them. Paths are written for
 Windows as `C:\PQ\data\`. On a Mac, use a path such as `/Users/you/PQ/data/` instead.
 
-> 📋 **Version check:** Power Query is built into Excel 2016 and later on Windows (Microsoft 365, 2016, 2019, 2021, 2024)
+> 📋 **Version note:** Power Query is built into Excel 2016 and later on Windows (Microsoft 365, 2016, 2019, 2021, 2024)
 > and into Microsoft 365 for Mac. It needs the **desktop** app, because Excel for the web can't read files from your
 > computer. Section 17 lists what differs between versions.
 
@@ -111,7 +111,7 @@ The preview window offers three ways forward:
 | Button | What happens |
 |---|---|
 | **Load** | Loads the data straight into a new worksheet as an Excel Table |
-| **Load To…** (Load's dropdown) | Asks where to load it: Table, PivotTable, connection only, or the Data Model |
+| **Load To…** (Load's drop-down arrow) | Asks where to load it: Table, PivotTable, connection only, or the Data Model |
 | **Transform Data** | Opens the Power Query Editor so you can check and change the data first |
 
 > 💡 **Tip:** Prefer **Transform Data**. You can fix types and remove columns before anything lands in your workbook.
@@ -242,8 +242,8 @@ Most cleanup takes only a handful of commands. Each one adds a step, and each st
 | Keep only some columns | **Home → Choose Columns**, or select them and right-click → **Remove Other Columns** | `Table.SelectColumns` |
 | Drop columns | Select them, then press **Delete** or **Home → Remove Columns** | `Table.RemoveColumns` |
 | Rename a column | Double-click the header | `Table.RenameColumns` |
-| Filter rows | The header's dropdown arrow | `Table.SelectRows` |
-| Sort | The header's dropdown arrow | `Table.Sort` |
+| Filter rows | The header's drop-down arrow | `Table.SelectRows` |
+| Sort | The header's drop-down arrow | `Table.Sort` |
 | Remove duplicate rows | Select the key columns → **Home → Remove Rows → Remove Duplicates** | `Table.Distinct` |
 | Replace a value | **Transform → Replace Values** | `Table.ReplaceValue` |
 | Trim spaces, clean, change case | **Transform → Format → Trim / Clean / lowercase / UPPERCASE / Capitalize Each Word** | `Text.Trim`, `Text.Clean`, `Text.Lower`, `Text.Upper`, `Text.Proper` |
@@ -274,7 +274,7 @@ Most cleanup takes only a handful of commands. Each one adds a step, and each st
 Power Query adds a Changed Type step after the split, and it usually makes CostCenter a Whole Number. That's fine here.
 Make it Text instead if you'll merge on it with a text key.
 
-**Filtering.** The header dropdown offers a checklist of values plus **Text Filters**, **Number Filters**, or
+**Filtering.** The header's drop-down arrow opens a checklist of values plus **Text Filters**, **Number Filters**, or
 **Date Filters**. The checklist shows only the first 1,000 distinct values, so click **Load more** when the list says it
 may be incomplete.
 
@@ -311,8 +311,8 @@ the current row as `[ColumnName]`, and you can double-click a name in the *Avail
 | Test for a missing value | `if [PaidDate] = null then "Unpaid" else "Paid"` |
 
 Subtracting one date from another gives a **duration** (for example 4.00:00:00, meaning four days), and `Duration.Days`
-turns it into the whole number 4. You can also build that column without typing: select SubmitDate, Ctrl-click
-(Mac: ⌘-click) ServiceDate, then click **Add Column → Date → Subtract Days**. The column you select first is the one
+turns it into the whole number 4. You can also build that column without typing: select SubmitDate, Ctrl + click
+(Mac: ⌘ + click) ServiceDate, then click **Add Column → Date → Subtract Days**. The column you select first is the one
 Power Query subtracts from.
 
 > ⚠️ **M is case-sensitive.** `"Denied"` doesn't equal `"denied"`, and the function is `Text.Start`, not `text.start`.
@@ -524,7 +524,7 @@ can return all matching rows, not just the first.
 1. Select the query you want to add columns to (for example Claims), then click **Home → Merge Queries** (or **Merge
    Queries as New** to keep the original unchanged).
 2. Click the key column in the top table (PayerID), pick the second table (Payers), and click its key column (PayerID).
-   To match on several columns, Ctrl-click (Mac: ⌘-click) them in the same order in both tables.
+   To match on several columns, Ctrl + click (Mac: ⌘ + click) them in the same order in both tables.
 3. Choose the **Join Kind** and click OK. A new column of nested tables appears.
 4. Click the **expand** button (two arrows) in the new column's header, tick only the columns you need (PayerType), and
    untick **Use original column name as prefix** unless you want the column named `Payers.PayerType`.
@@ -597,8 +597,8 @@ workbook full of queries.
 
 ### 15. Load options and refresh
 
-**Home → Close & Load** loads the query as a Table on a new sheet. **Close & Load To…** (the dropdown under the same
-button) lets you choose:
+**Home → Close & Load** loads the query as a Table on a new sheet. **Close & Load To…** (the drop-down arrow under the
+same button) lets you choose:
 
 | Option | Result | Good for |
 |---|---|---|
@@ -698,7 +698,21 @@ When a query fails, the message names the problem:
 | *DataFormat.Error: We couldn't convert to Number* | Text that isn't a number, or a locale mismatch | Fix the source, use **Change Type → Using Locale…**, or replace errors |
 | *Formula.Firewall: … references other queries or steps, so it may not directly access a data source* | One step both opens a data source and uses data from another query or source, such as a path read from a worksheet cell | Use a parameter for the path, move the data access into its own query, or (on your own computer) ignore privacy levels (section 13) |
 
-### 17. Version notes
+### 17. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Import a CSV file | **Data → Get Data → From File → From Text/CSV** | **Data → Get Data (Power Query)** → **Text/CSV** |
+| Combine a folder of files | **Data → Get Data → From File → From Folder** | **Data → Get Data (Power Query)** → **Folder** |
+| Start a blank query | **Data → Get Data → From Other Sources → Blank Query** | **Data → Get Data (Power Query)** → **Blank query** |
+| Open the Power Query Editor | **Alt + F12**, or double-click a query in **Queries & Connections** | Double-click a query in **Queries & Connections** |
+| Show the Queries & Connections pane | **Data → Queries & Connections** | **Data → Queries & Connections** |
+| Select several columns | **Ctrl** + click each header | **⌘** + click each header |
+| Select a block of columns | **Shift** + click the first and last headers | **Shift** + click the first and last headers |
+| Rename a step | **F2**, or right-click → **Rename** | Right-click → **Rename** |
+| Read or edit the M code | **Home → Advanced Editor** | **Home → Advanced Editor** |
+| Refresh one loaded table | **Alt + F5**, or right-click → **Refresh** | Right-click → **Refresh** |
+| Refresh every query | **Ctrl + Alt + F5**, or **Data → Refresh All** | **Data → Refresh All** |
 
 | Excel | Power Query |
 |---|---|
@@ -720,23 +734,23 @@ turns green when you're right. The workbook's **DenialMap** sheet holds the tabl
 holds the code for task 11 (also in [`starter/AgedPending.m`](starter/AgedPending.m)).
 
 <!-- BEGIN GENERATED: practice -->
-Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks in order because later tasks reuse earlier queries. Name each query as the task says, because later tasks and the answer key use those names. Type each result in the yellow cell as a plain number or text. From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, or work on a Mac, your code shows your full folder path in its place.
+Build every query in this workbook from the CSV files in the lesson's data folder (Guide section 2), and do the tasks in order because later tasks reuse earlier queries. Name each query as the task says, because later tasks and the answer key use those names. From task 3 on, the answer key's M code uses a DataFolder parameter (Guide section 12). If you skip the parameter, or work on a Mac, your code shows your full folder path in its place.
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Import claims_2025_01.csv from the claims_monthly folder with Data → Get Data → From File → From Text/CSV and load it to a new sheet. How many claims (rows, not counting the header) does the January 2025 file contain? | After loading, the Queries & Connections pane says 'N rows loaded' |
-| 2 | Import claims_2025_11.csv and claims_2025_12.csv as two more queries. Then, in the Power Query Editor, stack them with Home → Append Queries → Append Queries as New, and name the new query Claims_NovDec. How many rows does it return? | Append stacks rows, and columns line up by name |
-| 3 | Now combine all twelve 2025 files at once. Choose Data → Get Data → From File → From Folder, select the claims_monthly folder, then Combine & Transform Data. Rename the new query Claims. How many rows does Claims return? | One folder query replaces twelve imports |
-| 4 | Check that PaidAmount in Claims has the Decimal Number type (1.2 icon). Then reference Claims in a new query named PaidTotal and total its PaidAmount column. What is the total PaidAmount across all 2025 claims? Enter it to the cent. | Select PaidAmount, then Transform → Statistics → Sum |
-| 5 | Reference Claims in a new query named DenialsByReason, keep only rows whose ClaimStatus is Denied, and use Home → Group By on DenialReason with the operation Count Rows. How many denied claims list Authorization Required as the reason? | Filter first, then Group By (Basic) |
-| 6 | Edit that Group By step (gear icon → Advanced) and add two aggregations of BilledAmount: Sum and Average. Which denial reason has the highest AVERAGE BilledAmount per denied claim? Type the reason exactly as it appears. | Group By → Advanced → Add aggregation |
-| 7 | Import payers.csv as a query named Payers. Then reference Claims in a new query named PaidByPayerType, merge it with Payers on PayerID (Join Kind: Left Outer), expand only PayerType, and group by PayerType with Sum of PaidAmount. What was the total PaidAmount for the Commercial payer type? Enter it to the cent. | Home → Merge Queries, then the expand button (two arrows) in the new column's header |
-| 8 | Reference Claims in a new query named SubmitLag and add a custom column DaysToSubmit that holds the number of days from ServiceDate to SubmitDate, with the Whole Number type. How many 2025 claims took MORE than 30 days to submit? | Duration.Days turns a date difference into days. Then Number Filters → Greater Than, and count the rows |
-| 9 | Load tblDenialMap (on the DenialMap sheet) with Data → From Table/Range and name the query DenialMap. Reference Claims in a new query named DenialsByOwner, keep the Denied rows, merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied BilledAmount owned by Patient Access? Enter it to the cent. | Merges match text exactly: look at Transform → Format → Trim and Capitalize Each Word |
-| 10 | Import encounters_2025.csv (one row per encounter discharged in 2025) as a query named Encounters2025. Use Merge Queries as New with Encounters2025 on top, Claims below, EncounterID in both, and Join Kind Left Anti. Name the new query Unbilled. How many 2025 encounters have no claim in the 2025 claim files? | Left Anti = rows only in the first (top) table |
-| 11 | Create a blank query (Data → Get Data → From Other Sources → Blank Query), name it AgedPending, open Home → Advanced Editor, and replace its contents with the starter code on the Starter M sheet (also in starter/AgedPending.m). It lists Pending claims more than 60 days old as of 12/31/2025. Read the code, change it to more than 90 days, and report how many Pending claims are more than 90 days old. | Find the step that compares DaysPending with 60 |
-| 12 | Import budget_2025_wide.csv as a query named Budget2025. Remove the FY Total column, select the five label columns (FacilityID, Department, LineType, Category, Measure), and choose Transform → Unpivot Columns → Unpivot Other Columns. Rename Attribute to Month and Value to Amount. How many rows does Budget2025 return? | Unpivot Other Columns keeps the selected columns and unpivots the rest |
-| 13 | In Budget2025, split Department (for example '6130 - Intensive Care Unit') into CostCenter and DeptName with Transform → Split Column → By Delimiter, using ' - ' (space, hyphen, space) at the left-most delimiter. Then reference Budget2025 in a new query named ICU_Q1_Salaries. What was the Q1 2025 (Jan–Mar) Actual Salaries & Wages for all three departments named Intensive Care Unit combined? Enter whole dollars. | Filter DeptName, Category, Measure, and Month, then Transform → Statistics → Sum on Amount (or Group By) |
+| 1 | Import claims_2025_01.csv from the claims_monthly folder with **Data → Get Data → From File → From Text/CSV** and load it to a new sheet. How many claims (rows, not counting the header) does the January 2025 file contain? | After loading, the Queries & Connections pane says 'N rows loaded' |
+| 2 | Import claims_2025_11.csv and claims_2025_12.csv as two more queries. Then, in the Power Query Editor, stack them with **Home → Append Queries → Append Queries as New**, and name the new query Claims_NovDec. How many rows does it return? | Append stacks rows, and columns line up by name |
+| 3 | Now combine all twelve 2025 files at once. Choose **Data → Get Data → From File → From Folder**, select the claims_monthly folder, then **Combine & Transform Data**. Rename the new query Claims. How many rows does Claims return? | One folder query replaces twelve imports |
+| 4 | Check that PaidAmount in Claims has the Decimal Number type (1.2 icon). Then reference Claims in a new query named PaidTotal and total its PaidAmount column. What is the total PaidAmount across all 2025 claims? Enter it to the cent. | Select PaidAmount, then **Transform → Statistics → Sum** |
+| 5 | Reference Claims in a new query named DenialsByReason, keep only rows whose ClaimStatus is Denied, and use **Home → Group By** on DenialReason with the operation Count Rows. How many denied claims list Authorization Required as the reason? | Filter first, then Group By (Basic) |
+| 6 | Edit that Group By step (gear icon → **Advanced**) and add two aggregations of BilledAmount: Sum and Average. Which denial reason has the highest AVERAGE BilledAmount per denied claim? Type the reason exactly as it appears. | **Group By → Advanced → Add aggregation** |
+| 7 | Import payers.csv as a query named Payers. Then reference Claims in a new query named PaidByPayerType, merge it with Payers on PayerID (Join Kind: Left Outer), expand only PayerType, and group by PayerType with Sum of PaidAmount. What was the total PaidAmount for the Commercial payer type? Enter it to the cent. | **Home → Merge Queries**, then the expand button (two arrows) in the new column's header |
+| 8 | Reference Claims in a new query named SubmitLag and add a custom column DaysToSubmit that holds the number of days from ServiceDate to SubmitDate, with the Whole Number type. How many 2025 claims took MORE than 30 days to submit? | Duration.Days turns a date difference into days. Then **Number Filters → Greater Than**, and count the rows |
+| 9 | Load tblDenialMap (on the DenialMap sheet) with **Data → From Table/Range** and name the query DenialMap. Reference Claims in a new query named DenialsByOwner, keep the Denied rows, merge them with the map on DenialReason (Left Outer), and expand OwnerTeam. Check that EVERY denied claim found a match (no null OwnerTeam), and fix the keys in the map query if some didn't. What is the total denied BilledAmount owned by Patient Access? Enter it to the cent. | Merges match text exactly: look at **Transform → Format → Trim** and **Capitalize Each Word** |
+| 10 | Import encounters_2025.csv (one row per encounter discharged in 2025) as a query named Encounters2025. Use **Merge Queries as New** with Encounters2025 on top, Claims below, EncounterID in both, and Join Kind Left Anti. Name the new query Unbilled. How many 2025 encounters have no claim in the 2025 claim files? | Left Anti = rows only in the first (top) table |
+| 11 | Create a blank query (**Data → Get Data → From Other Sources → Blank Query**), name it AgedPending, open **Home → Advanced Editor**, and replace its contents with the starter code on the Starter M sheet (also in starter/AgedPending.m). It lists Pending claims more than 60 days old as of 12/31/2025. Read the code, change it to more than 90 days, and report how many Pending claims are more than 90 days old. | Find the step that compares DaysPending with 60 |
+| 12 | Import budget_2025_wide.csv as a query named Budget2025. Remove the FY Total column, select the five label columns (FacilityID, Department, LineType, Category, Measure), and choose **Transform → Unpivot Columns → Unpivot Other Columns**. Rename Attribute to Month and Value to Amount. How many rows does Budget2025 return? | Unpivot Other Columns keeps the selected columns and unpivots the rest |
+| 13 | In Budget2025, split Department (for example '6130 - Intensive Care Unit') into CostCenter and DeptName with **Transform → Split Column → By Delimiter**, using ' - ' (space, hyphen, space) at the left-most delimiter. Then reference Budget2025 in a new query named ICU_Q1_Salaries. What was the Q1 2025 (Jan–Mar) Actual Salaries & Wages for all three departments named Intensive Care Unit combined? Enter whole dollars. | Filter DeptName, Category, Measure, and Month, then **Transform → Statistics → Sum** on Amount (or Group By) |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -748,7 +762,7 @@ you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Import one CSV file (January 2025)**
 
@@ -924,7 +938,7 @@ in
 ```
 
 
-Subtracting one date from another in M gives a **duration**, not a number. `Duration.Days` turns it into whole days. You can also build it without typing: select SubmitDate, Ctrl-click ServiceDate, then Add Column → Date → Subtract Days (the order you click sets which date comes first). Claims billed more than 30 days after service delay cash and risk timely-filing denials.
+Subtracting one date from another in M gives a **duration**, not a number. `Duration.Days` turns it into whole days. You can also build it without typing: select SubmitDate, Ctrl + click (Mac: ⌘ + click) ServiceDate, then **Add Column → Date → Subtract Days** (the order you click sets which date comes first). Claims billed more than 30 days after service delay cash and risk timely-filing denials.
 
 **9. Merge with an Excel Table (denials owned by Patient Access)**
 
@@ -1073,18 +1087,18 @@ Splitting at ' - ' (with the spaces) separates the cost center from the name wit
 <!-- BEGIN GENERATED: bonus -->
 It's the first week of February 2026 and the CFO wants a denial dashboard she can refresh every month without anyone rebuilding it. Build it on top of your Claims query. First, make the pipeline portable: if you haven't yet, create the DataFolder parameter (Guide section 12) and use it in the Source steps of Claims and its Sample File helper query (on a Mac, keep the full paths instead). Answer B1–B3 BEFORE you add the January 2026 file, then follow B4 and B5.
 
-Work on the **Bonus** sheet of the workbook.
+Build the bonus queries in Power Query in the same workbook, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Build a query named DenialDashboard: reference Claims, keep Denied claims, merge Payers to get PayerType, and group by BOTH PayerType and DenialReason with Count Rows and Sum of BilledAmount. What is the denied BilledAmount for Government + Authorization Required? Enter it to the cent. *(Hint: Select PayerType and DenialReason before you click Group By, or use Add grouping in the Advanced dialog)*
 - **B2.** Build a query named DenialRateByPayerType from ALL claims: reference Claims, merge Payers for PayerType, and add a conditional column IsDenied (1 if ClaimStatus is Denied, otherwise 0). Group by PayerType with two aggregations: AllClaims (Count Rows) and Denied (Sum of IsDenied). Which payer type has the highest denial rate (denied claims ÷ all claims)? *(Hint: After the Group By step, add a custom column DenialRate = [Denied] / [AllClaims] and sort it)*
 - **B3.** What is that payer type's denial rate? Enter it as a percentage rounded to 1 decimal place. *(Hint: Click the type icon in the DenialRate header and choose Percentage)*
-- **B4.** Now copy data\new_month\claims_2026_01.csv into the claims_monthly folder and click Data → Refresh All. You don't edit any query. What is the denied BilledAmount for Government + Authorization Required now? Enter it to the cent. *(Hint: Every query built on Claims re-reads the folder when you refresh)*
+- **B4.** Now copy data\new_month\claims_2026_01.csv into the claims_monthly folder and click **Data → Refresh All**. You don't edit any query. What is the denied BilledAmount for Government + Authorization Required now? Enter it to the cent. *(Hint: Every query built on Claims re-reads the folder when you refresh)*
 - **B5.** Your Unbilled query (task 10) refreshed too. How many 2025 encounters are still unbilled now that the January 2026 claims are in? *(Hint: Look at the Queries & Connections pane after the refresh)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. DenialDashboard by PayerType × DenialReason**
 

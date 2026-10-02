@@ -454,7 +454,7 @@ def build() -> Lesson:
         # no dependents at all, and Excel's Trace Dependents would draw an arrow to this hidden key otherwise.
         live=f"=ROUND({m('vpd')}-({m('rev')}-{m('exp')})/(({m('avg')}*(1-{m('c_fee')}/{m('rev')})-{m('sup')}-{m('vac')})"
              f"*{m('days')}),1)",
-        hint="Data → What-If Analysis → Goal Seek",
+        hint="**Data → What-If Analysis → Goal Seek**",
         explanation=f"Each extra visit per day adds one visit on each of the {CLINIC_DAYS} clinic days. Each of those visits brings "
                     f"in {money2(base['cm'])} after the billing fee, supplies, and vaccines (its **contribution margin**). "
                     f"Fixed costs are {money(base['fixed'])} a month, so break-even = {money(base['fixed'])} ÷ "
@@ -534,14 +534,14 @@ def build() -> Lesson:
         f"B{R['fee']}. {scen_rows}. Create a Scenario Summary with result cells B{R['oi']} and B{R['margin']}. What is "
         "operating income in the Downside scenario? Round to the nearest dollar.",
         answer=round(scen["Downside"]["oi"]), tol=0.51, fmt="#,##0", title="Scenario Manager: Downside operating income",
-        solution=f"1. Select B{R['vpd']}, then Ctrl-click (Mac: ⌘-click) B{MED_ROW}:B{COM_ROW} and B{R['fee']}.\n"
+        solution=f"1. Select B{R['vpd']}, then Ctrl + click (Mac: ⌘ + click) B{MED_ROW}:B{COM_ROW} and B{R['fee']}.\n"
                  "2. **Data → What-If Analysis → Scenario Manager → Add…**. Name it *Base plan* and click **OK**. The values "
                  "box shows the current values, so click **OK** again.\n"
                  f"3. Click **Add…** again for *Downside* and *Upside*. Type the values in the order B{R['vpd']}, B{MED_ROW}, B{COM_ROW}, B{R['fee']} "
                  "(decimals like 0.179 for 17.9%).\n"
                  f"4. Click **Summary…**, choose **Scenario summary**, set **Result cells** to `B{R['oi']},B{R['margin']}`, and "
                  "click **OK**. Read the Downside column on the new Scenario Summary sheet.",
-        live=False, hint="Data → What-If Analysis → Scenario Manager",
+        live=False, hint="**Data → What-If Analysis → Scenario Manager**",
         explanation=f"Fewer visits, a shift from commercial to Medicaid, and a higher vendor fee all hit income at once. If you "
                     f"skipped the fix in task 3, the model ignores the 5% fee and you'd see {money(down_unfixed_oi)} instead. "
                     "That's exactly the kind of silent error a hard-coded number causes. The summary sheet is a snapshot. It "
@@ -578,7 +578,7 @@ def build() -> Lesson:
         live=(f"=Staffing!B{S['vpm']}*Staffing!B{S['lic_hpv']}/Staffing!B{S['hrs']}*(Staffing!B{S['rn_share']}"
               f"*Staffing!D{S['rn']}+(1-Staffing!B{S['rn_share']})*Staffing!D{S['lpn']})+Staffing!B{S['vpm']}"
               f"*(Staffing!B{S['sup_hpv']}-Staffing!B{S['lic_hpv']})/Staffing!B{S['hrs']}*Staffing!D{S['cna']}"),
-        hint="Data → Solver (enable the Solver add-in first)",
+        hint="**Data → Solver** (enable the Solver add-in first)",
         explanation=f"Solver chooses {float(lp_x[0]):.1f} RN, {float(lp_x[1]):.1f} LPN and "
                     f"{float(lp_x[2]):.1f} CNA FTEs. This answer makes sense: CNAs are the cheapest staff, so they cover every "
                     "hour that doesn't need a licensed nurse. The licensed hours are then split at exactly the 60% RN "
@@ -659,7 +659,7 @@ def build() -> Lesson:
              answer=round(growth["oi"]), tol=0.51, fmt="#,##0", title="Growth 2026 scenario: operating income",
              solution=f"1. On the Model, open **Scenario Manager**, select *Base plan*, and click **Show**. Close the "
                       "dialog.\n"
-                      f"2. Select B{R['vpd']}, B{R['app']}, and B{R['rn']}:B{R['cna']} (Ctrl-click, or ⌘-click on a Mac).\n"
+                      f"2. Select B{R['vpd']}, B{R['app']}, and B{R['rn']}:B{R['cna']} (Ctrl + click, or ⌘ + click on a Mac).\n"
                       f"3. **Scenario Manager → Add…** *Today*: {VISITS_PER_DAY}, {APP_FTE}, {RN_FTE}, {LPN_FTE}, {CNA_FTE}.\n"
                       f"4. **Add…** *Growth 2026*: {GROWTH_VPD}, {GROWTH_APP}, {g_rn}, {g_lpn}, {g_cna}.\n"
                       f"5. **Summary…** with result cells `B{R['oi']},B{R['margin']}`, or select Growth 2026, click "
@@ -678,15 +678,25 @@ def build() -> Lesson:
     ]
 
     L.start_notes = [
-        "Model is the clinic's monthly profit and loss (P&L) model, laid out as INPUTS (blue numbers), CALCULATIONS (black "
-        "formulas), and OUTPUTS. You "
-        "complete two yellow output cells and build two Data Tables in the Sensitivity area (columns F–K).",
-        "Staffing is a Solver worksheet. The green cells are the decision variables that Solver changes. Sources lists where "
-        "every data-derived input came from.",
+        "On the Model sheet, blue numbers are inputs and black cells are formulas. You complete two yellow output cells and "
+        "build two Data Tables in the Sensitivity area (columns F–K). The Sources sheet shows where each data-derived input "
+        "came from.",
         "Goal Seek and Scenario Manager's Show button change the Model's input cells. Put the base case back after each run "
         "so the other tasks stay correct. Solver only changes the Staffing sheet, which doesn't feed the Model.",
         "Solver is a free add-in that ships with Excel. Turn it on once: File → Options → Add-ins → Manage: Excel Add-ins → "
         "Go → tick Solver Add-in (Mac: Tools → Excel Add-ins).",
+    ]
+    L.practice_how = ("Go to the 'Practice' sheet. For tasks 1 and 2, complete the yellow output cells on the Model sheet, and "
+                      "the task's gray cell on Practice reads them. For tasks 3–13, do the work on the Model or Staffing sheet, "
+                      "then type the answer into the task's yellow cell on Practice.")
+    L.bonus_where = ("Run Solver on the **Staffing** sheet and add the scenarios on the **Model** sheet, then type your answers "
+                     "in the yellow cells on the **Bonus** sheet.")
+    # Model and Staffing are built in the customize hook; Sources is a data sheet, so the library lists it already.
+    L.sheet_notes = [
+        ("Model", "The clinic's monthly profit and loss (P&L) model: inputs, calculations, outputs, and the Sensitivity area "
+                  "for your Data Tables (tasks 1–11 and bonus B4)."),
+        ("Staffing", "The Solver worksheet for the RN, LPN, and CNA staffing mix. The green cells are the decision variables "
+                     "(tasks 12–13 and bonus B1–B3)."),
     ]
     L.sheet_order = ["Start Here", "Practice", "Model", "Staffing", "Sources", "Bonus", "Answer Key", "Bonus Key"]
 

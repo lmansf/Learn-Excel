@@ -575,10 +575,26 @@ def build() -> Lesson:
         "write a Table reference such as tblPatients[LastName] instead of Patients!D2:D186. Both give the same result "
         "(Lesson 3.1 covers Tables).",
         "BMI = 703 × WeightLb ÷ HeightIn², rounded to 1 decimal place. Age is the patient's age in completed years on 12/31/2025.",
-        "The Card sheet is for the bonus challenge.",
     ]
     L.sheet_order = ["Start Here", "Practice", "Encounters", "Patients", "Referrals", "Providers", "Diagnoses", "Payers",
                      "Departments", "Claims", "Budget", "BMITiers", "AgeBands", "Bonus", "Card", "Answer Key", "Bonus Key"]
+    # Tasks 5, 7, and 13 are column fills read by gray cells, and every bonus part is a gray cell that reads the Card
+    # sheet, so Start Here, the Bonus sheet's how-to line, and the README's bonus line say where the work happens.
+    # Start Here lists Practice, the eleven data sheets, Card, then Bonus.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{', '.join(fills[:-1])}, and {fills[-1]}, fill the yellow column on the Encounters, Patients, or "
+                      "Referrals sheet instead, and the task's gray cell on Practice reads it.")
+    L.bonus_instructions = (
+        "There's nothing to type on this sheet. Build the card in the yellow cells on the Card sheet, and the gray cells "
+        "here read it. The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. "
+        f"Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = "Build the card on the **Card** sheet, and check your progress on the **Bonus** sheet."
+    L.sheet_notes = [
+        ("Card", f"The bonus encounter lookup card. Type one formula in each yellow cell of column B (rows "
+                 f"{CARD_FIRST}–{CARD_FIRST + len(card_rows) - 1}), then copy them to column C. The Bonus sheet's gray "
+                 "cells read it."),
+    ]
 
     @L.customize
     def _card(wb, lesson, selftest):

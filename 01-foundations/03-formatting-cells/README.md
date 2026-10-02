@@ -48,7 +48,7 @@ the value with `ROUND` (Lesson 1.4) instead of relying on the format.
 > Budget!F7 as `0.0%`, its formula bar shows `2.812593825…%` with all the digits, instead of `0.02812593825…`. A cell with a date
 > or time format shows something like `12/1/2025 9:24:00 AM`. Both are the full stored value, written a different way.
 
-> 💡 **Tip:** To see a cell's raw stored number, apply the **General** format with **Ctrl + Shift + ~** (Mac: **⌃ + Shift + ~**),
+> 💡 **Tip:** To see a cell's raw stored number, apply the **General** format with **Ctrl + Shift + ~** (Mac: **Control + Shift + ~**),
 > then press **Ctrl + Z** (Mac: **⌘ + Z**) to put the format back.
 
 > ⚠️ **Don't turn on "Set precision as displayed."** It's under **File → Options → Advanced** (Mac: **Excel → Settings →
@@ -109,16 +109,16 @@ from the key left of 1 through 6, which makes them easy to remember.
 
 | Windows | Mac | Applies | Example |
 |---|---|---|---|
-| **Ctrl + Shift + ~** | **⌃ + Shift + ~** | General | `9165952` |
-| **Ctrl + Shift + !** | **⌃ + Shift + !** | Number: two decimals, thousands separator | `9,165,952.00` |
-| **Ctrl + Shift + @** | **⌃ + Shift + @** | Time: hour, minute, AM/PM | `9:24 AM` |
-| **Ctrl + Shift + #** | **⌃ + Shift + #** | Date: day, month, year | `1-Dec-25` |
-| **Ctrl + Shift + \$** | **⌃ + Shift + \$** | Currency: two decimals, negatives in parentheses | `$257,801.00` |
-| **Ctrl + Shift + %** | **⌃ + Shift + %** | Percentage with no decimals | `3%` |
-| **Ctrl + Shift + ^** | **⌃ + Shift + ^** | Scientific with two decimals | `9.17E+06` |
+| **Ctrl + Shift + ~** | **Control + Shift + ~** | General | `9165952` |
+| **Ctrl + Shift + !** | **Control + Shift + !** | Number: two decimals, thousands separator | `9,165,952.00` |
+| **Ctrl + Shift + @** | **Control + Shift + @** | Time: hour, minute, AM/PM | `9:24 AM` |
+| **Ctrl + Shift + #** | **Control + Shift + #** | Date: day, month, year | `1-Dec-25` |
+| **Ctrl + Shift + \$** | **Control + Shift + \$** | Currency: two decimals, negatives in parentheses | `$257,801.00` |
+| **Ctrl + Shift + %** | **Control + Shift + %** | Percentage with no decimals | `3%` |
+| **Ctrl + Shift + ^** | **Control + Shift + ^** | Scientific with two decimals | `9.17E+06` |
 | **Ctrl + 1** | **⌘ + 1** | Opens Format Cells | |
 
-> 📋 On a Mac, **⌃ + Shift + \$** also shows negative amounts in red. On both platforms you can press the shortcut with the whole
+> 📋 On a Mac, **Control + Shift + \$** also shows negative amounts in red. On both platforms you can press the shortcut with the whole
 > column selected, so new numbers typed into it pick up the format too.
 
 ### 4. Currency vs. Accounting
@@ -132,11 +132,11 @@ use Accounting and price lists or single amounts use Currency.
 | A column of amounts | The \$ signs form a ragged edge, because each one sits next to its own number | The \$ signs form a straight line on the left, and the decimal points line up |
 | Zero | `$0.00` | A dash |
 | Negative numbers | You choose: `-$1,234.10`, red, `($1,234.10)`, or red with parentheses | Always in parentheses |
-| How to apply | **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**) or the Number Format box | The Accounting Number Format button (the dollar-sign button on the Home tab), or the Number Format box |
+| How to apply | **Ctrl + Shift + \$** (Mac: **Control + Shift + \$**) or the Number Format box | The Accounting Number Format button (the dollar-sign button on the Home tab), or the Number Format box |
 | Typical use | A copay on a registration form, a price per unit | Budget reports, financial statements, any column of money you'll total |
 
 > ⚠️ **The \$ button is not Currency.** The big **\$** button on the Home tab applies **Accounting**. The keyboard shortcut
-> **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**) applies **Currency**. Check the Number Format box if you're not sure which one a
+> **Ctrl + Shift + \$** (Mac: **Control + Shift + \$**) applies **Currency**. Check the Number Format box if you're not sure which one a
 > cell has.
 
 **Comma Style** (the **,** button) is Accounting without the dollar sign. It's a good choice for counts and dollar columns in a
@@ -156,7 +156,7 @@ Excel handles typing in two ways:
 
 > ⚠️ **Percent of what?** The percentage format assumes the cell holds a fraction. If a report already stores readmission rates as
 > whole percentages, such as 14.2 for 14.2%, applying `0.0%` shows `1420.0%`. Either divide those numbers by 100 first (Lesson 1.2's
-> Paste Special → Divide does it in one step) or keep them as plain numbers with a header like "Readmission rate (%)".
+> **Paste Special → Divide** does it in one step) or keep them as plain numbers with a header like "Readmission rate (%)".
 
 ### 6. Dates, times, and durations
 
@@ -185,7 +185,7 @@ Full codes on the same cell:
 | Format code | Displays |
 |---|---|
 | `mm/dd/yyyy` | `12/01/2025` |
-| `d-mmm-yy` (what Ctrl + Shift + # applies; Mac: ⌃ + Shift + #) | `1-Dec-25` |
+| `d-mmm-yy` (what Ctrl + Shift + # applies; Mac: Control + Shift + #) | `1-Dec-25` |
 | `dddd, mmmm d, yyyy` | `Monday, December 1, 2025` |
 | `mmm yyyy` | `Dec 2025` |
 | `yyyy-mm-dd` | `2025-12-01` |
@@ -318,7 +318,7 @@ color first, as in `[Red][<0]`.
 
 #### 8f. Spacing tricks you'll see in built-in codes
 
-Select a cell you formatted with **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**), open Format Cells, and click **Custom**. The Type
+Select a cell you formatted with **Ctrl + Shift + \$** (Mac: **Control + Shift + \$**), open Format Cells, and click **Custom**. The Type
 box shows `$#,##0.00_);($#,##0.00)` (on a Mac, `$#,##0.00_);[Red]($#,##0.00)`). The `_)` means "leave a space as wide as a
 closing parenthesis," so positive numbers line up with negative ones in parentheses. An asterisk repeats the next character to
 fill the cell, so `* ` in the Accounting code pushes the \$ to the left edge.
@@ -354,7 +354,7 @@ Alignment controls where content sits in its cell. The buttons are in **Home →
 | **Orientation** | Angles or stacks text with the **ab↗** button, for narrow column headers in a day-by-day census grid. |
 | **Shrink to fit** | Reduces the font size until the content fits. It can make text unreadably small, so use it sparingly. |
 
-To start a new line at an exact spot, press **Alt + Enter** (Mac: **⌃ + ⌥ + Return**) while typing, as you did in Lesson 1.2. Excel
+To start a new line at an exact spot, press **Alt + Enter** (Mac: **Control + Option + Return**) while typing, as you did in Lesson 1.2. Excel
 turns on Wrap Text for you.
 
 ### 10. Merge & Center vs. Center Across Selection
@@ -391,10 +391,10 @@ expect, and you can make the repeats look quieter with a gray font if you like.
    **Ctrl + D** (Mac: **⌘ + D**) to fill the label down.
 
 > 💡 **Tip:** For a long list with many blocks, select just the label cells (A5:A20 on the Budget sheet, not the whole column,
-> which would also catch the blank rows above and below the list), press **F5** or **Ctrl + G** (Mac: **⌃ + G**), and click
+> which would also catch the blank rows above and below the list), press **F5** or **Ctrl + G** (Mac: **Control + G**), and click
 > **Special… → Blanks → OK**. Type `=`, press **↑**, and press **Ctrl + Enter** (Mac: **⌘ + Return**). That puts a tiny formula
 > in every blank that points at the cell above it (Lesson 1.4 teaches formulas), so each blank now shows the label above it. Then
-> copy the same cells and use Paste Special → Values (Lesson 1.2) to replace those formulas with plain text.
+> copy the same cells and use **Paste Special → Values** (Lesson 1.2) to replace those formulas with plain text.
 
 ### 11. Fonts, fills, and borders
 
@@ -404,8 +404,8 @@ expect, and you can make the repeats look quieter with a gray font if you like.
 | Strikethrough | **Ctrl + 5** | **⌘ + Shift + X** |
 | Fill color / Font color | **Alt, H, H** / **Alt, H, F, C** | **Home → Fill Color** / **Home → Font Color** |
 | Borders menu | **Alt, H, B** | **Home → Borders ▾** |
-| Outline border around the selection | **Ctrl + Shift + &** | **⌘ + ⌥ + 0** |
-| Remove borders from the selection | **Ctrl + Shift + _** | **⌘ + ⌥ + -** |
+| Outline border around the selection | **Ctrl + Shift + &** | **⌘ + Option + 0** |
+| Remove borders from the selection | **Ctrl + Shift + _** | **⌘ + Option + -** |
 
 **Colors.** The Fill Color and Font Color palettes have two parts. **Theme colors** (the top block) come from the workbook's theme
 and change if the theme changes. **Standard colors** (the bottom row) never change. Use theme colors for anything that should match
@@ -442,7 +442,7 @@ sheets, until you press **Esc** or click the paintbrush again. If you copy forma
 repeats that cell's formatting across the whole range.
 
 **Paste Special → Formats** does the same job through the clipboard: copy the formatted cells, select the target, press
-**Ctrl + Alt + V** (Mac: **⌃ + ⌘ + V**), and choose **Formats**.
+**Ctrl + Alt + V** (Mac: **Control + ⌘ + V**), and choose **Formats**.
 
 > ⚠️ Format Painter replaces *all* the target's formatting. If you paint a currency cell onto a percentage column, the percentages
 > become dollar amounts. Press **Ctrl + Z** (Mac: **⌘ + Z**) right away if you paint the wrong range.
@@ -491,7 +491,7 @@ formatting and sets the number format back to General. **Clear All** removes the
 
 > ⚠️ **Delete clears contents, not formats.** A cell that once held a date keeps its date format after you press Delete. Type 36
 > into it later and Excel shows a date in February 1900, because serial number 36 is 2/5/1900. Clear the formats, or press
-> **Ctrl + Shift + ~** (Mac: **⌃ + Shift + ~**) to reset the number format.
+> **Ctrl + Shift + ~** (Mac: **Control + Shift + ~**) to reset the number format.
 
 ### 15. Worked example: variance arrows for a dashboard
 
@@ -503,7 +503,7 @@ with one decimal place.*
    warned. That's fine here, because the arrow will carry the direction.
 3. **Add the arrows as literal text.** `▲ 0.0%;▼ 0.0%` shows `▲ 2.8%` and `▼ 3.3%`. The quickest way to get the arrows is to copy
    them from this page and paste them into the Type box. On Windows you can also hold **Alt** and type **30** (▲) or **31** (▼) on
-   the numeric keypad. On a Mac, press **⌃ + ⌘ + Space** to open the Character Viewer and search for "triangle." The ribbon is
+   the numeric keypad. On a Mac, press **Control + ⌘ + Space** to open the Character Viewer and search for "triangle." The ribbon is
    locked while Format Cells is open, so to use **Insert → Symbol** you insert the arrow into a spare cell first and copy it from
    the formula bar.
 4. **Add a zero section** so a department exactly on budget shows no arrow: `▲ 0.0%;▼ 0.0%;0.0%`.
@@ -512,6 +512,35 @@ with one decimal place.*
 The finished code shows Medical-Surgical 4 West as a green `▲ 2.8%` and Orthopedics & Spine as a red ▼. The arrows mean
 the report still reads correctly when printed in black and white. The stored values are untouched, so any formula that uses
 the Variance % column still gets the real numbers.
+
+### 16. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Format Cells dialog | Ctrl + 1 | ⌘ + 1 |
+| General / Number | Ctrl + Shift + ~ / Ctrl + Shift + ! | Control + Shift + ~ / Control + Shift + ! |
+| Time / Date | Ctrl + Shift + @ / Ctrl + Shift + # | Control + Shift + @ / Control + Shift + # |
+| Currency / Percentage / Scientific | Ctrl + Shift + \$ / Ctrl + Shift + % / Ctrl + Shift + ^ | Control + Shift + \$ / Control + Shift + % / Control + Shift + ^ |
+| Increase / Decrease Decimal | Alt, H, 0 / Alt, H, 9 | **Home → Increase Decimal** / **Home → Decrease Decimal** |
+| Bold / Italic / Underline | Ctrl + B / Ctrl + I / Ctrl + U | ⌘ + B / ⌘ + I / ⌘ + U |
+| Wrap Text | Alt, H, W | **Home → Wrap Text** |
+| New line inside a cell | Alt + Enter | Control + Option + Return |
+| Unmerge cells | Alt, H, M, U | **Home → Merge & Center ▾ → Unmerge Cells** |
+| Fill a label down | Ctrl + D | ⌘ + D |
+| Go To (then **Special… → Blanks**) | F5 or Ctrl + G | Control + G |
+| Outline border / remove borders | Ctrl + Shift + & / Ctrl + Shift + _ | ⌘ + Option + 0 / ⌘ + Option + - |
+| Format Painter | Alt, H, F, P | **Home → Format Painter** |
+| Paste Special (choose **Formats**) | Ctrl + Alt + V | Control + ⌘ + V |
+| AutoFit column width | Alt, H, O, I | **Home → Format → AutoFit Column Width** |
+| Clear Formats | Alt, H, E, F | **Home → Clear → Clear Formats** |
+
+| Feature | Version |
+|---|---|
+| Built-in and custom number formats, Center Across Selection, Format Painter, cell styles, themes | Every Excel version, Windows and Mac |
+| Currency shortcut shows negatives in red parentheses | Excel for Mac. On Windows, Ctrl + Shift + \$ shows them in black parentheses |
+| KeyTips (Alt, H, …) | Excel for Windows only |
+| Aptos Narrow and Aptos Display as the default theme fonts | Microsoft 365 (since 2023–2024) and Excel 2024. Excel 2021 and earlier use Calibri and Calibri Light |
+| Settings on a Mac | **Excel → Settings**, called **Excel → Preferences** in older versions |
 
 ## 🧪 Hands-on practice
 
@@ -523,11 +552,11 @@ Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, an
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | On the Budget sheet, select the Variance cells E5:E21 and press Ctrl + Shift + \$ (Mac: ⌃ + Shift + \$). What does E11 (Emergency Department, which spent more than its budget) display now? | Negative amounts in this format don't use a minus sign |
-| 2 | Select the Variance % cells F5:F21, press Ctrl + Shift + % (Mac: ⌃ + Shift + %), then click Home → Increase Decimal once. What does F17 (Orthopedics & Spine) display? | The shortcut shows 0 decimals; each Increase Decimal click adds one |
+| 1 | On the Budget sheet, select the Variance cells E5:E21 and press Ctrl + Shift + \$ (Mac: Control + Shift + \$). What does E11 (Emergency Department, which spent more than its budget) display now? | Negative amounts in this format don't use a minus sign |
+| 2 | Select the Variance % cells F5:F21, press Ctrl + Shift + % (Mac: Control + Shift + %), then click **Home → Increase Decimal** once. What does F17 (Orthopedics & Spine) display? | The shortcut shows 0 decimals; each Increase Decimal click adds one |
 | 3 | C5 already has a finance format: it shows the Laboratory budget in thousands with a K. What number is actually stored in C5? Click the cell and read the formula bar. | The cell shows one thing; the formula bar shows another |
-| 4 | Copy C5's format to the rest of the money columns with Format Painter: select C5, double-click Home → Format Painter, drag over C5:E20, then drag over the Total row C21:E21, and press Esc. What does E6 (Pharmacy's variance) display now? | A format with only one section puts a minus sign in front of negatives |
-| 5 | On the Registry sheet, select the PatientDue cells F5:F24 and click Home → Accounting Number Format (the \$ button). Cox, Ronald (row 5) owes nothing for this visit. What character does F5 show where the 0 used to be? | Compare Accounting with Currency in the guide's table |
+| 4 | Copy C5's format to the rest of the money columns with Format Painter: select C5, double-click **Home → Format Painter**, drag over C5:E20, then drag over the Total row C21:E21, and press Esc. What does E6 (Pharmacy's variance) display now? | A format with only one section puts a minus sign in front of negatives |
+| 5 | On the Registry sheet, select the PatientDue cells F5:F24 and click **Home → Accounting Number Format** (the \$ button). Cox, Ronald (row 5) owes nothing for this visit. What character does F5 show where the 0 used to be? | Compare Accounting with Currency in the guide's table |
 | 6 | The MRN column lost its leading zeros on the way out of the registration system. Bluestone MRNs are always 8 digits. Select B5:B24, open Format Cells (Ctrl + 1; Mac: ⌘ + 1), choose Custom, and type the code 00000000 in the Type box. What does B13 display? | Each 0 in the code is a digit that always shows, even when it's a zero |
 | 7 | The Phone column (D) stores 10-digit numbers. Write a custom number format that shows each one the usual US way: the first three digits in parentheses, a space, three digits, a hyphen, and the last four digits. For example, D5 (5555298330) should display as (555) 529-8330. Apply your format to D5:D24, then type the format code you used. | 0 is a digit placeholder; parentheses, spaces, and hyphens can be typed as they are |
 | 8 | On the Stays sheet, the Admitted column (C) shows serial numbers because the export lost its date format. Select C5:C40 and apply the custom format ddd mm/dd/yyyy h:mm AM/PM. What does C6 display? | ddd is the short day name; mm right after h means minutes |
@@ -535,7 +564,7 @@ Tasks 1–4 and 12–13 use the Budget sheet, tasks 5–7 the Registry sheet, an
 | 10 | Hospitals often track length of stay in hours. Select E5:E40 and apply the custom format [h]:mm. What does E15 (the longest stay of the month) display? | Square brackets let the hours keep counting past 24 |
 | 11 | Column G (LOS vs Expected) stores LOS minus the diagnosis's expected LOS, in days, so a positive value means the patient stayed longer than expected. Write a two-section custom format for G5:G40: positive values in red with a plus sign and the word days (like +2.1 days), and negative values with a minus sign (like -0.4 days), each with one decimal. What does G5 display? | Sections are separated by semicolons: positive;negative. The second section needs its own minus sign |
 | 12 | Back on the Budget sheet, column A labels each department's service line with merged cells. Select A5:A20 and read Count on the status bar (it counts cells that aren't empty). How many of those 16 cells actually contain a service-line label? | A merged block stores its text in one cell only |
-| 13 | Finish the Budget report so it looks like the hidden Budget Key sheet: (1) unmerge A1:F1 and center the title with Center Across Selection; (2) unmerge column A and fill each service line down so every row has its label; (3) make header row 4 bold with white text on a dark blue fill, wrapped and centered; (4) add All Borders to A4:F21; (5) apply the Total cell style to A21:F21; (6) select A4:F21 and AutoFit the columns with Home → Format → AutoFit Column Width. Then zoom in on row 21: what kind of line does the Total style draw along the bottom of the row? Answer in a word or two. | Cell Styles is on the Home tab; look closely at the bottom edge of the total row |
+| 13 | Finish the Budget report so it looks like the hidden Budget Key sheet: (1) unmerge A1:F1 and center the title with Center Across Selection; (2) unmerge column A and fill each service line down so every row has its label; (3) make header row 4 bold with white text on a dark blue fill, wrapped and centered; (4) add All Borders to A4:F21; (5) apply the Total cell style to A21:F21; (6) select A4:F21 and AutoFit the columns with **Home → Format → AutoFit Column Width**. Then zoom in on row 21: what kind of line does the Total style draw along the bottom of the row? Answer in a word or two. | Cell Styles is on the Home tab; look closely at the bottom edge of the total row |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -546,7 +575,7 @@ function, which you'll meet in Lesson 2.2, to prove what each format code displa
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Currency shortcut on a negative variance**
 
@@ -554,7 +583,7 @@ function, which you'll meet in Lesson 2.2, to prove what each format code displa
 - **Solution:**
 
 1. Select **Budget!E5:E21**.
-2. Press **Ctrl + Shift + \$** (Mac: **⌃ + Shift + \$**).
+2. Press **Ctrl + Shift + \$** (Mac: **Control + Shift + \$**).
 3. Read **E11**.
 
 
@@ -566,7 +595,7 @@ The shortcut applies the Currency format with two decimals, whose code is `$#,##
 - **Solution:**
 
 1. Select **Budget!F5:F21**.
-2. Press **Ctrl + Shift + %** (Mac: **⌃ + Shift + %**). The cells show whole percentages.
+2. Press **Ctrl + Shift + %** (Mac: **Control + Shift + %**). The cells show whole percentages.
 3. Click **Home → Increase Decimal** (the .00 button with the left arrow) once.
 4. Read **F17**.
 
@@ -710,7 +739,7 @@ The Emergency Department director presents the December 2025 operating report to
 - Rule 4: Show both Var % columns with one decimal place, with negatives red and in parentheses, so -0.1075… displays as (10.8%).
 - Rule 5: Show YTD Budget and YTD Actual with a dollar sign: in millions with two decimals and an M when the amount is 1,000,000 or more (10,290,782 displays as \$10.29M), and otherwise in thousands with no decimals and a K.
 
-Work on the **Bonus** sheet of the workbook.
+Format the **Dec Report** sheet, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Rule 2: on the Dec Report sheet, what does C5 (Employee Benefits, Dec Actual) display? *(Hint: One comma after the last digit placeholder divides the display by 1,000)*
 - **B2.** Rule 3: on the Dec Report sheet, what does D11 (Salaries & Wages, Dec Variance) display? *(Hint: Two sections: positive;negative. Put the color first in the negative section)*
@@ -721,7 +750,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Thousands with one decimal**
 
@@ -770,10 +799,10 @@ A condition in square brackets replaces the usual positive/negative meaning of a
 
 - Formatting changes the **displayed value**, never the **stored value**. The formula bar shows what's really in the cell, and every
   calculation uses that.
-- **Ctrl + 1** (Mac: **⌘ + 1**) opens Format Cells. **Ctrl + Shift** (Mac: **⌃ + Shift**) with `~ ! @ # $ % ^` applies General,
+- **Ctrl + 1** (Mac: **⌘ + 1**) opens Format Cells. **Ctrl + Shift** (Mac: **Control + Shift**) with `~ ! @ # $ % ^` applies General,
   Number, Time, Date, Currency, Percentage, and Scientific.
 - **Accounting** (the \$ button) pins the \$ to the left, aligns decimals, and shows zero as a dash. **Currency** (Ctrl + Shift + \$;
-  Mac: ⌃ + Shift + \$) keeps the \$ next to the number.
+  Mac: Control + Shift + \$) keeps the \$ next to the number.
 - Custom codes are built from placeholders (`0 # ?`), scaling commas, quoted text, `[Color]` tags, `[conditions]`, and up to four
   sections: positive; negative; zero; text. A negative section needs its own sign.
 - Use `[h]:mm` for durations that can pass 24 hours, and remember that `m` means minutes only next to `h` or `s`.

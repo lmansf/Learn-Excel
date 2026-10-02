@@ -13,7 +13,7 @@ from datetime import date, datetime
 from openpyxl.styles import Alignment, Font
 
 from xlcourse import Lesson, Task, data
-from xlcourse.lesson import INPUT_FILL, ROOT
+from xlcourse.lesson import INPUT_FILL, ROOT, estimate_lines
 
 CODE = "3.3"
 RAW_COLS = ["RecordID", "PatientName", "DOB", "Sex", "Phone", "Email", "CityStateZip", "Insurance", "MRN", "RegisteredOn"]
@@ -452,8 +452,8 @@ def build() -> Lesson:
                          "first letter. Medicare and Medicaid share a first letter, so Insurance needs a mapping table instead "
                          "(task 8)."),
         # ---------------------------------------------------------------- Remove Duplicates (on a copy)
-        Task("Make a copy of the Raw sheet (right-click its tab → Move or Copy → tick Create a copy). On the copy, run "
-             f"Data → Remove Duplicates on all the data (A1:{rw.col('RegisteredOn')}{LR}) with every column ticked except "
+        Task("Make a copy of the Raw sheet (right-click its tab → **Move or Copy…** → tick **Create a copy**). On the copy, run "
+             f"**Data → Remove Duplicates** on all the data (A1:{rw.col('RegisteredOn')}{LR}) with every column ticked except "
              "RecordID (each row has its own "
              "RecordID, so leaving it ticked finds nothing). How many duplicate rows does Excel remove?",
              answer=exact_dups, title="Remove Duplicates on the raw columns",
@@ -479,13 +479,13 @@ def build() -> Lesson:
         # ---------------------------------------------------------------- Go To Special: blanks, fill down
         Task(f"Switch to CensusExport, a bed-board report that prints each Facility and Unit only on the first row of its block. "
              f"Fill every blank cell in {ce.col('Facility')}{ce.first_row}:{ce.col('Unit')}{ce.last_row} with the value above it: "
-             f"select that range, use Go To Special → Blanks, type = and press the Up arrow, then press Ctrl + Enter "
+             f"select that range, use **Go To Special → Blanks**, type = and press the Up arrow, then press Ctrl + Enter "
              f"(Mac: ⌘ + Return). The gray cell stays blank until every gap is filled, then totals the week's midnight census "
              f"for the Intensive Care Unit at Cedar Ridge Medical Center (ICU patient days).",
              answer=icu_days, title="Go To Special → Blanks fill-down (Cedar Ridge ICU patient days)",
              solution=(f"1. Select **{ce.col('Facility')}{ce.first_row}:{ce.col('Unit')}{ce.last_row}** on CensusExport (not "
                        "the whole columns, and not the header row).\n"
-                       "2. **Home → Find & Select → Go To Special…** (or press **F5**, Mac: **⌃ + G**, then **Special…**). "
+                       "2. **Home → Find & Select → Go To Special…** (or press **F5**, Mac: **Control + G**, then **Special…**). "
                        "Choose **Blanks** → **OK**. Only the empty cells stay selected.\n"
                        f"3. Without clicking anywhere, type **=** and press **↑**. The active cell is the first "
                        f"blank, {ce.col('Facility')}{ce.first_row + 1}, so the formula reads "
@@ -514,7 +514,7 @@ def build() -> Lesson:
         Task(f"Back on Clean, use Flash Fill to fill the yellow ZIP5 column ({cl.col('ZIP5')}) with the 5-digit ZIP from "
              f"CityStateZip. {zip4_rows} rows carry a ZIP+4 such as 45501-8106, and those must become 45501. Type three "
              f"examples yourself: rows {F} and {F + 1}, plus the first ZIP+4 row (row {row_of('R1010')}). Then select the "
-             f"first empty cell and press Ctrl + E (Mac: Data → Flash Fill). The gray cell counts the distinct ZIP codes "
+             f"first empty cell and press Ctrl + E (Mac: **Data → Flash Fill**). The gray cell counts the distinct ZIP codes "
              f"in your column.",
              answer=distinct_zips, title="Flash Fill ZIP5 (distinct ZIP codes)",
              solution=(f"1. In **{c1('ZIP5')}** type **{zips[0]}** (from *{raw[0]['CityStateZip']}*), and in "
@@ -524,8 +524,8 @@ def build() -> Lesson:
                        f"3. Select **{cl.col('ZIP5')}{F + 2}**, the first empty cell, and press **Ctrl + E** (or "
                        "**Data → Flash Fill**).\n"
                        f"4. Check the result: `=SUMPRODUCT(--(LEN({C('ZIP5')})<>5))` should return 0. If some rows are "
-                       "wrong, press Ctrl + Z, type the correct ZIP on one of the wrong rows as an extra example, and run "
-                       "Flash Fill again.\n\n"
+                       "wrong, press Ctrl + Z (Mac: ⌘ + Z), type the correct ZIP on one of the wrong rows as an extra "
+                       "example, and run Flash Fill again.\n\n"
                        f"Formula alternative (Microsoft 365 or Excel 2024): `=LEFT(TEXTAFTER({c1('CityStateZip')},\" \",-1),5)`"),
              summary=f'=IF(COUNTA({C("ZIP5")})=0,"",SUMPRODUCT(({C("ZIP5")}<>"")/COUNTIF({C("ZIP5")},{C("ZIP5")}&"")))',
              fill=fill("ZIP5", values=zips),
@@ -595,8 +595,8 @@ def build() -> Lesson:
                          "`=IFNA(VLOOKUP(TRIM(H2),tblPayerMap,2,FALSE),\"UNMAPPED\")`."),
         # ---------------------------------------------------------------- Text to Columns
         Task(f"Switch to LabFeed: {len(feed)} STAT results from a lab interface, each crammed into one cell as "
-             f"MRN|TestCode|Result|Units|CollectedDateTime. Split A1:A{lf.last_row} into five columns with Data → Text to "
-             f"Columns (Delimited, Other: |). In step 3 of the wizard, set the MRN column's format to Text so its leading "
+             f"MRN|TestCode|Result|Units|CollectedDateTime. Split A1:A{lf.last_row} into five columns with **Data → Text to "
+             f"Columns** (Delimited, Other: |). In step 3 of the wizard, set the MRN column's format to Text so its leading "
              f"zeros survive. The gray cell checks the MRNs, then shows the average potassium (TestCode K) result in mmol/L.",
              answer=avg_k, fmt="0.00", title="Text to Columns on the lab feed (average potassium)",
              solution=(f"1. On **LabFeed**, select **A1:A{lf.last_row}** (header included).\n"
@@ -722,8 +722,8 @@ def build() -> Lesson:
                   "(`$Q$2:Q2`) breaks ties",
              explanation="The first test, RegisteredClean = MAXIFS(all RegisteredClean, all MRNClean, this MRN), is TRUE on the "
                          "patient's latest row. Exact copies share that time, so the second test counts how many rows so far "
-                         "(the range `$Q$2:Q2` grows as the formula goes down) have this MRN and this time. It equals 1 only on "
-                         f"the first of them. The total must equal the {distinct_mrn} distinct MRNs from practice task 7, which "
+                         "(the expanding range `$Q$2:Q2` grows as the formula goes down) have this MRN and this time. It "
+                         f"equals 1 only on the first of them. The total must equal the {distinct_mrn} distinct MRNs from practice task 7, which "
                          "is a good cross-check. Avoid comparing date-times with `\">\"&R2` inside COUNTIFS, because that turns "
                          "the time into text with 15 digits and can miss by a rounding error."),
         Task(f"Which RegisteredOn did you keep for MRN {KEEP_MRN}? Enter it as a date and time.",
@@ -769,29 +769,56 @@ def build() -> Lesson:
                          "recent row that has it filled in, instead of taking every field from the most recent row."),
     ]
 
+    # Only tasks 1 and 3 (and B3–B5) are typed on the Practice/Bonus sheets. The other parts are worked on Clean,
+    # CensusExport, LabFeed, or CleaningLog and read by gray cells, so Start Here, the two how-to lines, and the README's
+    # bonus line say where the work happens.
+    typed = [i for i, t in enumerate(L.tasks, 1) if not t.summary]
+    assert typed == [1, 3], typed
+    assert [i for i, t in enumerate(L.bonus, 1) if t.summary] == [1, 2]
+    L.practice_how = ("Go to the 'Practice' sheet. Type your answers to tasks 1 and 3 in its yellow cells. For tasks 2 and "
+                      f"4–{len(L.tasks)}, do the work on the sheet the task names (Clean, CensusExport, LabFeed, or "
+                      "CleaningLog), and the task's gray cell on Practice reads it.")
+    L.practice_instructions = (
+        "For tasks 1 and 3, type a formula or value in the yellow cell. For the other tasks, do the work on the sheet the "
+        "task names, and the gray cell here reads it. The Check column turns green when your answer matches. Stuck? Read "
+        f"the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "For B1 and B2, fill the yellow RegisteredClean and Keep columns on the Clean sheet, and the gray cell here reads "
+        "them. For B3–B5, type a formula or value in the yellow cell. The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Fill the RegisteredClean and Keep columns on the **Clean** sheet, and type your answers to B3–B5 in "
+                     "the yellow cells on the **Bonus** sheet.")
+
+    # Start Here describes each data sheet only by its size, so the hook below adds what each one is for.
+    practice_cols, bonus_cols = [cl.col(c) for c in CLEAN_COLS[:7]], [cl.col(c) for c in CLEAN_COLS[7:]]
+    assert "".join(practice_cols + bonus_cols) == "KLMNOPQRS"
+    sheet_roles = {
+        "Raw": "The registration export exactly as received. Read it, but never edit it.",
+        "Clean": (f"Your working copy of Raw. Fill its yellow columns: {practice_cols[0]}–{practice_cols[-1]} in the "
+                  f"practice tasks, and {bonus_cols[0]}–{bonus_cols[-1]} in the bonus."),
+        "PayerMap": "The mapping table that turns each insurance spelling into a PayerID (task 8).",
+        "CensusExport": "A one-week bed-board census export with blank Facility and Unit cells to fill (task 4).",
+        "LabFeed": "A pipe-delimited lab interface feed to split with Text to Columns (task 9).",
+        "CleaningLog": "Your cleaning log. Fill in its yellow cells as you go. Task 12 checks step 2's RowsChanged cell.",
+    }
+
     # ------------------------------------------------------------------ workbook polish
     log_fill_cols = ("FixApplied", "RowsChanged")
 
     @L.customize
     def _polish(wb, lesson, selftest):
-        # Some prompts and hints use Markdown code spans so GitHub keeps doubled spaces and doesn't read "?*" as emphasis or
-        # "$Q$2" as math. The library writes prompts and hints to the workbook verbatim (only explanations are de-Markdowned),
-        # so strip the backticks here: prompt and hint columns on Practice/Bonus, prompt column on the two key sheets.
-        for sheet, last_col in ((lesson.practice_sheet, 3), (lesson.bonus_sheet, 3), (lesson.key_sheet, 2),
-                                (lesson.bonus_key_sheet, 2)):
-            for row in wb[sheet].iter_rows(min_row=5, min_col=2, max_col=last_col):
-                for c in row:
-                    if isinstance(c.value, str) and "`" in c.value:
-                        c.value = c.value.replace("`", "")
-        # The key's "Sample solution" column also gets the Markdown step lists of the tool tasks (3, 4, 5, 9) verbatim.
-        # Strip the bold/italic markers and backticks there, but never touch formula solutions (their * means multiply)
-        # or the text inside code spans.
-        for sheet in (lesson.key_sheet, lesson.bonus_key_sheet):
-            for row in wb[sheet].iter_rows(min_row=5, min_col=4, max_col=4):
-                c = row[0]
-                if isinstance(c.value, str) and not c.value.startswith("=") and ("**" in c.value or "`" in c.value):
-                    parts = c.value.split("`")
-                    c.value = "".join(p if i % 2 else p.replace("**", "").replace("*", "") for i, p in enumerate(parts))
+        # Start Here: append each data sheet's role to the library's "Data: N rows" line (each sheet is listed once).
+        sh = wb["Start Here"]
+        hdr = next(r for r in range(1, sh.max_row + 1) if sh.cell(row=r, column=2).value == "Sheets in this workbook")
+        done = []
+        for r in range(hdr + 1, sh.max_row + 1):
+            name = sh.cell(row=r, column=2).value
+            if name in sheet_roles:
+                c = sh.cell(row=r, column=3)
+                c.value = f"{c.value}. {sheet_roles[name]}"
+                sh.row_dimensions[r].height = 15 * estimate_lines(c.value, 100) + 3
+                done.append(name)
+        assert sorted(done) == sorted(sheet_roles), done
         # CleaningLog: learner cells in yellow; wrap long text
         lg_ws = wb["CleaningLog"]
         for r in range(lg.first_row, lg.last_row + 1):

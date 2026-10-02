@@ -439,6 +439,12 @@ def build() -> Lesson:
                          f"would show \"{b_raw_text}\". `TRUNC` or `ROUNDDOWN(…,0)` can replace INT here because the minutes are "
                          "positive."),
     ]
+    # Task 10 fills a yellow column on the Stays sheet, and a gray cell on Practice reads it, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    assert fills == ["10"], fills
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For task "
+                      f"{fills[0]}, fill the yellow AgeBand column on the Stays sheet instead, and the task's gray cell on "
+                      "Practice reads it.")
 
     # ------------------------------------------------------------------ bonus
     q3f = f"QUARTILE.INC({J},3)"

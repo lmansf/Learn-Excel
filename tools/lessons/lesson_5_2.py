@@ -635,14 +635,13 @@ def build() -> Lesson:
     L.start_notes = [
         "Macros can't be saved in an .xlsx file. Before you write any code, choose File → Save As and pick "
         "'Excel Macro-Enabled Workbook (*.xlsm)'.",
-        "Import starter/LabMacros.bas and starter/Snippets.bas from the lesson folder: open the Visual Basic Editor "
-        "(Alt+F11; Mac: Option+F11 or Developer → Visual Basic), then File → Import File…",
-        "Debug.Print writes to the Immediate window. Open it in the Visual Basic Editor with Ctrl+G (Mac: View → Immediate Window) "
-        "before you run the snippets.",
-        "The Snippets sheet shows the code for the predict-the-output tasks. The Output sheet is where your macros write their results.",
+        "Import starter/LabMacros.bas and starter/Snippets.bas from the lesson folder: open the Visual Basic Editor with "
+        "Alt + F11 (Mac: Option + F11, or Developer → Visual Basic), then choose File → Import File…",
+        "Debug.Print writes to the Immediate window. Open it in the Visual Basic Editor with Ctrl + G (Mac: View → Immediate "
+        "Window) before you run the snippets.",
     ]
     L.practice_intro = (
-        "Save this workbook as .xlsm, then import starter/LabMacros.bas and starter/Snippets.bas (VBE → File → Import File…). "
+        "Save this workbook as .xlsm, then import starter/LabMacros.bas and starter/Snippets.bas (**File → Import File…** in the VBE). "
         "Tasks 2–7 are predict-the-output questions about the code on the Snippets sheet: type your prediction first, then run the "
         "snippet to check it. In tasks 1 and 8–13 you run macros, and the gray cells read what your macros wrote to the Output sheet "
         "(or to the TATFlag column on the Labs sheet).")
@@ -655,12 +654,12 @@ def build() -> Lesson:
              solution=WARMUP, solution_lang="vba",
              summary=out_summary(OUT["rows"]), fill=out_fill(OUT["rows"], n),
              live=f"=COUNTA({rng('LabResultID')})",
-             hint="Click inside Warmup and press F5, or in Excel press Alt+F8 (Mac: Option+F8), pick Warmup, and click Run",
+             hint="Click inside Warmup and press F5, or in Excel press Alt + F8 (Mac: Option + F8), pick Warmup, and click Run",
              explanation="Warmup finds the last filled row in column A, subtracts 1 for the header row, and writes the result "
                          "into a cell. If the gray cell stays empty, check that you saved as .xlsm, enabled macros, and ran "
                          "Warmup in **this** workbook. If you made a Personal Macro Workbook in Lesson 5.1, also check that "
                          "LabMacros was imported into this workbook's project and not into PERSONAL.XLSB. Open the "
-                         "Immediate window (Ctrl + G; Mac: View → Immediate Window) to see the line Debug.Print wrote."),
+                         "Immediate window (Ctrl + G; Mac: **View → Immediate Window**) to see the line Debug.Print wrote."),
         # ---------------------------------------------------------- 2-7 predict the output
         Task("Snippet A: what number does the Immediate window show? Predict first, then run SnippetA_Typo to check.",
              answer=ans_a, solution="Trace it: `drawCount` is set to 5. The next line assigns to `drawCuont`, which is a "
@@ -803,15 +802,15 @@ def build() -> Lesson:
         "Don't use Scripting.Dictionary, because that's Lesson 5.4. A nested loop that searches the table you're building "
         "is enough.")
     L.bonus = [
-        Task("Run LabSnapshot. Then click the filter arrow on the Labs table's AbnormalFlag header and choose Filter by Color → "
-             f"your amber fill. How many rows are amber? (The status bar shows 'x of {n} records found'.)",
+        Task("Run LabSnapshot. Then click the filter arrow on the Labs table's AbnormalFlag header and choose **Filter by Color**, "
+             f"then your amber fill. How many rows are amber? (The status bar shows 'x of {n} records found'.)",
              answer=amber, solution=BONUS_SOL, solution_lang="vba", live=f'=COUNTIF({rng("AbnormalFlag")},"H")+COUNTIF({rng("AbnormalFlag")},"L")',
              hint="Select Case flag: Case \"HH\", \"LL\" … Case \"H\", \"L\" …",
              title="Run LabSnapshot, then count the amber rows",
              explanation="A worksheet formula can't see fill colors, so Filter by Color (Lesson 1.6) is how you check the "
                          "coloring. Clearing "
                          "the old fills first matters: without it, a row that was amber yesterday would stay amber even if its "
-                         "flag changed. Clear the filter afterwards (Data → Clear). The full macro is also in "
+                         "flag changed. Clear the filter afterwards (**Data → Clear**). The full macro is also in "
                          "solutions/LabSnapshot_Solution.bas."),
         Task("How many TestCode rows does your summary table have? (The gray cell counts the codes in Output!E5:E40.)",
              answer=n_tests,
@@ -929,7 +928,7 @@ def build() -> Lesson:
         sn["A1"] = "Snippets for Practice tasks 2–7"
         sn["A1"].font = Font(bold=True, size=14, color=navy)
         sn["A2"] = ("Predict what each snippet prints, type your prediction on the Practice sheet, then run it from the Snippets "
-                    "module (starter/Snippets.bas) to check. Debug.Print writes to the Immediate window (Ctrl+G; Mac: View → Immediate Window).")
+                    "module (starter/Snippets.bas) to check. Debug.Print writes to the Immediate window (Ctrl + G; Mac: View → Immediate Window).")
         sn["A2"].font = Font(italic=True, color="595959")
         sn["A2"].alignment = Alignment(wrap_text=True, vertical="top")
         sn.row_dimensions[2].height = 48
@@ -952,20 +951,6 @@ def build() -> Lesson:
         _fit_page(ws, landscape=True)
         _fit_page(sn, landscape=False)
 
-        # The library's generic instructions say "type a formula or value". Here most answers are gray cells that fill in
-        # when a macro runs, so say that instead.
-        generic = ("Type a formula or value into each yellow cell.", "Type a formula or value in each yellow cell.")
-        lesson_text = "Type your answer in each yellow cell, or run the task's macro so its gray cell fills in by itself."
-        for name in ("Start Here", "Practice", "Bonus"):
-            if name not in wb.sheetnames:
-                continue
-            for row in wb[name].iter_rows(max_row=40):
-                for c in row:
-                    if isinstance(c.value, str) and not c.value.startswith("="):
-                        for g in generic:
-                            if g in c.value:
-                                c.value = c.value.replace(g, lesson_text)
-
         # The key sheets show Markdown markers (** ` *) literally. Prose solutions and explanations read better as plain
         # text, so strip them there; VBA solutions stay as code.
         for key_name, tasks in (("Answer Key", lesson.tasks), ("Bonus Key", lesson.bonus)):
@@ -983,6 +968,25 @@ def build() -> Lesson:
                     ex.value = _cell_text(ex.value)
 
     L.sheet_order = ["Start Here", "Practice", "Snippets", "Labs", "Output", "Bonus", "Answer Key", "Bonus Key"]
+    L.sheet_notes = [
+        ("Snippets", "The code for the predict-the-output snippets (Practice tasks 2–7). Run it from the Snippets module."),
+        ("Output", "Where your macros write their results: B5:B10 for the practice macros (task 11 flags Labs column M "
+                   "instead), and E5:H40 and J5 for the bonus."),
+    ]
+
+    # Most answers here are gray cells that a macro fills, so the generic "type a formula or value" lines don't fit.
+    L.practice_how = ("Go to the 'Practice' sheet. Type your predictions for tasks 2–7 in the yellow cells. For tasks 1 "
+                      "and 8–13, run your macros. Their gray cells fill in by themselves.")
+    L.practice_instructions = (
+        "Type your predictions for tasks 2–7 in the yellow cells. The gray cells for tasks 1 and 8–13 fill in by themselves "
+        "when your macros run. The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "Type your answer to B1 in its yellow cell. The gray cells for B2–B5 fill in by themselves once LabSnapshot has run. "
+        "The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("LabSnapshot writes to the **Labs** and **Output** sheets. Type or check your answers on the **Bonus** "
+                     "sheet of the workbook.")
 
     # Keep the README's snippet listings in sync with the code above.
     readme = L.dir / "README.md"

@@ -162,13 +162,13 @@ def build() -> Lesson:
         "tblInventory[QtyOnHand] instead of cell ranges.")
     L.start_notes = [
         "The Inventory, Settings, and Vendors sheets are plain ranges on purpose. You turn them into Tables and "
-        "named cells as part of the practice.",
+        "named cells as part of the practice and the bonus.",
     ]
 
     L.tasks = [
         Task("On the Inventory sheet, click any cell in the data and convert the range to an Excel Table with "
-             "Ctrl + T (Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the Table Design "
-             "tab (Mac: Table tab). The gray cell finds a Table with that exact name and counts its data rows. It stays blank until "
+             "Ctrl + T (Mac: Control + T). Then rename the Table tblInventory in the Table Name box on the **Table Design** "
+             "tab (Mac: **Table** tab). The gray cell finds a Table with that exact name and counts its data rows. It stays blank until "
              "the Table exists.",
              answer=n, title="Convert the range to a Table named tblInventory (data rows)",
              summary=f'=IFERROR(ROWS(INDIRECT("{TBL}")),"")',
@@ -240,9 +240,9 @@ def build() -> Lesson:
              "time in days, to 2 decimal places?",
              answer=avg_lead, fmt="0.00", solution=f"={TBL}[[#Totals],[LeadTimeDays]]",
              live=f"=AVERAGE({a1('LeadTimeDays')})",
-             hint="Table Design → Total Row (Windows: Ctrl + Shift + T; Mac: Table → Total Row), then use the dropdown in the "
-                  "Total Row cell",
-             explanation="The Total Row's dropdown writes `=SUBTOTAL(101,[LeadTimeDays])`. Function number 101 means "
+             hint="**Table Design → Total Row** (Windows: Ctrl + Shift + T; Mac: **Table → Total Row**), then use the drop-down "
+                  "arrow in the Total Row cell",
+             explanation="The Total Row's drop-down list writes `=SUBTOTAL(101,[LeadTimeDays])`. Function number 101 means "
                          "AVERAGE of the visible rows only, ignoring rows hidden by a filter or hidden by hand "
                          "(109 = SUM, 103 = COUNTA, 104 = MAX). "
                          "`tblInventory[[#Totals],[LeadTimeDays]]` points at that total cell by name, so it still works "
@@ -255,7 +255,7 @@ def build() -> Lesson:
                          f"Total Row: 1 + {n} + 1 = "
                          f"{all_rows_with_totals}. `tblInventory[#Data]` (or just `tblInventory`) is the {n} "
                          f"data rows, `[#Headers]` is the header row alone, and `[#Totals]` is the Total Row alone."),
-        Task(f"Insert slicers for Facility and Category (Table Design → Insert Slicer; Mac: Table → Insert Slicer). "
+        Task(f"Insert slicers for Facility and Category (**Table Design → Insert Slicer**; Mac: **Table → Insert Slicer**). "
              f"Select {SLICER_FACILITY} in "
              f"the Facility slicer and {SLICER_CATEGORY} in the Category slicer. Set the Total Row's ExtendedValue cell "
              f"to Sum. What value does it show? Type the number, then clear both slicers, because while they filter the "
@@ -265,7 +265,7 @@ def build() -> Lesson:
                       "Slicer**). Tick **Facility** and **Category** and click **OK**.\n"
                       f"2. In the Facility slicer click **{SLICER_FACILITY}**. In the Category slicer click "
                       f"**{SLICER_CATEGORY}**. The Table now shows {len(slicer_rows)} rows.\n"
-                      "3. In the Total Row, click the ExtendedValue cell, open its dropdown, and choose **Sum**.\n"
+                      "3. In the Total Row, click the ExtendedValue cell, open its drop-down list, and choose **Sum**.\n"
                       f"4. Read the total and type it in the answer cell: **{slicer_sum:,.2f}**.\n"
                       "5. Click the **Clear Filter** button (funnel with a red X) at the top right of each slicer.",
              live=f'=SUMPRODUCT(({a1("Facility")}="{SLICER_FACILITY}")*({a1("Category")}="{SLICER_CATEGORY}")*{qty}*{cost})',
@@ -276,7 +276,7 @@ def build() -> Lesson:
                          f"number without slicers using "
                          f"`=SUMIFS(tblInventory[ExtendedValue],tblInventory[Facility],\"{SLICER_FACILITY}\","
                          f"tblInventory[Category],\"{SLICER_CATEGORY}\")`."),
-        Task("On the Settings sheet, select A2:B3 and use Formulas → Create from Selection (tick only Left column) to "
+        Task("On the Settings sheet, select A2:B3 and use **Formulas → Create from Selection** (tick only Left column) to "
              "name cell B2 ReportDate and cell B3 ExpiringWindowDays. The gray cell looks up both names and adds them: "
              "what date does it show?",
              answer=window_end, fmt="mm/dd/yyyy", title="Name the Settings cells with Create from Selection",
@@ -318,7 +318,7 @@ def build() -> Lesson:
                          f"The live formula in the key guards against blanks with `<>\"\"`, but SUMIFS doesn't need "
                          f"that guard, because an empty cell never matches \"<\"&ReportDate."),
         Task(f"Policy says every stock row must be cycle-counted at least every {CYCLE_COUNT_DAYS} days. Create a named "
-             f"constant CycleCountDays that refers to ={CYCLE_COUNT_DAYS} with Formulas → Define Name. It doesn't live in "
+             f"constant CycleCountDays that refers to ={CYCLE_COUNT_DAYS} with **Formulas → Define Name**. It doesn't live in "
              f"any cell. How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays?",
              answer=overdue,
              solution=f'=COUNTIF({TBL}[LastCountDate],"<"&ReportDate-CycleCountDays)',
@@ -365,8 +365,8 @@ def build() -> Lesson:
                          f"`=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns "
                          f"from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. "
                          f"INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. "
-                         f"`=XLOOKUP(MAX({VTBL}[ReorderCost]),{VTBL}[ReorderCost],{VTBL}[Vendor])` works too in Excel "
-                         f"2021 or Microsoft 365. {top_lines_note}"),
+                         f"`=XLOOKUP(MAX({VTBL}[ReorderCost]),{VTBL}[ReorderCost],{VTBL}[Vendor])` also works in "
+                         f"Microsoft 365 and Excel 2021 or later. {top_lines_note}"),
         Task("What's the value of that vendor's purchase order, to the cent?",
              answer=round(top_amount, 2), fmt="#,##0.00", solution=f"=MAX({VTBL}[ReorderCost])",
              live=f'=SUMPRODUCT(({a1("Vendor")}="{top_vendor}")*({qty}<={rp})*{a1("ReorderQty")}*{cost})',
@@ -389,6 +389,29 @@ def build() -> Lesson:
                          f"named constants, Purchasing can test a new contract (say 3% at $15,000) by editing two names in "
                          f"Name Manager, and every formula that uses them updates."),
     ]
+
+    # Tasks with gray summary cells are worked on the Inventory or Settings sheet (B1 on Inventory), so Start Here, the
+    # Practice and Bonus how-to lines, and the README's bonus line say where. Vendors is used only by the bonus, so its
+    # tab sits right after Bonus.
+    gray = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    assert gray == ["1", "3", "5", "9"], gray
+    assert [i for i, t in enumerate(L.bonus, 1) if t.summary] == [1]
+    gray_txt = f"{', '.join(gray[:-1])}, and {gray[-1]}"
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{gray_txt}, do the work on the Inventory or Settings sheet instead, and the task's gray cell on "
+                      "Practice reads it.")
+    L.practice_instructions = (
+        f"Type a formula or value in each yellow cell. For tasks {gray_txt}, do the work on the Inventory or Settings "
+        "sheet instead, and the gray cell here reads it. The Check column turns green when your answer matches. Stuck? "
+        f"Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "Type a formula or value in each yellow cell. For B1, fill the OrderCost column on the Inventory sheet instead, "
+        f"and the gray cell here reads it. B2 also builds the {VTBL} Table on the Vendors sheet. The Check column turns "
+        "green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → "
+        f"Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Add the OrderCost column on the **Inventory** sheet and build tblVendors on the **Vendors** sheet, "
+                     "and type your answers to B2–B4 in the yellow cells on the **Bonus** sheet.")
+    L.sheet_order = ["Start Here", "Practice", "Inventory", "Settings", "Bonus", "Vendors", "Answer Key", "Bonus Key"]
 
     # ------------------------------------------------------------------ custom content
     @L.customize

@@ -86,20 +86,9 @@ The workbook's sheets:
 | **Log** | Timestamp, Event, Detail, User. `WriteLog` appends here | Tasks 6, 7 |
 | **Combined** | Headers only. `CombineCensusFiles` fills it from the CSV files | Tasks 11, 12, bonus |
 | **Settings** | ReportMonth, CsvFolder, ReportFolder, LastExport: cells your macros read and write | Task 11, bonus |
-| **Lists** | Arrival modes and chief complaints for the form's drop-downs | Tasks 8–10 |
+| **Lists** | Arrival modes and chief complaints for the form's drop-down lists | Tasks 8–10 |
 
-VBE shortcuts you'll use in this lesson:
-
-| Action | Windows | Mac |
-|---|---|---|
-| Open or switch to the VBE | **Alt + F11** | **Option + F11**, or **Developer → Visual Basic** |
-| Properties window | **F4** | **View → Properties Window** |
-| Immediate window | **Ctrl + G** | **View → Immediate Window** |
-| Run the Sub or UserForm the cursor is in | **F5** | **Run → Run Sub/UserForm** |
-| Step through code one line at a time | **F8** | **Debug → Step Into** |
-| Toggle a breakpoint | **F9** | **Debug → Toggle Breakpoint** |
-| Show a form's code / its designer | **F7** / **Shift + F7** | **View → Code** / **View → Object** |
-| Run a macro from Excel | **Alt + F8** | **Option + F8**, or **Developer → Macros** |
+Section 13 lists the VBE shortcuts you'll use in this lesson, for Windows and Mac.
 
 ### 2. Events: code that runs by itself
 
@@ -197,7 +186,7 @@ Inside the ThisWorkbook module, **`Me`** means this workbook, so `Me.Worksheets(
 worksheet IF function, so the last line logs *Save As dialog* when `SaveAsUI` is True and *Save* otherwise. Because
 BeforeSave runs *before* Excel writes the file, the Save row it logs is included in the saved file.
 
-To test it, save (Ctrl + S, Mac: ⌘ + S), close the workbook, reopen it, and click **Enable Content** if asked. The Log
+To test it, save with Ctrl + S (Mac: ⌘ + S), close the workbook, reopen it, and click **Enable Content** if asked. The Log
 sheet now shows a Save row and an Open row.
 
 > ⚠️ Because `Workbook_Open` writes to the Log, Excel asks whether to save when you close the file, even if you changed
@@ -257,7 +246,7 @@ End Sub
 ```
 
 Paste this into the BedBoard sheet's module, open the Immediate window, and experiment. Change one status, then fill
-three with Ctrl + Enter, then type in a Notes cell. You'll see one line, then three lines, then nothing.
+three with Ctrl + Enter (Mac: ⌘ + Return), then type in a Notes cell. You'll see one line, then three lines, then nothing.
 
 A few details make this code robust:
 
@@ -333,20 +322,21 @@ What you need to know about EnableEvents:
 | It **stays** off after your macro ends | One crash between `False` and `True` silently disables every handler until you fix it |
 | It doesn't affect UserForm events | A button's `Click` still runs while EnableEvents is False |
 
-When your handlers suddenly stop working, open the Immediate window (Ctrl + G), type this line, and press Enter. You
-can also run the `EventsOn` macro in `modLog`.
+When your handlers suddenly stop working, open the Immediate window with Ctrl + G (Mac: **View → Immediate Window**),
+type this line, and press Enter. You can also run the `EventsOn` macro in `modLog`.
 
 ```vba
 Application.EnableEvents = True
 ```
 
 > ⚠️ **Event macros clear Undo.** When any macro changes the workbook, Excel empties its Undo list. With a handler that
-> stamps a time on every status change, **Ctrl + Z** can't undo the user's last edit on that sheet. Tell your users, and
-> keep write-back handlers to sheets where that's acceptable.
+> stamps a time on every status change, **Ctrl + Z** (Mac: **⌘ + Z**) can't undo the user's last edit on that sheet.
+> Tell your users, and keep write-back handlers to sheets where that's acceptable.
 
-**Debugging events.** Click the handler's first line and press **F9** to set a breakpoint, then edit a cell in Excel.
-The VBE stops on that line, and you can step through with **F8** and hover over `Target` to see its address. If the
-code never stops there, run through this checklist:
+**Debugging events.** Click the handler's first line and press **F9** (Mac: **Debug → Toggle Breakpoint**) to set a
+breakpoint, then edit a cell in Excel. The VBE stops on that line, and you can step through with **F8** (Mac:
+**Debug → Step Into**) and hover over `Target` to see its address. If the code never stops there, run through this
+checklist:
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
@@ -361,7 +351,7 @@ code never stops there, run through this checklist:
 A **UserForm** is a dialog box you design yourself. People type into its controls, your code checks the input, and
 only clean data reaches the sheet. To add one, choose **Insert → UserForm** in the VBE. The **Toolbox** appears next to
 it (if it doesn't, choose **View → Toolbox**). Draw a control by clicking a Toolbox button and dragging on the form.
-Then select the control and set its properties in the **Properties window** (F4).
+Then select the control and set its properties in the **Properties window** (F4, Mac: **View → Properties Window**).
 
 The first property to set on every control is **(Name)**, the name your code uses. A three-letter prefix tells you what
 kind of control a name refers to:
@@ -627,7 +617,7 @@ Fail:
 > automation workbooks in a local folder that isn't synced, or check for `"http"` at the start of the path and stop with
 > a clear message, as the solution does.
 
-> ⚠️ **Mac:** Excel for Mac runs in a security sandbox. The first time your macro opens a file in a new folder, macOS may
+> 📋 **Mac:** Excel for Mac runs in a security sandbox. The first time your macro opens a file in a new folder, macOS may
 > show a *Grant File Access* dialog. Approve the `census_monthly` folder and the macro continues.
 
 > 📋 Power Query (Lesson 4.3) can also combine a folder of CSV files with **Data → Get Data → From File → From Folder**,
@@ -838,8 +828,9 @@ Power Automate.
 census summary from practice task 5 is a three-step flow:
 
 1. **Trigger:** *Recurrence*, every day at 06:00 in your time zone.
-2. **Action:** *Excel Online (Business) → Run script*. Pick the workbook in OneDrive or SharePoint and the script.
-3. **Action:** *Microsoft Teams → Post message in a chat or channel*, using the script's result.
+2. **Action:** choose **Excel Online (Business) → Run script**. Pick the workbook in OneDrive or SharePoint and the
+   script.
+3. **Action:** choose **Microsoft Teams → Post message in a chat or channel**, and use the script's result in the message.
 
 | | VBA | Office Scripts | Power Automate |
 |---|---|---|---|
@@ -853,6 +844,35 @@ census summary from practice task 5 is a three-step flow:
 
 Use VBA for rich desktop tools like the ones in this lesson. Move to Office Scripts and Power Automate when the work must
 run unattended, in the browser, or across Microsoft 365 services.
+
+### 13. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Save as a macro-enabled workbook | F12, then choose **.xlsm** | ⌘ + Shift + S, then choose **.xlsm** |
+| Open or switch to the VBE | Alt + F11 | Option + F11, or **Developer → Visual Basic** |
+| Import a `.bas` module | Ctrl + M, or **File → Import File…** | **File → Import File…** |
+| Properties window | F4 | **View → Properties Window** |
+| Immediate window | Ctrl + G | **View → Immediate Window** |
+| Run the Sub or UserForm the cursor is in | F5 | **Run → Run Sub/UserForm** |
+| Step through code one line at a time | F8 | **Debug → Step Into** |
+| Toggle a breakpoint | F9 | **Debug → Toggle Breakpoint** |
+| Show a form's code / its designer | F7 / Shift + F7 | **View → Code** / **View → Object** |
+| Run a macro from Excel | Alt + F8 | Option + F8, or **Developer → Macros** |
+| Fill every selected cell with one entry (one Change event) | Ctrl + Enter | ⌘ + Return |
+| Save, which runs `Workbook_BeforeSave` | Ctrl + S | ⌘ + S |
+
+On a Mac laptop whose top-row keys control brightness and volume, hold **Fn** as well: Fn + Option + F11.
+
+| Feature | Availability |
+|---|---|
+| VBA events, UserForms, `Dir`, `ExportAsFixedFormat`, `SaveCopyAs`, and `OnTime` | Desktop Excel for Windows and Mac. Excel for the web, iPad, iPhone, and Android can open an `.xlsm` file but can't run its macros |
+| The UserForm designer | Fullest on Windows. Excel for Mac (Microsoft 365, 2021, 2019) runs and edits forms, but some properties have to be set in code (section 6) |
+| `Dir` with a wildcard such as `*.csv` | Windows only. On a Mac, list every file and test each name with `Like` (section 8) |
+| A *Grant File Access* prompt the first time a macro opens a file in a new folder | Excel for Mac only, because it runs in a sandbox (section 8) |
+| `Scripting.Dictionary` | Excel for Windows only, so the bonus uses a Collection |
+| Office Scripts (**Automate** tab) | Excel for the web and desktop Excel in Microsoft 365, with a Microsoft 365 work or school account (section 12) |
+| Power Automate flows that run an Office Script | A Microsoft 365 work or school account, with the workbook stored in OneDrive or SharePoint (section 12) |
 
 ## 🧪 Hands-on practice
 
@@ -870,7 +890,7 @@ Tasks 1–5 are quick concept checks you can answer from the guide. Tasks 6–12
 | 4 | After ThisWorkbook.SaveCopyAs runs, which workbook are you working in? Type A, B, or C.<br>A = the original file (the copy was written to disk but isn't open)<br>B = the new copy (Excel switched to it, the way Save As does)<br>C = both files are open in Excel | Compare Save, SaveAs, and SaveCopyAs in Guide §9 |
 | 5 | The house supervisor wants the census summary rebuilt at 06:00 every morning and posted to a Microsoft Teams channel, even on days when nobody has Excel open. Which tool fits? Type A, B, or C.<br>A = Application.OnTime in your .xlsm<br>B = a Workbook_Open macro<br>C = an Office Script run by a scheduled Power Automate flow | Which option doesn't need desktop Excel to be running? |
 | 6 | Save the workbook as .xlsm and import modLog. Paste starter/ThisWorkbook.cls into the ThisWorkbook module and finish Workbook_Open and Workbook_BeforeSave so they call WriteLog "Open", … and WriteLog "Save", …. Save, close, reopen with macros enabled, then save again. The gray cell shows TRUE when the Log sheet has at least one Open row and one Save row. | Choose Workbook in the left drop-down of the ThisWorkbook code window, then the event on the right |
-| 7 | Paste starter/BedBoard.cls into the BedBoard sheet's module and finish its Worksheet_Change handler. For each changed Status cell it should stamp StatusTime with Now and call WriteLog "Bed status", … once. Delete any "Bed status" rows that your testing left on the Log sheet, then make exactly these edits:<br>• Change 4W-405B's Status to Dirty.<br>• Select the Status cells of 4W-410A, 4W-410B and 4W-411A, type Clean, and press Ctrl + Enter (Mac: ⌘ + Return) to fill all three at once.<br>• In 4W-415A's Notes cell, type Bed alarm on.<br>The gray cell counts the Log's "Bed status" rows. | Intersect Target with the Status column, then loop For Each over the result |
+| 7 | Paste starter/BedBoard.cls into the BedBoard sheet's module and finish its Worksheet_Change handler. For each changed Status cell it should stamp StatusTime with Now and call WriteLog "Bed status", … once. Delete any "Bed status" rows that your testing left on the Log sheet, then make exactly these edits:<br>• Change 4W-405B's Status to Dirty.<br>• Select the Status cells of 4W-410A, 4W-410B, and 4W-411A, type Clean, and press Ctrl + Enter (Mac: ⌘ + Return) to fill all three at once.<br>• In 4W-415A's Notes cell, type Bed alarm on.<br>The gray cell counts the Log's "Bed status" rows. | Intersect Target with the Status column, then loop For Each over the result |
 | 8 | Build frmIntake (Guide §6–7) and use it to add these three ED arrivals on 12/31/2025. Type each arrival as yyyy-mm-dd hh:mm, for example 2025-12-31 11:41.<br>• 11:41 · MRN 02718484 · King, Gerald · Walk-In · ESI 3 · Vomiting / Dizziness · interpreter needed<br>• 11:44 · MRN 00787672 · Cruz, Bobby · Walk-In · ESI 4 · Vomiting / Dizziness · no interpreter<br>• 11:52 · MRN 05525049 · Rice, Jennifer · Ambulance · ESI 2 · Shortness of Breath · no interpreter<br>Then try to save a fourth record with MRN 787672. Your form must refuse it. The gray cell shows how many rows tblIntake has now. | ListRows.Add, then write each field into the new row |
 | 9 | How many MRNs in tblIntake are stored as 8-character text? The gray cell counts them with ISTEXT and LEN. If the count is lower than your row count in task 8, your form wrote some MRNs as numbers. Delete those rows, fix AddIntakeRow, and enter the patients again. | A TextBox gives you text, but Excel converts number-like text that lands in a General cell |
 | 10 | How many arrivals in tblIntake are ESI level 1 or 2 now? The gray cell uses COUNTIFS(tblIntake[ESILevel],"<=2"), which counts only real numbers. | Loop over the five option buttons with Me.Controls("optESI" & i) |
@@ -887,7 +907,7 @@ accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Cells in Intersect(Target, Status column)**
 
@@ -901,7 +921,7 @@ Rows 38–40 are below the table and columns other than C aren't Status cells, s
 - **Answer:** Application.EnableEvents = True
 - **Solution:** `Application.EnableEvents = True` (type it in the Immediate window and press Enter)
 
-EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays False after the macro stops, for every open workbook, until something sets it back. That's why every handler that turns it off needs an error handler that always turns it back on. The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or Developer → Macros).
+EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays False after the macro stops, for every open workbook, until something sets it back. That's why every handler that turns it off needs an error handler that always turns it back on. The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or **Developer → Macros**).
 
 **3. Timestamped file name from Format**
 
@@ -938,7 +958,7 @@ Private Sub Workbook_Open()
     Me.Worksheets("BedBoard").Activate
 End Sub
 
-' Runs just before every save (Ctrl+S, File > Save, Save As).
+' Runs just before every save (Ctrl + S, File > Save, Save As).
 ' Setting Cancel = True stops the save.
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
     Dim lo As ListObject
@@ -1059,7 +1079,7 @@ End Sub
 ```
 
 
-The table started with 69 arrivals, and three valid saves make 72. If you see 73, the 6-digit MRN got through, so check your Like "########" test (# matches exactly one digit). An extra, half-empty row instead means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row (right-click → Delete → Table Rows) and fix the error. ListRows.Add grows the Table itself, so formats, formulas, and anything that refers to tblIntake pick up the new row automatically. The full form code is in solutions/frmIntake.vba.
+The table started with 69 arrivals, and three valid saves make 72. If you see 73, the 6-digit MRN got through, so check your Like "########" test (# matches exactly one digit). An extra, half-empty row instead means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row (right-click → **Delete → Table Rows**) and fix the error. ListRows.Add grows the Table itself, so formats, formulas, and anything that refers to tblIntake pick up the new row automatically. The full form code is in solutions/frmIntake.vba.
 
 **9. Intake form: MRNs kept as text**
 
@@ -1184,7 +1204,7 @@ The Chief Nursing Officer wants a monthly census packet without anyone copying a
 
 Run it for December 2025 (the month already in Settings!B3), then set Settings!B3 to 01/01/2025 and run it again. The gray cells read your report sheets.
 
-Work on the **Bonus** sheet of the workbook.
+Write the macro in the VBE and run it as described. The gray cells on the workbook's **Bonus** sheet read the **Report_2025-12** and **Report_2025-01** sheets it creates and the path in **Settings!B6**, so there's nothing to type there.
 
 - **B1.** What was the December 2025 average daily census (ADC) of Bluestone Memorial's Intensive Care Unit (D130)? The gray cell looks it up on Report_2025-12. *(Hint: ADC = patient days ÷ 31 for December)*
 - **B2.** Which unit (DeptID) had the highest occupancy in December 2025? The gray cell reads the first unit row of Report_2025-12, so your sort must be right. *(Hint: Range.Sort on the Occupancy column, descending, before you add the Total row)*
@@ -1195,7 +1215,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. December ADC for D130**
 

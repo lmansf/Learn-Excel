@@ -123,24 +123,25 @@ insert the parentheses and argument names.
 | A cell passed as an argument changes | Recalculates the UDF |
 | A cell the code reads directly (not an argument) changes | Nothing, so the result goes stale |
 | The function calls `Application.Volatile` | Recalculates it whenever anything recalculates, like TODAY and NOW |
-| You edit the VBA code | Nothing yet. Re-enter the cell: F2, then Enter (Mac: ⌃ + U, then Return) |
+| You edit the VBA code | Nothing yet. Re-enter the cell: F2, then Enter (Mac: Control + U, then Return) |
 | You press Ctrl + Alt + F9 (Windows) | Recalculates every formula in every open workbook |
 
 To refresh a whole column of UDF cells after you fix your code, on Windows or on a Mac, select the cells, open
-**Replace** (Ctrl + H; Mac: ⌃ + H), and replace `=` with `=`. Excel re-enters every formula in the selection, so each
-cell runs your new code.
+**Replace** (Ctrl + H; Mac: Control + H), and replace `=` with `=`. Excel re-enters every formula in the selection, so
+each cell runs your new code.
 
 > ⚠️ Pass every input as an argument. A function that reads `Range("ReportDate")` inside its code won't update when
 > ReportDate changes, because Excel doesn't know the function depends on that cell.
 
 > 💡 **Tip:** To debug a UDF, click a line inside it and press **F9** (Mac: **Debug → Toggle Breakpoint**) to set a
-> breakpoint. Then select a cell that uses the function and re-enter it (F2, then Enter; Mac: ⌃ + U, then Return). The
-> VBE stops at the breakpoint, and you step through with F8 (Mac: **Debug → Step Into**) as in Lesson 5.2. Remove the
-> breakpoint when you're done, or every recalculation stops there.
+> breakpoint. Then select a cell that uses the function and re-enter it (F2, then Enter; Mac: Control + U, then
+> Return). The VBE stops at the breakpoint, and you step through with F8 (Mac: **Debug → Step Into**) as in Lesson 5.2.
+> Remove the breakpoint when you're done, or every recalculation stops there.
 
 > 📋 **Version note:** UDFs run in Excel for Windows and Excel for Mac. Excel for the web, iPad, and iPhone can't run
 > VBA, so UDF cells can't recalculate there. If you need a reusable formula that works everywhere, a named LAMBDA
-> (Lesson 4.2, which needs Microsoft 365 or Excel 2024) is the macro-free alternative for pure calculations.
+> (Lesson 4.2, which needs Microsoft 365 or Excel 2024) is the macro-free alternative for pure calculations. Lesson
+> 4.2's LOSDAYS LAMBDA follows a different rule from this lesson's LOSDAYS UDF, though (section 6 compares them).
 
 > 📋 Each UDF call has some overhead. A few thousand UDF cells are fine. Hundreds of thousands can make a workbook
 > sluggish, and a built-in formula is usually faster when one can do the job.
@@ -334,6 +335,12 @@ boundaries (midnights) between two date-times.
 **Worked example.** Encounter ENC111251 (row 26 of the Encounters sheet) is an observation stay admitted 01/15/2025 at
 21:16 and discharged 01/16/2025 at 10:27. That's only 13 hours, but it crosses one midnight, so
 `DateDiff("d", …)` returns 1. Counting midnights is how hospitals count inpatient days.
+
+> 📋 Lesson 4.2 also defines a LOSDAYS, as a named LAMBDA, but its rule is different. That version has a **1-day
+> minimum**: a same-day stay counts as 1, and so does a discharge keyed before the admission. This lesson's LOSDAYS
+> UDF has **no minimum**. It counts midnights only, so a same-day stay returns 0, and a discharge before the admission
+> returns #VALUE!. The two functions give different totals on the same stays, so don't mix them in one report, and
+> don't expect this lesson's answers to match a LOSDAYS LAMBDA.
 
 Why return an error instead of 0 or a blank? A 0 looks exactly like a same-day stay, so a typo would quietly pull
 the average length of stay down. An error can't be mistaken for data. You can still summarize around it:
@@ -788,6 +795,36 @@ To turn your UDF modules into an **add-in**:
 > ⚠️ A workbook that uses add-in functions stores the add-in's location. On a colleague's computer without the add-in,
 > those cells can't recalculate. Share the add-in, or keep the functions in the workbook itself.
 
+### 15. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Save as a macro-enabled workbook | F12, then choose **.xlsm** | ⌘ + Shift + S, then choose **.xlsm** |
+| Open or switch to the VBE | Alt + F11 | Option + F11, or **Developer → Visual Basic** |
+| Run a macro from Excel | Alt + F8 | Option + F8 |
+| Import a `.bas` module | Ctrl + M, or **File → Import File…** | **File → Import File…** |
+| Properties window (to rename a module) | F4 | **View → Properties Window** |
+| Immediate window | Ctrl + G | **View → Immediate Window** |
+| Run the Sub the cursor is in | F5 | **Run → Run Sub/UserForm** |
+| Toggle a breakpoint | F9 | **Debug → Toggle Breakpoint** |
+| Step Into | F8 | **Debug → Step Into** |
+| Stop a paused macro | **Run → Reset** | **Run → Reset** |
+| Find compile errors | **Debug → Compile VBAProject** | **Debug → Compile VBAProject** |
+| Re-enter one cell so its UDF reruns | F2, then Enter | Control + U, then Return |
+| Re-enter a column of UDF formulas | Ctrl + H, then replace `=` with `=` | Control + H, then replace `=` with `=` |
+| Insert a UDF's argument names | Type `=BMI`, then Ctrl + Shift + A | Click **fx** next to the formula bar |
+
+On a Mac laptop whose top-row keys control brightness and volume, hold **Fn** as well: Fn + Option + F11.
+
+| Feature | Availability |
+|---|---|
+| UDFs, Collections, `On Error` and the Err object, add-ins (.xlam) | Desktop Excel for Windows and Mac. Excel for the web, iPad, and iPhone can open an .xlsm file but can't run its VBA, so UDF cells can't recalculate there |
+| `Scripting.Dictionary` | Excel for Windows only. On a Mac, `CreateObject` stops with run-time error 429, so use Collections (section 10) |
+| `Application.MacroOptions` descriptions (section 14) | Excel for Windows. `ArgumentDescriptions` needs Excel 2010 or later |
+| `AGGREGATE`, to sum or average around error cells | Excel 2010 or later |
+| A named LAMBDA, the macro-free alternative to a UDF (Lesson 4.2) | Microsoft 365 and Excel 2024 |
+| UNIQUE, FILTER, and SORTBY in the answer key's cross-check formulas | Microsoft 365 and Excel 2021 or later |
+
 ## 🧪 Hands-on practice
 
 Download [`5.4-vba-functions-error-handling.xlsx`](5.4-vba-functions-error-handling.xlsx), save it as .xlsm, and import
@@ -903,7 +940,7 @@ them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. BMI for the first patient**
 
@@ -1116,7 +1153,7 @@ End Sub
 ```
 
 
-`.Exists` asks whether a key is already in the dictionary, so each PatientID is added once and `.Count` is the number of different patients. 1,093 claims come from 631 patients because 265 patients had more than one claim. `Dim patients As Object` with `CreateObject` is **late binding**: it needs no reference to the Scripting Runtime library, so the file works on any Windows PC. In Microsoft 365 the key's `=ROWS(UNIQUE(…))` gives the same answer, but the dictionary pattern scales to jobs a formula can't do, like the bonus.
+`.Exists` asks whether a key is already in the dictionary, so each PatientID is added once and `.Count` is the number of different patients. 1,093 claims come from 631 patients because 265 patients had more than one claim. `Dim patients As Object` with `CreateObject` is **late binding**: it needs no reference to the Scripting Runtime library, so the file works on any Windows PC. In Microsoft 365 and Excel 2021 or later, the key's `=ROWS(UNIQUE(…))` gives the same answer, but the dictionary pattern scales to jobs a formula can't do, like the bonus.
 
 **10. TopDeniedPayer (two dictionaries)**
 
@@ -1204,13 +1241,13 @@ Cedar Ridge's revenue-cycle director wants a payer scorecard she can rebuild wit
 4. It writes a sheet named PayerSummary, clearing it first if it already exists. Row 1 holds the headers PayerID, PayerName, Claims, Billed, Paid, Denied, DenialRate (Denied ÷ Claims). Below it go one row per payer, sorted by Billed from largest to smallest, and then a TOTAL row: the word TOTAL in column A, the totals in C:F, and the overall rate in G. Two rows below TOTAL, column A holds the text Rows skipped and column B holds the count.
 5. It restores ScreenUpdating and Calculation even when an error stops the macro.
 
-Work on the **Bonus** sheet of the workbook.
+Write the macro in the VBE. It creates the **PayerSummary** sheet, and the gray cells on the workbook's **Bonus** sheet read it, so there's nothing to type there.
 
 - **B1.** Run BuildPayerSummary. Which payer has the third-highest billed charges? (It's the PayerName in cell B4 of PayerSummary, and the gray cell reads it.) *(Hint: Range.Sort with Key1:=the Billed header cell, Order1:=xlDescending, Header:=xlYes)*
 - **B2.** What DenialRate does your PayerSummary show for Silverline Medicare Advantage? (The gray cell finds Silverline's row on PayerSummary and reads column G.) *(Hint: The array-in-a-dictionary pattern: copy it out, change it, put it back)*
 - **B3.** What total Paid does the TOTAL row of PayerSummary show? (The gray cell reads column E of the TOTAL row, and the check compares it to the cent.) *(Hint: Accumulate the totals in the same loop that fills the output array)*
 - **B4.** How many claim rows did your macro skip because BilledAmount or PaidAmount was not a number? (The gray cell reads the number next to 'Rows skipped'.) *(Hint: A blank cell read into an array is Empty, and VarType(Empty) is vbEmpty)*
-- **B5.** Test the error handling. (1) Rename the Claims sheet to Claims_old and run BuildPayerSummary: you should get your friendly message, not a run-time error. (2) Rename it back. (3) Temporarily change the header text in the Claims sheet's BilledAmount cell (E1) to Billed and run the macro again: the Fail handler should report the missing column, and Formulas → Calculation Options should still show Automatic afterwards. (4) Put the header back and run the macro once more. *(Hint: Check before you change settings, and clean up in one place)*
+- **B5.** Test the error handling. (1) Rename the Claims sheet to Claims_old and run BuildPayerSummary: you should get your friendly message, not a run-time error. (2) Rename it back. (3) Temporarily change the header text in the Claims sheet's BilledAmount cell (E1) to Billed and run the macro again: the Fail handler should report the missing column, and **Formulas → Calculation Options** should still show Automatic afterwards. (4) Put the header back and run the macro once more. *(Hint: Check before you change settings, and clean up in one place)*
 <!-- END GENERATED: bonus -->
 
 The reference solutions are in [`solutions/PayerSummary_Solution.bas`](solutions/PayerSummary_Solution.bas) (Windows,
@@ -1219,7 +1256,7 @@ Collections only, and it also runs on Windows). Both are spoilers.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Third-highest billed payer**
 

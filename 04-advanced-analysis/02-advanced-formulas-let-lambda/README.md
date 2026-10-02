@@ -81,7 +81,7 @@ with a 1 on every F01 stay that went home, and `SUM` or `SUMPRODUCT` of that arr
 > converts criteria strings to numbers, but a plain `=` comparison doesn't convert anything.
 
 > 💡 **Tip:** To see a short array, type a test formula such as `=SUM((Stays!C2:C6="F01")*1)`, select the part
-> `Stays!C2:C6="F01"` in the formula bar, and press **F9** (Mac: **Fn + F9**). Excel shows `{TRUE;FALSE;FALSE;TRUE;FALSE}`.
+> `Stays!C2:C6="F01"` in the formula bar, and press **F9** (Mac: **⌘ + =**, or **Fn + F9**). Excel shows `{TRUE;FALSE;FALSE;TRUE;FALSE}`.
 > Press **Esc** afterwards. If you press Enter instead, Excel replaces that part of the formula with the constant values. F9
 > can't display a whole 5,586-row column, because the result would be longer than Excel's 8,192-character formula limit. To
 > inspect a full column, type the piece into a cell on the **Sandbox** sheet and let it spill.
@@ -160,7 +160,7 @@ Of the 2,905 stays discharged in 2025, **2,402** went home (Home/Self-Care or Ho
 
 A list is shorter than one comparison per value, and you can add a value to it without touching the rest of the formula.
 
-> 📋 **SUM or SUMPRODUCT?** In Microsoft 365 and Excel 2021+, `=SUM((condition1)*(condition2))` works too, because these
+> 📋 **Version note:** In Microsoft 365 and Excel 2021 or later, `=SUM((condition1)*(condition2))` works too, because these
 > versions evaluate arrays in any formula. In Excel 2019 and earlier, SUM needed **Ctrl + Shift + Enter** (Mac: **⌘ + Shift +
 > Return**) to do array math, but SUMPRODUCT never did. That's why you'll see SUMPRODUCT in older workbooks.
 
@@ -193,8 +193,9 @@ The first formula searches top-down (search_mode 1, the default) and returns the
 uses search_mode **-1** to search bottom-up, so it returns the *most recent* result from 12/04/2025. On a sorted sheet, -1
 means "latest".
 
-> 📋 **Before XLOOKUP**, the same lookup was written `=INDEX(return_range, MATCH(1, (condition1)*(condition2), 0))`. In
-> Excel 2019 and earlier it has to be confirmed with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return).
+> 📋 **Version note:** Before XLOOKUP, the same lookup was written
+> `=INDEX(return_range, MATCH(1, (condition1)*(condition2), 0))`. In Excel 2019 and earlier it has to be confirmed with
+> **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**).
 
 #### 4b. FREQUENCY: distributions in one formula
 
@@ -364,8 +365,8 @@ observed LOS days ÷ expected LOS days is **1.23**:
 This ratio is the **LOS index**, often written **O/E** (observed ÷ expected). A value above 1.00 means patients stayed longer
 than the benchmark. Divide the totals rather than averaging each stay's ratio, so long stays carry their proper weight.
 
-> 💡 **Tip:** Long formulas are easier to read on several lines. Press **Alt + Enter** (Mac: **⌃ + ⌥ + Return**) inside the
-> formula bar to start a new line, and add spaces to indent. Press **Ctrl + Shift + U** (Mac: **⌃ + Shift + U**) to expand the
+> 💡 **Tip:** Long formulas are easier to read on several lines. Press **Alt + Enter** (Mac: **Control + Option + Return**) inside the
+> formula bar to start a new line, and add spaces to indent. Press **Ctrl + Shift + U** (Mac: **Control + Shift + U**) to expand the
 > formula bar so you can see every line.
 
 ### 6. LAMBDA: build your own functions
@@ -437,7 +438,7 @@ These functions run a LAMBDA many times for you, each in a different pattern:
 | **REDUCE** | once per item, in order | the running result so far and the next item | only the final result | Loop over a list of codes |
 | **MAKEARRAY** | once per cell of a grid you size | a row number and a column number | the grid | Facility × year summary |
 
-#### MAP
+#### 7a. MAP
 
 ```
 =MAP(array1, [array2, …], LAMBDA(item1, [item2, …], calculation))
@@ -453,7 +454,7 @@ MAP passes one item at a time, so AND, OR, and MAX behave. Count F02 stays disch
 
 The result is **12**. The arrays must all be the same size, and the LAMBDA needs one parameter per array, in the same order.
 
-#### BYROW and BYCOL
+#### 7b. BYROW and BYCOL
 
 ```
 =BYROW(array, LAMBDA(r, calculation))
@@ -472,7 +473,7 @@ BYROW really pays off when each row needs a function that would otherwise swallo
 `BYROW(range, LAMBDA(r, AND(r>0)))` ("every cell in this row is positive") or `BYROW(range, LAMBDA(r, MAX(r)))`.
 `=BYCOL(tblCensus[[Admissions]:[MidnightCensus]], LAMBDA(col, MAX(col)))` returns `{12, 12, 20}`, the maximum of each column.
 
-#### SCAN
+#### 7c. SCAN
 
 ```
 =SCAN(initial_value, array, LAMBDA(accumulator, item, calculation))
@@ -504,7 +505,7 @@ on a FALSE, so it measures **streaks**. With this illustration input:
 LAMBDA(run, full, IF(full, run+1, 0))))` returns **4**, the longest run of nights when every ICU bed was full. Streaks depend on
 the previous row's result, so SUMPRODUCT and COUNTIFS can't calculate them without a helper column.
 
-#### REDUCE
+#### 7d. REDUCE
 
 ```
 =REDUCE(initial_value, array, LAMBDA(accumulator, item, calculation))
@@ -521,7 +522,7 @@ The result is **165**. `{"Expired","Hospice"}` is an array constant like the one
 a row, and semicolons separate items down a column, so `{"F01";"F02";"F03"}` (used by MAKEARRAY below) is a vertical list of
 three facility IDs. REDUCE, MAP, and SCAN accept either shape.
 
-#### MAKEARRAY
+#### 7e. MAKEARRAY
 
 ```
 =MAKEARRAY(rows, columns, LAMBDA(r, c, calculation))
@@ -570,17 +571,17 @@ A long formula that returns a believable number can still be wrong. These tools 
 > quotes. To check a whole condition, count its TRUE values (see *Count each condition on its own* below).
 
 > 📋 Evaluate Formula is in every Windows version of Excel, but Excel for Mac doesn't have it. On a Mac, copy pieces of the
-> formula into Sandbox cells and let them spill, or select a piece in the formula bar and press **Fn + F9** (then **Esc**).
+> formula into Sandbox cells and let them spill, or select a piece in the formula bar and press **⌘ + =** (then **Esc**).
 > In Microsoft 365, selecting a piece of a formula while you edit it also shows its value in a small tooltip.
 
 | Tool | Where | What it tells you |
 |---|---|---|
-| **F2** (Mac: **Fn + F2** or **⌃ + U**) | Edit the cell | Each reference gets a color, and a matching colored box outlines the cells on the sheet. A box that's one row too low is easy to spot |
-| **F9** (Mac: **Fn + F9**) on a selected part | Formula bar | The value of just that part, if the result is short enough to display. Press **Esc** afterwards |
-| **Trace Precedents / Trace Dependents** | Formulas → Formula Auditing | Arrows to the cells a formula uses, or to the formulas that use this cell. **Remove Arrows** clears them |
-| **Ctrl + [** (Mac: **⌃ + [**) | Keyboard | Selects the cells the formula refers to, even on another sheet |
-| **Watch Window** | Formulas → Watch Window | Keeps chosen cells' values in view while you work elsewhere (on a Mac: Microsoft 365, or Excel 2021 and later) |
-| **Show Formulas**, **Ctrl + `` ` ``** (Mac: **⌃ + `` ` ``**) | Keyboard | Shows formulas instead of results in every cell |
+| **F2** (Mac: **Control + U**, or **Fn + F2**) | Edit the cell | Each reference gets a color, and a matching colored box outlines the cells on the sheet. A box that's one row too low is easy to spot |
+| **F9** (Mac: **⌘ + =**) on a selected part | Formula bar | The value of just that part, if the result is short enough to display. Press **Esc** afterwards |
+| **Trace Precedents / Trace Dependents** | **Formulas → Formula Auditing** | Arrows to the cells a formula uses, or to the formulas that use this cell. **Remove Arrows** clears them |
+| **Ctrl + [** (Mac: **Control + [**) | Keyboard | Selects the cells the formula refers to, even on another sheet |
+| **Watch Window** | **Formulas → Watch Window** | Keeps chosen cells' values in view while you work elsewhere (on a Mac: Microsoft 365, or Excel 2021 and later) |
+| **Show Formulas**, **Ctrl + `` ` ``** (Mac: **Control + `` ` ``**) | Keyboard | Shows formulas instead of results in every cell |
 
 **Debugging a LET.** Temporarily replace the last argument with one of the names. If the average looks wrong, change
 `SUM(los*keep)/SUM(keep)` to `SUM(keep)` and press Enter. For the heart failure example in section 5 you should see 36. If you see 0,
@@ -607,7 +608,30 @@ A checklist for any long formula:
 4. Test it on a case you can verify by hand, such as a single patient or a single day.
 5. Compare the total with a simpler method, such as a COUNTIFS or a filtered column's status-bar count.
 
-### 9. Performance and compatibility
+### 9. Performance
+
+- **Use Tables, not whole columns.** `tblStays[FacilityID]` covers exactly the data rows.
+- **Name repeated work with LET.** Excel calculates each name once, however many times the formula uses it.
+- **Avoid volatile functions** (OFFSET, INDIRECT, TODAY, NOW, RAND) in large models.
+- **Choose between a helper column and one formula.** A helper column such as Readmit30 is easy to inspect and filter. A single
+  LET formula is self-contained and can't be broken by someone deleting a column. Both are good choices for different audiences.
+- **Calculation mode.** If a big workbook feels slow while you build it, switch to **Formulas → Calculation Options → Manual**,
+  press **F9** (Mac: **⌘ + =**) to recalculate, and switch back to Automatic when you're done.
+
+### 10. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Show the value of a selected part of a formula | F9, then Esc | ⌘ + = (or Fn + F9), then Esc |
+| Recalculate the workbook (Manual calculation) | F9 | ⌘ + = |
+| Edit the active cell and show colored range boxes | F2 | Control + U (or Fn + F2) |
+| Line break inside a formula | Alt + Enter | Control + Option + Return |
+| Expand or collapse the formula bar | Ctrl + Shift + U | Control + Shift + U |
+| Open the Name Manager | Ctrl + F3 | **Formulas → Define Name** |
+| Select the cells a formula refers to | Ctrl + [ | Control + [ |
+| Show formulas instead of results | Ctrl + `` ` `` | Control + `` ` `` |
+| Step through a formula | **Formulas → Evaluate Formula** | not available (use the Sandbox sheet) |
+| Enter a legacy array formula (Excel 2019 and earlier) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
 
 | Function | Excel 2016/2019 | Excel 2021 | Excel 2024 | Microsoft 365 & web |
 |---|:-:|:-:|:-:|:-:|
@@ -616,19 +640,12 @@ A checklist for any long formula:
 | TAKE, DROP, VSTACK | ❌ | ❌ | ✅ | ✅ |
 | LAMBDA, MAP, BYROW, BYCOL, SCAN, REDUCE, MAKEARRAY, ISOMITTED | ❌ | ❌ | ✅ | ✅ |
 
-- **Use Tables, not whole columns.** `tblStays[FacilityID]` covers exactly the data rows.
-- **Name repeated work with LET.** Excel calculates each name once, however many times the formula uses it.
-- **Avoid volatile functions** (OFFSET, INDIRECT, TODAY, NOW, RAND) in large models.
-- **Choose between a helper column and one formula.** A helper column such as Readmit30 is easy to inspect and filter. A single
-  LET formula is self-contained and can't be broken by someone deleting a column. Both are good choices for different audiences.
-- **Calculation mode.** If a big workbook feels slow while you build it, switch to **Formulas → Calculation Options → Manual**,
-  press **F9** (Mac: **Fn + F9**) to recalculate, and switch back to Automatic when you're done.
-
 ## 🧪 Hands-on practice
 
 Download [`4.2-advanced-formulas-let-lambda.xlsx`](4.2-advanced-formulas-let-lambda.xlsx) and open the **Practice** sheet. Type
-each formula in the yellow cell, and the **Check** column turns green when you're right. Tasks 8–12 and bonus B3 need Microsoft 365
-or Excel 2024. Tasks 3, 4, 6, 7, and the bonus use XLOOKUP, FILTER, or LET, which need Excel 2021 or later.
+each formula in the yellow cell, and the **Check** column turns green when you're right. For Task 5, fill the yellow Readmit30
+column on the **Stays** sheet instead, and a gray cell on Practice totals it. Tasks 8–12 and bonus B3 need Microsoft 365 or
+Excel 2024. Tasks 3, 4, 6, 7, and the bonus use XLOOKUP, FILTER, or LET, which need Excel 2021 or later.
 
 <!-- BEGIN GENERATED: practice -->
 Every task works on the Excel Tables in this workbook. Table references such as tblStays[FacilityID] are the easiest to read, and A1 ranges such as Stays!\$C\$2:\$C\$5587 work too. LOS days = discharge date − admit date (midnights), with a minimum of 1 day. Each answer cell must return ONE value, so try array formulas on the Sandbox sheet first.
@@ -642,7 +659,7 @@ Every task works on the Excel Tables in this workbook. Table references such as 
 | 5 | On the Stays sheet, fill the yellow Readmit30 column: 1 if the same patient has another stay whose AdmitDateTime is after this stay's DischargeDateTime and whose admit DATE is 0–30 days after this stay's discharge DATE, otherwise 0. The gray cell totals your column. How many stays were followed by a 30-day readmission? | COUNTIFS over the whole table, using this row's PatientID and DischargeDateTime as criteria. Compare dates with INT(). |
 | 6 | Write ONE LET formula that names the admit and discharge columns, computes LOS days (minimum 1), and returns the average LOS days for sepsis stays (PrimaryDxCode A41.9) at Bluestone Memorial (F01) discharged in 2025. Round to 2 decimal places with ROUND. | Name each step (nights, then los, then a 1/0 keep array). A conditional average is SUM(los*keep)/SUM(keep). |
 | 7 | The LOS index (observed ÷ expected) compares actual LOS days with the benchmark ExpectedLOS of each stay's diagnosis (Diagnoses sheet). Calculate it for Cedar Ridge (F03) stays discharged in 2025: total LOS days ÷ total ExpectedLOS. Enter the ratio to at least 2 decimal places. | Inside LET, XLOOKUP the whole PrimaryDxCode column. You get one ExpectedLOS for every stay. |
-| 8 | Create a named function LOSDAYS(admit, discharge) in the Name Manager that returns LOS days (discharge date − admit date, minimum 1). Then call it on whole columns. What is the total of LOS days for Ashby Falls (F02) stays discharged in 2025? | Formulas → Name Manager → New. Test the LAMBDA in a cell first, for example =LAMBDA(…)(Stays!E2,Stays!F2). |
+| 8 | Create a named function LOSDAYS(admit, discharge) in the Name Manager that returns LOS days (discharge date − admit date, minimum 1). Then call it on whole columns. What is the total of LOS days for Ashby Falls (F02) stays discharged in 2025? | **Formulas → Name Manager → New**. Test the LAMBDA in a cell first, for example =LAMBDA(…)(Stays!E2,Stays!F2). |
 | 9 | Utilization review audits inpatient stays that spanned fewer than 2 midnights (discharge date − admit date < 2). Using MAP with a LAMBDA that uses AND, count Bluestone Memorial (F01) stays discharged in 2025 that spanned fewer than 2 midnights. | MAP can take several same-size arrays and passes one value from each to your LAMBDA. Wrap the result in SUM. |
 | 10 | On the Labs sheet, count the results outside their reference range (ResultValue below RefLow or above RefHigh). Use BYROW over the three adjacent columns ResultValue:RefHigh with a LAMBDA that uses OR. | Inside BYROW, the LAMBDA gets one row of 3 cells: INDEX(r,1) is the value, INDEX(r,2) the low, INDEX(r,3) the high. |
 | 11 | The Census sheet holds the Bluestone Memorial ICU's daily census for 2024–2025. A day is 'strained' when MidnightCensus ÷ StaffedBeds is 90% or more. Using SCAN, find the longest run of consecutive strained days. | Keep a running count that adds 1 on a strained day and resets to 0 otherwise. Then take the MAX. |
@@ -658,7 +675,7 @@ same answers are below, collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Weekend admissions in 2025**
 
@@ -777,7 +794,7 @@ Define LOSDAYS as `=LAMBDA(admit, discharge, LET(nights, INT(discharge)-INT(admi
 ```
 
 
-MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, AND(...) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version `=SUMPRODUCT((tblStays[FacilityID]="F01")*(YEAR(tblStays[DischargeDateTime])=2025)*(INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])<2))` gives the same count. MAP is worth it when the per-row logic reads better with AND, OR, or MAX.
+MAP calls the LAMBDA once per stay, so `fac`, `adm`, and `dis` are single values and AND works. Outside MAP, AND(…) on whole columns would return one TRUE/FALSE for all 5,586 rows. The boolean-math version `=SUMPRODUCT((tblStays[FacilityID]="F01")*(YEAR(tblStays[DischargeDateTime])=2025)*(INT(tblStays[DischargeDateTime])-INT(tblStays[AdmitDateTime])<2))` gives the same count. MAP is worth it when the per-row logic reads better with AND, OR, or MAX.
 
 **10. Lab results outside the reference range (BYROW)**
 
@@ -850,7 +867,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Eligible index stays (system-wide)**
 
@@ -952,8 +969,8 @@ ISNUMBER(MATCH(…)) is the mirror image of the exclusion test: TRUE when the di
 
 - Comparisons on whole columns return TRUE/FALSE arrays. Multiply them for AND, add them for OR, and wrap an OR in `(…)>0` so no
   row counts twice.
-- Use SUMPRODUCT, or SUM in Microsoft 365, when the conditions need calculations such as YEAR, WEEKDAY, or LOS. Keep COUNTIFS and
-  SUMIFS for simple conditions.
+- Use SUMPRODUCT, or SUM in Microsoft 365 and Excel 2021 or later, when the conditions need calculations such as YEAR,
+  WEEKDAY, or LOS. Keep COUNTIFS and SUMIFS for simple conditions.
 - `XLOOKUP(1, (A)*(B), …)` matches on several columns, and search_mode -1 returns the latest match on a sorted sheet.
 - LET names each step once, which makes long formulas readable, faster, and easy to debug.
 - LAMBDA turns a tested LET into your own function. Test it in a cell, save it in the Name Manager, and use IF rather than MAX

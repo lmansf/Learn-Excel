@@ -195,7 +195,7 @@ LibreOffice is only a stand-in for Excel, and a few behaviors differ. Write summ
 | `lesson.practice_how` | You want a different Start Here "2. Practice" text |
 | `lesson.key_note` | You want a different subtitle on the hidden key sheets |
 | `lesson.bonus_where` | The bonus work happens on another sheet (`""` omits the README line) |
-| `lesson.sheet_notes = [(sheet, description)]` | You add sheets in a customize hook and want them listed on Start Here |
+| `lesson.sheet_notes = [(sheet, description)]` | You add sheets in a customize hook and want them listed on Start Here, or want a better description for a data sheet (a note with the same sheet name replaces the default text). The list follows `sheet_order` when it is set |
 | `lesson.sheet_order = [...]` | You need a different tab order. Put sheets that only the bonus uses right after the **Bonus** tab |
 | `lesson.verify_scan = [(sheet, "A1:Z99")]` | The verifier should also scan a custom sheet for error values |
 | `add_table_sheet(..., freeze=False, hidden=True, hidden_cols=[...])` | The lesson needs unfrozen, hidden sheets or hidden columns |

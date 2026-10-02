@@ -30,6 +30,7 @@ from __future__ import annotations
 from openpyxl.styles import Font, PatternFill
 
 from xlcourse import Lesson, Task, data
+from xlcourse.lesson import estimate_lines
 
 CODE = "5.1"
 FACILITY = "F03"           # Cedar Ridge Medical Center
@@ -109,7 +110,7 @@ CENSUS_CLEAN = '''Sub FormatCensusReport_Clean()
     Columns("A").NumberFormat = "mm/dd/yyyy"
 
     ' The TOTAL row goes one row below the last date in column A
-    ' (the same cell Ctrl+Down and then Down arrow would reach).
+    ' (the same cell that Ctrl + Down arrow, then Down arrow, would reach).
     With Range("A1").End(xlDown).Offset(1, 0)
         .Value = "TOTAL"
         ' Columns D:G: from row 2 (fixed) down to the row above (relative).
@@ -203,7 +204,7 @@ def _ha_edited(nov_last: int, nov_ha_last: int) -> str:
     ActiveSheet.Name = "HighAcuity"                     ' EDIT: was Sheets("Sheet1").Select / .Name
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Clear
     ' EDIT: keys were Range("E2:E{nov_ha_last}") and Range("C2:C{nov_ha_last}"). One cell is enough
-    ' to name the key column. (.Add works in Excel 2007 and later; Excel 365 records .Add2.)
+    ' to name the key column. (.Add works in Excel 2007 and later; Microsoft 365 records .Add2.)
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("E1"), _
         SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("C1"), _
@@ -235,11 +236,13 @@ SPOILER = [
     "Lesson 5.1 - Recording Your First Macros - reference solution",
     "SPOILER: record your own macro first, then compare.",
     "",
-    "To import: open the VBE (Alt+F11, Mac: Option+F11), choose File > Import File...",
-    "and pick this .bas file. If your workbook already has a macro with the same",
-    "name, rename or delete one of them first so it's clear which one runs.",
+    "To import: open the VBE with Alt + F11 (Mac: Option + F11, or Developer >",
+    "Visual Basic), choose File > Import File..., and pick this .bas file. If your",
+    "workbook already has a macro with the same name, rename or delete one of them",
+    "first so it's clear which one runs.",
     "An imported macro has no shortcut key (the 'Keyboard Shortcut' line is only a",
-    "comment). Set one with Macros (Alt+F8, Mac: Option+F8) > select it > Options...",
+    "comment). To set one, open Macros (Alt + F8; Mac: Option + F8), select it, and",
+    "click Options...",
     "Save the workbook as .xlsm to keep the code.",
 ]
 
@@ -345,15 +348,40 @@ def build() -> Lesson:
     L.start_notes = [
         "This workbook is an .xlsx file, so it can't store macros. Before you record, use File → Save As (F12; Mac: ⌘ + Shift + S) "
         "and choose Excel Macro-Enabled Workbook (*.xlsm).",
-        "Ctrl + Z can't undo a macro. Save before you run a macro you just recorded, so you can close without saving if it goes wrong.",
+        "Ctrl + Z (Mac: ⌘ + Z) can't undo a macro. Save before you run a macro you just recorded, so you can close without saving "
+        "if it goes wrong.",
         "Reference macros (.bas files) are in the lesson's solutions/ folder on GitHub. They're spoilers, so record your own first.",
     ]
+    # Nothing here is a formula, several Practice cells and every Bonus cell are gray, so the generic
+    # "Type a formula or value in each yellow cell" lines don't fit.
+    L.practice_how = ("Go to the 'Practice' sheet. Type your answers in the yellow cells. The gray cells read the TOTAL rows your "
+                      "macro writes on the census sheets.")
+    L.practice_instructions = (
+        "Type your answer in each yellow cell. The gray cells fill in by themselves once your macro has run. The Check column "
+        "turns green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → "
+        f"Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        f"There's nothing to type on this sheet. The gray cells read the {HA_SHEET} sheet your macro builds from ED_Dec, and the "
+        "Check column turns green when they match. Stuck? Read the hint, then Guide section 9. Answers: right-click a sheet tab → "
+        f"Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Record the macro on the **ED_Nov** sheet and run your edited version on **ED_Dec**. The gray cells on the "
+                     f"**Bonus** sheet check the {HA_SHEET} sheet it builds.")
+    # ED_Nov and ED_Dec are used only by the bonus, so they sit right after the Bonus tab.
+    L.sheet_order = ["Start Here", "Practice", "Census_Nov", "Census_Dec", "Bonus", "ED_Nov", "ED_Dec", "Answer Key", "Bonus Key"]
+    # Start Here lists each data sheet as "Data: N rows"; the customize hook adds what each export is for.
+    sheet_roles = {
+        "Census_Nov": "November's raw census export. Record FormatCensusReport here (tasks 7–8).",
+        "Census_Dec": "December's raw census export. Add the button and run your macro here (tasks 10–12).",
+        "ED_Nov": "November's raw ED export (bonus only). Record ExtractHighAcuity here.",
+        "ED_Dec": f"December's raw ED export (bonus only). Your edited macro builds {HA_SHEET} from it.",
+    }
 
     L.tasks = [
         Task("This workbook is an .xlsx file, which can't store macros. Which file extension does the Excel Macro-Enabled Workbook "
              "format use, the format you save it in before you record? Type the extension, like .xlsx",
-             answer=".xlsm", accept=["xlsm", "*.xlsm"], hint="File → Save As shows each format's extension in the Save as type list",
-             solution="**.xlsm**: File → Save As (F12; Mac: ⌘ + Shift + S) → *Save as type:* **Excel Macro-Enabled Workbook (*.xlsm)**.",
+             answer=".xlsm", accept=["xlsm", "*.xlsm"],
+             hint="**File → Save As** shows each format's extension in the Save as type list",
+             solution="**.xlsm**: **File → Save As** (F12; Mac: ⌘ + Shift + S) → *Save as type:* **Excel Macro-Enabled Workbook (*.xlsm)**.",
              explanation="An .xlsx file can't contain VBA code. If you save a workbook that has macros as .xlsx, Excel warns you that "
                          "the *VB project* can't be saved, and if you click **Yes** it throws the code away. .xlsb, .xltm, .xlam and the "
                          "old .xls can hold macros too, but .xlsm is the everyday format for a workbook with macros. Save as .xlsm now, "
@@ -361,7 +389,8 @@ def build() -> Lesson:
         Task("A colleague emails you Census_Report.xlsm. When you open it, a red bar says Microsoft has blocked macros because the "
              "source of this file is untrusted. Which is the safe way to run its macros? Type the letter.\n"
              "A: Change the Trust Center to Enable VBA macros.\n"
-             "B: Confirm with the colleague that they sent it, save it to your computer, then right-click the file → Properties → tick Unblock.\n"
+             "B: Confirm with the colleague that they sent it, save it to your computer, then right-click the file → **Properties** → "
+             "tick **Unblock**.\n"
              "C: Click Enable Content on the red bar.\n"
              "D: Rename the file to .xlsx.",
              answer="B", hint="The red bar has no Enable button. Look at the file's Properties",
@@ -372,8 +401,10 @@ def build() -> Lesson:
                          "and renaming to .xlsx (D) doesn't run anything because .xlsx can't hold macros. Unblocking one file you've "
                          "verified is the targeted, safe fix."),
         Task("Which function key do you press with Alt (Mac: Option) to open the Visual Basic Editor? Type just the key, like F5.",
-             answer="F11", accept=["alt+f11", "alt + f11", "option+f11", "option + f11"], hint="It's also on the Developer tab: Visual Basic",
-             solution="**F11**: Alt + F11 on Windows, Option + F11 on a Mac (add Fn if your top-row keys control brightness and volume).",
+             answer="F11", accept=["alt+f11", "alt + f11", "option+f11", "option + f11"],
+             hint="It's also on the ribbon: **Developer → Visual Basic**",
+             solution="**F11**: Alt + F11 (Mac: Option + F11, or **Developer → Visual Basic**). On a Mac laptop, add Fn if your "
+                      "top-row keys control brightness and volume.",
              explanation="Alt + F11 opens the Visual Basic Editor (VBE), where the recorder puts your code. Pressing it again flips back to "
                          "Excel. Alt + F8 (Mac: Option + F8) opens the Macro dialog instead."),
         Task("On Windows, what is the file name (with extension) of the Personal Macro Workbook, the hidden workbook that makes a macro "
@@ -400,7 +431,7 @@ def build() -> Lesson:
                          f"makes that same move from wherever it starts. From H10 that lands on {rel_answer}. The Enter key is stored as "
                          "another move, ActiveCell.Offset(1, 0)."),
         Task("Record the FormatCensusReport macro on the Census_Nov sheet by following the recipe in Guide section 7 (TOTAL row recorded "
-             "with relative references, shortcut Ctrl + Shift + R). The gray cell finds the row your macro labeled TOTAL and reads its "
+             "with relative references, shortcut Ctrl + Shift + R, Mac: Option + ⌘ + Shift + R). The gray cell finds the row your macro labeled TOTAL and reads its "
              "MidnightCensus cell, which should equal November's patient days.",
              answer=nov_pd, title="Record FormatCensusReport on Census_Nov (TOTAL patient days)",
              summary=total_cell("Census_Nov", "G"), fill=nov_fill,
@@ -420,23 +451,26 @@ def build() -> Lesson:
              summary=total_cell("Census_Nov", "H"), fill=nov_fill,
              live=f"=SUM(Census_Nov!G{cn.first_row}:G{cn.last_row})/SUM(Census_Nov!D{cn.first_row}:D{cn.last_row})",
              hint="Patient days are in column G, staffed-bed days in column D",
-             solution=f"In H{nov_total_row} type `=G{nov_total_row}/D{nov_total_row}`, then Percent Style and Increase Decimal once. "
+             solution=f"In H{nov_total_row} type `=G{nov_total_row}/D{nov_total_row}`, then click **Home → Percent Style** and "
+                      "**Increase Decimal** once. "
                       'The recorder stores it as `"=RC[-1]/RC[-4]"`: same row, 1 and 4 columns to the left.',
              explanation="Total patient days ÷ total staffed-bed days is the unit's occupancy for the month. The formula only refers "
                          "to cells in its own row, so in R1C1 notation it is the same on every sheet and works on December too."),
         Task("In the Record Macro dialog you typed an uppercase R in the Shortcut key box. Which key combination runs the macro on "
-             "Windows? Type it like Ctrl+Alt+X.",
-             answer="Ctrl+Shift+R",
-             accept=["ctrl + shift + r", "shift+ctrl+r", "shift + ctrl + r", "control+shift+r", "ctrl shift r", "ctrl-shift-r"],
+             "Windows? Type it like Ctrl + Alt + X.",
+             answer="Ctrl + Shift + R",
+             accept=["ctrl+shift+r", "shift+ctrl+r", "shift + ctrl + r", "control+shift+r", "control + shift + r", "ctrl shift r",
+                     "ctrl-shift-r"],
              hint="An uppercase letter adds a key",
              solution="**Ctrl + Shift + R** (Mac: Option + ⌘ + Shift + R).",
              explanation="A lowercase letter gives Ctrl + letter, which replaces Excel's own shortcut while this workbook is open "
                          "(Ctrl + r would stop doing Fill Right). An uppercase letter adds Shift, which collides with far fewer "
-                         "built-in shortcuts. Change it later in Alt + F8 → select the macro → Options…"),
+                         "built-in shortcuts. Change it later with **Macros** (Alt + F8; Mac: Option + F8) → select the macro → "
+                         "**Options…**"),
         Task("Add two more ways to run FormatCensusReport: (a) a button on the Census_Dec sheet labeled Build report, and (b) a button on "
              "the Quick Access Toolbar. Don't click them yet.",
              answer=None, check="manual", title="Button on the sheet and on the Quick Access Toolbar",
-             hint="Right-click a shape → Assign Macro",
+             hint="Right-click a shape → **Assign Macro…**",
              solution=("**Sheet button**\n\n"
                        "1. On Census_Dec, choose **Insert → Shapes → Rectangle: Rounded Corners** and draw it to the right of the data "
                        "(for example over columns J:K).\n"
@@ -451,17 +485,18 @@ def build() -> Lesson:
              explanation="A shape button belongs to one sheet and travels with the workbook. A Quick Access Toolbar button belongs to "
                          "your copy of Excel and remembers which workbook holds the macro, so it opens that workbook if needed. To edit a "
                          "shape later without running the macro, Ctrl + click it (Mac: ⌘ + click) or right-click it."),
-        Task("Go to Census_Dec and run your macro (Ctrl + Shift + R or your button). December has 31 days. The gray cell finds your "
+        Task("Go to Census_Dec and run your macro (Ctrl + Shift + R, Mac: Option + ⌘ + Shift + R, or your button). December has 31 days. The gray cell finds your "
              "TOTAL row and counts the daily rows above it. It should show all 31 days.",
              answer=len(dec), title="Run on Census_Dec (days above the TOTAL row)",
              summary=f'=IFERROR(MATCH("TOTAL",Census_Dec!A:A,0)-{cd.first_row},"")', fill=dec_fill,
              live=f"=COUNT(Census_Dec!A{cd.first_row}:A{cd.last_row})",
              hint="If it shows 30, your TOTAL row overwrote a day",
-             solution=f"Click the **Census_Dec** tab and press **Ctrl + Shift + R**. `Selection.End(xlDown)` finds the last date "
+             solution=f"Click the **Census_Dec** tab and press **Ctrl + Shift + R** (Mac: **Option + ⌘ + Shift + R**). "
+                      f"`Selection.End(xlDown)` finds the last date "
                       f"(row {cd.last_row}) and `ActiveCell.Offset(1, 0)` steps to row {dec_total_row}.",
              explanation=f"If you recorded the TOTAL steps with relative references off, the code says Range(\"A{nov_total_row}\").Select, "
-                         f"so on December it types TOTAL over 12/31/2025 in row {nov_total_row} and the gray cell shows 30. Ctrl + Down "
-                         "plus a relative one-row move finds the first empty row on any month. Macros can't be undone, so close without "
+                         f"so on December it types TOTAL over 12/31/2025 in row {nov_total_row} and the gray cell shows 30. Ctrl + ↓ "
+                         "(Mac: ⌘ + ↓) plus a relative one-row move finds the first empty row on any month. Macros can't be undone, so close without "
                          "saving (or reopen your saved copy), fix the recording, and run it again."),
         Task("On Census_Dec, the gray cell reads the MidnightCensus total in your TOTAL row. It should equal December's patient days "
              "(all 31 days).",
@@ -539,17 +574,19 @@ def build() -> Lesson:
         f"2. Copy the visible rows, with the header, to a new sheet named {HA_SHEET}.\n"
         "3. Sort that sheet by ESILevel (smallest first), then ArrivalDateTime (oldest first), and AutoFit the columns.\n"
         "4. Go back to the export and turn its filter off.\n\n"
-        "Recording tips: Check that Use Relative References is off. Click A1 and turn the filter on with Data → Filter, then use "
-        "the ESILevel filter arrow → Number Filters → Less Than Or Equal To → 2 → OK. Select the data with Ctrl + Shift + → and "
-        "then Ctrl + Shift + ↓ (Mac: ⌘ + Shift + arrows), and copy it with Ctrl + C (Mac: ⌘ + C). Add a sheet with the + (New "
+        "Recording tips: Check that Use Relative References is off. Click A1 and turn the filter on with **Data → Filter**, then "
+        "use the ESILevel filter arrow → **Number Filters → Less Than Or Equal To** → 2 → **OK**. Select the data with "
+        "Ctrl + Shift + → and then Ctrl + Shift + ↓ (Mac: ⌘ + Shift + arrows), and copy it with Ctrl + C (Mac: ⌘ + C). Add a "
+        "sheet with the + (New "
         "sheet) button next to the sheet tabs, paste with Ctrl + V (Mac: ⌘ + V), and rename the sheet by double-clicking its tab. "
-        "In Data → Sort (Lesson 1.6), sort by ESILevel (Smallest to Largest), then click Add Level and pick ArrivalDateTime "
+        "In **Data → Sort** (Lesson 1.6), sort by ESILevel (Smallest to Largest), then click **Add Level** and pick ArrivalDateTime "
         "(Oldest to Newest). "
         "AutoFit every column: click the Select All button (the triangle where the row and column headings meet), then "
         "double-click any column boundary. Finish by "
-        "clicking the ED_Nov tab, then A1, then Data → Filter again.\n\n"
-        f"Record it on ED_Nov ({len(ed_nov)} visits) as ExtractHighAcuity (shortcut Ctrl + Shift + H). Then delete the {HA_SHEET} "
-        "sheet it made (right-click its tab → Delete), open the VBE, "
+        "clicking the ED_Nov tab, then A1, then **Data → Filter** again.\n\n"
+        f"Record it on ED_Nov ({len(ed_nov)} visits) as ExtractHighAcuity (shortcut Ctrl + Shift + H, Mac: "
+        f"Option + ⌘ + Shift + H). Then delete the {HA_SHEET} sheet it made (right-click its tab → **Delete**), open the VBE with "
+        "Alt + F11 (Mac: Option + F11, or **Developer → Visual Basic**), "
         f"and edit the code so it works on ED_Dec ({len(ed_dec)} visits). Guide section 9 lists the edits recorded code usually "
         "needs and what to do if the macro stops with a run-time error. Run it on ED_Dec. The gray cells read the "
         f"{HA_SHEET} sheet your macro builds from December, so they stay blank until it exists. While the sheet from your "
@@ -624,7 +661,7 @@ def build() -> Lesson:
                       f"That toggles the filter off, so all {len(ed_dec)} visits show again.",
              explanation=f"The recording ends with Sheets(\"ED_Nov\").Select, so on December it toggles a filter ON on ED_Nov and "
                          f"leaves ED_Dec showing only {len(ha_dec)} rows. A good macro leaves the source data the way it found it. "
-                         "Selection.AutoFilter is a toggle (like Data → Filter), so it turns the filter off only when one is on."),
+                         "Selection.AutoFilter is a toggle (like **Data → Filter**), so it turns the filter off only when one is on."),
     ]
 
     # ------------------------------------------------------------------ workbook polish + self-test simulation
@@ -632,29 +669,16 @@ def build() -> Lesson:
     def _raw_exports(wb, lesson, selftest):
         from copy import copy
 
-        # The library's generic sheet text says "type a formula or value in each yellow cell". Here nothing is a formula,
-        # several Practice cells and every Bonus cell are gray, so say what this workbook actually asks for.
-        generic = "Type a formula or value in each yellow cell."
-        own = {
-            lesson.practice_sheet: ("Type your answer in each yellow cell. The gray cells fill in by themselves once your macro "
-                                    "has run. The Check column turns green when your answer matches. Stuck? Read the hint, then "
-                                    f"the lesson guide. Answers: right-click a sheet tab → Unhide… → '{lesson.key_sheet}'."),
-            lesson.bonus_sheet: (f"There's nothing to type on this sheet. The gray cells read the {HA_SHEET} sheet your macro builds "
-                                 "from ED_Dec, and the Check column turns green when they match. Stuck? Read the hint, then Guide "
-                                 f"section 9. Answers: right-click a sheet tab → Unhide… → '{lesson.bonus_key_sheet}'."),
-        }
-        for sheet, text in own.items():
-            ws = wb[sheet]
-            hits = [c for c in ws["A"][:6] if isinstance(c.value, str) and c.value.startswith(generic)]
-            assert len(hits) == 1, sheet
-            hits[0].value = text
-            ws.row_dimensions[hits[0].row].height = 15 * (len(text) // 140 + 1) + 4
+        # Start Here: add each export's role to its "Data: N rows" line.
         start = wb["Start Here"]
-        hits = [c for c in start["B"] if c.value == "2. Practice"]
-        assert len(hits) == 1
-        start.cell(row=hits[0].row, column=3).value = ("Go to the 'Practice' sheet. Type your answers in the yellow cells. The gray "
-                                                       "cells read the TOTAL rows your macro writes on the census sheets.")
-        start.row_dimensions[hits[0].row].height = 33          # two wrapped lines in column C (the library sizes for one)
+        done = set()
+        for r in range(1, start.max_row + 1):
+            name, desc = start.cell(row=r, column=2).value, start.cell(row=r, column=3)
+            if name in sheet_roles and isinstance(desc.value, str) and desc.value.startswith("Data:"):
+                desc.value = f"{desc.value}. {sheet_roles[name]}"
+                start.row_dimensions[r].height = 15 * estimate_lines(desc.value, 100) + 3
+                done.add(name)
+        assert done == set(sheet_roles), done
 
         plain = Font(name="Calibri", size=11)
         for name in ("Census_Nov", "Census_Dec", "ED_Nov", "ED_Dec"):

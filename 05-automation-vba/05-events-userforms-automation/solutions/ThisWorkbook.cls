@@ -15,7 +15,7 @@ Private Sub Workbook_Open()
     Me.Worksheets("BedBoard").Activate
 End Sub
 
-' Runs just before every save (Ctrl+S, File > Save, Save As).
+' Runs just before every save (Ctrl + S, File > Save, Save As).
 ' Setting Cancel = True stops the save.
 Private Sub Workbook_BeforeSave(ByVal SaveAsUI As Boolean, Cancel As Boolean)
     Dim lo As ListObject

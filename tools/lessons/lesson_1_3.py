@@ -30,7 +30,7 @@ from xlcourse.lesson import NAVY
 CODE = "1.3"
 
 # ---------------------------------------------------------------------------- format codes used in the lesson
-CUR2_PAREN = '$#,##0.00_);($#,##0.00)'          # what Ctrl+Shift+$ applies (Windows)
+CUR2_PAREN = '$#,##0.00_);($#,##0.00)'          # what Ctrl + Shift + $ applies (Windows)
 PCT1 = "0.0%"
 K0 = '$#,##0,"K"'                                # thousands with a K (practice, Budget sheet)
 ACCT2 = '_($* #,##0.00_);_($* (#,##0.00);_($* "-"??_);_(@_)'   # Home > Accounting Number Format ($ button)
@@ -284,11 +284,11 @@ def build() -> Lesson:
     L.tasks = [
         # ------------------------------------------------------------------ built-in formats & shortcuts (Budget)
         Task(f"On the Budget sheet, select the Variance cells E{B_FIRST}:E{B_TOTAL} and press Ctrl + Shift + $ "
-             f"(Mac: ⌃ + Shift + $). What does E{worst_var_row} ({worst_var['Department']}, which spent more than its "
+             f"(Mac: Control + Shift + $). What does E{worst_var_row} ({worst_var['Department']}, which spent more than its "
              f"budget) display now?",
              answer=show_currency_paren(worst_var["Variance"]), fmt="@", title="Currency shortcut on a negative variance",
              solution=f"1. Select **Budget!E{B_FIRST}:E{B_TOTAL}**.\n"
-                      "2. Press **Ctrl + Shift + $** (Mac: **⌃ + Shift + $**).\n"
+                      "2. Press **Ctrl + Shift + $** (Mac: **Control + Shift + $**).\n"
                       f"3. Read **E{worst_var_row}**.",
              live=f"=TEXT({bcell('E', worst_var_row)},{q(CUR2_PAREN)})",
              hint="Negative amounts in this format don't use a minus sign",
@@ -297,11 +297,11 @@ def build() -> Lesson:
                          f"the way accountants write losses. The stored value is still {worst_var['Variance']}. Click the cell and look "
                          "at the formula bar to confirm. (The key's live formula uses TEXT, a Lesson 2.2 function that returns what a "
                          "format would display.)"),
-        Task(f"Select the Variance % cells F{B_FIRST}:F{B_TOTAL}, press Ctrl + Shift + % (Mac: ⌃ + Shift + %), then click "
-             f"Home → Increase Decimal once. What does F{worst_pct_row} ({worst_pct['Department']}) display?",
+        Task(f"Select the Variance % cells F{B_FIRST}:F{B_TOTAL}, press Ctrl + Shift + % (Mac: Control + Shift + %), then click "
+             f"**Home → Increase Decimal** once. What does F{worst_pct_row} ({worst_pct['Department']}) display?",
              answer=show_pct(worst_pct["VarPct"]), fmt="@", title="Percentage with one decimal place",
              solution=f"1. Select **Budget!F{B_FIRST}:F{B_TOTAL}**.\n"
-                      "2. Press **Ctrl + Shift + %** (Mac: **⌃ + Shift + %**). The cells show whole percentages.\n"
+                      "2. Press **Ctrl + Shift + %** (Mac: **Control + Shift + %**). The cells show whole percentages.\n"
                       "3. Click **Home → Increase Decimal** (the .00 button with the left arrow) once.\n"
                       f"4. Read **F{worst_pct_row}**.",
              live=f"=TEXT({bcell('F', worst_pct_row)},{q(PCT1)})",
@@ -319,7 +319,7 @@ def build() -> Lesson:
                          "ends with a comma after the last 0, which tells Excel to *display* the number divided by 1,000. Any formula that "
                          f"uses C{B_FIRST} still gets the full amount, so totals stay exact even when every cell is shown in thousands."),
         Task(f"Copy C{B_FIRST}'s format to the rest of the money columns with Format Painter: select C{B_FIRST}, double-click "
-             f"Home → Format Painter, drag over C{B_FIRST}:E{B_LAST}, then drag over the Total row C{B_TOTAL}:E{B_TOTAL}, and press Esc. "
+             f"**Home → Format Painter**, drag over C{B_FIRST}:E{B_LAST}, then drag over the Total row C{B_TOTAL}:E{B_TOTAL}, and press Esc. "
              f"What does E{pharm_row} (Pharmacy's variance) display now?",
              answer=show_k(pharm["Variance"]), fmt="@", title="Format Painter: thousands format on a negative number",
              solution=f"1. Select **Budget!C{B_FIRST}**.\n"
@@ -335,8 +335,8 @@ def build() -> Lesson:
                          "gone because each cell has only one number format, and the newest one wins. A single click on Format Painter "
                          "paints once. A double-click lets you paint several ranges until you press Esc."),
         # ------------------------------------------------------------------ Accounting & custom codes (Registry)
-        Task(f"On the Registry sheet, select the PatientDue cells {DUE}{R_FIRST}:{DUE}{R_LAST} and click Home → Accounting "
-             f"Number Format (the $ button). {reg[zero_i]['Patient']} (row {R_FIRST + zero_i}) owes nothing for this visit. "
+        Task(f"On the Registry sheet, select the PatientDue cells {DUE}{R_FIRST}:{DUE}{R_LAST} and click **Home → Accounting "
+             f"Number Format** (the $ button). {reg[zero_i]['Patient']} (row {R_FIRST + zero_i}) owes nothing for this visit. "
              f"What character does {DUE}{R_FIRST + zero_i} show where the 0 used to be?",
              answer="-", fmt="@", accept=["$ -", "$-", "dash", "a dash", "hyphen", "a hyphen", "–", "$ –"],
              title="Accounting format: how a zero looks",
@@ -452,7 +452,7 @@ def build() -> Lesson:
              f"(3) make header row {B_HDR} bold with white text on a dark blue fill, wrapped and centered; "
              f"(4) add All Borders to A{B_HDR}:F{B_TOTAL}; "
              f"(5) apply the Total cell style to A{B_TOTAL}:F{B_TOTAL}; (6) select A{B_HDR}:F{B_TOTAL} and AutoFit the columns "
-             f"with Home → Format → AutoFit Column Width. "
+             f"with **Home → Format → AutoFit Column Width**. "
              f"Then zoom in on row {B_TOTAL}: what kind of line does the Total style draw along the bottom of the row? "
              f"Answer in a word or two.",
              answer="double", fmt="@",
@@ -556,13 +556,34 @@ def build() -> Lesson:
     ]
 
     L.start_notes = [
-        "Work sheets: Budget (tasks 1–4 and 12–13), Registry (tasks 5–7), Stays (tasks 8–11), and Dec Report (bonus).",
         "Two more hidden sheets, Budget Key and Report Key, show the finished, formatted versions of the Budget and Dec Report "
         "sheets. Unhide them to compare once you've tried.",
         "Answers assume US regional settings ($, comma thousands separators, month/day/year dates).",
     ]
     L.sheet_order = ["Start Here", "Practice", "Budget", "Registry", "Stays", "Bonus", "Dec Report",
                      "Answer Key", "Bonus Key", "Budget Key", "Report Key"]
+    # Every work sheet is built in the customize hook, so Start Here's "Sheets in this workbook" needs them listed here.
+    L.sheet_notes = [
+        ("Budget", f"Bluestone Memorial's 2025 expense budget vs actual for {len(brows)} departments, half-formatted, with "
+                   "merged cells (tasks 1–4 and 12–13)."),
+        ("Registry", f"{len(reg)} ED registrations from 12/30–12/31/2025. MRNs, phone numbers, and patient balances arrived "
+                     "as plain numbers (tasks 5–7)."),
+        ("Stays", f"{len(stays)} Cardiac Step-Down discharges from December 2025: admit times and lengths of stay "
+                  "(tasks 8–11)."),
+        ("Dec Report", "The ED's December 2025 operating report, unformatted. Apply the bonus's five rules here."),
+    ]
+    # Every answer is typed (a displayed value, a stored number, or a format code) after formatting another sheet,
+    # so the generic "type a formula or value" lines don't fit.
+    L.practice_how = ("Go to the 'Practice' sheet. Apply each format on the sheet the task names (Budget, Registry, or "
+                      "Stays), then type what the task asks for into its yellow cell.")
+    L.practice_instructions = (
+        "Type each answer in its yellow cell. The Check column turns green when your answer matches. Stuck? Read the hint, "
+        f"then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    # The bonus scenario already says where to work and where to type, so this line only adds the check and the key.
+    L.bonus_instructions = (
+        "The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. "
+        f"Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = "Format the **Dec Report** sheet, and type your answers in the yellow cells on the **Bonus** sheet."
 
     # ======================================================================== sheets (built in customize)
     def titled(ws, title: str, note: str):

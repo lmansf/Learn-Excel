@@ -3,11 +3,13 @@ Attribute VB_Name = "modHighAcuity"
 ' Lesson 5.1 - Recording Your First Macros - reference solution
 ' SPOILER: record your own macro first, then compare.
 ' 
-' To import: open the VBE (Alt+F11, Mac: Option+F11), choose File > Import File...
-' and pick this .bas file. If your workbook already has a macro with the same
-' name, rename or delete one of them first so it's clear which one runs.
+' To import: open the VBE with Alt + F11 (Mac: Option + F11, or Developer >
+' Visual Basic), choose File > Import File..., and pick this .bas file. If your
+' workbook already has a macro with the same name, rename or delete one of them
+' first so it's clear which one runs.
 ' An imported macro has no shortcut key (the 'Keyboard Shortcut' line is only a
-' comment). Set one with Macros (Alt+F8, Mac: Option+F8) > select it > Options...
+' comment). To set one, open Macros (Alt + F8; Mac: Option + F8), select it, and
+' click Options...
 ' Save the workbook as .xlsm to keep the code.
 ' ==========================================================================
 Option Explicit
@@ -80,7 +82,7 @@ Sub ExtractHighAcuity()
     ActiveSheet.Name = "HighAcuity"                     ' EDIT: was Sheets("Sheet1").Select / .Name
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Clear
     ' EDIT: keys were Range("E2:E21") and Range("C2:C21"). One cell is enough
-    ' to name the key column. (.Add works in Excel 2007 and later; Excel 365 records .Add2.)
+    ' to name the key column. (.Add works in Excel 2007 and later; Microsoft 365 records .Add2.)
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("E1"), _
         SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
     ActiveWorkbook.Worksheets("HighAcuity").Sort.SortFields.Add Key:=Range("C1"), _

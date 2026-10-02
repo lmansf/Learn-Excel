@@ -44,7 +44,7 @@ def _dr(col: str, d1: date, d2: date) -> str:
 def build() -> Lesson:
     L = Lesson(
         code=CODE, module_dir="04-advanced-analysis", slug="04-power-pivot-dax",
-        title="Data Model, Power Pivot & DAX", level="Advanced", minutes=75,
+        title="Data Model, Power Pivot & DAX", level="Advanced", minutes=175,
         objectives=[
             "Design a star schema and load tables into the Data Model",
             "Create relationships and a proper date table",
@@ -384,7 +384,7 @@ def build() -> Lesson:
         Task("Create the measure Total Charges = the sum of FactEncounters[TotalCharges]. Show it in a PivotTable with "
              "DimDate[Year] in Rows. What are the total charges for 2025? Enter the amount rounded to the nearest dollar.",
              answer=t2, fmt="#,##0", tol=0.5, live=x_t2, solution_lang="dax", title="Total Charges, 2025",
-             hint="Power Pivot → Measures → New Measure…, then SUM",
+             hint="**Power Pivot → Measures → New Measure…**, then SUM",
              solution=dax("Total Charges := SUM(FactEncounters[TotalCharges])",
                           "-- PivotTable: DimDate[Year] in Rows, [Total Charges] in Values"),
              explanation=(
@@ -495,7 +495,7 @@ def build() -> Lesson:
                  "ALL(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits "
                  "in the system. REMOVEFILTERS(DimFacility) does the same job and reads more clearly, but only Excel for "
                  "Microsoft 365 recognizes it. ALL works in every version. This is the DAX "
-                 "version of Show Values As → % of Column Total, with one big advantage: it's a real measure that you can "
+                 "version of **Show Values As → % of Column Total**, with one big advantage: it's a real measure that you can "
                  "reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities "
                  "through DimFacility. A filter on FactEncounters[FacilityID] would survive ALL(DimFacility).")),
         Task("Create Stays Over Expected = the number of Inpatient encounters whose LOSDays is greater than the ExpectedLOS of "
@@ -571,7 +571,7 @@ def build() -> Lesson:
                  "replaces them with every date from January 1 through September 30, 2025 and evaluates Total Charges over "
                  f"that range. September on its own was {t12_month_only:,.0f}. Time-intelligence functions need a proper date table: one row per day with "
                  "no gaps, marked as the date table, and related to the fact table on a date column. If MonthName sorts "
-                 "alphabetically (Apr, Aug, Dec…), set Sort by Column to MonthNum in Power Pivot.")),
+                 "alphabetically (Apr, Aug, Dec…), sort it by MonthNum with **Home → Sort by Column** in Power Pivot.")),
         Task("Create ED Visits LY = ED Visits for the same period one year earlier (SAMEPERIODLASTYEAR) and ED YoY % = (ED "
              "Visits − ED Visits LY) ÷ ED Visits LY. What is the year-over-year change in ED visits at Bluestone Memorial "
              "Hospital for 2025 compared with 2024? Put DimDate[Year] in Rows and DimFacility[FacilityName] = Bluestone "
@@ -696,8 +696,6 @@ def build() -> Lesson:
         "that includes it, such as Office Professional Plus). Turn the add-in on once: File → Options → Add-ins → Manage: "
         "COM Add-ins → Go… → tick Microsoft Power Pivot for Excel. Excel for Mac and Excel for the web can't create a Data "
         "Model, relationships, or measures, so on those you can read the guide and the answer key but not build the model.",
-        "The Model Map sheet lists the nine tables, their keys, and the ten relationships to create (nine active, one "
-        "inactive).",
         "Each answer is a number (or a name) that you read from a Data Model PivotTable and type into the yellow cell. You "
         "can also link to the PivotTable cell, which writes a GETPIVOTDATA formula, or use CUBEVALUE (Guide section 15).",
         "The hidden Answer Key has a worksheet formula next to each answer that recomputes it from the same tables without "
@@ -708,6 +706,29 @@ def build() -> Lesson:
     ]
     L.sheet_order = ["Start Here", "Model Map", "Practice", "Bonus", "FactEncounters", "FactClaims", "DimDate",
                      "DimFacility", "DimDepartment", "DimProvider", "DimPatient", "DimPayer", "DimDiagnosis"]
+    L.sheet_notes = [
+        ("Model Map", "The star schema: each table's role, key, row count, and grain, plus the ten relationships to "
+                      "create (nine active, one inactive)."),
+    ]
+    L.practice_how = ("Build the model first (Guide sections 3–5, with the Model Map sheet). Then go to the 'Practice' "
+                      "sheet: for each task, create the measure, show it in a Data Model PivotTable, and type the number "
+                      "it shows into the yellow cell.")
+    L.practice_instructions = (
+        "Type the number your Data Model PivotTable shows in each yellow cell, or link to the PivotTable cell. The Check "
+        "column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a "
+        f"sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "Type the value your Data Model PivotTable shows (a number, a percentage, or a provider name) in each yellow cell. "
+        "The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: "
+        f"right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Build the bonus measures in the same Data Model, and type your answers in the yellow cells on the "
+                     "**Bonus** sheet.")
+    L.key_note = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column compares "
+                  "against. Column D is the DAX (or the steps) that produces it in a Data Model PivotTable. Column E is NOT "
+                  "the DAX: it is a worksheet formula over the same tables (COUNTIFS, SUMIFS, SUMPRODUCT, XLOOKUP, UNIQUE) "
+                  "that recomputes the answer without the Data Model. Click a cell in column E to read it. Formulas that use "
+                  "XLOOKUP, LET, UNIQUE, or FILTER need Microsoft 365 or Excel 2021 or later. Older versions show #NAME? "
+                  "there.")
 
     tables_info = [
         ("FactEncounters", "Fact", "one encounter (visit or stay)", "EncounterID", len(fact_enc)),
@@ -814,20 +835,8 @@ def build() -> Lesson:
         ws.page_setup.fitToHeight = 0
         ws.sheet_properties.pageSetUpPr.fitToPage = True
 
-        note = ("Spoiler alert: try every task before reading this sheet. Column C is the value the Check column compares "
-                "against. Column D is the DAX (or the steps) that produces it in a Data Model PivotTable. Column E is NOT the "
-                "DAX: it is a worksheet formula over the same tables (COUNTIFS, SUMIFS, SUMPRODUCT, XLOOKUP, UNIQUE) that "
-                "recomputes the answer without the Data Model. Click a cell in column E to read it. Formulas that use "
-                "XLOOKUP, LET, UNIQUE, or FILTER need Microsoft 365 or Excel 2021+; older versions show #NAME? there.")
-        for name in (lesson.key_sheet, lesson.bonus_key_sheet):
+        for name in (lesson.key_sheet, lesson.bonus_key_sheet):  # the longer key_note needs three lines
             if name in wb.sheetnames:
-                wb[name]["A2"] = note
                 wb[name].row_dimensions[2].height = 48
-        # Task 1's build steps are Markdown in the README; show them without ** markers in the key cell.
-        key = wb[lesson.key_sheet]
-        for row in range(5, 5 + len(lesson.tasks)):
-            t = next((t for t in lesson.tasks if t.number == str(key.cell(row=row, column=1).value)), None)
-            if t is not None and t.lang not in ("dax", "excel") and t.solution and "**" in t.solution:
-                key.cell(row=row, column=4).value = t.solution.replace("**", "")
 
     return L

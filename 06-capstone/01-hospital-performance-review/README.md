@@ -164,8 +164,8 @@ These quick checks take a minute and catch most extract problems:
 | Earliest admission | `=MIN(Encounters!F2:F11197)`, formatted as a date and time | 12/16/2024 12:06 | Stays that started in 2024 are included, by design |
 | Duplicate survey rows | `=ROWS(Surveys!A2:A988)-ROWS(UNIQUE(Surveys!A2:A988))` | (task 1) | Anything above 0 means some SurveyIDs appear more than once |
 
-XMATCH and UNIQUE need Microsoft 365 or Excel 2021+. In older versions, use
-`=SUMPRODUCT(--(COUNTIF(Encounters!A2:A11197,Claims!B2:B11197)=0))` for the join check, which is slower but works.
+> 📋 **Version note:** XMATCH and UNIQUE are available in Microsoft 365 and Excel 2021 or later. In older versions, use
+> `=SUMPRODUCT(--(COUNTIF(Encounters!A2:A11197,Claims!B2:B11197)=0))` for the join check, which is slower but works.
 
 #### 4b. Remove duplicate rows
 
@@ -189,7 +189,7 @@ Excel keeps the **first** occurrence of each row and deletes the later ones.
 > each duplicate.
 
 Two non-destructive alternatives: `=UNIQUE(Surveys!A2:M988)` spills a de-duplicated copy of the whole table (Microsoft
-365 or Excel 2021+), and Power Query's **Home → Remove Rows → Remove Duplicates** step repeats the clean-up every time you
+365 and Excel 2021 or later), and Power Query's **Home → Remove Rows → Remove Duplicates** step repeats the clean-up every time you
 refresh (Lesson 4.3).
 
 #### 4c. Calculated columns
@@ -235,7 +235,7 @@ The `$` signs lock the lookup ranges so they don't slide down as the formula fil
 
 | Version | Use instead of XLOOKUP |
 |---|---|
-| Microsoft 365, Excel 2021 or later | XLOOKUP as above |
+| Microsoft 365 and Excel 2021 or later | XLOOKUP as above |
 | Excel 2019 or earlier | `=INDEX(Diagnoses!$D$2:$D$52,MATCH(H2,Diagnoses!$A$2:$A$52,0))` or `=VLOOKUP(H2,Diagnoses!$A$2:$D$52,4,FALSE)` |
 | Power Query | **Home → Merge Queries**, Left Outer join on the key, then expand the column (Lesson 4.3) |
 | Data Model | A relationship in Diagram View, with no lookup column at all (Lesson 4.4) |
@@ -380,7 +380,7 @@ times are reported as medians. Add a second condition by multiplying, as in `(ED
 
 | Excel version | How to enter MEDIAN(IF()) |
 |---|---|
-| Microsoft 365, Excel 2021 or later | Press **Enter** |
+| Microsoft 365 and Excel 2021 or later | Press **Enter** |
 | Excel 2019 or earlier | Press **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**) so Excel treats it as an array formula |
 | Excel 2010 or later (Mac: 2011 or later), without array entry | `=AGGREGATE(17,6,(E2:E6218-D2:D6218)*1440/((C2:C6218="F01")*(E2:E6218<>"")),2)` on the ED_Visits sheet. Function 17 is QUARTILE.INC, quartile 2 is the median, and option 6 ignores the #DIV/0! errors that the division creates on excluded rows |
 
@@ -399,7 +399,7 @@ There are three good routes:
 |---|---|---|
 | **PivotTable** | Add a 1/0 helper flag, then Rows = group and Values = Average of the flag. Sort largest to smallest | You want to explore and see every group |
 | **Summary table** | List the groups, add COUNTIFS for the denominator and numerator, divide, then `INDEX(groups,MATCH(MAX(rates),rates,0))` | The answer must update with formulas, in any Excel version |
-| **One formula** | LET + UNIQUE + COUNTIFS + XLOOKUP(MAX(…)) | Microsoft 365, and you're comfortable with Lesson 4.2 |
+| **One formula** | LET + UNIQUE + COUNTIFS + XLOOKUP(MAX(…)) | Microsoft 365 and Excel 2021 or later, and you're comfortable with Lesson 4.2 |
 
 The **average of a 1/0 flag is a rate**. If ReadmitFlag is 1 for a readmission and 0 otherwise, its average over index
 stays is the readmission rate. That's how a PivotTable computes rates (Lesson 3.4). For the PivotTable route on
@@ -667,6 +667,32 @@ Use this rubric to review your own work, or to have a colleague review it.
 | Task 12 stays red after you fix the macro | The check reads row 2 of RefreshLog, which still holds an earlier test run | Delete the RefreshLog sheet and run the macro again. It recreates the sheet |
 | The summary sentence check stays red | Extra spaces, different punctuation, or a missing TEXT | Compare it character by character with the template in task 13 |
 
+### 12. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Undo, straight after Remove Duplicates | Ctrl + Z | ⌘ + Z |
+| Format Cells (Number tab, Protection tab) | Ctrl + 1 | ⌘ + 1 |
+| Apply the General number format | Ctrl + Shift + ~ | Control + Shift + ~ |
+| Enter MEDIAN(IF()) as an array formula (Excel 2019 and earlier) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
+| Add a cell to the selection | Ctrl + click | ⌘ + click |
+| Open the C4 drop-down list on the Dashboard | Alt + ↓ | Option + ↓ |
+| Open the Visual Basic Editor | Alt + F11 | Option + F11 |
+| Open the Macro dialog to run RefreshReview | Alt + F8 | Option + F8 |
+| Refresh every query and PivotTable | Ctrl + Alt + F5, or **Data → Refresh All** | **Data → Refresh All** |
+| Recalculate the workbook | F9 | ⌘ + = |
+
+On a Mac laptop, add **Fn** to the function-key shortcuts, as in Fn + Option + F11.
+
+| Feature | Available in |
+|---|---|
+| COUNTIFS, SUMIFS, AVERAGEIFS, MEDIAN, TEXT, INDEX/MATCH, and Remove Duplicates | Every current version |
+| AGGREGATE | Excel 2010 and later (Excel 2011 and later on a Mac) |
+| XLOOKUP, XMATCH, UNIQUE, FILTER, LET, and MEDIAN(IF()) without Ctrl + Shift + Enter | Microsoft 365 and Excel 2021 or later |
+| Power Query | Excel 2016 and later for Windows, and Microsoft 365 for Mac with fewer connectors (Lesson 4.3) |
+| Data Model and DAX measures | Excel for Windows only (Lesson 4.4) |
+| VBA macros | Desktop Excel for Windows and Mac. Not Excel for the web or iPad (Lessons 5.1–5.5) |
+
 ## 🧪 Hands-on practice
 
 Download [`6.1-hospital-performance-review.xlsx`](6.1-hospital-performance-review.xlsx), save a copy as an .xlsm, and
@@ -678,7 +704,7 @@ The tasks follow the work plan in the lesson guide: 1–2 prepare the data, 3–
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Data prep · cleaning. The survey vendor re-sent one month's file, so some rows on the Surveys sheet are exact duplicates of earlier rows. Remove the duplicates so each SurveyID appears once, then enter how many survey rows remain. | Data → Remove Duplicates, then COUNTA the SurveyID column |
+| 1 | Data prep · cleaning. The survey vendor re-sent one month's file, so some rows on the Surveys sheet are exact duplicates of earlier rows. Remove the duplicates so each SurveyID appears once, then enter how many survey rows remain. | **Data → Remove Duplicates**, then COUNTA the SurveyID column |
 | 2 | Data prep · calculated column. In the yellow LOSDays column of Encounters (M2:M11197), calculate DischargeDateTime − AdmitDateTime for every row, in days with decimals. The gray cell then shows the system ALOS: the average LOSDays of the Inpatient rows. | Subtracting two date-times gives days. Keep the column formatted as a number, not a date |
 | 3 | Throughput. What was the median door-to-provider time, in minutes, for 2025 ED arrivals at Cedar Ridge Medical Center (FacilityID F03)? Door-to-provider = ProviderSeenDateTime − ArrivalDateTime. Leave out visits with no ProviderSeenDateTime. | MEDIAN(IF(…)) with × 1440, or fill the DoorToProviderMin helper column first |
 | 4 | Utilization. What was the combined 2025 occupancy of the three Intensive Care Units (the units whose UnitType is Critical Care on the Departments sheet)? Occupancy = total MidnightCensus ÷ total StaffedBeds over all their days. Enter it as a percentage to 1 decimal place. | Find the three DeptIDs first. SUMIFS ÷ SUMIFS, or add UnitType to Census with XLOOKUP |
@@ -701,14 +727,14 @@ Dashboard** sheet shows a finished dashboard. The same answers are below, collap
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Survey rows left after removing duplicates**
 
 - **Answer:** 917
 - **Solution:** `=COUNTA(Surveys!A2:A988)`
 
-Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → Remove Duplicates**, which is **Table → Remove Duplicates** on a Mac), leave every column ticked, and click OK. Excel reports 70 duplicate values removed and 917 unique values remaining, so `=COUNTA(Surveys!A2:A988)` now returns 917. Removing duplicates matters because the 70 repeated October surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* deleting anything, `=ROWS(UNIQUE(Surveys!A2:A988))` gives the same answer in Microsoft 365.
+Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → Remove Duplicates**, which is **Table → Remove Duplicates** on a Mac), leave every column ticked, and click OK. Excel reports 70 duplicate values removed and 917 unique values remaining, so `=COUNTA(Surveys!A2:A988)` now returns 917. Removing duplicates matters because the 70 repeated October surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* deleting anything, `=ROWS(UNIQUE(Surveys!A2:A988))` gives the same answer in Microsoft 365 and Excel 2021 or later.
 
 **2. LOSDays column → system ALOS**
 
@@ -727,7 +753,7 @@ Excel stores a date-time as days since 1900 with the time as a fraction, so `=G2
 ```
 
 
-Times are fractions of a day, so × 1440 converts them to minutes. There is no MEDIANIFS, so the IF inside MEDIAN keeps only F03 visits that have a provider time and returns FALSE for the rest, which MEDIAN ignores. In Microsoft 365 and Excel 2021 press Enter. In Excel 2019 and earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). Visits with a blank ProviderSeenDateTime are the patients who left without being seen. Left in, each one becomes a huge negative number (an empty cell minus the arrival time), which pulls the median down and wrecks any average. A PivotTable can't help here, because its value summaries offer Average but not Median.
+Times are fractions of a day, so × 1440 converts them to minutes. There is no MEDIANIFS, so the IF inside MEDIAN keeps only F03 visits that have a provider time and returns FALSE for the rest, which MEDIAN ignores. In Microsoft 365 and Excel 2021 or later, press Enter. In Excel 2019 and earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). Visits with a blank ProviderSeenDateTime are the patients who left without being seen. Left in, each one becomes a huge negative number (an empty cell minus the arrival time), which pulls the median down and wrecks any average. A PivotTable can't help here, because its value summaries offer Average but not Median.
 
 **4. Combined ICU occupancy, 2025**
 
@@ -918,7 +944,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Hospital with the highest O/E**
 
@@ -930,7 +956,7 @@ Work on the **Bonus** sheet of the workbook.
 ```
 
 
-O/E by hospital: F01 1.253, F02 1.280, F03 1.255. Ashby Falls Community Hospital is the highest. SUMIFS with a three-cell criteria range (`ids`) returns all three indexes at once in Microsoft 365. Three separate SUMIFS ÷ SUMIFS formulas work in any version.
+O/E by hospital: F01 1.253, F02 1.280, F03 1.255. Ashby Falls Community Hospital is the highest. SUMIFS with a three-cell criteria range (`ids`) returns all three indexes at once in Microsoft 365 and Excel 2021 or later. Three separate SUMIFS ÷ SUMIFS formulas work in any version.
 
 **B2. Net gap to O/E = 1.00 (bed-days)**
 

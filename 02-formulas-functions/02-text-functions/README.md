@@ -202,9 +202,9 @@ non-printing characters, then trim.
 > is the same character on every platform (Excel 2013 and later for Windows, Excel 2016 and later for Mac), so this lesson
 > uses UNICHAR.
 
-> 💡 **Tip:** To remove non-breaking spaces without a formula, open Find & Replace (Ctrl + H; Mac: ⌃ + H). In **Find what**, hold
-> Alt and type 0160 on the numeric keypad (Mac: press Option + Space). Type one ordinary space in **Replace with**, then click
-> **Replace All**.
+> 💡 **Tip:** To remove non-breaking spaces without a formula, open Find & Replace (Ctrl + H; Mac: Control + H). In
+> **Find what**, hold Alt and type 0160 on the numeric keypad (Mac: press Option + Space). Type one ordinary space in
+> **Replace with**, then click **Replace All**.
 
 ### 5. Changing case with UPPER, LOWER, and PROPER
 
@@ -321,8 +321,9 @@ The delimiter goes between every pair of items, and **ignore_empty** decides wha
 > ⚠️ Joining uses the **stored value**, not what the cell displays. `="Admitted "&Encounters!D128` gives `Admitted 45975`,
 > because the date 11/14/2025 is stored as 45975. Wrap numbers and dates in TEXT (next section) before you join them.
 
-> 📋 CONCAT and TEXTJOIN need Excel 2019 or later, or Microsoft 365. Older versions show `#NAME?`, so use `&` if your workbook
-> must open in them. A cell holds at most 32,767 characters, and TEXTJOIN returns `#VALUE!` if its result would be longer.
+> 📋 **Version note:** CONCAT and TEXTJOIN need Excel 2019 or later, or Microsoft 365. Older versions show `#NAME?`, so use
+> `&` if your workbook must open in them. A cell holds at most 32,767 characters, and TEXTJOIN returns `#VALUE!` if its result
+> would be longer.
 
 ### 8. Turning numbers and dates into text with TEXT (and back again)
 
@@ -397,7 +398,7 @@ it. Together they replace most FIND-inside-LEFT-or-MID nesting.
 | `match_end` | 1 = treat the end of the text as a delimiter | 0 |
 | `if_not_found` | What to return when the delimiter isn't there | `#N/A` |
 
-| Goal | Classic formula | Microsoft 365 |
+| Goal | Classic formula | Microsoft 365 and Excel 2024 |
 |---|---|---|
 | Last name from `ABBOTT, Edward` | `=LEFT(C2,FIND(",",C2)-1)` | `=TEXTBEFORE(C2,",")` |
 | First name | `=TRIM(MID(C2,FIND(",",C2)+1,LEN(C2)))` | `=TRIM(TEXTAFTER(C2,","))` |
@@ -457,7 +458,7 @@ into one formula (without the step 5 patch):
 =PROPER(TRIM(MID(C294,FIND(",",C294)+1,LEN(C294)))&" "&TRIM(LEFT(C294,FIND(",",C294)-1)))
 ```
 
-In Microsoft 365 the same result is shorter:
+In Microsoft 365 and Excel 2024, the same result is shorter:
 
 ```
 =PROPER(TRIM(TEXTAFTER(C294,","))&" "&TRIM(TEXTBEFORE(C294,",")))
@@ -470,23 +471,14 @@ expect, and look specifically for Mc, Mac, O', and hyphenated names. Formulas ar
 > nest them into one formula, or keep the helper columns, which are easier for the next person to audit.
 
 > 💡 **Tip:** A cleaned column still depends on the original. Before you delete the messy column, copy the cleaned one and use
-> **Paste Special → Values** (Ctrl + Alt + V, then V and Enter; Mac: ⌃ + ⌘ + V, then choose **Values**) to replace the
+> **Paste Special → Values** (Ctrl + Alt + V, then V and Enter; Mac: Control + ⌘ + V, then choose **Values**) to replace the
 > formulas with their results.
 
 ### 11. Working efficiently with text formulas
 
-| Action | Windows | Mac |
-|---|---|---|
-| Edit the active cell | F2 | ⌃ + U |
-| Expand the formula bar for a long formula | Ctrl + Shift + U | ⌃ + Shift + U |
-| Fill the top cell's formula down a selected range | Ctrl + D | ⌘ + D |
-| Show formulas instead of results | Ctrl + `` ` `` (grave accent) | ⌃ + `` ` `` |
-| Paste Special (for example, to paste values) | Ctrl + Alt + V | ⌃ + ⌘ + V |
-| Find & Replace | Ctrl + H | ⌃ + H |
-
 Double-clicking the fill handle copies a formula down to the last row of data on both platforms. On Windows,
 **Formulas → Evaluate Formula** steps through a nested formula one layer at a time, which is the fastest way to see where a
-long text formula goes wrong.
+long text formula goes wrong. The keyboard shortcuts for this lesson are in section 12.
 
 > 📋 **Excel Tables:** the lesson's data sheets are Excel Tables. When you type a formula into the first cell of an empty Table
 > column, such as a yellow column, Excel fills the whole column for you (a *calculated column*). If you click cells instead of
@@ -501,6 +493,25 @@ Formulas aren't the only way to reshape text. Choose the tool by how often you'l
 | Flash Fill | Type an example or two, then **Data → Flash Fill** (Windows: Ctrl + E) | No | Quick one-off fixes (Lesson 1.2) |
 | Text to Columns | **Data → Text to Columns** | No | Splitting a whole column once at a delimiter (Lesson 3.3) |
 | Power Query | **Data → Get Data** | Yes, on refresh | Cleaning the same export every month (Lesson 4.3) |
+
+### 12. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Edit the active cell | F2 | Control + U |
+| Expand the formula bar for a long formula | Ctrl + Shift + U | Control + Shift + U |
+| Fill the top cell's formula down a selected range | Ctrl + D | ⌘ + D |
+| Show formulas instead of results | Ctrl + `` ` `` (grave accent) | Control + `` ` `` |
+| Paste Special (for example, to paste values) | Ctrl + Alt + V | Control + ⌘ + V |
+| Find & Replace | Ctrl + H | Control + H |
+
+| Function | Version |
+|---|---|
+| LEN, LEFT, RIGHT, MID, FIND, SEARCH, TRIM, CLEAN, UPPER, LOWER, PROPER, EXACT, SUBSTITUTE, REPLACE, REPT, TEXT, VALUE, CONCATENATE, and `&` | Every Excel version |
+| UNICHAR, UNICODE, and NUMBERVALUE | Excel 2013 or later for Windows, Excel 2016 or later for Mac |
+| CONCAT and TEXTJOIN | Excel 2019 or later, and Microsoft 365 |
+| TEXTBEFORE, TEXTAFTER, and TEXTSPLIT | Microsoft 365 and Excel 2024, plus Excel for the web |
+| REGEXTEST, REGEXEXTRACT, and REGEXREPLACE (not covered here) | Recent Microsoft 365 versions |
 
 ## 🧪 Hands-on practice
 
@@ -521,7 +532,7 @@ Tasks use the Patients, Encounters, and Providers sheets. When a task names one 
 | 6 | Monthly quality reports label encounters by month. Return the admit month of encounter ENC121048 (row 202 of the Encounters sheet) as text in the form Mon-YYYY, for example Jan-2026. | TEXT with a date format code |
 | 7 | Build the ID-badge label for provider PRV1054 (row 55 of the Providers sheet) in the form Dr. First Last, Credential. For example, provider PRV1001's label is Dr. Roy Ferguson, MD. | Join the pieces with &. Spaces and punctuation go inside double quotes |
 | 8 | On the Patients sheet, fill the yellow HasDM column with TRUE when the patient's ChronicConditions list includes DM (diabetes) and FALSE otherwise. Blank lists should give FALSE. Type your formula in G2, then copy it down. The gray cell counts the TRUEs. | SEARCH returns a position or #VALUE!, and ISNUMBER turns that into TRUE or FALSE |
-| 9 | The patient portal username is the part of the email address before the @. Return the username for patient PT10123 (row 124 of the Patients sheet). | TEXTBEFORE (Microsoft 365 or Excel 2024), or LEFT + FIND |
+| 9 | The patient portal username is the part of the email address before the @. Return the username for patient PT10123 (row 124 of the Patients sheet). | TEXTBEFORE (Microsoft 365 and Excel 2024), or LEFT + FIND |
 | 10 | How many chronic conditions does patient PT10101 (row 102 of the Patients sheet) have? Split the semicolon-separated ChronicConditions list with TEXTSPLIT and count the pieces. | COUNTA(TEXTSPLIT(…)) returns one number instead of a spill. Without TEXTSPLIT, count the semicolons with LEN and SUBSTITUTE (guide section 6) |
 | 11 | On the Patients sheet, fill the yellow ContactLine column with the phone and email joined by " \| " (space, vertical bar, space), for example (555) 875-0698 \| edward.abbott94@example.com. When there's no email, show just the phone, with no dangling delimiter. Type your formula in H2, then copy it down. The gray cell counts lines that contain a \|. | TEXTJOIN(delimiter, ignore_empty, …) |
 | 12 | On the Patients sheet, fill the yellow FirstName column with each patient's first name: everything after the comma in PatientName, with no extra spaces. Watch out: some names have doubled, leading, or trailing spaces, and 28 were pasted from the patient portal with non-breaking spaces (UNICHAR(160)). Case doesn't matter here. Type your formula in I2, then copy it down. The gray cell adds up the lengths of all your first names, so any leftover space changes the total. | TRIM can't remove a non-breaking space, so SUBSTITUTE it with a normal space first |
@@ -536,7 +547,7 @@ accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Front-desk staff confirm a caller's identity with the last 4 digits of their phone…**
 
@@ -557,7 +568,7 @@ An ICD-10 code's first three characters are its category, so LEFT(code,3) groups
 - **Answer:** PETROV
 - **Solution:** `=LEFT(Patients!C32,FIND(",",Patients!C32)-1)`
 
-FIND(",",…) returns the comma's position (7). The last name is the 6 characters before it, so subtract 1. In Microsoft 365 you can also write =TEXTBEFORE(Patients!C32,",").
+FIND(",",…) returns the comma's position (7). The last name is the 6 characters before it, so subtract 1. In Microsoft 365 and Excel 2024, you can also write =TEXTBEFORE(Patients!C32,",").
 
 **4. The appointment-reminder system needs phone numbers as 10 digits with no punctuation.…**
 
@@ -620,7 +631,7 @@ TEXTJOIN puts the delimiter between items. With ignore_empty set to TRUE, it ski
 - **Answer:** 2,324
 - **Solution:** `=TRIM(MID(SUBSTITUTE(C2,UNICHAR(160)," "),FIND(",",C2)+1,LEN(C2)))`
 
-Work from the inside out. SUBSTITUTE turns each non-breaking space into an ordinary space, MID takes everything after the comma (LEN is simply a length that's long enough), and TRIM removes the leading, trailing, and doubled spaces. Without the SUBSTITUTE, the 28 portal rows keep an invisible character and the total comes out 28 too high. On Windows, CHAR(160) is the same character as UNICHAR(160). A Microsoft 365 version is =TRIM(SUBSTITUTE(TEXTAFTER(C2,","),UNICHAR(160)," ")).
+Work from the inside out. SUBSTITUTE turns each non-breaking space into an ordinary space, MID takes everything after the comma (LEN is simply a length that's long enough), and TRIM removes the leading, trailing, and doubled spaces. Without the SUBSTITUTE, the 28 portal rows keep an invisible character and the total comes out 28 too high. On Windows, CHAR(160) is the same character as UNICHAR(160). A version for Microsoft 365 and Excel 2024 is =TRIM(SUBSTITUTE(TEXTAFTER(C2,","),UNICHAR(160)," ")).
 
 **13. Patient PT10325's name was typed as "o'brien,hannah  " (row 326 of the Patients sheet,…**
 
@@ -632,7 +643,7 @@ Work from the inside out. SUBSTITUTE turns each non-breaking space into an ordin
 ```
 
 
-MID + FIND takes the first name and TRIM drops the trailing spaces. LEFT + FIND takes the last name. Join them with a space and wrap the whole thing in PROPER, which capitalizes the first letter of each word and every letter that follows a non-letter. That's why the B after the apostrophe in O'Brien comes out right. In Microsoft 365: =PROPER(TRIM(TEXTAFTER(Patients!C326,","))&" "&TEXTBEFORE(Patients!C326,",")).
+MID + FIND takes the first name and TRIM drops the trailing spaces. LEFT + FIND takes the last name. Join them with a space and wrap the whole thing in PROPER, which capitalizes the first letter of each word and every letter that follows a non-letter. That's why the B after the apostrophe in O'Brien comes out right. In Microsoft 365 and Excel 2024: =PROPER(TRIM(TEXTAFTER(Patients!C326,","))&" "&TEXTBEFORE(Patients!C326,",")).
 
 </details>
 <!-- END GENERATED: answers -->
@@ -642,7 +653,7 @@ MID + FIND takes the first name and TRIM drops the trailing spaces. LEFT + FIND 
 <!-- BEGIN GENERATED: bonus -->
 Bluestone is opening a diabetes education clinic in Cedar Ridge. Marketing wants a clean mailing list from the legacy registration export (the Registrations sheet), and care management wants to know how many current patients are 'complex' (three or more chronic conditions). The export crams city, state, and ZIP into one CityStateZip column in several styles: Cedar Ridge, OH 45720 · CEDAR RIDGE, OH 45720 · Cedar Ridge OH 45720 (no comma) · Cedar Ridge, OH 45720-1280 (ZIP+4). Some city names are two words. (The export also has duplicate records. Removing those is a Lesson 3.3 job, so leave them in.)
 
-Work on the **Bonus** sheet of the workbook.
+Fill the yellow columns on the **Registrations** and **Patients** sheets, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** On the Registrations sheet, fill the yellow City column with just the city name in Proper Case, with no comma, state, or ZIP (for example Lakeview Heights). Type your formula in D2, then copy it down. The gray cell counts rows whose City is exactly Lakeview Heights (case-sensitive). That town appears in every messy style, so it's a good test. *(Hint: The city is everything before the second-to-last space. TEXTBEFORE accepts a negative instance_num.)*
 - **B2.** On the Registrations sheet, fill the yellow ZIP5 column with the 5-digit ZIP code as text. ZIP+4 codes like 45720-1280 must become 45720. Type your formula in E2, then copy it down. The gray cell counts rows in ZIP 45501 (downtown Bluestone). *(Hint: The ZIP is the last word. Keep only its first 5 characters)*
@@ -653,14 +664,14 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. City column (rows exactly 'Lakeview Heights')**
 
 - **Answer:** 51
 - **Solution:** `=PROPER(TRIM(SUBSTITUTE(TEXTBEFORE(C2," ",-2),",","")))`
 
-The commas are unreliable, but the spaces are not: the last two spaces always separate the city, the state, and the ZIP. TEXTBEFORE(C2," ",-2) counts spaces from the end, so it returns everything before the second-to-last space ("Cedar Ridge," or "CEDAR RIDGE"). SUBSTITUTE removes a comma if there is one, TRIM tidies up, and PROPER fixes the case. A FIND(",") approach fails with #VALUE! on the rows that have no comma. Without Microsoft 365, the classic trick is =PROPER(SUBSTITUTE(LEFT(C2,LEN(C2)-LEN(TRIM(RIGHT(SUBSTITUTE(C2," ",REPT(" ",100)),100)))-4),",","")): the TRIM(RIGHT(SUBSTITUTE(…))) part pulls out the last word (the ZIP), and LEFT keeps everything except the ZIP and the 4 characters of " OH ".
+The commas are unreliable, but the spaces are not: the last two spaces always separate the city, the state, and the ZIP. TEXTBEFORE(C2," ",-2) counts spaces from the end, so it returns everything before the second-to-last space ("Cedar Ridge," or "CEDAR RIDGE"). SUBSTITUTE removes a comma if there is one, TRIM tidies up, and PROPER fixes the case. A FIND(",") approach fails with #VALUE! on the rows that have no comma. Without Microsoft 365 or Excel 2024, the classic trick is =PROPER(SUBSTITUTE(LEFT(C2,LEN(C2)-LEN(TRIM(RIGHT(SUBSTITUTE(C2," ",REPT(" ",100)),100)))-4),",","")): the TRIM(RIGHT(SUBSTITUTE(…))) part pulls out the last word (the ZIP), and LEFT keeps everything except the ZIP and the 4 characters of " OH ".
 
 **B2. ZIP5 column (rows in ZIP 45501)**
 
@@ -710,8 +721,8 @@ If your average comes out as 1.33, your column counts the 181 blank lists as 1 c
   COUNTIF ignore it.
 - Join with **&**, **CONCAT**, or **TEXTJOIN** (whose ignore_empty argument skips blanks), and wrap numbers and dates in **TEXT**
   so they keep their format inside a sentence.
-- In Microsoft 365, **TEXTBEFORE**, **TEXTAFTER**, and **TEXTSPLIT** replace most FIND/MID nesting, and a negative instance_num
-  searches from the end.
+- In Microsoft 365 and Excel 2024, **TEXTBEFORE**, **TEXTAFTER**, and **TEXTSPLIT** replace most FIND/MID nesting, and a
+  negative instance_num searches from the end.
 
 <!-- BEGIN GENERATED: nav -->
 ---

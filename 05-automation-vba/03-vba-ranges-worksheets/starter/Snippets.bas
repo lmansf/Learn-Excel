@@ -7,7 +7,7 @@ Option Explicit
 ' For each snippet: predict what it prints (or which error it stops
 ' with), type your prediction on the Practice sheet, THEN click inside
 ' the Sub and press F5 to check. Debug.Print writes to the Immediate
-' window (Ctrl+G; Mac: View > Immediate Window).
+' window (Ctrl + G; Mac: View > Immediate Window).
 ' =====================================================================
 
 ' Snippet A (task 1)

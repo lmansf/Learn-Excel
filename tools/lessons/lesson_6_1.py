@@ -68,9 +68,10 @@ VBA_HEADER = """Attribute VB_Name = "modRefresh"
 ' Lesson 6.1 - Capstone: one-click refresh for the 2025 performance review
 ' {kind}
 '
-' Import: in the VBE (Alt+F11; Mac: Option+F11) choose File > Import File...
-' Run:    Alt+F8 (Mac: Option+F8) > RefreshReview > Run, or a button on the
-'         Dashboard. Save the workbook as .xlsm to keep the code.
+' Import: in the VBE (Alt + F11; Mac: Option + F11), choose
+'         File > Import File...
+' Run:    Alt + F8 (Mac: Option + F8) > RefreshReview > Run, or a button on
+'         the Dashboard. Save the workbook as .xlsm to keep the code.
 '
 ' RefreshReview does five things, in order:
 '   1. Refreshes every Power Query query and PivotTable (Data > Refresh All).
@@ -292,7 +293,7 @@ LWBS_CELL = f"D{DASH_FIRST + [k for _, _, k, _, _ in DASH_ROWS].index('lwbs')}"
 def build() -> Lesson:
     L = Lesson(
         code=CODE, module_dir="06-capstone", slug="01-hospital-performance-review",
-        title="Capstone: Hospital Performance Review", level="Expert", minutes=180,
+        title="Capstone: Hospital Performance Review", level="Expert", minutes=240,
         objectives=[
             "Plan an analysis from business questions to deliverables",
             "Prepare multi-table data (cleaning, joins, calculated fields)",
@@ -539,14 +540,14 @@ def build() -> Lesson:
              answer=n_unique_surveys, title="Survey rows left after removing duplicates",
              solution=f"=COUNTA({svA})",
              live=f'=ROWS(UNIQUE(FILTER({svA},{svA}<>"")))',
-             hint="Data → Remove Duplicates, then COUNTA the SurveyID column",
+             hint="**Data → Remove Duplicates**, then COUNTA the SurveyID column",
              explanation=f"Click any cell in the Surveys table, choose **Data → Remove Duplicates** (or **Table Design → "
                          f"Remove Duplicates**, which is **Table → Remove Duplicates** on a Mac), leave every column ticked, and click OK. Excel reports {n_dups} duplicate "
                          f"values removed and {n_unique_surveys} unique values remaining, so `=COUNTA(Surveys!A2:A{ss.last_row})` "
                          f"now returns {n_unique_surveys}. Removing duplicates matters because the {n_dups} repeated October "
                          f"surveys would otherwise count twice in the HCAHPS score (task 5). To count unique IDs *without* "
                          f"deleting anything, `=ROWS(UNIQUE(Surveys!A2:A{ss.last_row}))` gives the same answer in "
-                         "Microsoft 365."),
+                         "Microsoft 365 and Excel 2021 or later."),
         # ---------------------------------------------------------------- 2 · prep: LOSDays → ALOS
         Task(f"Data prep · calculated column. In the yellow LOSDays column of Encounters "
              f"({mcol}{first}:{mcol}{es.last_row}), calculate DischargeDateTime − AdmitDateTime for every row, in days "
@@ -574,11 +575,12 @@ def build() -> Lesson:
              hint="MEDIAN(IF(…)) with × 1440, or fill the DoorToProviderMin helper column first",
              explanation="Times are fractions of a day, so × 1440 converts them to minutes. There is no MEDIANIFS, so the "
                          "IF inside MEDIAN keeps only F03 visits that have a provider time and returns FALSE for the rest, "
-                         "which MEDIAN ignores. In Microsoft 365 and Excel 2021 press Enter. In Excel 2019 and earlier, "
-                         "confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). Visits with a blank ProviderSeenDateTime are the patients "
-                         "who left without being seen. Left in, each one becomes a huge negative number (an empty cell "
-                         "minus the arrival time), which pulls the median down and wrecks any average. A PivotTable can't help here, because its value "
-                         "summaries offer Average but not Median."),
+                         "which MEDIAN ignores. In Microsoft 365 and Excel 2021 or later, press Enter. In Excel 2019 and "
+                         "earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). Visits with a blank "
+                         "ProviderSeenDateTime are the patients who left without being seen. Left in, each one becomes a "
+                         "huge negative number (an empty cell minus the arrival time), which pulls the median down and "
+                         "wrecks any average. A PivotTable can't help here, because its value summaries offer Average but "
+                         "not Median."),
         # ---------------------------------------------------------------- 4 · utilization: ICU occupancy
         Task("Utilization. What was the combined 2025 occupancy of the three Intensive Care Units (the units whose "
              "UnitType is Critical Care on the Departments sheet)? Occupancy = total MidnightCensus ÷ total StaffedBeds "
@@ -782,7 +784,8 @@ def build() -> Lesson:
              hint="Repeat task 7's SUMIFS ÷ SUMIFS for F01, F02, and F03 and compare",
              explanation=f"O/E by hospital: " + ", ".join(f"{f} {oe_by[f]:.3f}" for f in hosp) + ". "
                          f"{wname} is the highest. SUMIFS with a three-cell criteria range (`ids`) returns all three "
-                         "indexes at once in Microsoft 365. Three separate SUMIFS ÷ SUMIFS formulas work in any version."),
+                         "indexes at once in Microsoft 365 and Excel 2021 or later. Three separate SUMIFS ÷ SUMIFS "
+                         "formulas work in any version."),
         Task(f"At that hospital, how many bed-days separate actual from benchmark? Total LOSDays − total ExpectedLOS over "
              "its Inpatient stays, to 1 decimal place. This is the gap that closes if its O/E index falls to exactly "
              "1.00.",
@@ -847,8 +850,26 @@ def build() -> Lesson:
         "This is the capstone: read the brief in the lesson guide (or the Brief sheet) before you start. Any tool from "
         "Lessons 1.1–5.5 is fair game: formulas, PivotTables, Power Query, the Data Model, or VBA.",
         "Task 12 needs macros: save your copy as an Excel Macro-Enabled Workbook (.xlsm) before you add the module.",
-        "The Dashboard sheet is your deliverable template. A finished example is on the hidden 'Reference Dashboard' sheet.",
     ]
+    # Brief and Dashboard are made in the customize hook, so Start Here needs them spelled out.
+    L.sheet_notes = [
+        ("Brief", "The project brief from the CMO and CFO: the five questions, the deliverables, and the metric "
+                  "definitions that the checks expect. Read it before task 1."),
+        ("Dashboard", "Your dashboard deliverable (task 11). Pick a hospital in the C4 drop-down list, then fill the "
+                      "yellow cells: the FacilityID formula in C5, the KPI values in D8:E19, and the status (Met or Missed) "
+                      "in column H. The build notes under the table explain each step. A finished example is on the hidden "
+                      "'Reference Dashboard' sheet."),
+    ]
+    # The capstone builds on itself, and three tasks are read from other sheets instead of typed here.
+    L.practice_how = ("Go to the 'Practice' sheet and work through the tasks in order, because later tasks use the "
+                      "clean-up and helper columns from earlier ones. Type a formula or value into each yellow cell. "
+                      "Tasks 2, 11, and 12 have gray cells that read your work on Encounters, the Dashboard, and the "
+                      "RefreshLog sheet that your macro creates.")
+    L.practice_instructions = (
+        "Type a formula or value in each yellow cell. The gray cells for tasks 2, 11, and 12 read your work on Encounters, "
+        "the Dashboard, and the RefreshLog sheet that your macro creates, so don't type over them. The Check column turns "
+        "green when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → "
+        "Unhide… → 'Answer Key'.")
     L.sheet_order = ["Start Here", "Brief", "Practice", "Dashboard", "Bonus", "Encounters", "ED_Visits", "Claims",
                      "Surveys", "Census", "Facilities", "Departments", "Diagnoses", "Payers", "Answer Key", "Bonus Key",
                      "Reference Dashboard"]

@@ -204,7 +204,7 @@ The Grand Total is the average of all 2,859 stays, not the average of the three 
 Memorial has most of the stays, so it pulls the total toward its own figure. That's correct, and it's the same reason a
 period rate should be total ÷ total (Lesson 1.4).
 
-#### One flag, three answers
+#### 5a. One flag, three answers
 
 A **flag** is a column of 1s and 0s that marks whether something happened. ReadmitFlag marks 30-day readmissions. Each
 inpatient stay is an **index stay**, meaning a stay that could be followed by a readmission. Because the column holds only
@@ -219,7 +219,7 @@ inpatient stay is an **index stay**, meaning a stay that could be followed by a 
 Readmit30 holds the same information as Y and N. Text can only be counted, so a pivot can't average Y and N. That's why
 analysts add a numeric flag next to a Y/N column.
 
-#### Formats and names
+#### 5b. Formats and names
 
 - **Number format:** click **Number Format** inside Value Field Settings to show 14.8% or 2,652.83. That format belongs to the
   value field, so it survives refreshes and layout changes. Formatting the cells with **Home → Number** can be lost when the
@@ -299,7 +299,7 @@ Medicare Advantage 15.1% (3), Self-Pay 5.3% (4), and Workers' Comp 0.5% (5).
 **Grouping** combines items into bigger buckets, such as days into months or ages into bands. The source data doesn't
 change, and you don't need a helper column.
 
-#### Dates
+#### 7a. Dates
 
 In Excel 2016 and later, dropping a date field into Rows or Columns often groups it automatically. Excel adds a field such as
 **Months (AdmitDate)**, and sometimes **Quarters** and **Years** fields too. The exact names vary by version. To choose the
@@ -324,7 +324,7 @@ All of this lesson's data is from 2025, so Months alone is safe here.
 > Microsoft 365 and Excel 2019 or later for Windows, you can switch it off for good in **File → Options → Data → Disable
 > automatic grouping of Date/Time columns in PivotTables**.
 
-#### Numbers
+#### 7b. Numbers
 
 Right-click a number in a Rows or Columns field, such as an age, and choose **Group…**. The dialog asks for **Starting at**,
 **Ending at**, and **By** (the band width). For example, inpatient LOSDays grouped from 0 to 34 by 7:
@@ -342,11 +342,11 @@ Each band includes both ends, so *7-13* means 7 through 13 days. Values below St
 extra groups whose labels begin with < and >. Every band has the same width. For uneven bands, such as 0–17, 18–64, and
 65+, add a band column to the source with IFS (Lesson 2.1) or an approximate-match lookup (Lesson 2.6), then refresh.
 
-#### Items you choose
+#### 7c. Items you choose
 
 You can also group any items you select:
 
-1. With PayerName in Rows, click **Medicare**, then Ctrl+click (Mac: ⌘+click) **Silverline Medicare Advantage**.
+1. With PayerName in Rows, click **Medicare**, then Ctrl + click (Mac: ⌘ + click) **Silverline Medicare Advantage**.
 2. Right-click one of them and choose **Group** (Windows: **Alt + Shift + →**), or choose **PivotTable Analyze → Group
    Selection**.
 3. Excel adds a new field, **PayerName2**, and puts the two payers in a group called *Group1*. Click the *Group1* cell, type
@@ -422,7 +422,7 @@ they work the same way here. A **timeline** is a slicer for a date field: a bar 
 1. Click inside the pivot.
 2. Choose **PivotTable Analyze → Insert Slicer** (or **Insert → Slicer**).
 3. Tick one or more fields, such as **PayerType**, and click **OK**.
-4. Click a button to filter. Ctrl+click (Mac: ⌘+click) adds more buttons, or turn on the **Multi-Select** button in the
+4. Click a button to filter. Ctrl + click (Mac: ⌘ + click) adds more buttons, or turn on the **Multi-Select** button in the
    slicer's header. Dimmed buttons have no data under the current filters.
 5. To clear it, click the **Clear Filter** button (a funnel with a red X) at the slicer's top right, or select the slicer
    and press **Alt + C** (Windows).
@@ -432,7 +432,7 @@ they work the same way here. A **timeline** is a slicer for a date field: a bar 
 1. Click inside the pivot and choose **PivotTable Analyze → Insert Timeline** (or **Insert → Timeline**).
 2. Tick a date field, such as **AdmitDate**, and click **OK**. Only fields that hold real dates are listed.
 3. Use the time-level menu at the timeline's top right to choose **YEARS**, **QUARTERS**, **MONTHS**, or **DAYS**.
-4. Click a period to select it. Drag the handles at either end of the selection, or Shift+click another period, to select a
+4. Click a period to select it. Drag the handles at either end of the selection, or Shift + click another period, to select a
    longer range.
 
 Selections combine just as they did on Tables: buttons in *one* slicer combine with OR (Government *or* Medicare
@@ -488,7 +488,7 @@ ChargesPerDay* even though it's a ratio.
 | Combine any number fields in the source | Count rows, because each field in the formula is already a sum |
 | Appear in every pivot that shares the cache | Work in a pivot built on the Data Model. There you write a DAX measure instead (Lesson 4.4) |
 
-To edit or delete a calculated field, open the same dialog, pick it from the **Name** dropdown, and click **Modify** or
+To edit or delete a calculated field, open the same dialog, pick it from the **Name** drop-down list, and click **Modify** or
 **Delete**.
 
 > 💡 **Tip:** To divide by a number of rows, give the source a helper column of 1s, such as `IndexStay` = 1 on every inpatient
@@ -576,14 +576,14 @@ Bluestone Memorial Hospital      Observation                      419
 
 | Option | Where | What it does |
 |---|---|---|
-| **Repeat All Item Labels** | Design → Report Layout | Repeats the outer label on every row (Outline and Tabular Form) |
-| **Subtotals** | Design → Subtotals | Shows subtotals at the top or bottom of each group, or hides them |
-| **Grand Totals** | Design → Grand Totals | Turns grand totals on or off for rows and columns separately |
-| **Blank Rows** | Design → Blank Rows | Adds an empty row after each group |
-| **PivotTable Styles** | Design → styles gallery | Banding, header colors, and borders |
-| **For empty cells show** | PivotTable Options → Layout & Format | Shows 0 instead of a blank where a combination has no records |
-| **Autofit column widths on update** | PivotTable Options → Layout & Format | Untick it to keep your column widths when you refresh |
-| **+/− buttons** | PivotTable Analyze → +/− Buttons | Shows or hides the expand and collapse buttons |
+| **Repeat All Item Labels** | **Design → Report Layout** | Repeats the outer label on every row (Outline and Tabular Form) |
+| **Subtotals** | **Design → Subtotals** | Shows subtotals at the top or bottom of each group, or hides them |
+| **Grand Totals** | **Design → Grand Totals** | Turns grand totals on or off for rows and columns separately |
+| **Blank Rows** | **Design → Blank Rows** | Adds an empty row after each group |
+| **PivotTable Styles** | **Design → PivotTable Styles** gallery | Banding, header colors, and borders |
+| **For empty cells show** | **PivotTable Options → Layout & Format** | Shows 0 instead of a blank where a combination has no records |
+| **Autofit column widths on update** | **PivotTable Options → Layout & Format** | Untick it to keep your column widths when you refresh |
+| **+/− buttons** | **PivotTable Analyze → +/− Buttons** | Shows or hides the expand and collapse buttons |
 
 Open **PivotTable Options** by right-clicking inside the pivot, or with **PivotTable Analyze → Options**.
 
@@ -624,13 +624,13 @@ the pivot. Click inside a pivot and choose **PivotTable Analyze → PivotChart**
 **Alt + F1** adds the chart to the current sheet and **F11** puts it on a sheet of its own. The chart's field buttons and any
 connected slicers filter the chart and the pivot together. Lesson 3.5 covers choosing and designing charts.
 
-### 15. Keyboard shortcuts and version notes
+### 15. Shortcuts and version notes
 
 | Action | Windows | Mac |
 |---|---|---|
 | Insert a PivotTable | **Alt, N, V** (in Microsoft 365, then **T** for From Table/Range) | **Insert → PivotTable** |
 | Open the field list | **PivotTable Analyze → Field List** | **PivotTable Analyze → Field List** |
-| Open a field's filter menu | **Alt + ↓** on its header cell | **⌥ + ↓** on its header cell |
+| Open a field's filter menu | **Alt + ↓** on its header cell | **Option + ↓** on its header cell |
 | Value Field Settings | Right-click a value → **Value Field Settings…** | **ⓘ** next to the field in the Values area |
 | Group selected items | **Alt + Shift + →** | Right-click → **Group…** |
 | Ungroup | **Alt + Shift + ←** | Right-click → **Ungroup** |
@@ -658,23 +658,23 @@ step, and tasks 7–9 reuse one monthly pivot. Type each answer in the yellow ce
 you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses tblEncounters on the Encounters sheet: all 11,145 encounters that began in 2025. Build each PivotTable on a new worksheet (Insert → PivotTable → New Worksheet), or rearrange the one you already have. When you reuse a pivot, make it match the layout the task lists: remove leftover fields and clear filters the task doesn't mention. Then type the answer the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the exception.
+Every task uses tblEncounters on the Encounters sheet: all 11,145 encounters that began in 2025. Build each PivotTable on a new worksheet (**Insert → PivotTable**, then **New Worksheet**), or rearrange the one you already have. When you reuse a pivot, make it match the layout the task lists: remove leftover fields and clear filters the task doesn't mention. Then type the answer the pivot shows into the yellow cell. Type the value itself rather than a reference to a pivot cell, because a reference like =B7 points somewhere else as soon as you rearrange the pivot. Task 13 is the exception.
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Create a PivotTable from tblEncounters on a new worksheet. Put FacilityName in Rows and EncounterID in Values. How many 2025 encounters did Cedar Ridge Medical Center have? | Insert → PivotTable, then drag fields into the four areas |
+| 1 | Create a PivotTable from tblEncounters on a new worksheet. Put FacilityName in Rows and EncounterID in Values. How many 2025 encounters did Cedar Ridge Medical Center have? | **Insert → PivotTable**, then drag fields into the four areas |
 | 2 | Rearrange the pivot. Remove FacilityName, put EncounterType in Filters and select Inpatient, put ServiceLine in Rows, and put TotalCharges in Values in place of EncounterID. What were the total charges for Cardiovascular inpatient stays? Enter the amount to the cent. | The filter button for the Filters area appears above the pivot |
-| 3 | Drill down: in that pivot, double-click the Sum of TotalCharges value on the Cardiovascular row. Excel lists the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the EncounterID of the most expensive Cardiovascular inpatient stay? | Double-click a value cell (Show Details) |
-| 4 | Build a pivot of average ED charges by payer type: EncounterType = Emergency in Filters, PayerType in Rows, and TotalCharges in Values. Change the summary from Sum to Average. What was the average charge for a Self-Pay ED visit? Round to 2 decimal places. | Right-click a value → Summarize Values By, or Value Field Settings |
+| 3 | Drill down: in that pivot, double-click the Sum of TotalCharges value on the Cardiovascular row. Excel lists the stays behind the number on a new sheet. Sort that list by TotalCharges, largest first. What is the EncounterID of the most expensive Cardiovascular inpatient stay? | Double-click a value cell (**Show Details**) |
+| 4 | Build a pivot of average ED charges by payer type: EncounterType = Emergency in Filters, PayerType in Rows, and TotalCharges in Values. Change the summary from Sum to Average. What was the average charge for a Self-Pay ED visit? Round to 2 decimal places. | Right-click a value → **Summarize Values By**, or **Value Field Settings** |
 | 5 | Build a readmission pivot: EncounterType = Inpatient in Filters, ServiceLine in Rows, and ReadmitFlag in Values. Notice which summary Excel picks, then change it to Average and format it as a percentage. What was the 30-day readmission rate for the Medicine service line? Enter it as a percentage to 1 decimal place. | Average of a 1/0 column is the share of 1s |
-| 6 | Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows, EncounterType in Columns, and EncounterID in Values. Show the values as % of Column Total. What percentage of ED visits (the Emergency column) were billed to State Medicaid? Enter it to 1 decimal place. | Value Field Settings → Show Values As |
-| 7 | Group dates by month: EncounterType = Emergency in Filters, AdmitDate in Rows, and EncounterID in Values. Group AdmitDate by Months. Which month of 2025 had the fewest ED visits? Type the month's three-letter name as the pivot shows it (for example, Mar). | Right-click a date → Group…, then sort by the count |
-| 8 | In the same pivot, first sort the months back into calendar order (Jan at the top). Then add EncounterID to Values a second time and show it as Difference From the (previous) month. By how many visits did December's ED volume differ from November's? Type a negative number if December was lower. | Right-click a month → Sort → Sort A to Z. Then Show Values As → Difference From, Base item (previous) |
-| 9 | Change the EncounterType filter to Inpatient, and change the second value field to Running Total In the months field. How many inpatient stays began from January 1 through June 30, 2025 (the running total on the Jun row)? | Show Values As → Running Total In |
-| 10 | Group numbers into bands: EncounterType = Inpatient in Filters, AgeAtAdmit in Rows, and EncounterID in Values. Group AgeAtAdmit starting at 0, ending at 99, by 10. How many inpatient stays were for patients aged 70–79? | Right-click an age → Group… (Starting at, Ending at, By) |
-| 11 | Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID in Values. Insert a slicer for PayerType and a timeline for AdmitDate. In the slicer, select both Government and Medicare Advantage. In the timeline, switch to QUARTERS and select Q4 2025. How many Emergency encounters does Cedar Ridge Medical Center show? | PivotTable Analyze → Insert Slicer and Insert Timeline. Ctrl+click (Mac: ⌘+click) picks a second button |
-| 12 | Add a calculated field named ChargesPerDay with the formula =TotalCharges/LOSDays. Use a pivot with EncounterType = Inpatient in Filters, FacilityName in Rows, and ChargesPerDay in Values. What is ChargesPerDay for Ashby Falls Community Hospital? Round to 2 decimal places. | PivotTable Analyze → Fields, Items, & Sets → Calculated Field |
-| 13 | On a new sheet, build a pivot with FacilityName in Rows, EncounterType in Columns, and TotalCharges in Values. Then click this task's yellow cell, type =, switch to the pivot sheet, click the Cedar Ridge Medical Center × Observation cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? Leave the formula in the cell. | If you get a plain reference such as =Sheet7!D8 instead, turn Generate GetPivotData back on |
+| 6 | Build a payer-mix pivot on a new sheet, with no filters: PayerName in Rows, EncounterType in Columns, and EncounterID in Values. Show the values as % of Column Total. What percentage of ED visits (the Emergency column) were billed to State Medicaid? Enter it to 1 decimal place. | **Value Field Settings → Show Values As** |
+| 7 | Group dates by month: EncounterType = Emergency in Filters, AdmitDate in Rows, and EncounterID in Values. Group AdmitDate by Months. Which month of 2025 had the fewest ED visits? Type the month's three-letter name as the pivot shows it (for example, Mar). | Right-click a date → **Group…**, then sort by the count |
+| 8 | In the same pivot, first sort the months back into calendar order (Jan at the top). Then add EncounterID to Values a second time and show it as Difference From the (previous) month. By how many visits did December's ED volume differ from November's? Type a negative number if December was lower. | Right-click a month → **Sort → Sort A to Z**. Then **Show Values As → Difference From**, Base item (previous) |
+| 9 | Change the EncounterType filter to Inpatient, and change the second value field to Running Total In the months field. How many inpatient stays began from January 1 through June 30, 2025 (the running total on the Jun row)? | **Show Values As → Running Total In** |
+| 10 | Group numbers into bands: EncounterType = Inpatient in Filters, AgeAtAdmit in Rows, and EncounterID in Values. Group AgeAtAdmit starting at 0, ending at 99, by 10. How many inpatient stays were for patients aged 70–79? | Right-click an age → **Group…** (Starting at, Ending at, By) |
+| 11 | Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID in Values. Insert a slicer for PayerType and a timeline for AdmitDate. In the slicer, select both Government and Medicare Advantage. In the timeline, switch to QUARTERS and select Q4 2025. How many Emergency encounters does Cedar Ridge Medical Center show? | **PivotTable Analyze → Insert Slicer** and **Insert Timeline**. Ctrl + click (Mac: ⌘ + click) picks a second button |
+| 12 | Add a calculated field named ChargesPerDay with the formula =TotalCharges/LOSDays. Use a pivot with EncounterType = Inpatient in Filters, FacilityName in Rows, and ChargesPerDay in Values. What is ChargesPerDay for Ashby Falls Community Hospital? Round to 2 decimal places. | **PivotTable Analyze → Fields, Items, & Sets → Calculated Field** |
+| 13 | On a new sheet, build a pivot with FacilityName in Rows, EncounterType in Columns, and TotalCharges in Values. Then click this task's yellow cell, type =, switch to the pivot sheet, click the Cedar Ridge Medical Center × Observation cell, and press Enter. Excel writes a GETPIVOTDATA formula. What does it return? Leave the formula in the cell. | If you get a plain reference such as =Sheet7!D8 instead, turn **Generate GetPivotData** back on |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -686,7 +686,7 @@ and choose **Unhide…**. The same answers are below, collapsed so you don't see
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Create a PivotTable from tblEncounters on a new worksheet. Put FacilityName in Rows…**
 
@@ -809,7 +809,7 @@ Running Total In adds each month to everything above it, so the Jun row is the y
 3. Read the **70-79** row.
 
 
-Grouping turns 99 distinct ages into ten bands labelled 0-9, 10-19, … 90-99. Each band includes both ends, so 70-79 means ages 70 through 79. It's the busiest band for inpatient care. Cross-check without a pivot: `=COUNTIFS(tblEncounters[EncounterType],"Inpatient",tblEncounters[AgeAtAdmit],">=70",tblEncounters[AgeAtAdmit],"<=79")`
+Grouping turns 99 distinct ages into ten bands labeled 0-9, 10-19, … 90-99. Each band includes both ends, so 70-79 means ages 70 through 79. It's the busiest band for inpatient care. Cross-check without a pivot: `=COUNTIFS(tblEncounters[EncounterType],"Inpatient",tblEncounters[AgeAtAdmit],">=70",tblEncounters[AgeAtAdmit],"<=79")`
 
 **11. Build a new pivot with FacilityName in Rows, EncounterType in Columns, and EncounterID…**
 
@@ -817,7 +817,7 @@ Grouping turns 99 distinct ages into ten bands labelled 0-9, 10-19, … 90-99. E
 - **Solution:**
 
 1. Build the pivot on a new sheet: **FacilityName** in **Rows**, **EncounterType** in **Columns**, **EncounterID** in **Values**.
-2. **PivotTable Analyze → Insert Slicer** → tick **PayerType** → **OK**. Click **Government**, then Ctrl+click (Mac: ⌘+click) **Medicare Advantage**.
+2. **PivotTable Analyze → Insert Slicer** → tick **PayerType** → **OK**. Click **Government**, then Ctrl + click (Mac: ⌘ + click) **Medicare Advantage**.
 3. **PivotTable Analyze → Insert Timeline** → tick **AdmitDate** → **OK**. Change the time level (top right of the timeline) to **QUARTERS** and click **Q4**.
 4. Read the Cedar Ridge Medical Center row in the Emergency column.
 
@@ -862,18 +862,18 @@ GETPIVOTDATA looks a value up by its field and item names instead of by its cell
 <!-- BEGIN GENERATED: bonus -->
 Bluestone's Quality Committee is preparing for its annual readmissions review and wants to know where 30-day readmissions concentrate. An index stay is any inpatient stay that could be followed by a readmission: every row where ReadmitFlag is 1 or 0. Small groups produce extreme rates by chance (1 readmission among 4 stays is 25%), so the committee only reviews groups with at least 30 index stays. Build the pivots on new sheets and answer the committee's questions.
 
-Work on the **Bonus** sheet of the workbook.
+Build the pivots on new sheets, and type your answers in the yellow cells on the **Bonus** sheet.
 
-- **B1.** Build a pivot with EncounterType = Inpatient in Filters, ServiceLine and then PayerType in Rows, and ReadmitFlag in Values twice: once as Count (rename it Index stays) and once as Average (rename it Readmit rate, formatted as a percentage). Add a value filter on PayerType that keeps only rows with at least 30 index stays. How many service line × payer type combinations remain? *(Hint: PayerType's filter menu → Value Filters → Greater Than Or Equal To. Tabular Form makes rows easy to count)*
+- **B1.** Build a pivot with EncounterType = Inpatient in Filters, ServiceLine and then PayerType in Rows, and ReadmitFlag in Values twice: once as Count (rename it Index stays) and once as Average (rename it Readmit rate, formatted as a percentage). Add a value filter on PayerType that keeps only rows with at least 30 index stays. How many service line × payer type combinations remain? (Hint: PayerType's filter menu → **Value Filters → Greater Than Or Equal To**. Tabular Form makes rows easy to count)
 - **B2.** Among the remaining combinations, which has the highest readmission rate? Type it as ServiceLine, PayerType (for example: Medicine, Commercial). *(Hint: Sort the Readmit rate column, or scan it with a color scale)*
 - **B3.** What is that combination's readmission rate? Enter it as a percentage to 1 decimal place. *(Hint: Read the Readmit rate cell)*
-- **B4.** Now rank diagnoses. In a new pivot (EncounterType = Inpatient in Filters), put DxDescription in Rows and ReadmitFlag in Values as Sum, which is the number of readmissions. Apply a Top 10 filter that keeps the top 3 items. Which diagnosis has the third-highest number of readmissions? Type the description exactly as it appears. *(Hint: Row Labels filter → Value Filters → Top 10…)*
+- **B4.** Now rank diagnoses. In a new pivot (EncounterType = Inpatient in Filters), put DxDescription in Rows and ReadmitFlag in Values as Sum, which is the number of readmissions. Apply a Top 10 filter that keeps the top 3 items. Which diagnosis has the third-highest number of readmissions? Type the description exactly as it appears. (Hint: **Row Labels** filter → **Value Filters → Top 10…**)
 - **B5.** What share of all 2025 inpatient readmissions do those three diagnoses account for together? Enter it as a percentage to 1 decimal place. *(Hint: With the Top 3 filter on, the Grand Total adds only the visible rows)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Build a pivot with EncounterType = Inpatient in Filters, ServiceLine and then…**
 
@@ -887,7 +887,7 @@ Work on the **Bonus** sheet of the workbook.
 5. Count the remaining PayerType rows (select the Readmit rate cells above the Grand Total and read **Count** on the status bar).
 
 
-A value filter on the inner row field is applied within each service line, so it keeps or hides each service line × payer type cell separately. 31 combinations exist in the data, and 9 of them have fewer than 30 index stays. Custom names keep the two ReadmitFlag fields apart and make the filter dialog readable. The key's cross-check uses Microsoft 365 functions you'll meet in Lessons 4.1 and 4.2: `=LET(s,UNIQUE(tblEncounters[ServiceLine]),p,TRANSPOSE(UNIQUE(tblEncounters[PayerType])),n,COUNTIFS(tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],s,tblEncounters[PayerType],p),SUM(--(n>=30)))`
+A value filter on the inner row field is applied within each service line, so it keeps or hides each service line × payer type cell separately. 31 combinations exist in the data, and 9 of them have fewer than 30 index stays. Custom names keep the two ReadmitFlag fields apart and make the filter dialog readable. The key's cross-check uses dynamic-array functions (Microsoft 365 and Excel 2021 or later) that you'll meet in Lessons 4.1 and 4.2: `=LET(s,UNIQUE(tblEncounters[ServiceLine]),p,TRANSPOSE(UNIQUE(tblEncounters[PayerType])),n,COUNTIFS(tblEncounters[EncounterType],"Inpatient",tblEncounters[ServiceLine],s,tblEncounters[PayerType],p),SUM(--(n>=30)))`
 
 **B2. Among the remaining combinations, which has the highest readmission rate? Type it as…**
 
@@ -918,7 +918,7 @@ Cardiovascular stays paid by Medicare Advantage plans had 22 readmissions in 86 
 3. Sort largest to smallest and read the third row.
 
 
-Sum of a 1/0 flag counts the 1s, so Sum of ReadmitFlag is the number of readmissions. The Top 10 filter keeps the top N items by any value field, not just 10. The top three are Pneumonia, unspecified organism (47), Chronic obstructive pulmonary disease with (acute) exacerbation (45), Heart failure, unspecified (44), and fourth place has 40. Cross-check (Microsoft 365): `=LET(d,UNIQUE(FILTER(tblEncounters[DxDescription],tblEncounters[ReadmitFlag]=1)),n,COUNTIFS(tblEncounters[DxDescription],d,tblEncounters[ReadmitFlag],1),INDEX(SORTBY(d,n,-1),3))`
+Sum of a 1/0 flag counts the 1s, so Sum of ReadmitFlag is the number of readmissions. The Top 10 filter keeps the top N items by any value field, not just 10. The top three are Pneumonia, unspecified organism (47), Chronic obstructive pulmonary disease with (acute) exacerbation (45), Heart failure, unspecified (44), and fourth place has 40. Cross-check (Microsoft 365 and Excel 2021 or later): `=LET(d,UNIQUE(FILTER(tblEncounters[DxDescription],tblEncounters[ReadmitFlag]=1)),n,COUNTIFS(tblEncounters[DxDescription],d,tblEncounters[ReadmitFlag],1),INDEX(SORTBY(d,n,-1),3))`
 
 **B5. What share of all 2025 inpatient readmissions do those three diagnoses account for…**
 
@@ -930,7 +930,7 @@ Sum of a 1/0 flag counts the 1s, so Sum of ReadmitFlag is the number of readmiss
 3. Divide: 136 ÷ 424.
 
 
-A regular PivotTable totals only the items that survive its filters. With the Top 3 filter on, the Grand Total is 136, so % of Grand Total would show the three diagnoses adding up to 100%. The true denominator is all 424 readmissions, so about 32% of readmissions come from just three diagnoses. Pneumonia, COPD, and heart failure are also conditions in Medicare's Hospital Readmissions Reduction Program, so quality teams watch them closely. Cross-check (Microsoft 365): `=LET(d,UNIQUE(FILTER(tblEncounters[DxDescription],tblEncounters[ReadmitFlag]=1)),n,COUNTIFS(tblEncounters[DxDescription],d,tblEncounters[ReadmitFlag],1),SUM(LARGE(n,SEQUENCE(3)))/SUM(tblEncounters[ReadmitFlag]))`
+A regular PivotTable totals only the items that survive its filters. With the Top 3 filter on, the Grand Total is 136, so % of Grand Total would show the three diagnoses adding up to 100%. The true denominator is all 424 readmissions, so about 32% of readmissions come from just three diagnoses. Pneumonia, COPD, and heart failure are also conditions in Medicare's Hospital Readmissions Reduction Program, so quality teams watch them closely. Cross-check (Microsoft 365 and Excel 2021 or later): `=LET(d,UNIQUE(FILTER(tblEncounters[DxDescription],tblEncounters[ReadmitFlag]=1)),n,COUNTIFS(tblEncounters[DxDescription],d,tblEncounters[ReadmitFlag],1),SUM(LARGE(n,SEQUENCE(3)))/SUM(tblEncounters[ReadmitFlag]))`
 
 </details>
 <!-- END GENERATED: bonus-answers -->

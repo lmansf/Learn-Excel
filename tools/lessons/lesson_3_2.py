@@ -320,7 +320,7 @@ def build() -> Lesson:
     # ------------------------------------------------------------------ tasks
     L.practice_intro = (
         "Part A (tasks 1–6) uses the IntakeLog and Lists sheets. Add each validation rule, then click the arrow on "
-        "Data → Data Validation → Circle Invalid Data and count the red circles. Part B (tasks 7–13) uses the Labs, "
+        "**Data → Data Validation**, choose **Circle Invalid Data**, and count the red circles. Part B (tasks 7–13) uses the Labs, "
         "Supplies, and Census sheets. Create each conditional formatting rule, then answer the question about what it "
         "highlights. Type the number you count, or write a formula that calculates it.")
 
@@ -332,7 +332,7 @@ def build() -> Lesson:
         Task(f"IntakeLog, Payer column ({ic('Payer')}): add a List validation whose Source is the payer list on the Lists sheet "
              f"({pay_rng}). Then circle invalid data. How many Payer cells are circled?",
              answer=bad_payer, title="Payer drop-down list (circled entries)",
-             hint="Data → Data Validation → Allow: List",
+             hint="**Data → Data Validation**, Allow: List",
              solution=(f"1. On **IntakeLog**, select **{ic('Payer')}**.\n"
                        "2. **Data → Data Validation** (Windows: Alt, A, V, V). On the **Settings** tab set **Allow** to **List**.\n"
                        f"3. Click in **Source**, switch to the **Lists** sheet, and select **A2:A{1 + len(payer_names)}**. "
@@ -405,7 +405,7 @@ def build() -> Lesson:
                          "something the other catches, so both go inside AND. You write the formula for C2 only, and Excel "
                          "adjusts it for C3, C4, and so on."),
         Task("Dependent drop-down: on the Lists sheet, name each department column after its facility "
-             f"(Formulas → Create from Selection → Top row, one column at a time: {', '.join(block_ranges)}). "
+             f"(**Formulas → Create from Selection**, Top row, one column at a time: {', '.join(block_ranges)}). "
              f"Give IntakeLog Facility ({ic('Facility')}) a List validation from {fac_rng}. Then give Department "
              f"({ic('Department')}) a List validation whose Source is =INDIRECT(SUBSTITUTE($H2,\" \",\"_\")). "
              "How many Department cells are circled?",
@@ -432,9 +432,9 @@ def build() -> Lesson:
 
         # ---------------- Part B: conditional formatting ----------------
         Task(f"Labs sheet: the lab interface re-sent some results, so a few LabResultIDs appear more than once. Select "
-             f"{lc('LabResultID')} and apply Highlight Cells Rules → Duplicate Values. How many cells are highlighted?",
+             f"{lc('LabResultID')} and apply **Highlight Cells Rules → Duplicate Values**. How many cells are highlighted?",
              answer=dup_cells, title="Duplicate LabResultIDs (highlighted cells)",
-             hint="Home → Conditional Formatting → Highlight Cells Rules",
+             hint="**Home → Conditional Formatting → Highlight Cells Rules**",
              solution=(f"1. On **Labs**, select **{lc('LabResultID')}**.\n"
                        "2. **Home → Conditional Formatting → Highlight Cells Rules → Duplicate Values**. Keep **Duplicate** "
                        "and the light red fill, then click **OK**.\n"
@@ -444,8 +444,8 @@ def build() -> Lesson:
              explanation=f"Duplicate Values highlights every copy of a repeated value, including the first one. There are "
                          f"{dup_ids} repeated IDs: five appear twice and one appears three times, so {dup_cells} cells light up even though only "
                          f"{extra_rows} rows are extra. When you clean the feed, you delete {extra_rows} rows, not {dup_cells}."),
-        Task(f"Labs, TATMin ({lc('TATMin')}): turnaround minutes from specimen collection to result. Apply Top/Bottom Rules → "
-             "Top 10 Items. What is the smallest TAT that your rule highlights? Enter it in minutes.",
+        Task(f"Labs, TATMin ({lc('TATMin')}): turnaround minutes from specimen collection to result. Apply **Top/Bottom Rules → "
+             "Top 10 Items**. What is the smallest TAT that your rule highlights? Enter it in minutes.",
              answer=tenth, title="Top 10 turnaround times (smallest highlighted value)",
              hint="Ties with the 10th value are highlighted too. LARGE gives the k-th largest",
              solution=(f"1. Select **{lc('TATMin')}**.\n"
@@ -477,8 +477,8 @@ def build() -> Lesson:
                          "the Maximum at 1 gives bar length a meaning: every item at or above 100% of par gets a full bar, and "
                          "an item at 50% gets a half bar."),
         Task(f"Census sheet (Medical-Surgical 5 East, Nov–Dec 2025): apply the Red - Yellow - Green Color Scale to Occupancy "
-             f"({cen.rng('Occupancy', absolute=False, sheet=False)}) so the fullest days are red. In Manage Rules → Edit Rule "
-             "you'll see the midpoint is the 50th percentile. Which occupancy gets the pure yellow midpoint color? Enter it as "
+             f"({cen.rng('Occupancy', absolute=False, sheet=False)}) so the fullest days are red. In **Manage Rules → Edit "
+             "Rule**, you'll see the midpoint is the 50th percentile. Which occupancy gets the pure yellow midpoint color? Enter it as "
              "a percentage to 1 decimal place.",
              answer=occ_median, fmt="0.0%", title="Color scale midpoint (50th percentile)",
              hint="The 50th percentile has a more common name",
@@ -495,12 +495,12 @@ def build() -> Lesson:
                             if median_days > 1 else "Exactly one day has that value and shows pure yellow. ")
                          + "The default color scale's middle color therefore marks a typical day for this unit, not a target. "
                            "To color against a target such as 85%, change the midpoint Type to Number (you'll do that in the bonus)."),
-        Task(f"Labs, TATMin ({lc('TATMin')}): apply Icon Sets → 3 Traffic Lights (Unrimmed). Edit the rule: click Reverse Icon "
+        Task(f"Labs, TATMin ({lc('TATMin')}): apply **Icon Sets → 3 Traffic Lights (Unrimmed)**. Edit the rule: click Reverse Icon "
              "Order, set both Types to Number, and make red show when the value is >= 60 and yellow when it is >= 45 (green "
              "below 45). How many cells show a yellow light?",
              answer=yellow, title="Traffic-light icons on turnaround time (yellow count)",
-             hint="Each icon's test is \">=\". The default Type is Percent, not Number. Filter by Color → Filter by Cell Icon "
-                  "counts icons",
+             hint="Each icon's test is \">=\". The default Type is Percent, not Number. **Filter by Color → Filter by Cell "
+                  "Icon** counts icons",
              solution=(f"1. Select **{lc('TATMin')}** → **Home → Conditional Formatting → Icon Sets → 3 Traffic Lights (Unrimmed)**.\n"
                        "2. **Manage Rules → Edit Rule**. Click **Reverse Icon Order** so red is on top.\n"
                        "3. Red: **>=**, Value **60**, Type **Number**. Yellow: **>=**, Value **45**, Type **Number**. "
@@ -514,7 +514,7 @@ def build() -> Lesson:
                          "literal. Reverse Icon Order puts red on the high (slow) values. Yellow covers 45 ≤ TAT < 60 because "
                          f"each icon's test is \">=\" and the red test is checked first. ({red_icons} results are red.)"),
         Task(f"Labs: highlight the entire row of every critical result (AbnormalFlag HH or LL). Select A2:{last_lab_col}{lab.last_row} "
-             "with A2 active, choose New Rule → \"Use a formula to determine which cells to format,\" and set a red fill. "
+             "with A2 active, choose **New Rule → Use a formula to determine which cells to format**, and set a red fill. "
              "How many rows are highlighted?",
              answer=crit_rows, title="Critical results: whole-row formula rule",
              hint="Lock the column with $, not the row",
@@ -583,13 +583,13 @@ def build() -> Lesson:
         "huddle from the Huddle sheet: one row per inpatient unit, with the midnight census for 11/24 and 11/25, the "
         "overnight change, and occupancy. Make the board readable at a glance, then build the unit selector that drives the "
         f"gray unit card (Huddle!B6:B9). The card reads the NovCensus sheet (every unit, Nov 1–25). The board's data is in "
-        f"rows {H_FIRST}–{H_LAST}. Build every rule and the selector on the Huddle sheet, and type your answers on the Bonus sheet.")
+        f"rows {H_FIRST}–{H_LAST}.")
     L.bonus = [
         Task(f"On Huddle, apply a 3-color scale to Occupancy ({hb('G').replace('Huddle!', '')}): Minimum = Lowest Value (green), "
              "Midpoint = Number 0.85 (yellow, the planning target), Maximum = Highest Value (red). How many units are shaded "
              "on the red side of yellow (occupancy above 85%)?",
              answer=above85, title="Color scale with an 85% target midpoint",
-             hint="New Rule → Format all cells based on their values → 3-Color Scale",
+             hint="**New Rule → Format all cells based on their values**, Format Style 3-Color Scale",
              solution=(f"1. Select **{hb('G').replace('Huddle!', '')}** on Huddle → **Conditional Formatting → New Rule → "
                        "Format all cells based on their values**.\n"
                        "2. **Format Style** = **3-Color Scale**. Minimum: Lowest Value, green. Midpoint: Type **Number**, "
@@ -598,7 +598,7 @@ def build() -> Lesson:
              live=f"=COUNTIF({hb('G')},\">0.85\")",
              explanation="With a Number midpoint, yellow means \"exactly at target\" instead of \"a typical unit.\" Every unit "
                          "above 85% shades from yellow toward red, and the reddest cell is simply the fullest unit."),
-        Task(f"On Huddle, apply Icon Sets → 3 Arrows (Colored) to Change ({hb('F').replace('Huddle!', '')}). Edit the rule so "
+        Task(f"On Huddle, apply **Icon Sets → 3 Arrows (Colored)** to Change ({hb('F').replace('Huddle!', '')}). Edit the rule so "
              "both Types are Number: up arrow when the value is >= 1, sideways arrow when it is >= 0, down arrow otherwise. How "
              "many units show an up arrow?",
              answer=up, title="Arrows on the overnight census change",
@@ -658,6 +658,26 @@ def build() -> Lesson:
                          "forces a facility first and then offers only that facility's units, and the card's SUMIFS uses both "
                          "cells. The OFFSET version needs no named ranges. If you insert a new unit's row inside its facility's block, "
                          "the board ranges in the formula grow to include it, so the list keeps working."),
+    ]
+
+    # Every rule is built on another sheet and the answers are counts, so Start Here, the Bonus sheet's how-to line, and the
+    # README's bonus line say where the work happens. Start Here lists Practice, the five data sheets, Lists, Huddle, then
+    # Bonus (Lists and Huddle are built in the customize hook, so they need sheet_notes).
+    L.practice_how = ("Go to the 'Practice' sheet. Build each rule on the sheet the task names (IntakeLog, Labs, Supplies, or "
+                      "Census), then type the count or value it asks for, or a formula that calculates it, into the task's "
+                      "yellow cell.")
+    L.bonus_instructions = (
+        "Build every rule and the selector on the Huddle sheet, and type your answers to B1–B3 in the yellow cells here. "
+        "B4's gray cell reads the unit card on Huddle, so it fills in when your selector works. The Check column turns green "
+        "when your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → "
+        f"'{L.bonus_key_sheet}' (or 'Huddle Key' for the finished board).")
+    L.bonus_where = ("Build every rule and the selector on the **Huddle** sheet, and type your answers to B1–B3 in the yellow "
+                     "cells on the **Bonus** sheet.")
+    L.sheet_notes = [
+        ("Lists", "Part A's drop-down sources: payers, facilities, each facility's departments in E:H (task 6 names them), "
+                  "and the same pairs in long form in J:K. Also the named cells ReportDate and ExpiringWindowDays."),
+        ("Huddle", f"The bonus bed huddle board ({len(board)} inpatient units in rows {H_FIRST}–{H_LAST}). Format it, and "
+                   "build the unit selector in the yellow cells B4:B5. The gray unit card in B6:B9 reads NovCensus."),
     ]
 
     L.start_notes = [

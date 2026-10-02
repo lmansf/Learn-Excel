@@ -8,7 +8,7 @@
 ' everything below the dashed line. Needs WriteLog from modLog.
 '
 ' Tip: instead of typing an event's first line, pick "Workbook" in the left
-' dropdown at the top of the code window and the event in the right dropdown.
+' drop-down at the top of the code window and the event in the right drop-down.
 '------------------------------------------------------------------------------
 Option Explicit
 

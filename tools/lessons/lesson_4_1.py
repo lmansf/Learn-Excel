@@ -25,7 +25,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.formula import ArrayFormula
 
 from xlcourse import Lesson, Task, data
-from xlcourse.lesson import INPUT_BORDER, INPUT_FILL, NAVY, WRAP_TOP, _estimate_lines, _plain
+from xlcourse.lesson import INPUT_BORDER, INPUT_FILL, NAVY, _plain
 from xlcourse.xlfn import to_file_formula
 
 CODE = "4.1"
@@ -173,8 +173,8 @@ def build() -> Lesson:
     L.sheet_order = ["Start Here", "Practice", WS, "Encounters", "Providers", "Departments", "Bonus",
                      "Answer Key", "Bonus Key"]
     L.start_notes = [
-        "Spill formulas go on the Workspace sheet. Type each one in its yellow anchor cell and leave the cells below "
-        "and to the right empty so the results have room to spill.",
+        "On the Workspace sheet, leave the cells below and to the right of each yellow anchor cell empty so the results "
+        "have room to spill.",
         "Needs Microsoft 365 or Excel 2024 (VSTACK, HSTACK, TAKE, DROP, CHOOSECOLS). FILTER, SORT, SORTBY, UNIQUE, "
         "SEQUENCE, and XLOOKUP also work in Excel 2021.",
     ]
@@ -467,6 +467,19 @@ def build() -> Lesson:
                     f"Two stays tie at {los_ties[0]} days. To break ties by charges, use SORT(…, {{3,4}}, {{-1,-1}}).",
     )
     L.tasks = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13]
+    # The spill tasks are built on the Workspace sheet and read by gray cells, so Start Here says where. Start Here lists
+    # Practice, the three data sheets, Workspace (a sheet_notes entry, because the customize hook creates it), then Bonus.
+    spill_nums = [str(i) for i, t in enumerate(L.tasks, 1) if id(t) in spill_fills]
+    assert spill_nums == ["1", "2", "12", "13"], "practice_intro names tasks 1, 2, 12, and 13"
+    spill_txt = f"{', '.join(spill_nums[:-1])}, and {spill_nums[-1]}"
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{spill_txt}, type a spill formula in the yellow anchor cell on the Workspace sheet instead, and "
+                      "the task's gray cell on Practice reads it.")
+    L.sheet_notes = [
+        (WS, f"Yellow anchor cells for the spill tasks ({spill_txt}) and the bonus unit leaderboard (N6), each with empty "
+             "space below for the results. Columns S–W are a gray Guide examples area for trying the guide's formulas "
+             "(not graded)."),
+    ]
 
     # ------------------------------------------------------------------ bonus
     L.bonus_title = "Bonus: A one-formula unit leaderboard"
@@ -527,6 +540,8 @@ def build() -> Lesson:
                     f"with high charges per stay, so together they still account for the remaining {1 - board_share:.1%}.",
     )
     L.bonus = [b1, b2, b3, b4]
+    L.bonus_where = ("Build the leaderboard in cell N6 of the **Workspace** sheet, and type your answers in the yellow cells "
+                     "on the **Bonus** sheet.")
     hash_tasks = {id(b1): f"=ROWS({board_ref})-1", id(b2): b2.solution, id(b3): b3.solution, id(b4): b4.solution}
 
     # ------------------------------------------------------------------ Workspace sheet + self-test simulation
@@ -608,42 +623,6 @@ def build() -> Lesson:
                     ks.cell(row=5 + i, column=4).value = _plain(t.solution)
                 if t.kind() == "text":
                     ks.cell(row=5 + i, column=5).alignment = Alignment(wrap_text=True, vertical="top")
-
-        # Start Here: the library lists only the data sheets. Describe every sheet the learner uses instead.
-        n_spill = [t.number for t in lesson.tasks if id(t) in spill_fills]
-        spill_list = ", ".join(n_spill[:-1]) + f", and {n_spill[-1]}"
-        sheet_lines = [
-            (lesson.practice_sheet, f"{len(lesson.tasks)} tasks. Each yellow answer cell needs a formula that returns ONE "
-                                    f"value. Gray cells read the spills you build on the Workspace sheet (tasks "
-                                    f"{spill_list})."),
-            (WS, f"Yellow anchor cells for the spill tasks ({spill_list}) and the bonus leaderboard, plus a gray "
-                 "Guide examples area (columns S–W) for trying the guide's formulas."),
-            ("Encounters", f"Data: {len(enc):,} rows in the Excel Table 'tblEncounters' ({len(ENC_COLUMNS)} columns)."),
-            ("Providers", f"Data: {len(provs):,} rows in the Excel Table 'tblProviders'."),
-            ("Departments", f"Data: {len(depts):,} rows in the Excel Table 'tblDepartments'."),
-            (lesson.bonus_sheet, f"{len(lesson.bonus)} harder questions about a one-formula unit leaderboard that you build "
-                                 "in Workspace!N6."),
-        ]
-        start = wb["Start Here"]
-        hdr_row = next(r for r in range(1, start.max_row + 1)
-                       if start.cell(row=r, column=2).value == "Sheets in this workbook")
-        tail = {}
-        for r in range(hdr_row + 1, start.max_row + 1):
-            label = start.cell(row=r, column=2).value
-            if label in ("About the data", "Disclaimer"):
-                tail[label] = start.cell(row=r, column=3).value
-            for col in (2, 3):
-                start.cell(row=r, column=col).value = None
-            start.row_dimensions[r].height = None
-        r = hdr_row + 1
-        for label, text in sheet_lines + [(k, tail[k]) for k in ("About the data", "Disclaimer") if tail.get(k)]:
-            a = start.cell(row=r, column=2, value=label)
-            a.font = Font(bold=True)
-            a.alignment = WRAP_TOP
-            b = start.cell(row=r, column=3, value=text)
-            b.alignment = WRAP_TOP
-            start.row_dimensions[r].height = 15 * _estimate_lines(text, 100) + 3
-            r += 1
 
         if not selftest:
             return

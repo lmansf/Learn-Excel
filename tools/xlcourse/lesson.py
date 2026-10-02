@@ -677,7 +677,7 @@ class Lesson:
             line("4. Bonus", f"Finished? Try the harder '{self.bonus_sheet}' sheet.")
         line("5. Answers", f"The '{self.key_sheet}' and '{self.bonus_key_sheet}' sheets are hidden. Right-click any sheet tab → Unhide… → pick one → OK. (Try first!)")
         for note in self.start_notes:
-            line("Note", note)
+            line("Note", _plain(note))
         r += 1
         section("Color legend")
         line("Yellow cell", "Your answer goes here.", fill=INPUT_FILL)
@@ -688,19 +688,26 @@ class Lesson:
         line("✘ Not yet", "Not matching yet. Check the hint and try again.", fill=BAD_FILL)
         r += 1
         section("Sheets in this workbook")
-        line(self.practice_sheet, f"{len(self.tasks)} practice tasks, each with a Check cell.")
+        entries = [(self.practice_sheet, f"{len(self.tasks)} practice tasks, each with a Check cell.")]
         for spec in self._data_specs:
             n = len(spec["rows"])
             desc = f"Data: {n:,} row{'s' if n != 1 else ''}" + (f", in the Excel Table '{spec['table']}'" if spec["table"] else "")
             if spec.get("hidden"):
-                desc += " (hidden — unhide it when a task asks)"
-            line(spec["name"], desc)
-        for name, desc in self.sheet_notes:
-            line(name, desc)
+                desc += " (hidden: unhide it when a task asks)"
+            entries.append((spec["name"], desc))
         if self.bonus:
-            line(self.bonus_sheet, f"The bonus challenge ({len(self.bonus)} parts).")
+            entries.append((self.bonus_sheet, f"The bonus challenge ({len(self.bonus)} parts)."))
+        notes = dict(self.sheet_notes)
+        entries = [(name, notes.pop(name, desc)) for name, desc in entries]   # a sheet_note overrides the default text
+        bonus_at = next((i for i, (nm, _) in enumerate(entries) if nm == self.bonus_sheet), len(entries))
+        entries[bonus_at:bonus_at] = list(notes.items())                        # custom sheets go before Bonus by default
+        if self.sheet_order:                                                    # …or follow the declared tab order
+            pos = {nm: i for i, nm in enumerate(self.sheet_order)}
+            entries = sorted(entries, key=lambda e: (pos.get(e[0], len(pos)), entries.index(e)))
+        for name, desc in entries:
+            line(name, _plain(desc))
         if self.data_note:
-            line("About the data", self.data_note)
+            line("About the data", _plain(self.data_note))
         line("Disclaimer", "All people, places, and numbers are synthetic and fictional. Not clinical guidance.")
 
     def _apply_selftest(self, wb: Workbook):
@@ -772,7 +779,7 @@ class Lesson:
         e = md_escape_dollars
         return {
             "practice": e(_md_tasks(self.tasks, self.practice_intro)),
-            "answers": e(_md_answers(self.tasks, "🔑 Show the answer key", "Try every task before opening this.")),
+            "answers": e(_md_answers(self.tasks, "🔑 Show the answer key", "Try every task before you open this.")),
             "bonus": e(_md_bonus(self)),
             "bonus-answers": e(_md_answers(self.bonus, "🔑 Show the bonus solution", "Give it a real try first!")) if self.bonus else "",
             "nav": nav,
@@ -888,7 +895,7 @@ def _code_block(t: Task) -> str:
 
 
 def _md_answers(tasks: list[Task], summary: str, warn: str) -> str:
-    out = ["<details>", f"<summary><b>{summary}</b> — {warn}</summary>", ""]
+    out = ["<details>", f"<summary><b>{summary}</b> ({warn[0].lower() + warn[1:].rstrip('.!')})</summary>", ""]
     for t in tasks:
         label = t.title or (t.prompt if len(t.prompt) <= 90 else t.prompt[:87].rsplit(" ", 1)[0] + "…")
         out.append(f"**{t.number}. {label}**")

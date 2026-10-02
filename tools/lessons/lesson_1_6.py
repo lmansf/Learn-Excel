@@ -227,16 +227,24 @@ def build() -> Lesson:
 
     L.start_notes = [
         "EDVisits is a plain range on purpose (not an Excel Table), so you turn AutoFilter on yourself with "
-        "Ctrl+Shift+L (Mac: ⌘+Shift+F). Rows shaded orange were flagged by the triage sepsis screen.",
+        "Ctrl + Shift + L (Mac: ⌘ + Shift + F). Rows shaded orange were flagged by the triage sepsis screen.",
         "To put the rows back in their original order at any time, sort by EDVisitID A to Z (IDs follow arrival order).",
-        "Use the Workspace sheet for Advanced Filter criteria ranges and results, and for trying the guide's formulas. "
-        "The gray labels in its row 3 show where each task's cells go.",
     ]
+    # Workspace is built in the customize hook, so Start Here's "Sheets in this workbook" needs it listed here.
+    L.sheet_notes = [
+        ("Workspace", "Your work area for the Advanced Filter criteria ranges and results (tasks 9–10 and the bonus) and "
+                      "for trying the guide's formulas. The gray labels in its row 3 show where each task's cells go."),
+    ]
+    # Tasks 1–10 are "sort or filter, then type what you see", so Start Here says that instead of the generic line.
+    L.practice_how = ("Go to the 'Practice' sheet. For tasks 1–10, sort or filter the EDVisits sheet, then type what you see "
+                      "into the yellow cell. For tasks 11 and 12, type a formula.")
+    L.bonus_where = ("Copy the review visits to a new **Review** sheet, and type your answers in the yellow cells on the "
+                     "**Bonus** sheet.")
 
     L.practice_intro = (
         f"Every task uses the EDVisits sheet: {n} visits in rows {first}–{last}, columns A–{col(COLUMNS[-1])}. "
         "For tasks 1–10, sort or filter, then type what you see in the yellow cell: an ID, a row number, a count, or a value. "
-        "Before each new filter task, clear the filters left over from the task before (Data → Clear). "
+        "Before each new filter task, clear the filters left over from the task before (**Data → Clear**). "
         "Tasks 9 and 10 use the Workspace sheet. "
         "Tasks 11 and 12 need an ESI 3 filter left on, so do them last."
     )
@@ -255,7 +263,7 @@ def build() -> Lesson:
              explanation=f"Clicking one cell (not selecting the column) lets Excel find the whole data block and keep every row "
                          f"together. Scroll to the bottom: the {n - len(waits)} LWBS visits with a blank wait sit in rows "
                          f"{first + len(waits)}–{last}. Excel always sorts blanks last, whether you sort ascending or descending."),
-        Task("Use the Sort dialog (Data → Sort) to sort by three levels: ESILevel Smallest to Largest, then DoorToProviderMin "
+        Task("Use the Sort dialog (**Data → Sort**) to sort by three levels: ESILevel Smallest to Largest, then DoorToProviderMin "
              "Largest to Smallest, then ArrivalDateTime Oldest to Newest. "
              f"Which EDVisitID is in row {t2_row}?",
              answer=t2_id, title=f"Three-level sort (row {t2_row})",
@@ -265,13 +273,13 @@ def build() -> Lesson:
                       "4. Click **Add Level** again: Then by **ArrivalDateTime**, **Oldest to Newest**. Click **OK**.\n"
                       f"5. Read A{t2_row}: **{t2_id}**.",
              live=f"=INDEX(SORTBY({R('EDVisitID')},{R('ESILevel')},1,{R(W)},-1,{R('ArrivalDateTime')},1),{t2_row - first + 1})",
-             hint="Data → Sort, then Add Level twice. The top level wins",
+             hint="**Data → Sort**, then **Add Level** twice. The top level wins",
              explanation=f"The first level groups the {esi1_n} ESI 1 visits at the top (rows {first}–{first + esi1_n - 1}). "
                          f"Inside that group the second level puts the longest waits first. Several ESI 1 patients waited exactly "
                          f"{t2_rec[W]} minutes, so the third level (arrival time) breaks the tie. Without a tiebreaker, rows that "
                          "tie on every level stay in whatever order they happened to be in, which depends on your earlier sorts."),
-        Task("Sort by ArrivalDay using the built-in custom list Sun, Mon, Tue, Wed, Thu, Fri, Sat (Sort dialog → Order → "
-             "Custom List…). On which row does the first Wednesday (Wed) visit appear? Type the row number.",
+        Task("Sort by ArrivalDay using the built-in custom list Sun, Mon, Tue, Wed, Thu, Fri, Sat (**Sort dialog → Order → "
+             "Custom List…**). On which row does the first Wednesday (Wed) visit appear? Type the row number.",
              answer=t3_row, title="Custom-list sort by weekday",
              solution="1. **Data → Sort**. If levels from task 2 are still listed, select each one and click **Delete Level**.\n"
                       "2. Sort by **ArrivalDay**, Sort On **Cell Values**, Order **Custom List…**.\n"
@@ -283,10 +291,10 @@ def build() -> Lesson:
                          f"Monday ({day_ct['Mon']}) and Tuesday ({day_ct['Tue']}) fill rows {first}–{t3_row - 1}, so Wednesday "
                          f"starts in row {t3_row}. An A→Z sort would have put the days in the order Fri, Mon, Sat, Sun, Thu, Tue, "
                          f"Wed, and the first Wednesday would land in row {az_wed_row}."),
-        Task("Turn on AutoFilter (Ctrl+Shift+L; Mac: ⌘+Shift+F). Show only visits with ArrivalMode = Ambulance and "
+        Task("Turn on AutoFilter with Ctrl + Shift + L (Mac: ⌘ + Shift + F). Show only visits with ArrivalMode = Ambulance and "
              "ESILevel 1 or 2. How many visits are visible?",
              answer=t4, title="Ambulance arrivals with ESI 1–2 (two-column filter)",
-             solution="1. Click any cell in the data and press **Ctrl+Shift+L** (Mac: **⌘+Shift+F**), or choose **Data → Filter**.\n"
+             solution="1. Click any cell in the data and press **Ctrl + Shift + L** (Mac: **⌘ + Shift + F**), or choose **Data → Filter**.\n"
                       f"2. Open the **ArrivalMode** arrow, untick **(Select All)**, tick **Ambulance**, **OK**.\n"
                       "3. Open the **ESILevel** arrow, untick 3, 4 and 5 (or use **Number Filters → Less Than Or Equal To → 2**), **OK**.\n"
                       f"4. The status bar reads **{t4} of {n} records found**.",
@@ -295,7 +303,7 @@ def build() -> Lesson:
              explanation="Filters on different columns combine with AND: a row stays visible only if it passes every column's filter. "
                          "Ticking 1 and 2 inside one column is OR within that column. If the status bar shows *Filter Mode* instead of "
                          f"a count, select A{first}:A{last} and read **Count** on the status bar."),
-        Task("Clear the filters (Data → Clear). Use the Search box in the ChiefComplaint filter to show every visit whose "
+        Task("Clear the filters (**Data → Clear**). Use the Search box in the ChiefComplaint filter to show every visit whose "
              "complaint contains the word fever anywhere. How many visits are visible?",
              answer=t5, title="Chief complaints containing \"fever\" (search box)",
              solution="1. **Data → Clear** removes the filters from task 4 but keeps the filter arrows.\n"
@@ -307,7 +315,7 @@ def build() -> Lesson:
              explanation="The Search box matches text anywhere in the value and ignores case, so it finds complaints that start, "
                          "end, or contain *fever*. It works the same as **Text Filters → Contains**. Always glance at the ticked items "
                          "before clicking OK, because a search can catch values you didn't intend."),
-        Task("Clear the filters. Use Number Filters → Top 10 on DoorToProviderMin to show the 10 longest waits. What is the "
+        Task("Clear the filters. Use **Number Filters → Top 10** on DoorToProviderMin to show the 10 longest waits. What is the "
              "smallest DoorToProviderMin still visible (the 10th-longest wait), in minutes?",
              answer=t6, title="Top 10 longest waits (10th-longest value)",
              solution="1. **Data → Clear**.\n"
@@ -344,14 +352,14 @@ def build() -> Lesson:
                       "3. Open the **DoorToProviderMin** arrow → **Number Filters → Greater Than…** → type **30** → **OK**.\n"
                       f"4. The status bar reads **{t8} of {n} records found**.",
              live=False,
-             hint="Filter by Color, then Number Filters → Greater Than",
+             hint="**Filter by Color**, then **Number Filters → Greater Than**",
              explanation=f"Color is the only marker for the sepsis flag, so Filter by Color is the only way to isolate those {len(flagged)} rows. "
                          "No worksheet function can read a fill color, which is why this task has no live formula in the key. "
                          "Combining a color filter on one column with a number filter on another is still AND logic. "
                          "Sepsis care is time-critical, so these are the waits a quality team reviews first."),
         Task("Clear the filters. Use Advanced Filter to find visits that were ESI level 1 OR waited more than 120 minutes for a "
              f"provider. Type the criteria range in Workspace!{WS_CRIT9}. Then, with the Workspace sheet active, choose "
-             f"Data → Advanced and copy the results to Workspace!{WS_OUT9}. How many visits does it copy? Don't count the header.",
+             f"**Data → Advanced** and copy the results to Workspace!{WS_OUT9}. How many visits does it copy? Don't count the header.",
              answer=t9, title="Advanced Filter: ESI 1 OR wait over 120 minutes",
              solution="1. **Data → Clear** on EDVisits.\n"
                       f"2. On **Workspace**, type the criteria range in {WS_CRIT9}. Copy the two headers from row 1 of EDVisits:\n\n"
@@ -378,7 +386,7 @@ def build() -> Lesson:
                       f"`EDVisits!${col('ChiefComplaint')}$1:${col('ChiefComplaint')}${last}` (just that one column, header included).\n"
                       f"3. Make the **Criteria range** box empty: Excel may fill in `{absr('Workspace', WS_CRIT9)}` from task 9, so delete it. "
                       f"Copy to: `{absr('Workspace', WS_UNIQ)}`. Tick **Unique records only**. **OK**.\n"
-                      f"4. The list has a header plus **{t10}** complaints. Select them and read Count on the status bar.",
+                      f"4. The list has a header plus **{t10}** complaints. Select them and read **Count** on the status bar.",
              live=f"=SUMPRODUCT(1/COUNTIF({R('ChiefComplaint')},{R('ChiefComplaint')}))",
              hint="List range: the ChiefComplaint column only. Empty the Criteria range box",
              explanation="With an empty criteria range every row qualifies, and **Unique records only** keeps the first copy of each "
@@ -421,14 +429,14 @@ def build() -> Lesson:
         "11:59 pm). That rule is an OR across different columns, so AutoFilter can't do it in one step. "
         "Your practice task 11 and 12 formulas follow the ESI 3 filter, so they switch to ✘ when you clear it. That's expected. "
         "To keep them green, first copy each of those two answer cells and paste it back as a value. "
-        "Then clear every filter on EDVisits (Data → Clear), insert a new sheet named Review, type the criteria range in "
-        f"Workspace!{WS_CRITB}, and run Data → Advanced from the Review sheet to copy the matching rows to Review!A1."
+        "Then clear every filter on EDVisits (**Data → Clear**), insert a new sheet named Review, type the criteria range in "
+        f"Workspace!{WS_CRITB}, and run **Data → Advanced** from the Review sheet to copy the matching rows to Review!A1."
     )
     L.bonus = [
         Task("How many visits does your Advanced Filter copy to the Review sheet? Don't count the header row.",
              answer=b1, title="Visits in the review list",
              solution="1. **Data → Clear** on EDVisits. Insert a sheet with the **+** button next to the sheet tabs (or press "
-                      "**Shift+F11**; on a Mac laptop, **Fn+Shift+F11**), then double-click its tab and rename it **Review**.\n"
+                      "**Shift + F11**; on a Mac laptop, **Fn + Shift + F11**), then double-click its tab and rename it **Review**.\n"
                       f"2. On **Workspace**, type this criteria range in {WS_CRITB}, to the right of your task 10 list. Copy the "
                       "headers from row 1 of EDVisits:\n\n"
                       "   | Row | U | V | W |\n   |:-:|---|---|---|\n   | 4 | ESILevel | ArrivalMode | ArrivalHour |\n"
@@ -441,7 +449,7 @@ def build() -> Lesson:
              hint="Two criteria rows: ESI 1 alone, and ESI 2 + Ambulance + >=18 together",
              explanation=f"Row 5 of the criteria range (ESILevel = 1) catches all {esi1_n} ESI 1 visits. Row 6 is an AND: ESI 2 *and* "
                          f"Ambulance *and* ArrivalHour ≥ 18, which adds {b1 - esi1_n} more. The two rows together are OR. Excel only copies "
-                         "filtered data to the active sheet, so you must start Data → Advanced from the Review sheet, or Excel shows an error."),
+                         "filtered data to the active sheet, so you must start **Data → Advanced** from the Review sheet, or Excel shows an error."),
         Task("In the yellow cell, write a formula for the average DoorToProviderMin of the review visits, rounded to "
              "1 decimal place.",
              answer=b2, fmt="0.0", tol=0.0001, title="Average wait in the review list",
@@ -463,7 +471,7 @@ def build() -> Lesson:
                       f"visit: **{b3_id}**.",
              live=(f"=INDEX(SORTBY(FILTER({R('EDVisitID')},{mask}),XMATCH(FILTER({R('EDDisposition')},{mask}),{loc_array}),1,"
                    f"FILTER({R(W)},{mask}),-1),{b3_row - first + 1})"),
-             hint="Order → Custom List… → NEW LIST",
+             hint="**Order → Custom List… → NEW LIST**",
              explanation=f"The review list holds {disp_ct['Admitted']} Admitted, {disp_ct['Observation']} Observation and "
                          f"{disp_ct['Discharged']} Discharged visits, so the custom order puts Observation in rows {b3_row}–"
                          f"{b3_row + disp_ct['Observation'] - 1}. Row {b3_row} is the Observation patient who waited longest "
@@ -475,7 +483,7 @@ def build() -> Lesson:
              "of the visible Review rows.",
              answer=b4, fmt=None if float(b4).is_integer() else "0.0",
              title="Median wait for the ESI 2 evening ambulance patients",
-             solution=f"1. On Review, press **Ctrl+Shift+L** (Mac: **⌘+Shift+F**) and filter **ESILevel** to **2**.\n"
+             solution=f"1. On Review, press **Ctrl + Shift + L** (Mac: **⌘ + Shift + F**) and filter **ESILevel** to **2**.\n"
                       f"2. In the yellow B4 cell on the Bonus sheet, type `=AGGREGATE(12,5,Review!{col(W)}2:{col(W)}{first + b1 - 1})`. "
                       "The Bonus sheet isn't filtered, so the filter can't hide your formula.\n"
                       f"3. It returns **{b4:g}**.",

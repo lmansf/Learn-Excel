@@ -8,8 +8,6 @@ from __future__ import annotations
 
 from collections import Counter
 
-from openpyxl.worksheet.views import Selection
-
 from xlcourse import Lesson, Task, data
 from xlcourse.data import excel_serial
 
@@ -45,10 +43,13 @@ def build() -> Lesson:
         "Patients", pts, table="tblPatients", columns=COLUMNS,
         widths={"Email": 32, "ChronicConditions": 20, "PreferredLanguage": 19, "PCPProviderID": 15,
                 "PrimaryPayerID": 15, "RegistrationDate": 17},
+        freeze=False,                                  # learners freeze panes themselves
+        hidden_cols=[HIDDEN_COL],                      # task 9: unhide column I
     )
     payers = sorted(data.load("payers"), key=lambda r: r["PayerID"])
     pay = L.add_table_sheet("Payers", payers, table="tblPayers", columns=["PayerID", "PayerName", "PayerType"],
-                            widths={"PayerName": 32, "PayerType": 22})
+                            widths={"PayerName": 32, "PayerType": 22},
+                            hidden=True)                # task 10: unhide the sheet (Start Here says it's hidden)
     payer_name = {r["PayerID"]: r["PayerName"] for r in payers}
 
     first, last = pat.first_row, pat.last_row          # 2, 501
@@ -83,15 +84,15 @@ def build() -> Lesson:
     nb_row = 347
     nb_name = pts[nb_row - first]["LastName"]
 
-    # 2 · bottom-right cell of the data (Ctrl+Down / Ctrl+Right / Ctrl+End)
+    # 2 · bottom-right cell of the data (Ctrl + Down / Ctrl + Right / Ctrl + End)
     br_addr = f"{last_col}{last}"
 
-    # 3 · Ctrl+Right in an empty row lands in the last worksheet column (16,384 = XFD)
+    # 3 · Ctrl + Right in an empty row lands in the last worksheet column (16,384 = XFD)
     empty_row = 600
     assert empty_row > last + 50
     xfd_addr = f"XFD{empty_row}"
 
-    # 4 · Ctrl+Down from the PCPProviderID header stops at the last filled cell before the first blank
+    # 4 · Ctrl + Down from the PCPProviderID header stops at the last filled cell before the first blank
     pcp = [r["PCPProviderID"] for r in pts]
     assert pcp[0] is not None and pcp[1] is not None
     first_blank_i = next(i for i, v in enumerate(pcp) if v is None)
@@ -101,7 +102,7 @@ def build() -> Lesson:
     # 5 · status bar Count of emails
     emails = sum(1 for r in pts if r["Email"])
     em = [bool(r["Email"]) for r in pts]
-    if em[0] and em[1]:                                # Ctrl+Shift+Down from the first data cell (rule 1 or rule 2)
+    if em[0] and em[1]:                                # Ctrl + Shift + Down from the first data cell (rule 1 or rule 2)
         em_stop_row = row_of(em.index(False) - 1)
     else:
         em_stop_row = row_of(next(i for i in range(1, n) if em[i]))
@@ -158,7 +159,17 @@ def build() -> Lesson:
     ]
     L.practice_intro = (f"Every task uses the Patients sheet ({n} patients, rows {first}–{last}) unless it says otherwise. "
                         "No formulas needed: navigate, look, and type what you find. "
-                        "Mac users: for Ctrl+arrow shortcuts such as Ctrl+↓ and Ctrl+Shift+↓, press ⌘ instead of Ctrl.")
+                        "Mac users: for Ctrl + arrow shortcuts such as Ctrl + ↓ and Ctrl + Shift + ↓, press ⌘ instead of Ctrl.")
+    # The library's generic lines say "type a formula or value". This lesson has no formulas: every answer is read off the screen.
+    L.practice_how = ("Go to the 'Practice' sheet. Each answer is something you read off the screen, so type the value itself "
+                      "(a name, number, date, or address) into each yellow cell.")
+    L.practice_instructions = (
+        "Type the value you find (a name, number, date, or address) in each yellow cell. The Check column turns green when "
+        "your answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → "
+        f"'{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "Type the value you find in each yellow cell. The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
 
     L.tasks = [
         Task(f"On the Patients sheet, click in the Name Box (the box at the left end of the formula bar), type C{nb_row}, "
@@ -170,39 +181,39 @@ def build() -> Lesson:
              explanation=f"The Name Box always shows the address of the active cell, and it works in reverse too: type an address, "
                          f"press Enter, and Excel takes you there. That's faster than scrolling {nb_row - first} rows. Column C holds "
                          f"LastName, so C{nb_row} is the last name of the patient in row {nb_row}."),
-        Task("What is the address of the bottom-right cell of the patient data? From A1, press Ctrl+↓ to find the last row, "
-             "go back with Ctrl+↑, then press Ctrl+→ to find the last column. Type the address as column letter + row number "
+        Task("What is the address of the bottom-right cell of the patient data? From A1, press Ctrl + ↓ to find the last row, "
+             "go back with Ctrl + ↑, then press Ctrl + → to find the last column. Type the address as column letter + row number "
              "(like B12).",
              answer=br_addr, accept=[f"${last_col}${last}"], title="Bottom-right cell of the data",
-             solution=f"1. Click A1 and press Ctrl+↓: the active cell becomes A{last}.\n"
-                      f"2. Press Ctrl+↑ to return to A1, then Ctrl+→: the active cell becomes {last_col}1.\n"
-                      f"3. Combine them: {br_addr}. Press Ctrl+End (Mac: Control+End, or Control+Fn+→) to confirm. "
+             solution=f"1. Click A1 and press Ctrl + ↓: the active cell becomes A{last}.\n"
+                      f"2. Press Ctrl + ↑ to return to A1, then Ctrl + →: the active cell becomes {last_col}1.\n"
+                      f"3. Combine them: {br_addr}. Press Ctrl + End (Mac: Control + End, or Control + Fn + →) to confirm. "
                       "It jumps straight there.",
              live='=ADDRESS(COUNTA(Patients!A:A),COUNTA(Patients!1:1),4)',
-             hint="Column letter from Ctrl+→, row number from Ctrl+↓. Ctrl+End confirms",
-             explanation=f"Ctrl+arrow jumps to the edge of the block of filled cells. Column A and row 1 have no gaps, so the jumps land on "
+             hint="Column letter from Ctrl + →, row number from Ctrl + ↓. Ctrl + End confirms",
+             explanation=f"Ctrl + arrow jumps to the edge of the block of filled cells. Column A and row 1 have no gaps, so the jumps land on "
                          f"the true last row ({last}: {n} patients plus the header row) and the true last column ({last_col}). "
-                         f"Ctrl+End goes straight to the last used cell, {br_addr}. The hidden column {hidden_letter} doesn't change "
+                         f"Ctrl + End goes straight to the last used cell, {br_addr}. The hidden column {hidden_letter} doesn't change "
                          "the answer, because hiding a column doesn't remove it."),
-        Task(f"Use the Name Box to go to cell A{empty_row}, which is in an empty row below the data, then press Ctrl+→. "
+        Task(f"Use the Name Box to go to cell A{empty_row}, which is in an empty row below the data, then press Ctrl + →. "
              "Excel races across the empty row to the very last column of the worksheet. "
              "What is the address of the cell you land on?",
              answer=xfd_addr, accept=[f"$XFD${empty_row}"], title="The last column of a worksheet",
-             solution=f"1. Type A{empty_row} in the Name Box and press Enter.\n2. Press Ctrl+→. The Name Box shows {xfd_addr}.\n"
-                      "3. Press Ctrl+← to come back to column A.",
+             solution=f"1. Type A{empty_row} in the Name Box and press Enter.\n2. Press Ctrl + →. The Name Box shows {xfd_addr}.\n"
+                      "3. Press Ctrl + ← to come back to column A.",
              live=f"=ADDRESS({empty_row},COLUMNS(Patients!1:1),4)",
              hint="A worksheet has 16,384 columns",
-             explanation="When the row is empty, Ctrl+→ has no data to stop at, so it goes to the edge of the sheet: column XFD, the "
-                         "16,384th column. Ctrl+↓ in an empty column goes to row 1,048,576. Every modern worksheet has exactly "
+             explanation="When the row is empty, Ctrl + → has no data to stop at, so it goes to the edge of the sheet: column XFD, the "
+                         "16,384th column. Ctrl + ↓ in an empty column goes to row 1,048,576. Every modern worksheet has exactly "
                          "1,048,576 rows × 16,384 columns."),
-        Task("Click M1 (the PCPProviderID header) and press Ctrl+↓ once. On which row number does Excel stop?",
-             answer=pcp_stop_row, title="Ctrl+↓ stops at a gap",
-             solution=f"1. Click M1 (or type M1 in the Name Box).\n2. Press Ctrl+↓. The Name Box shows M{pcp_stop_row}.",
+        Task("Click M1 (the PCPProviderID header) and press Ctrl + ↓ once. On which row number does Excel stop?",
+             answer=pcp_stop_row, title="Ctrl + ↓ stops at a gap",
+             solution=f"1. Click M1 (or type M1 in the Name Box).\n2. Press Ctrl + ↓. The Name Box shows M{pcp_stop_row}.",
              live=f"=MATCH(TRUE,ISBLANK(Patients!{rng('PCPProviderID')}),0)",
-             hint="Ctrl+arrow stops at the edge of a block of filled cells",
-             explanation=f"M{pcp_stop_row + 1} is empty because that patient has no primary care provider on file. Ctrl+↓ stops at the "
+             hint="Ctrl + arrow stops at the edge of a block of filled cells",
+             explanation=f"M{pcp_stop_row + 1} is empty because that patient has no primary care provider on file. Ctrl + ↓ stops at the "
                          f"last filled cell before the gap, M{pcp_stop_row}, even though the data continues to row {last}. "
-                         "Never assume Ctrl+↓ found the bottom of a column with blanks. Check the row number, or press Ctrl+↓ again "
+                         "Never assume Ctrl + ↓ found the bottom of a column with blanks. Check the row number, or press Ctrl + ↓ again "
                          "to keep jumping."),
         Task(f"Select the Email data cells {rng('Email')}: type {rng('Email')} in the Name Box and press Enter. "
              "How many patients have an email address on file? Read Count on the status bar.",
@@ -211,15 +222,15 @@ def build() -> Lesson:
              live=f"=COUNTA(Patients!{rng('Email')})",
              hint="Count = cells that aren't empty",
              explanation=f"The status bar's Count counts every non-empty cell, text included, so it counts the email addresses and skips "
-                         f"the blanks. Typing the range in the Name Box selects exactly {n} cells. Ctrl+Shift+↓ from "
+                         f"the blanks. Typing the range in the Name Box selects exactly {n} cells. Ctrl + Shift + ↓ from "
                          f"{col('Email')}{first} would be a trap, because the Email column has gaps: it would select only "
                          f"{col('Email')}{first}:{col('Email')}{em_stop_row}. "
-                         "In a Table you can also click any Email cell and press Ctrl+Space (Mac: Control+Space) to select "
+                         "In a Table you can also click any Email cell and press Ctrl + Space (Mac: Control + Space) to select "
                          "just that column's data."),
-        Task(f"Select the WeightLb values {rng('WeightLb')} with Go To: press F5 or Ctrl+G (Mac: Control+G), "
+        Task(f"Select the WeightLb values {rng('WeightLb')} with Go To: press F5 or Ctrl + G (Mac: Control + G), "
              f"type {rng('WeightLb')}, and press Enter. What is the average weight in pounds? Round to 1 decimal place.",
              answer=round(avg_w, 1), fmt="0.0", tol=0.051, title="Status bar Average (weight, lb)",
-             solution=f"1. Press F5 (or Ctrl+G), type {rng('WeightLb')} in Reference, press Enter.\n"
+             solution=f"1. Press F5 (or Ctrl + G), type {rng('WeightLb')} in Reference, press Enter.\n"
                       "2. Read Average on the status bar and round it to 1 decimal place.",
              live=f"=ROUND(AVERAGE(Patients!{rng('WeightLb')}),1)",
              hint="Average is on the status bar by default",
@@ -228,23 +239,23 @@ def build() -> Lesson:
                          f"patient weighs {min(weights)} lb, which is a baby and not a typo. Always glance at Minimum and Maximum "
                          "before trusting an average."),
         Task("Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first "
-             "DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient? "
+             "DOB) and press Ctrl + Shift + ↓ to select every date of birth. What is the date of birth of the oldest patient? "
              "Type it as month/day/year, the way the status bar shows it. (If your computer uses day/month dates, type the "
              "month as a word instead, such as 15 Mar 1950.)",
              answer=oldest_dob, fmt="mm/dd/yyyy", title="Status bar Minimum (oldest patient's DOB)",
              solution="1. Right-click the status bar and tick Minimum (and Maximum while you're there).\n"
-                      f"2. Click cell F2 and press Ctrl+Shift+↓ to select {rng('DOB')}.\n3. Read Minimum on the status bar.",
+                      f"2. Click cell F2 and press Ctrl + Shift + ↓ to select {rng('DOB')}.\n3. Read Minimum on the status bar.",
              live=f"=MIN(Patients!{rng('DOB')})",
              hint="The oldest patient has the earliest date, so look at Minimum",
              explanation="Excel stores dates as numbers that grow by 1 each day, so the earliest date is the smallest number and "
                          "Minimum finds it. The status bar shows it as a date because the cells are formatted as dates. (If you "
                          f"see a plain number such as {int(excel_serial(oldest_dob))} instead, that's the date's serial number, and the check accepts it.) "
-                         "Ctrl+Shift+↓ is safe here because the DOB column has no blanks."),
+                         "Ctrl + Shift + ↓ is safe here because the DOB column has no blanks."),
         Task(f"How many patients live in {town}? On the Patients sheet, click a single cell such as A1 so Find searches the "
-             f"whole sheet. Then press Ctrl+F (Mac: Control+F), type {town}, click Find All, and read the count at the bottom of "
+             f"whole sheet. Then press Ctrl + F (Mac: Control + F), type {town}, click Find All, and read the count at the bottom of "
              "the dialog.",
              answer=town_count, title=f"Find All: patients in {town}",
-             solution=f"1. Click A1 (one cell, so Find searches the whole sheet).\n2. Press Ctrl+F, type {town}, and click Find All.\n"
+             solution=f"1. Click A1 (one cell, so Find searches the whole sheet).\n2. Press Ctrl + F, type {town}, and click Find All.\n"
                       "3. Read '… cell(s) found' at the bottom of the dialog.",
              live=f'=COUNTIF(Patients!A1:{last_col}{last},"*{town}*")',
              hint="Find All shows '… cell(s) found'",
@@ -254,40 +265,40 @@ def build() -> Lesson:
                          "cell first matters too. When several cells are selected, Find searches only inside the selection, so with "
                          "the DOB column still selected from the previous task, Find All would report nothing."),
         Task(f"Column {hidden_letter} is hidden (the column letters jump from {col('ZIP')} to {col('Email')}). Unhide it, then "
-             f"click cell A1 and use Ctrl+F (Mac: Control+F) to find patient {ph_pt['PatientID']}. "
+             f"click cell A1 and use Ctrl + F (Mac: Control + F) to find patient {ph_pt['PatientID']}. "
              "What is that patient's phone number?",
              answer=phone, accept=[digits, f"{digits[:3]}-{digits[3:6]}-{digits[6:]}", f"({digits[:3]}){digits[3:6]}-{digits[6:]}",
                                    f"{digits[:3]} {digits[3:6]} {digits[6:]}"],
              title=f"Unhide column {hidden_letter} (phone number)",
-             solution=f"1. Click the {col('ZIP')} column header, Shift+click the {col('Email')} header, then right-click → Unhide.\n"
-                      f"2. Click A1, press Ctrl+F, type {ph_pt['PatientID']}, click Find Next, then close the dialog.\n"
+             solution=f"1. Click the {col('ZIP')} column header, Shift + click the {col('Email')} header, then right-click → **Unhide**.\n"
+                      f"2. Click A1, press Ctrl + F, type {ph_pt['PatientID']}, click Find Next, then close the dialog.\n"
                       f"3. Read column {hidden_letter} on row {ph_row}.",
              live=f"=Patients!{hidden_letter}{ph_row}",
-             hint="Select the columns on both sides of the gap, right-click → Unhide",
+             hint="Select the columns on both sides of the gap, right-click → **Unhide**",
              explanation=f"You can't click a hidden column, so you select the columns on both sides of it ({col('ZIP')} and "
                          f"{col('Email')}) and choose Unhide. Click A1 before you search, because while those three columns are "
                          f"selected, Find looks only inside them. The patient is on row {ph_row}. Hiding never deletes data: the "
                          "phone numbers were there all along, so a hidden column is not a safe place for confidential data."),
         Task(f"Patient {py_pt['PatientID']} has a PrimaryPayerID in column {col('PrimaryPayerID')}. The payer names are on the "
-             "Payers sheet, which is hidden. Unhide it (right-click any sheet tab → Unhide…) and type the name of this "
+             "Payers sheet, which is hidden. Unhide it (right-click any sheet tab → **Unhide…**) and type the name of this "
              "patient's payer.",
              answer=py_name, title="Unhide the Payers sheet",
-             solution=f"1. On the Patients sheet, click A1, press Ctrl+F, and find {py_pt['PatientID']}: row {py_row}, payer ID "
+             solution=f"1. On the Patients sheet, click A1, press Ctrl + F, and find {py_pt['PatientID']}: row {py_row}, payer ID "
                       f"{py_pt['PrimaryPayerID']}.\n"
-                      "2. Right-click any sheet tab → Unhide… → Payers → OK.\n"
+                      "2. Right-click any sheet tab → **Unhide…**, pick Payers, and click OK.\n"
                       f"3. On the Payers sheet, {py_pt['PrimaryPayerID']} is {py_name}.",
              live=f"=INDEX(Payers!{pay.rng('PayerName', sheet=False)},MATCH(Patients!{col('PrimaryPayerID')}{py_row},"
                   f"Payers!{pay.rng('PayerID', sheet=False)},0))",
-             hint="Right-click a sheet tab → Unhide…",
+             hint="Right-click a sheet tab → **Unhide…**",
              explanation="Hidden sheets don't show a tab, so the only clue is the Unhide… command becoming available. This is the "
                          "same move you'll use to open the Answer Key in every lesson. Small lookup lists like this one are often "
                          "hidden to keep a workbook tidy, and in Lesson 2.6 you'll learn to pull names from them automatically "
                          "with a lookup formula."),
         Task("How many worksheets does this workbook contain in total, hidden ones included? Count the tabs you can see, then "
-             "right-click a tab → Unhide… to see what's still hidden. Look, but don't unhide the answer keys yet!",
+             "right-click a tab → **Unhide…** to see what's still hidden. Look, but don't unhide the answer keys yet!",
              answer=total_sheets, title="Worksheets in this workbook",
              solution="1. Count the visible tabs: Start Here, Practice, Patients, Payers (now unhidden), Bonus.\n"
-                      "2. Right-click a tab → Unhide…: the list shows Answer Key and Bonus Key. Click Cancel.\n"
+                      "2. Right-click a tab → **Unhide…**: the list shows Answer Key and Bonus Key. Click Cancel.\n"
                       f"3. 5 + 2 = {total_sheets}.",
              live="=SHEETS()",
              hint="Visible tabs + the names listed in the Unhide dialog",
@@ -295,10 +306,10 @@ def build() -> Lesson:
                          "2 of them are still hidden: the Answer Key and the Bonus Key. The total is the same whether or not you "
                          "unhid Payers first, because hiding a sheet doesn't remove it."),
         Task("You want row 1 (the headers) and columns A:B (PatientID and MRN) to stay on screen while you scroll. Which cell "
-             "must you select before choosing View → Freeze Panes → Freeze Panes? Type its address.",
+             "must you select before choosing **View → Freeze Panes → Freeze Panes**? Type its address.",
              answer=freeze_cell, accept=["$C$2"], title="Freeze Panes: which cell to select",
-             solution="1. Click C2.\n2. View → Freeze Panes → Freeze Panes.\n"
-                      "3. Scroll down and right: row 1 and columns A:B stay put. (View → Freeze Panes → Unfreeze Panes undoes it.)",
+             solution="1. Click C2.\n2. Choose **View → Freeze Panes → Freeze Panes**.\n"
+                      "3. Scroll down and right: row 1 and columns A:B stay put. (**View → Freeze Panes → Unfreeze Panes** undoes it.)",
              live=False,
              hint="Excel freezes everything above and to the left of the selected cell",
              explanation="Freeze Panes freezes the rows above the active cell and the columns to its left. To keep 1 row and 2 "
@@ -310,13 +321,13 @@ def build() -> Lesson:
     L.bonus_title = "Bonus: Data-quality scavenger hunt"
     L.bonus_scenario = ("The population-health team is starting a blood-pressure outreach program and will build its mailing list "
                         "from this patient index. Before the letters go out, the data steward asks you to check four facts. Set up "
-                        "the Patients sheet first: if you froze panes earlier, choose View → Freeze Panes → Unfreeze Panes. Then "
-                        "press Ctrl+Home (Mac: Control+Home), click B2, and choose View → Freeze Panes → Freeze Panes so the headers "
+                        "the Patients sheet first: if you froze panes earlier, choose **View → Freeze Panes → Unfreeze Panes**. Then "
+                        "press Ctrl + Home (Mac: Control + Home), click B2, and choose **View → Freeze Panes → Freeze Panes** so the headers "
                         "and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look "
                         "everything up on the Patients sheet and type your answers on the Bonus sheet, without a single formula.")
     L.bonus = [
         Task(f"Each outreach letter is signed by the patient's primary care provider (PCP), and a blank PCPProviderID means no "
-             f"PCP is on file. Use Go To (F5 or Ctrl+G, Mac: Control+G) to select {rng('PCPProviderID')}. How many of the {n} "
+             f"PCP is on file. Use Go To (F5 or Ctrl + G, Mac: Control + G) to select {rng('PCPProviderID')}. How many of the {n} "
              "patients have no PCP?",
              answer=no_pcp, title="Patients with no PCP on file",
              solution=f"1. Press F5, type {rng('PCPProviderID')}, press Enter.\n"
@@ -329,11 +340,11 @@ def build() -> Lesson:
                          f"(If you select by dragging instead, the Name Box shows the size of the selection while you drag, such "
                          f"as {n}R x 1C.)"),
         Task("The program targets every patient with hypertension, coded HTN. Click a single cell such as A1, so Find searches "
-             "the whole sheet rather than the column you just selected. Press Ctrl+F (Mac: Control+F), click Options >> and make "
+             "the whole sheet rather than the column you just selected. Press Ctrl + F (Mac: Control + F), click Options >> and make "
              "sure Match entire cell contents is OFF, then Find All for HTN. How many patients have HTN anywhere in their "
              "ChronicConditions list?",
              answer=htn_any, title="Find All: HTN anywhere in the list",
-             solution="1. Click A1, then Ctrl+F → Options >> → untick Match entire cell contents.\n2. Type HTN and click Find All.\n"
+             solution="1. Click A1, press Ctrl + F, click **Options >>**, and untick Match entire cell contents.\n2. Type HTN and click Find All.\n"
                       "3. Read the count at the bottom of the dialog.",
              live=f'=COUNTIF(Patients!A1:{last_col}{last},"*HTN*")',
              hint="Partial matches count: 'HTN;DM' contains HTN",
@@ -354,26 +365,17 @@ def build() -> Lesson:
              "read the PatientID in the frozen column A. Type the PatientID.",
              answer=heavy["PatientID"], title="The heaviest patient",
              solution=f"1. Select {rng('WeightLb')} (Name Box or Go To) and read Maximum: {max_w}.\n"
-                      f"2. With the weights still selected, press Ctrl+F → Find what: {max_w} → Find Next. (Match entire cell "
+                      f"2. With the weights still selected, press Ctrl + F, type {max_w} in Find what, and click Find Next. (Match entire cell "
                       f"contents can be on or off here, because no other cell on the sheet contains {max_w}.)\n"
                       f"3. Excel selects {col('WeightLb')}{weights.index(max_w) + first}. The frozen column A shows {heavy['PatientID']}.",
              live=f"=INDEX(Patients!{rng('PatientID')},MATCH(MAX(Patients!{rng('WeightLb')}),Patients!{rng('WeightLb')},0))",
-             hint="Status bar Maximum, then Ctrl+F for that number",
+             hint="Status bar Maximum, then Ctrl + F for that number",
              explanation="The status bar tells you what the largest value is but not where it is. Find tells you where, and "
                          "leaving the weights selected helps, because Find then searches only inside the selection. Because "
                          "panes are frozen at B2, column A stays on screen when Find scrolls over to the WeightLb column, so you "
                          "can read the ID without losing your place. Teams use this check to plan bariatric beds and lift "
                          f"equipment, and it's also how you'd spot a typo such as {max_w * 10:.0f} lb."),
     ]
-
-    # ------------------------------------------------------------------ workbook tweaks
-    @L.customize
-    def _setup(wb, lesson, selftest):
-        ws = wb["Patients"]
-        ws.freeze_panes = None                         # learners freeze panes themselves
-        ws.sheet_view.selection = [Selection(activeCell="A1", sqref="A1")]
-        ws.column_dimensions[hidden_letter].hidden = True
-        wb["Payers"].sheet_state = "hidden"
 
     # sanity: the town and term choices above are the only places these strings occur
     assert Counter(r["City"] for r in pts)[town] == town_count

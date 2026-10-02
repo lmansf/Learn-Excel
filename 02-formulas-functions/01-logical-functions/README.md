@@ -505,7 +505,7 @@ are not clinical guidance.)
 | Action | Windows | Mac |
 |---|---|---|
 | Accept a function from the AutoComplete list | Tab | Tab |
-| Insert Function (Windows) or Formula Builder (Mac) | Shift + F3 | Shift + F3 |
+| Insert Function (Windows) or Formula Builder (Mac) | Shift + F3 | Shift + F3 (Fn + Shift + F3 on a laptop) |
 | Edit the active cell | F2 | Control + U |
 | New line inside a formula | Alt + Enter | Control + Option + Return |
 | Expand or collapse the formula bar | Ctrl + Shift + U | Control + Shift + U |
@@ -546,7 +546,7 @@ by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Labs row 38 holds a White Blood Cell Count result of 11 K/uL. Write a comparison that…**
 
@@ -652,7 +652,7 @@ IFERROR catches every error type. IFNA catches only #N/A, the "value not availab
 <!-- BEGIN GENERATED: bonus -->
 The sepsis committee wants to know what a quick qSOFA-style screen would flag if triage nurses scored every ED patient. This simplified, educational version (not clinical guidance) gives one point for each of three findings. (1) RespRate is 22 or more. (2) SystolicBP is 100 or less. A blank (not recorded) SystolicBP earns NO point. (3) Altered mentation, meaning the ChiefComplaint contains the word "Altered" or "Confusion" anywhere. A score of 2 or more is screen-positive. Build the score in the yellow qSOFA column on the ED sheet, then answer the questions.
 
-Work on the **Bonus** sheet of the workbook.
+Build the qSOFA column on the **ED** sheet, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Fill the yellow qSOFA column with a score from 0 to 3 on the ED sheet, starting in R2. The gray cell adds up your whole column, so it shows the total number of qSOFA points. *(Hint: Add three tests. Guard the BP test with I2<>"". ISNUMBER(SEARCH("altered", E2)) tests 'contains')*
 - **B2.** How many visits are screen-positive (a qSOFA score of 2 or more)? *(Hint: COUNTIF on your qSOFA column)*
@@ -663,7 +663,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. qSOFA column (total points)**
 
@@ -689,7 +689,7 @@ Once the score is a number, COUNTIF counts any threshold. If your column scored 
 - **Answer:** 115.8
 - **Solution:** `=ROUND(AVERAGE(IF(ED!R2:R424>=2,ED!G2:G424)),1)`
 
-`IF(range>=2, HeartRate)` returns the heart rate for screen-positive rows and FALSE for the rest, and AVERAGE skips FALSE. Microsoft 365 and Excel 2021 evaluate this array formula automatically. In Excel 2019 and earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). `=AVERAGEIF(ED!R2:R424,">=2",ED!G2:G424)` gives the same result.
+`IF(range>=2, HeartRate)` returns the heart rate for screen-positive rows and FALSE for the rest, and AVERAGE skips FALSE. Microsoft 365 and Excel 2021 or later evaluate this array formula automatically. In Excel 2019 and earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). `=AVERAGEIF(ED!R2:R424,">=2",ED!G2:G424)` gives the same result.
 
 **B4. Safety check: how many screen-positive visits ended with EDDisposition "Discharged"…**
 

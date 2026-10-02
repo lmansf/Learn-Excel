@@ -68,12 +68,12 @@ def messy_name(i: int, first: str, last: str) -> str:
 def build() -> Lesson:
     L = Lesson(
         code=CODE, module_dir="02-formulas-functions", slug="02-text-functions",
-        title="Text Functions", level="Beginner → Intermediate", minutes=50,
+        title="Text Functions", level="Beginner → Intermediate", minutes=110,
         objectives=[
             "Extract parts of text with LEFT, RIGHT, MID, FIND, and SEARCH",
             "Clean and standardize text with TRIM, CLEAN, UPPER, LOWER, PROPER, and SUBSTITUTE",
             "Join text with &, CONCAT, and TEXTJOIN; format numbers as text with TEXT",
-            "Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365)",
+            "Use modern TEXTBEFORE, TEXTAFTER, and TEXTSPLIT (Microsoft 365 and Excel 2024)",
         ],
     )
 
@@ -279,7 +279,7 @@ def build() -> Lesson:
                                           f'FIND(",",{pcell("PatientName", t_last["PatientID"])})-1)',
              hint="FIND gives the comma's position, and LEFT takes everything before it",
              explanation=f"FIND(\",\",…) returns the comma's position ({len(last_answer) + 1}). The last name is the "
-                         f"{len(last_answer)} characters before it, so subtract 1. In Microsoft 365 you can also write "
+                         f"{len(last_answer)} characters before it, so subtract 1. In Microsoft 365 and Excel 2024, you can also write "
                          f"=TEXTBEFORE({pcell('PatientName', t_last['PatientID'])},\",\")."),
         Task(f"The appointment-reminder system needs phone numbers as 10 digits with no punctuation. Convert patient "
              f"{t_phone['PatientID']}'s phone (row {prow(t_phone['PatientID'])} of the Patients sheet, \"{t_phone['Phone']}\") "
@@ -336,7 +336,7 @@ def build() -> Lesson:
         Task(f"The patient portal username is the part of the email address before the @. Return the username for patient "
              f"{t_mail['PatientID']} (row {prow(t_mail['PatientID'])} of the Patients sheet).",
              answer=username, solution=f'=TEXTBEFORE({pcell("Email", t_mail["PatientID"])},"@")',
-             hint="TEXTBEFORE (Microsoft 365 or Excel 2024), or LEFT + FIND",
+             hint="TEXTBEFORE (Microsoft 365 and Excel 2024), or LEFT + FIND",
              explanation="TEXTBEFORE returns everything before the first @, however long the username is. The classic "
                          "version, which works in every Excel, is "
                          f"=LEFT({pcell('Email', t_mail['PatientID'])},FIND(\"@\",{pcell('Email', t_mail['PatientID'])})-1): "
@@ -383,7 +383,7 @@ def build() -> Lesson:
                          "MID takes everything after the comma (LEN is simply a length that's long enough), and TRIM "
                          f"removes the leading, trailing, and doubled spaces. Without the SUBSTITUTE, the {nbsp_rows} portal rows "
                          f"keep an invisible character and the total comes out {no_nbsp_chars - first_chars} too high. "
-                         "On Windows, CHAR(160) is the same character as UNICHAR(160). A Microsoft 365 version is "
+                         "On Windows, CHAR(160) is the same character as UNICHAR(160). A version for Microsoft 365 and Excel 2024 is "
                          "=TRIM(SUBSTITUTE(TEXTAFTER(C2,\",\"),UNICHAR(160),\" \"))."),
         Task(f"Patient {t_disp['PatientID']}'s name was typed as \"{t_disp['PatientName']}\" (row {prow(t_disp['PatientID'])} "
              f"of the Patients sheet, with two trailing spaces). Return a clean display name in the form First Last, in "
@@ -396,7 +396,7 @@ def build() -> Lesson:
              explanation="MID + FIND takes the first name and TRIM drops the trailing spaces. LEFT + FIND takes the last name. "
                          "Join them with a space and wrap the whole thing in PROPER, which capitalizes the first letter of each "
                          "word and every letter that follows a non-letter. That's why the B after the apostrophe in O'Brien "
-                         "comes out right. In Microsoft 365: "
+                         "comes out right. In Microsoft 365 and Excel 2024: "
                          "=PROPER(TRIM(TEXTAFTER({0},\",\"))&\" \"&TEXTBEFORE({0},\",\")).".format(
                              pcell("PatientName", "PT10325"))),
     ]
@@ -464,7 +464,7 @@ def build() -> Lesson:
                          f"state, and the ZIP. TEXTBEFORE({D2},\" \",-2) counts spaces from the end, so it returns everything before "
                          "the second-to-last space (\"Cedar Ridge,\" or \"CEDAR RIDGE\"). SUBSTITUTE removes a comma if there is one, "
                          "TRIM tidies up, and PROPER fixes the case. A FIND(\",\") approach fails with #VALUE! on the rows that "
-                         "have no comma. Without Microsoft 365, the classic trick is "
+                         "have no comma. Without Microsoft 365 or Excel 2024, the classic trick is "
                          f"=PROPER(SUBSTITUTE(LEFT({D2},LEN({D2})-LEN(TRIM(RIGHT(SUBSTITUTE({D2},\" \",REPT(\" \",100)),100)))-4),\",\",\"\")): "
                          "the TRIM(RIGHT(SUBSTITUTE(…))) part pulls out the last word (the ZIP), and LEFT keeps everything except "
                          "the ZIP and the 4 characters of \" OH \"."),
@@ -530,15 +530,36 @@ def build() -> Lesson:
               if any(f in t.solution for f in ("TEXTBEFORE", "TEXTAFTER", "TEXTSPLIT"))]
     joiners = [str(i) for i, t in enumerate(L.tasks, 1) if "TEXTJOIN" in t.solution]
     assert len(joiners) == 1, joiners
+    # Several tasks fill a yellow column on a data sheet, and a gray cell on Practice or Bonus reads it, so Start Here,
+    # the Bonus sheet, and the README say so.
     cols = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
     bcols = [f"B{i}" for i, t in enumerate(L.bonus, 1) if t.summary]
+    assert bcols == ["B1", "B2", "B4"], bcols
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{', '.join(cols[:-1])}, and {cols[-1]}, fill the yellow column on the Encounters or Patients sheet "
+                      "instead, and the task's gray cell on Practice reads it.")
+    L.bonus_instructions = (
+        f"Type a formula or value in each yellow cell. For {', '.join(bcols[:-1])}, and {bcols[-1]}, fill the yellow column on "
+        "the Registrations or Patients sheet instead, and the gray cell here reads it. The Check column turns green when your "
+        "answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → "
+        f"'{L.bonus_key_sheet}'.")
+    L.bonus_where = ("Fill the yellow columns on the **Registrations** and **Patients** sheets, and type your answers in the "
+                     "yellow cells on the **Bonus** sheet.")
     L.start_notes = [
         f"Tasks {' and '.join(modern)} and bonus parts B1–B3 use TEXTBEFORE, TEXTAFTER, or TEXTSPLIT, which need Microsoft 365, "
         "Excel for the web, or Excel 2024. In older versions those functions show #NAME?, so use the classic LEFT, MID, and "
         f"FIND methods from the guide instead. Task {joiners[0]} uses TEXTJOIN, which needs Excel 2019 or later. In Excel 2016, "
         "join the pieces with & and an IF instead.",
-        f"Tasks {', '.join(cols[:-1])}, and {cols[-1]} and bonus parts {', '.join(bcols[:-1])}, and {bcols[-1]} ask you to fill "
-        "a yellow column on a data sheet. The data sheets are Excel Tables, so a formula typed in the first row usually fills "
-        "the whole column automatically.",
+        f"Bonus parts {', '.join(bcols[:-1])}, and {bcols[-1]} also fill a yellow column, on the Registrations or Patients "
+        "sheet. The data sheets are Excel Tables, so a formula typed in the first row usually fills the whole column "
+        "automatically.",
     ]
+
+    @L.customize
+    def _start_here(wb, lesson, selftest):
+        # Registrations comes after the Bonus tab because only the bonus uses it, so its Start Here line says so.
+        ws = wb["Start Here"]
+        row = next(r for r in range(1, ws.max_row + 1)
+                   if ws.cell(row=r, column=2).value == "Registrations" and ws.cell(row=r, column=3).value)
+        ws.cell(row=row, column=3).value += " (used only in the bonus)"
     return L

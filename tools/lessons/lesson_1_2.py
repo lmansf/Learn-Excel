@@ -1,6 +1,6 @@
 """Lesson 1.2 · Data Entry, AutoFill & Editing.
 
-Most tasks are "do it in Excel" skills (AutoFill, Fill Series, Flash Fill, Ctrl+Enter, Paste Special,
+Most tasks are "do it in Excel" skills (AutoFill, Fill Series, Flash Fill, Ctrl + Enter, Paste Special,
 Find & Replace). Each one is checked by a gray summary formula on the Practice sheet that reads the
 learner's work on a worksheet built in the `customize` hook below; the self-test simulates that work
 with `fill={"range": ..., "values": [...]}`. Every expected value is computed in Python from the data.
@@ -21,7 +21,7 @@ MONTH_START = date(2025, 12, 1)
 DAYS_IN_MONTH = 31
 SHIFT_CODES = {"Day 12h": "D", "Night 12h": "N"}
 NIGHT_NEW = "N12"
-# Not "Float RN": AutoComplete would offer that header while the learner types FLOAT, and Ctrl+Enter would accept it.
+# Not "Float RN": AutoComplete would offer that header while the learner types FLOAT, and Ctrl + Enter would accept it.
 FLOAT_HDR = "Weekend float"
 
 
@@ -39,10 +39,10 @@ def _whiteboard(name: str) -> str:
 def build() -> Lesson:
     L = Lesson(
         code=CODE, module_dir="01-foundations", slug="02-data-entry-autofill",
-        title="Data Entry, AutoFill & Editing", level="Beginner", minutes=40,
+        title="Data Entry, AutoFill & Editing", level="Beginner", minutes=80,
         objectives=[
             "Recognize how Excel stores text, numbers, dates, times, and TRUE/FALSE",
-            "Enter and edit data efficiently (F2, Ctrl+Enter, Ctrl+D, Alt+Enter)",
+            "Enter and edit data efficiently (F2, Ctrl + Enter, Ctrl + D, Alt + Enter)",
             "Create series with AutoFill, the Fill Series dialog, and Flash Fill",
             "Use Copy, Paste Special (values, transpose, formats), and Find & Replace",
             "Avoid classic traps: lost leading zeros, numbers stored as text, accidental dates",
@@ -249,9 +249,9 @@ def build() -> Lesson:
 
     # ================================================================== tasks
     L.practice_intro = ("Most tasks are done on the other sheets (Entries, Schedule, Beds, Q15 Log, Admissions, Supplies, Order, "
-                        "Roster). Type in the yellow cells here. A gray cell is a pre-filled formula that reads your work "
-                        "on another sheet, and its Check turns green when that work is right. Do the tasks in order, because the Schedule tasks build on "
-                        "each other.")
+                        "Roster). Type the answers for tasks 1–4 in the yellow cells on the Practice sheet. A gray cell is a "
+                        "pre-filled formula that reads your work on another sheet, and its Check turns green when that work is "
+                        "right. Do the tasks in order, because the Schedule tasks build on each other.")
 
     def sched_cell(col, k):
         return f"Schedule!{col}{SCH_FIRST + k}"
@@ -276,7 +276,7 @@ def build() -> Lesson:
         Task(f"Entries!B{entry_row['ED arrival']} shows the ED arrival as a date and time. What number does Excel actually store in that "
              f"cell? Switch the cell to General format to see it, then type that number in the yellow cell, rounded to 2 decimal places.",
              answer=round(arrival_serial, 2), fmt="0.00", tol=0.0051, title="Stored value of a date and time",
-             solution=f"Select **Entries!B{entry_row['ED arrival']}** and press **Ctrl + Shift + ~** (Mac: **⌃ + Shift + ~**), or choose "
+             solution=f"Select **Entries!B{entry_row['ED arrival']}** and press **Ctrl + Shift + ~** (Mac: **Control + Shift + ~**), or choose "
                       "**Home → Number Format → General**. Read the number, then press **Ctrl + Z** (Mac: **⌘ + Z**) to put the date "
                       "format back.",
              live=f"=Entries!B{entry_row['ED arrival']}",
@@ -304,7 +304,7 @@ def build() -> Lesson:
              custom_check='SUBSTITUTE(LOWER({cell}&"")," ","")=SUBSTITUTE(LOWER({key}&"")," ","")',
              answer_display="Allergy: Penicillin ⏎ Isolation: Contact (two lines in one cell)",
              title="A two-line note with a line break",
-             solution="Type `Allergy: Penicillin`, press **Alt + Enter** (Mac: **⌃ + ⌥ + Return**), type `Isolation: Contact`, "
+             solution="Type `Allergy: Penicillin`, press **Alt + Enter** (Mac: **Control + Option + Return**), type `Isolation: Contact`, "
                       "then press **Enter**.",
              live=False, hint="Enter on its own leaves the cell, so you need a different key combination",
              explanation="Alt + Enter inserts a line-break character inside the cell and turns on Wrap Text for you. Pressing "
@@ -345,7 +345,7 @@ def build() -> Lesson:
              explanation="When an entry is text that ends in a number, AutoFill increases that number and keeps the rest of the text, "
                          "including the leading zero (4W-01, 4W-02 … 4W-36). Text with no number in it is just copied."),
         Task(f"On the Q15 Log sheet, A{Q_FIRST} holds 07:00. Fill the yellow cells below it with a check time every 15 minutes, "
-             f"ending at 18:45. Use Home → Fill → Series, or the two-cell AutoFill pattern. The gray cell shows the latest time "
+             f"ending at 18:45. Use **Home → Fill → Series…**, or the two-cell AutoFill pattern. The gray cell shows the latest time "
              f"in column A.",
              answer=q_last_time, fmt="hh:mm", title="Fill Series: Q15 check times from 07:00 to 18:45",
              solution=f"**Option A (Fill Series):** select **A{Q_FIRST}**, choose **Home → Fill → Series…**, pick **Columns** and "
@@ -361,12 +361,12 @@ def build() -> Lesson:
                          f"{len(q_times)} check times. A single time dragged on its own steps by a whole **hour**, not 15 minutes."),
         # ---------------------------------------------------------------- 4 · selection tricks
         Task(f"4 West gets one float-pool RN on every Saturday and Sunday. In the {FLOAT_HDR} column ({FLOAT_COL}) of the Schedule "
-             f"sheet, put FLOAT in every weekend row and nowhere else, using a single entry: Ctrl+click (Mac: ⌘+click) the weekend "
-             f"cells, type FLOAT, and press Ctrl+Enter (Mac: ⌘+Return). The gray cell counts correctly placed FLOATs minus any "
+             f"sheet, put FLOAT in every weekend row and nowhere else, using a single entry: Ctrl + click (Mac: ⌘ + click) the weekend "
+             f"cells, type FLOAT, and press Ctrl + Enter (Mac: ⌘ + Return). The gray cell counts correctly placed FLOATs minus any "
              f"entries on weekdays.",
-             answer=n_weekend, title="Ctrl+Enter into a non-adjacent selection",
-             solution=f"1. Click the first weekend cell in column {FLOAT_COL} (the first Sat row), then **Ctrl+click** "
-                      "(Mac: **⌘+click**) every other Sat and Sun row.\n"
+             answer=n_weekend, title="Ctrl + Enter into a non-adjacent selection",
+             solution=f"1. Click the first weekend cell in column {FLOAT_COL} (the first Sat row), then **Ctrl + click** "
+                      "(Mac: **⌘ + click**) every other Sat and Sun row.\n"
                       "2. Type `FLOAT` (it appears in the last cell you clicked).\n"
                       "3. Press **Ctrl + Enter** (Mac: **⌘ + Return**) to enter it in every selected cell at once.",
              summary=(f'=IF(COUNTA({float_rng})=0,"",SUMPRODUCT(({float_rng}="FLOAT")*({date_rng}<>"")*(WEEKDAY({date_rng},2)>5))'
@@ -392,7 +392,7 @@ def build() -> Lesson:
              summary=(f'=IF(COUNTA({a_wb})=0,"",SUMPRODUCT(--({a_wb}=MID({a_name},FIND(",",{a_name})+2,50)'
                       f'&" "&LEFT({a_name},1)&".")))'),
              fill={"range": a_wb, "values": wb_labels},
-             live=False, hint="Type an example that can only mean one thing, then press Ctrl + E (Mac: Data → Flash Fill)",
+             live=False, hint="Type an example that can only mean one thing, then press Ctrl + E (Mac: **Data → Flash Fill**)",
              explanation=("Flash Fill studies your examples, finds the pattern (\"the text after the comma, a space, the first letter, "
                           "a period\"), and applies it to every row. "
                           + (f"The first row needs help. In `{adm[0]['PatientName']}` both names start with "
@@ -411,7 +411,7 @@ def build() -> Lesson:
              answer=total_order, title="Paste Special → Values",
              solution=f"1. Select **Supplies!H{sup.first_row}:H{sup.last_row}** and press **Ctrl + C** (Mac: **⌘ + C**).\n"
                       f"2. Click **Order!D{O_FIRST}**.\n"
-                      "3. Press **Ctrl + Alt + V** (Mac: **⌃ + ⌘ + V**) to open Paste Special, choose **Values**, and click **OK**. "
+                      "3. Press **Ctrl + Alt + V** (Mac: **Control + ⌘ + V**) to open Paste Special, choose **Values**, and click **OK**. "
                       "Or use **Home → Paste ▾ → Values (123)**.",
              summary=f'=IF(COUNTA({order_rng})=0,"",SUM({order_rng}))',
              fill={"range": order_rng, "values": suggested},
@@ -419,15 +419,15 @@ def build() -> Lesson:
              hint="A normal paste brings the formulas, and their references move",
              explanation=f"SuggestedOrder holds formulas such as `=MAX(0,G{sup.first_row}-F{sup.first_row})`. A normal paste copies the *formula*, and because its "
                          "references are relative, it ends up pointing at the wrong cells on the Order sheet, so you see #VALUE! or wrong "
-                         "numbers. Paste Special → Values pastes only the *results*, which is what you want when the numbers must stay "
+                         "numbers. **Paste Special → Values** pastes only the *results*, which is what you want when the numbers must stay "
                          "fixed or leave the workbook."),
         Task(f"Most people read schedules with staff down the side and dates across the top. Copy Schedule!A{SCH_HDR}:"
-             f"{LAST_NURSE_COL}{SCH_LAST} and use Paste Special → Transpose with the top-left corner in Roster!A{ROSTER_ANCHOR}. "
+             f"{LAST_NURSE_COL}{SCH_LAST} and use **Paste Special → Transpose** with the top-left corner in Roster!A{ROSTER_ANCHOR}. "
              f"The gray cell checks that {check_name} landed in column A, then counts that nurse's December shifts.",
              answer=check_shifts, title="Paste Special → Transpose",
              solution=f"1. Select **Schedule!A{SCH_HDR}:{LAST_NURSE_COL}{SCH_LAST}** and press **Ctrl + C** (Mac: **⌘ + C**).\n"
                       f"2. Click **Roster!A{ROSTER_ANCHOR}**.\n"
-                      "3. Press **Ctrl + Alt + V** (Mac: **⌃ + ⌘ + V**), tick **Transpose**, and click **OK**. "
+                      "3. Press **Ctrl + Alt + V** (Mac: **Control + ⌘ + V**), tick **Transpose**, and click **OK**. "
                       "Or use **Home → Paste ▾ → Transpose**.",
              summary=(f'=IF(COUNTA(Roster!A{ROSTER_ANCHOR}:AH{roster_last_row + 5})=0,"",IF(Roster!A{check_row}="{check_name}",'
                       f'COUNTA(Roster!B{check_row}:{roster_last_col}{check_row}),"Not transposed into A{ROSTER_ANCHOR} yet"))'),
@@ -444,7 +444,7 @@ def build() -> Lesson:
              f"(C{SCH_FIRST}:{LAST_NURSE_COL}{SCH_LAST}) and warns you if a name or day label changed too.",
              answer=n_nights, title="Find & Replace with Match entire cell contents",
              solution="1. Click any single cell on the Schedule sheet (so Excel searches the whole sheet).\n"
-                      "2. Press **Ctrl + H** (Mac: **⌃ + H**). Find what: `N`, Replace with: `N12`.\n"
+                      "2. Press **Ctrl + H** (Mac: **Control + H**). Find what: `N`, Replace with: `N12`.\n"
                       "3. Tick **Match entire cell contents** (click **Options >>** first if you can't see it). On a Mac the box is "
                       "called **Find entire cells only**.\n"
                       "4. Click **Replace All**. Excel reports how many replacements it made, which matches the gray cell.",
@@ -466,7 +466,7 @@ def build() -> Lesson:
         f"{doc}, at the Primary Care Clinic in the Bluestone Outpatient Pavilion, needs an appointment template for the two weeks "
         f"of Monday 01/05/2026 through Friday 01/16/2026. The clinic books 15-minute slots from 08:00 to 16:45 on weekdays only. "
         "Lunch (12:00–12:45) is blocked every day, Wednesday afternoons (13:00 onward) are admin time, and Friday afternoons "
-        "become video visits. Build the whole grid on the Clinic Grid sheet with AutoFill, Fill Series, Ctrl+Enter, and Find & "
+        "become video visits. Build the whole grid on the Clinic Grid sheet with AutoFill, Fill Series, Ctrl + Enter, and Find & "
         f"Replace, without typing cell by cell. B{G_HDR} (01/05/2026) and A{G_FIRST} (08:00) are filled in for you. "
         "The first four parts are checked by gray cells that read the Clinic Grid, so don't type over them. The last part has a "
         "yellow cell for your answer.")
@@ -494,12 +494,12 @@ def build() -> Lesson:
              explanation=f"08:00 to 16:45 every 15 minutes is {len(slot_mins)} slots per day, so the grid has "
                          f"{len(slot_mins)} × {len(clinic_days)} = {len(slot_mins) * len(clinic_days)} cells."),
         Task(f"Fill the whole grid B{G_FIRST}:{G_LASTCOL}{G_LAST} with Open in one entry. Then type Lunch over the 12:00–12:45 rows "
-             "for every day, and Admin over both Wednesday afternoons (13:00–16:45). Use one Ctrl+Enter for each step. "
+             "for every day, and Admin over both Wednesday afternoons (13:00–16:45). Use one Ctrl + Enter for each step. "
              "The gray cell counts Lunch and Admin slots in the right places, minus any in the wrong place.",
-             answer=n_lunch + n_admin, title="Block lunch and admin time with Ctrl+Enter",
+             answer=n_lunch + n_admin, title="Block lunch and admin time with Ctrl + Enter",
              solution=f"1. Select **B{G_FIRST}:{G_LASTCOL}{G_LAST}**, type `Open`, and press **Ctrl + Enter** (Mac: **⌘ + Return**).\n"
                       f"2. Select **B{lunch_r1}:{G_LASTCOL}{lunch_r2}** (12:00–12:45), type `Lunch`, and press **Ctrl + Enter**.\n"
-                      f"3. Select **{gcol[weds[0]]}{pm_r1}:{gcol[weds[0]]}{G_LAST}**, Ctrl+drag (Mac: ⌘+drag) "
+                      f"3. Select **{gcol[weds[0]]}{pm_r1}:{gcol[weds[0]]}{G_LAST}**, Ctrl + drag (Mac: ⌘ + drag) "
                       f"**{gcol[weds[1]]}{pm_r1}:{gcol[weds[1]]}{G_LAST}** (the two Wednesday afternoons), type `Admin`, and press "
                       "**Ctrl + Enter**.",
              summary=(f'=IF(COUNTA({body})=0,"",2*({lunch_ok}+{admin_ok})-COUNTIF({body},"Lunch")-COUNTIF({body},"Admin"))'),
@@ -512,9 +512,9 @@ def build() -> Lesson:
              "selection only. Excel reports how many replacements it made. The gray cell counts Telehealth slots in the right places, "
              "minus any in the wrong place, so the two numbers should agree.",
              answer=n_tele, title="Find & Replace inside a selection",
-             solution=f"1. Select **{gcol[fris[0]]}{pm_r1}:{gcol[fris[0]]}{G_LAST}**, then Ctrl+drag (Mac: ⌘+drag) "
+             solution=f"1. Select **{gcol[fris[0]]}{pm_r1}:{gcol[fris[0]]}{G_LAST}**, then Ctrl + drag (Mac: ⌘ + drag) "
                       f"**{gcol[fris[1]]}{pm_r1}:{gcol[fris[1]]}{G_LAST}**.\n"
-                      "2. Press **Ctrl + H** (Mac: **⌃ + H**). Find what: `Open`, Replace with: `Telehealth`. Tick **Match entire "
+                      "2. Press **Ctrl + H** (Mac: **Control + H**). Find what: `Open`, Replace with: `Telehealth`. Tick **Match entire "
                       "cell contents** for safety.\n"
                       "3. Click **Replace All**. Because more than one cell is selected, Excel searches only the selection. "
                       "(You can also do one Friday at a time and add the two counts.)",
@@ -528,7 +528,7 @@ def build() -> Lesson:
              answer=n_open, title="Open slots remaining",
              solution=(f"Work it out: {len(slot_mins)} rows × {len(clinic_days)} days = {len(slot_mins) * len(clinic_days)} slots, minus "
                        f"{n_lunch} Lunch, {n_admin} Admin, and {n_tele} Telehealth = **{n_open}**. To confirm, click one cell on the "
-                       "Clinic Grid, press **Ctrl + F** (Mac: **⌃ + F**), type `Open`, tick **Match entire cell contents**, and click "
+                       "Clinic Grid, press **Ctrl + F** (Mac: **Control + F**), type `Open`, tick **Match entire cell contents**, and click "
                        f"**Find All**. The dialog reports *\"{n_open} cell(s) found\"*."),
              # Pristine grid is blank, so a live COUNTIF would be 0: the answer is typed, not read from the grid.
              live=False, hint="Total slots minus everything you blocked or converted",
@@ -545,6 +545,30 @@ def build() -> Lesson:
     ]
     L.sheet_order = ["Start Here", "Practice", "Entries", "Schedule", "Beds", "Q15 Log", "Admissions", "Supplies", "Order",
                      "Roster", "Bonus", "Clinic Grid", "Answer Key", "Bonus Key"]
+    # Start Here lists Practice, the two Table sheets (Supplies, Admissions), these, then Bonus.
+    L.sheet_notes = [
+        ("Entries", "A registration record: what a clerk typed next to what Excel stored (tasks 1–2)."),
+        ("Schedule", "4 West's December 2025 rotating-RN schedule. Fill the dates, day names, and weekend float column, "
+                     "then replace the N codes (tasks 5–6, 9, 13)."),
+        ("Beds", f"4 West's {beds_n} staffed beds. Fill the yellow Bed column (task 7)."),
+        ("Q15 Log", "A Q15 safety observation form. Fill the 15-minute check times (task 8)."),
+        ("Order", "A supply requisition. Paste the restock quantities here as values (task 11)."),
+        ("Roster", f"Empty. Paste the transposed schedule here, starting in A{ROSTER_ANCHOR} (task 12)."),
+        ("Clinic Grid", "The bonus appointment template you build. The Bonus sheet's gray cells read it."),
+    ]
+    # Tasks 1–4 are typed on Practice. Tasks 5–13 (and bonus B1–B4) are worked on other sheets and read by gray cells,
+    # so the generic "type a formula or value into each yellow cell" lines don't fit.
+    L.practice_how = ("Go to the 'Practice' sheet. Type your answers for tasks 1–4 in its yellow cells. For tasks 5–13, do "
+                      "the work on the sheet each task names, and the task's gray cell on Practice reads it.")
+    # practice_intro and the bonus scenario already say which cells to type in and which are gray, so these lines only
+    # add the check and the key.
+    L.practice_instructions = (
+        "The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. "
+        f"Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "The Check column turns green when your answer matches. Stuck? Read the hint, then the lesson guide. "
+        f"Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = "Work on the **Clinic Grid** sheet, and check your progress on the **Bonus** sheet."
 
     # ================================================================== custom sheets
     TITLE_FONT = Font(bold=True, size=13, color=NAVY)
@@ -690,7 +714,7 @@ def build() -> Lesson:
         ws = wb.create_sheet("Clinic Grid")
         ws.sheet_properties.tabColor = "BF9000"
         titled(ws, f"Primary Care Clinic · {doc} · appointment template, 01/05/2026 – 01/16/2026",
-               "Build the grid with AutoFill, Fill Series, Ctrl+Enter, and Find & Replace. No typing cell by cell.")
+               "Build the grid with AutoFill, Fill Series, Ctrl + Enter, and Find & Replace. No typing cell by cell.")
         header(ws, G_HDR, ["Time"])
         c = ws.cell(row=G_HDR, column=G_COL0, value=clinic_days[0])
         c.number_format = "ddd mm/dd"

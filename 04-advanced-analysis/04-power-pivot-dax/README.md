@@ -45,7 +45,7 @@ PivotTable built on the model can use fields from every table at once.
 | Row limit | 1,048,576 (one worksheet) | Limited only by memory |
 | Combining tables | XLOOKUP columns into one flat table first | Relationships, no lookup columns |
 | Calculations | Calculated fields (they sum first, then divide) | **Measures** in DAX, reusable everywhere |
-| Distinct count | Not available | Built in (Value Field Settings → Distinct Count) |
+| Distinct count | Not available | Built in (**Value Field Settings → Distinct Count**) |
 | Group dates and numbers | Group command | Use columns in a date table or calculated columns |
 
 > 💡 **Tip:** Use a classic PivotTable for a quick look at one table. Reach for the Data Model when a question needs two or
@@ -154,11 +154,11 @@ For this lesson:
 
 | Part | What it's for |
 |---|---|
-| **Data View** (Home → Data View) | One tab per table, showing the rows. Add calculated columns in the rightmost empty column |
-| **Calculation area** (Home → Calculation Area) | The grid under the rows. Type measures here as `Name:=formula` |
+| **Data View** (**Home → Data View**) | One tab per table, showing the rows. Add calculated columns in the rightmost empty column |
+| **Calculation area** (**Home → Calculation Area**) | The grid under the rows. Type measures here as `Name:=formula` |
 | **Formula bar** | Shows the formula of the selected column or measure |
-| **Diagram View** (Home → Diagram View) | Boxes for tables and lines for relationships. Drag to create relationships |
-| **Design tab** | Create Relationship, Manage Relationships, Mark as Date Table, Date Table → New |
+| **Diagram View** (**Home → Diagram View**) | Boxes for tables and lines for relationships. Drag to create relationships |
+| **Design tab** | **Create Relationship**, **Manage Relationships**, **Mark as Date Table**, **Date Table → New** |
 | **Home → PivotTable** | Inserts a PivotTable connected to the model |
 
 > ⚠️ Saving the workbook saves the model inside it, and the model is stored in addition to the sheets. Expect the file to
@@ -208,8 +208,8 @@ be unique. If Power Pivot refuses with a message about **duplicate values**, the
 unique.
 
 > 💡 **Tip:** Hide the fact table's **foreign keys** (the key columns that point to dimensions) from the field list:
-> right-click `FactEncounters[FacilityID]` in Data View or Diagram View → **Hide from Client Tools**. People then slice by `DimFacility[FacilityName]`, which is the column the
-> relationships are designed for.
+> right-click `FactEncounters[FacilityID]` in Data View or Diagram View → **Hide from Client Tools**. People then slice
+> by `DimFacility[FacilityName]`, which is the column the relationships are designed for.
 
 > 📋 Power BI lets you set a relationship to filter in both directions and supports many-to-many relationships. Excel's
 > relationship settings offer neither option, so in Excel, filters flow from the dimension to the fact.
@@ -255,7 +255,7 @@ sort MonthName by **MonthNum**. Without this, PivotTables list months alphabetic
 > 📋 No date table in your data? In the Power Pivot window, **Design → Date Table → New** builds a *Calendar* table that
 > spans the dates in your model. Power BI users often create one with `CALENDAR(DATE(2024,1,1), DATE(2025,12,31))` or
 > `CALENDARAUTO()`, but Excel's Power Pivot can't create tables from DAX formulas, so in Excel you load a date table or use
-> Date Table → New.
+> **Design → Date Table → New**.
 
 ### 6. PivotTables from the Data Model
 
@@ -278,7 +278,7 @@ but they have limits:
 | Logic | Only SUM, COUNT, AVERAGE, MIN, MAX, DISTINCT COUNT of one column | Anything DAX can express |
 | Format | Set in each PivotTable | Set once in the measure |
 
-> 💡 **Tip:** Data Model PivotTables offer **Distinct Count** under Value Field Settings → Summarize Values By. Classic
+> 💡 **Tip:** Data Model PivotTables offer **Distinct Count** under **Value Field Settings → Summarize Values By**. Classic
 > PivotTables don't. It's the quickest way to count unique patients.
 
 Data Model PivotTables don't support the calculated fields from Lesson 3.4, and most of the Group command's options aren't
@@ -299,7 +299,7 @@ create one:
    the measure is about, for example FactEncounters.
 3. **Measure name:** `Total Charges`.
 4. **Formula:** `=SUM(FactEncounters[TotalCharges])`. Click **Check formula** to catch typos.
-5. **Formatting Options:** choose *Currency* with 0 decimal places. For rates, choose *Number → Percentage* with 1 decimal
+5. **Formatting Options:** choose *Currency* with 0 decimal places. For rates, choose **Number → Percentage** with 1 decimal
    place.
 6. Click **OK**. The measure appears in the field list with an *fx* icon, ready to drag into Values.
 
@@ -686,7 +686,21 @@ into editable CUBE formulas, click it and choose **PivotTable Analyze → OLAP T
 | USERELATIONSHIP shows an error | The inactive relationship doesn't exist yet | Create it in Diagram View (section 13) |
 | A function isn't recognized | An older DAX engine | Use ALL instead of REMOVEFILTERS, and `\|\|` instead of IN |
 
-### 17. Versions and compatibility
+### 17. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Turn a range into an Excel Table | **Ctrl + T** | **⌘ + T** |
+| Turn on the Power Pivot add-in | **File → Options → Add-ins → Manage: COM Add-ins → Go…** | — |
+| Add the selected Table to the Data Model | **Power Pivot → Add to Data Model** | — |
+| Open the Power Pivot window | **Power Pivot → Manage** (or **Data → Manage Data Model**) | — |
+| Switch between Excel and the Power Pivot window | **Alt + Tab** | — |
+| Create a measure | **Power Pivot → Measures → New Measure…** | — |
+| Insert a PivotTable from the Data Model | **Home → PivotTable** in the Power Pivot window, or **Insert → PivotTable → From Data Model** (Microsoft 365) | — |
+| Refresh the selected PivotTable | **Alt + F5** | — |
+| Refresh everything | **Ctrl + Alt + F5** | — |
+
+A dash means the action needs Power Pivot or the Data Model, which Excel for Mac doesn't have.
 
 | Excel | Data Model, Power Pivot, and DAX |
 |---|---|
@@ -696,10 +710,6 @@ into editable CUBE formulas, click it and choose **PivotTable Analyze → OLAP T
 | Excel for Mac | No Power Pivot. You can't create a Data Model, relationships, or measures |
 | Excel for the web | Can display and filter existing Data Model PivotTables, but can't edit the model |
 | Power BI Desktop (free, Windows) | The same engine and the same DAX. Everything here transfers, plus calculated tables and two-way filters |
-
-> 💡 **Tip:** Keyboard help on Windows: **Ctrl + T** turns a range into an Excel Table before you add it to the model (Mac:
-> **⌘ + T**), **Alt + F5** refreshes the selected PivotTable, **Ctrl + Alt + F5** refreshes everything, and **Alt + Tab**
-> switches between Excel and the Power Pivot window.
 
 ## 🧪 Hands-on practice
 
@@ -713,7 +723,7 @@ Start by building the model (Guide sections 3–5): add all nine tables to the D
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | Load all nine tables into the Data Model and create the relationships listed on the Model Map sheet. Then insert a PivotTable from the Data Model with DimFacility[FacilityName] in Rows and FactEncounters[EncounterID] in Values (Excel names it Count of EncounterID). How many encounters (2024 and 2025 together) does Cedar Ridge Medical Center show? | If every facility shows the same number, a relationship is missing |
-| 2 | Create the measure Total Charges = the sum of FactEncounters[TotalCharges]. Show it in a PivotTable with DimDate[Year] in Rows. What are the total charges for 2025? Enter the amount rounded to the nearest dollar. | Power Pivot → Measures → New Measure…, then SUM |
+| 2 | Create the measure Total Charges = the sum of FactEncounters[TotalCharges]. Show it in a PivotTable with DimDate[Year] in Rows. What are the total charges for 2025? Enter the amount rounded to the nearest dollar. | **Power Pivot → Measures → New Measure…**, then SUM |
 | 3 | Create the measure Encounters = the number of rows in FactEncounters. How many encounters did the Emergency Department at Cedar Ridge Medical Center have in Q3 2025? Filter DimFacility[FacilityName] = Cedar Ridge Medical Center, DimDepartment[DeptName] = Emergency Department, DimDate[Year] = 2025, and DimDate[Quarter] = Q3. | COUNTROWS counts the rows of a table |
 | 4 | Create the measure Patients = the number of distinct PatientID values in FactEncounters. How many different patients had at least one encounter in 2025, system-wide? (Use the Grand Total, not a sum of facility rows.) | DISTINCTCOUNT |
 | 5 | Create the measure Avg LOS (IP) = the average of FactEncounters[LOSDays] for Inpatient encounters only, using CALCULATE so that the measure applies the filter itself. What is it for Bluestone Memorial Hospital in 2025? Enter it to 2 decimal places. | CALCULATE(expression, Table[Column] = "value") |
@@ -737,7 +747,7 @@ still holds the answer. The same answers are below, collapsed so you don't see t
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Relationship check: Cedar Ridge encounters**
 
@@ -861,7 +871,7 @@ DIVIDE(
 ```
 
 
-In the Ashby Falls row, the numerator sees two filters: the facility and the year. The denominator uses ALL(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits in the system. REMOVEFILTERS(DimFacility) does the same job and reads more clearly, but only Excel for Microsoft 365 recognizes it. ALL works in every version. This is the DAX version of Show Values As → % of Column Total, with one big advantage: it's a real measure that you can reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities through DimFacility. A filter on FactEncounters[FacilityID] would survive ALL(DimFacility).
+In the Ashby Falls row, the numerator sees two filters: the facility and the year. The denominator uses ALL(DimFacility) to clear the facility filter but keeps the year, so it returns all 2025 ED visits in the system. REMOVEFILTERS(DimFacility) does the same job and reads more clearly, but only Excel for Microsoft 365 recognizes it. ALL works in every version. This is the DAX version of **Show Values As → % of Column Total**, with one big advantage: it's a real measure that you can reuse in other measures, KPIs, and CUBEVALUE formulas. It only works when the PivotTable filters facilities through DimFacility. A filter on FactEncounters[FacilityID] would survive ALL(DimFacility).
 
 **9. Cedar Ridge stays over expected LOS, 2025**
 
@@ -928,7 +938,7 @@ Charges YTD := TOTALYTD([Total Charges], DimDate[Date])
 ```
 
 
-In the September 2025 row, the filter context holds the dates September 1 to September 30, 2025. TOTALYTD replaces them with every date from January 1 through September 30, 2025 and evaluates Total Charges over that range. September on its own was 353,672. Time-intelligence functions need a proper date table: one row per day with no gaps, marked as the date table, and related to the fact table on a date column. If MonthName sorts alphabetically (Apr, Aug, Dec…), set Sort by Column to MonthNum in Power Pivot.
+In the September 2025 row, the filter context holds the dates September 1 to September 30, 2025. TOTALYTD replaces them with every date from January 1 through September 30, 2025 and evaluates Total Charges over that range. September on its own was 353,672. Time-intelligence functions need a proper date table: one row per day with no gaps, marked as the date table, and related to the fact table on a date column. If MonthName sorts alphabetically (Apr, Aug, Dec…), sort it by MonthNum with **Home → Sort by Column** in Power Pivot.
 
 **13. ED visits YoY %, Bluestone Memorial, 2025 vs 2024**
 
@@ -952,7 +962,7 @@ In the 2025 row, SAMEPERIODLASTYEAR shifts the year's dates back one year, so ED
 <!-- BEGIN GENERATED: bonus -->
 The Chief Medical Officer wants a one-page December 2025 briefing built from the Data Model, so that next month it refreshes instead of being rebuilt. It needs a rolling ED trend, a same-month comparison for the smallest hospital, the busiest inpatient attending, discharges counted by discharge date, and a readmission rate dated the way quality teams date it. Use your measures from the practice tasks and add new ones as needed. ED visits are encounters with EncounterType = Emergency.
 
-Work on the **Bonus** sheet of the workbook.
+Build the bonus measures in the same Data Model, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** Create ED Visits 3M Avg = the average monthly ED visits over the three months ending with the last date in the current filter context (use DATESINPERIOD). What does it show for December 2025, system-wide? Enter it to 1 decimal place. *(Hint: DATESINPERIOD(DimDate[Date], MAX(DimDate[Date]), -3, MONTH))*
 - **B2.** Ashby Falls Community Hospital: what is the percentage change in ED visits for December 2025 compared with December 2024? Enter it as a percentage with 1 decimal place (negative if visits fell). *(Hint: Your ED YoY % measure from Task 13 works at month level too)*
@@ -963,7 +973,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Rolling 3-month average ED visits, Dec 2025**
 

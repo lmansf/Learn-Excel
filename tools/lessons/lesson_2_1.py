@@ -310,6 +310,11 @@ def build() -> Lesson:
                          "when they can't find a match (Lesson 2.6). A divide-by-zero is a different error, so IFNA hands it straight "
                          "back. That's the point of IFNA. It hides the one error you expect and leaves every other mistake visible."),
     ]
+    # Six tasks fill a yellow column on a data sheet, and a gray cell on Practice reads it, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{', '.join(fills[:-1])}, and {fills[-1]}, fill the yellow column on the Labs or ED sheet instead, "
+                      "and the task's gray cell on Practice reads it.")
 
     # ------------------------------------------------------------------ bonus: qSOFA-style screen
     def qsofa(r):
@@ -342,6 +347,7 @@ def build() -> Lesson:
         f"(1) RespRate is {QSOFA_RR} or more. (2) SystolicBP is {QSOFA_SBP} or less. A blank (not recorded) SystolicBP earns "
         "NO point. (3) Altered mentation, meaning the ChiefComplaint contains the word \"Altered\" or \"Confusion\" anywhere. "
         "A score of 2 or more is screen-positive. Build the score in the yellow qSOFA column on the ED sheet, then answer the questions.")
+    L.bonus_where = "Build the qSOFA column on the **ED** sheet, and type your answers in the yellow cells on the **Bonus** sheet."
     L.bonus = [
         Task(f"Fill the yellow qSOFA column with a score from 0 to 3 on the ED sheet, starting in "
              f"{edd.cell('qSOFA', 0, sheet=False)}. The gray cell adds up your whole column, so it shows the total number "
@@ -372,7 +378,7 @@ def build() -> Lesson:
              live=f"=ROUND(AVERAGE(IF({q_arr}>=2,{er('HeartRate')})),1)",
              hint="AVERAGE(IF(test_range>=2, values_range)). AVERAGEIF (Lesson 2.5) also works",
              explanation="`IF(range>=2, HeartRate)` returns the heart rate for screen-positive rows and FALSE for the rest, and AVERAGE "
-                         "skips FALSE. Microsoft 365 and Excel 2021 evaluate this array formula automatically. In Excel 2019 and "
+                         "skips FALSE. Microsoft 365 and Excel 2021 or later evaluate this array formula automatically. In Excel 2019 and "
                          "earlier, confirm it with Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). "
                          f"`=AVERAGEIF({er('qSOFA')},\">=2\",{er('HeartRate')})` gives the same result."),
         Task("Safety check: how many screen-positive visits ended with EDDisposition \"Discharged\" (sent home)?",

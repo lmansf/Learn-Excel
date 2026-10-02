@@ -74,18 +74,18 @@ def build() -> Lesson:
     sfirst, slast = sup.first_row, sup.last_row
 
     L.practice_intro = ("All tasks use the Census sheet (4 West, Q1 2025) unless they say otherwise. "
-                        "Use cell ranges like Census!C2:C91 — or click and drag to select them while typing a formula.")
+                        "Use cell ranges like Census!C2:C91, or click and drag to select them while typing a formula.")
     L.tasks = [
         Task("How many patients were admitted to 4 West during the quarter (total of the Admissions column)?",
              answer=sum(adm), solution=f"=SUM({rng('Admissions')})", hint="SUM",
              explanation="SUM adds every number in the range. Typing =SUM( and then dragging over the column fills in the range for you."),
-        Task("What was the average midnight census? (Keep full precision — the check accepts 2 decimal places.)",
+        Task("What was the average midnight census? (Keep full precision. The check compares the value to 2 decimal places.)",
              answer=sum(mc) / n, fmt="0.00", solution=f"=AVERAGE({rng('MidnightCensus')})", hint="AVERAGE",
              explanation="AVERAGE = SUM ÷ COUNT of the numbers in the range. This is the unit's *average daily census* (ADC)."),
         Task("What was the highest midnight census on any day?", answer=max(mc), solution=f"=MAX({rng('MidnightCensus')})", hint="MAX"),
         Task("What was the lowest midnight census on any day?", answer=min(mc), solution=f"=MIN({rng('MidnightCensus')})", hint="MIN"),
         Task("How many days of census data are there? Count the dates in the CensusDate column.",
-             answer=n, solution=f"=COUNT({rng('CensusDate')})", hint="COUNT counts numbers — and dates are numbers",
+             answer=n, solution=f"=COUNT({rng('CensusDate')})", hint="COUNT counts numbers, and dates are numbers",
              explanation="Excel stores dates as numbers (serial numbers), so COUNT includes them. COUNT ignores text and blanks."),
         Task("On how many days did the charge nurse write a note?", answer=sum(1 for x in notes if x),
              solution=f"=COUNTA({rng('Notes')})", hint="COUNTA counts anything that isn't empty",
@@ -100,7 +100,7 @@ def build() -> Lesson:
              "Enter it as a percentage.", answer=sum(mc) / sum(beds), fmt="0.0%",
              solution=f"=SUM({rng('MidnightCensus')})/SUM({rng('StaffedBeds')})", hint="SUM(…)/SUM(…), then format as %",
              explanation="A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage "
-                         "(Ctrl + Shift + %, Mac: ⌃ + Shift + %) to see 91.3% instead of 0.9126…"),
+                         "(Ctrl + Shift + %, Mac: Control + Shift + %) to see 91.3% instead of 0.9126…"),
         Task(f"In the Census sheet, fill the yellow Occupancy column with a formula for each day (MidnightCensus ÷ StaffedBeds). "
              f"The gray cell counts the days your column shows 100% or more. (Type it in {cen.cell('Occupancy', 0, sheet=False)}, "
              f"then double-click the fill handle to copy it down.)",
@@ -111,9 +111,9 @@ def build() -> Lesson:
                    "formula": f"={cen.col('MidnightCensus')}{first}/{cen.col('StaffedBeds')}{first}"},
              live=f'=SUMPRODUCT(--({rng("MidnightCensus")}>={rng("StaffedBeds")}))',
              hint="Relative references shift down as you copy",
-             explanation=f"Type =E{first}/B{first} in the first Occupancy cell and copy it down; each row's formula points to its own row "
+             explanation=f"Type =E{first}/B{first} in the first Occupancy cell and copy it down. Each row's formula points to its own row "
                          "(=E3/B3, =E4/B4 …). Because the data is an Excel Table, typing the formula in one cell may fill the whole column "
-                         "automatically — and you may see it written as =[@MidnightCensus]/[@StaffedBeds]. Both are correct."),
+                         "automatically, and you may see it written as =[@MidnightCensus]/[@StaffedBeds]. Both are correct."),
         Task("Average length of stay (ALOS) = patient days ÷ discharges. Calculate it for the quarter, rounded to 1 decimal place with ROUND.",
              answer=round(sum(mc) / sum(dis), 1), fmt="0.0",
              solution=f"=ROUND(SUM({rng('MidnightCensus')})/SUM({rng('Discharges')}),1)", hint="ROUND(number, 1)",
@@ -123,7 +123,7 @@ def build() -> Lesson:
              answer=(30 - 6) / 4 + 2 ** 3, solution="=(30-6)/4+2^3", hint="Parentheses → exponents → × ÷ → + −",
              explanation="(30−6)=24 first (parentheses), then 2^3=8 (exponent), then 24/4=6 (division), then 6+8=14."),
         Task("Switch to the Supplies sheet. Fill the yellow StockValue column with UnitCost × QtyOnHand for every item. "
-             "The gray cell totals your column — what is the total value of 4 West's supply room?",
+             "The gray cell totals your column. What is the total value of 4 West's supply room?",
              answer=round(stock_value, 2), fmt="#,##0.00", title="StockValue column (total supply value)",
              solution=f"={sup.col('UnitCost')}{sfirst}*{sup.col('QtyOnHand')}{sfirst}",
              summary=f'=IF(COUNT(Supplies!{sup.col("StockValue")}{sfirst}:{sup.col("StockValue")}{slast})=0,"",'
@@ -133,14 +133,19 @@ def build() -> Lesson:
              live=f"=SUMPRODUCT(Supplies!{sup.col('UnitCost')}{sfirst}:{sup.col('UnitCost')}{slast},"
                   f"Supplies!{sup.col('QtyOnHand')}{sfirst}:{sup.col('QtyOnHand')}{slast})",
              hint="Multiply with *; copy down",
-             explanation="One formula, copied down, gives each item's value; then SUM the column. (The live formula in the key uses SUMPRODUCT, "
-                         "which multiplies and adds in one step — you'll meet it in Lesson 2.4.)"),
+             explanation="One formula, copied down, gives each item's value, and then SUM adds up the column. (The live formula in the key "
+                         "uses SUMPRODUCT, which multiplies and adds in one step. You'll meet it in Lesson 2.4.)"),
     ]
+    # Two tasks fill a yellow column on a data sheet, and a gray cell on Practice reads it, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{' and '.join(fills)}, fill the yellow column on the Census or Supplies sheet instead, and the task's "
+                      "gray cell on Practice reads it.")
 
     # ------------------------------------------------------------------ bonus
     L.bonus_title = "Bonus: Does 4 West need more beds?"
     L.bonus_scenario = ("The Chief Nursing Officer says February felt 'impossibly full' on 4 West and asks whether the unit needs more staffed "
-                        "beds. Hospitals often plan beds so average occupancy is about 85% — enough slack to absorb surges. "
+                        "beds. Hospitals often plan beds so average occupancy is about 85%, which leaves enough slack to absorb surges. "
                         f"February is rows {feb_first}–{feb_last} of the Census sheet.")
     L.bonus = [
         Task("What was February's average daily census (ADC)? Use only the February rows.", answer=feb_adc, fmt="0.00",
@@ -158,8 +163,8 @@ def build() -> Lesson:
                          "but only ROUNDUP guarantees you never under-build: 2.1 extra beds still means opening 3."),
         Task("Sanity check: on how many February days did the midnight census exceed 85% of 36 beds (i.e. more than 30.6 patients)?",
              answer=sum(1 for r in feb if r["MidnightCensus"] > 0.85 * r["StaffedBeds"]),
-             solution=f'=COUNTIF(Census!E{feb_first}:E{feb_last},">"&0.85*36)', hint="COUNTIF(range, \">30.6\") — a preview of Lesson 2.5",
-             explanation="COUNTIF counts cells that meet a condition. You'll master it in Lesson 2.5 — here it confirms that almost every "
+             solution=f'=COUNTIF(Census!E{feb_first}:E{feb_last},">"&0.85*36)', hint="COUNTIF(range, \">30.6\"), a preview of Lesson 2.5",
+             explanation="COUNTIF counts cells that meet a condition, and you'll master it in Lesson 2.5. Here it confirms that almost every "
                          "February day ran above the 85% planning target."),
     ]
     return L

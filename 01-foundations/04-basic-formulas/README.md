@@ -36,7 +36,7 @@ update it for you.
 > address for you. Press **Enter** to finish, or **Esc** to cancel.
 
 The cell shows the **result**. The **formula bar** shows the formula. Click a cell and look at the formula bar to see how its value was
-calculated. Press **Ctrl + `` ` ``** (the grave accent key, next to 1; Mac: **⌃ + `` ` ``**) to toggle
+calculated. Press **Ctrl + `` ` ``** (the grave accent key, next to 1; Mac: **Control + `` ` ``**) to toggle
 *Show Formulas* for the whole sheet.
 
 ### 2. Operators and the order of operations
@@ -79,7 +79,7 @@ Ways to enter a function:
 - **Type it.** As you type `=SU`, Excel shows a list of matching functions. Press **Tab** to accept one. A ScreenTip then shows the
   arguments the function expects.
 - **AutoSum.** Select the cell just below a column of numbers and press **Alt + =** (Mac: **⌘ + Shift + T**). Excel guesses the range
-  and writes `=SUM(...)` for you. The dropdown arrow on the **Home → AutoSum** button also offers Average, Count Numbers, Max, and Min.
+  and writes `=SUM(...)` for you. The drop-down arrow on the **Home → AutoSum** button also offers Average, Count Numbers, Max, and Min.
 - **Insert Function.** Click **fx** next to the formula bar to search for a function and fill in its arguments in a dialog.
 
 ### 4. The seven functions you'll use every day
@@ -114,11 +114,11 @@ most of the standard unit metrics:
 | **Occupancy rate** | Patient days ÷ staffed-bed days | `=SUM(census)/SUM(beds)` |
 | **Average length of stay (ALOS)** | Patient days ÷ discharges | `=SUM(census)/SUM(discharges)` |
 
-> 💡 **Rates for a period:** compute *total numerator ÷ total denominator*, as in `=SUM(census)/SUM(beds)`. Don't average the daily
-> percentages. When the denominators differ from day to day (for example, if beds open and close), the average of daily rates is
-> slightly wrong. The SUM/SUM pattern is always right.
+> 💡 **Tip:** For a rate over a period, compute *total numerator ÷ total denominator*, as in `=SUM(census)/SUM(beds)`. Don't
+> average the daily percentages. When the denominators differ from day to day (for example, if beds open and close), the
+> average of daily rates is slightly wrong. The SUM/SUM pattern is always right.
 
-To show a rate as a percentage, select the cell and press **Ctrl + Shift + %** (Mac: **⌃ + Shift + %**) or click **Home → %**.
+To show a rate as a percentage, select the cell and press **Ctrl + Shift + %** (Mac: **Control + Shift + %**) or click **Home → %**.
 The stored value is still 0.9126…. Formatting only changes how it's *displayed* (see Lesson 1.3).
 
 ### 6. Copying formulas down a column
@@ -164,7 +164,7 @@ staff half a nurse"), and `MROUND`, `CEILING.MATH`, and `FLOOR.MATH` round to mu
 | `#REF!` | A referenced cell was deleted | Undo (Ctrl + Z, Mac: ⌘ + Z) or rewrite the reference |
 | `#####` | The column is too narrow to show the number or date | Widen the column (double-click its right border) |
 
-To investigate any formula, select the cell and press **F2**. Excel color-codes each reference and outlines the matching cells on the
+To investigate any formula, select the cell and press **F2** (Mac: **Control + U**, or **Fn + F2**). Excel color-codes each reference and outlines the matching cells on the
 sheet.
 
 ### 9. Worked example: one formula, start to finish
@@ -181,21 +181,41 @@ sheet.
 That last step matters. **Always ask whether the answer is plausible.** Formulas are fast, but a wrong range gives a wrong answer
 just as fast.
 
+### 10. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Finish / cancel a formula | Enter / Esc | Return / Esc |
+| Accept a function from the AutoComplete list | Tab | Tab |
+| AutoSum | Alt + = | ⌘ + Shift + T |
+| Show or hide formulas on the whole sheet | Ctrl + `` ` `` | Control + `` ` `` |
+| Percentage format | Ctrl + Shift + % | Control + Shift + % |
+| Fill down | Ctrl + D | ⌘ + D |
+| Edit the active cell and color-code its references | F2 | Control + U (or Fn + F2) |
+| Undo | Ctrl + Z | ⌘ + Z |
+
+| Feature | Version |
+|---|---|
+| SUM, AVERAGE, MIN, MAX, COUNT, COUNTA, COUNTBLANK, ROUND, ROUNDUP, ROUNDDOWN | Every Excel version, including Excel for the web |
+| **fx** (Insert Function) | Every version. On a Mac it opens the **Formula Builder** pane instead of a dialog |
+| **Formulas → Show Formulas** (the button version of Ctrl + `` ` ``) | Every current desktop version, Windows and Mac |
+| CEILING.MATH and FLOOR.MATH (Lesson 2.4) | Excel 2013 or later on Windows, Excel 2016 or later on a Mac |
+
 ## 🧪 Hands-on practice
 
 Download [`1.4-basic-formulas.xlsx`](1.4-basic-formulas.xlsx) and open the **Practice** sheet. Type each answer in the yellow cell, as a
 formula wherever possible. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-All tasks use the Census sheet (4 West, Q1 2025) unless they say otherwise. Use cell ranges like Census!C2:C91 — or click and drag to select them while typing a formula.
+All tasks use the Census sheet (4 West, Q1 2025) unless they say otherwise. Use cell ranges like Census!C2:C91, or click and drag to select them while typing a formula.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | How many patients were admitted to 4 West during the quarter (total of the Admissions column)? | SUM |
-| 2 | What was the average midnight census? (Keep full precision — the check accepts 2 decimal places.) | AVERAGE |
+| 2 | What was the average midnight census? (Keep full precision. The check compares the value to 2 decimal places.) | AVERAGE |
 | 3 | What was the highest midnight census on any day? | MAX |
 | 4 | What was the lowest midnight census on any day? | MIN |
-| 5 | How many days of census data are there? Count the dates in the CensusDate column. | COUNT counts numbers — and dates are numbers |
+| 5 | How many days of census data are there? Count the dates in the CensusDate column. | COUNT counts numbers, and dates are numbers |
 | 6 | On how many days did the charge nurse write a note? | COUNTA counts anything that isn't empty |
 | 7 | On how many days was the Notes cell left empty? | COUNTBLANK |
 | 8 | Patient days = the sum of every day's midnight census. How many patient days did 4 West provide in Q1? | It's a SUM |
@@ -203,7 +223,7 @@ All tasks use the Census sheet (4 West, Q1 2025) unless they say otherwise. Use 
 | 10 | In the Census sheet, fill the yellow Occupancy column with a formula for each day (MidnightCensus ÷ StaffedBeds). The gray cell counts the days your column shows 100% or more. (Type it in G2, then double-click the fill handle to copy it down.) | Relative references shift down as you copy |
 | 11 | Average length of stay (ALOS) = patient days ÷ discharges. Calculate it for the quarter, rounded to 1 decimal place with ROUND. | ROUND(number, 1) |
 | 12 | Without typing it into Excel first, what does =(30-6)/4+2^3 return? Then type it to confirm. | Parentheses → exponents → × ÷ → + − |
-| 13 | Switch to the Supplies sheet. Fill the yellow StockValue column with UnitCost × QtyOnHand for every item. The gray cell totals your column — what is the total value of 4 West's supply room? | Multiply with *; copy down |
+| 13 | Switch to the Supplies sheet. Fill the yellow StockValue column with UnitCost × QtyOnHand for every item. The gray cell totals your column. What is the total value of 4 West's supply room? | Multiply with *; copy down |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -213,7 +233,7 @@ runs each sample formula, so you can see it working. The same answers are below,
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. How many patients were admitted to 4 West during the quarter (total of the Admissions…**
 
@@ -222,7 +242,7 @@ runs each sample formula, so you can see it working. The same answers are below,
 
 SUM adds every number in the range. Typing =SUM( and then dragging over the column fills in the range for you.
 
-**2. What was the average midnight census? (Keep full precision — the check accepts 2…**
+**2. What was the average midnight census? (Keep full precision. The check compares the…**
 
 - **Answer:** 32.86
 - **Solution:** `=AVERAGE(Census!E2:E91)`
@@ -272,14 +292,14 @@ Each patient in a bed at midnight counts as one patient day. Patient days drive 
 - **Answer:** 91.3%
 - **Solution:** `=SUM(Census!E2:E91)/SUM(Census!B2:B91)`
 
-A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage (Ctrl + Shift + %, Mac: ⌃ + Shift + %) to see 91.3% instead of 0.9126…
+A rate for a whole period should be total numerator ÷ total denominator. Format the cell as a percentage (Ctrl + Shift + %, Mac: Control + Shift + %) to see 91.3% instead of 0.9126…
 
 **10. Daily occupancy column (days at or over 100%)**
 
 - **Answer:** 6
 - **Solution:** `=E2/B2`
 
-Type =E2/B2 in the first Occupancy cell and copy it down; each row's formula points to its own row (=E3/B3, =E4/B4 …). Because the data is an Excel Table, typing the formula in one cell may fill the whole column automatically — and you may see it written as =[@MidnightCensus]/[@StaffedBeds]. Both are correct.
+Type =E2/B2 in the first Occupancy cell and copy it down. Each row's formula points to its own row (=E3/B3, =E4/B4 …). Because the data is an Excel Table, typing the formula in one cell may fill the whole column automatically, and you may see it written as =[@MidnightCensus]/[@StaffedBeds]. Both are correct.
 
 **11. Average length of stay (ALOS) = patient days ÷ discharges. Calculate it for the…**
 
@@ -300,7 +320,7 @@ ROUND changes the stored value, not just how it looks. The check here is strict:
 - **Answer:** 31,730.68
 - **Solution:** `=E2*F2`
 
-One formula, copied down, gives each item's value; then SUM the column. (The live formula in the key uses SUMPRODUCT, which multiplies and adds in one step — you'll meet it in Lesson 2.4.)
+One formula, copied down, gives each item's value, and then SUM adds up the column. (The live formula in the key uses SUMPRODUCT, which multiplies and adds in one step. You'll meet it in Lesson 2.4.)
 
 </details>
 <!-- END GENERATED: answers -->
@@ -308,19 +328,19 @@ One formula, copied down, gives each item's value; then SUM the column. (The liv
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The Chief Nursing Officer says February felt 'impossibly full' on 4 West and asks whether the unit needs more staffed beds. Hospitals often plan beds so average occupancy is about 85% — enough slack to absorb surges. February is rows 33–60 of the Census sheet.
+The Chief Nursing Officer says February felt 'impossibly full' on 4 West and asks whether the unit needs more staffed beds. Hospitals often plan beds so average occupancy is about 85%, which leaves enough slack to absorb surges. February is rows 33–60 of the Census sheet.
 
 Work on the **Bonus** sheet of the workbook.
 
 - **B1.** What was February's average daily census (ADC)? Use only the February rows. *(Hint: AVERAGE over rows 33–60)*
 - **B2.** How many beds would 4 West have needed in February for that ADC to equal 85% occupancy? (ADC ÷ 0.85, keep the decimals.) *(Hint: If ADC is 85% of the beds, beds = ADC ÷ 0.85)*
 - **B3.** You can't open part of a bed. How many EXTRA beds (beyond today's 36) should the unit open? Round up to a whole bed. *(Hint: ROUNDUP works like ROUND but always rounds up: ROUNDUP(number, 0))*
-- **B4.** Sanity check: on how many February days did the midnight census exceed 85% of 36 beds (i.e. more than 30.6 patients)? *(Hint: COUNTIF(range, ">30.6") — a preview of Lesson 2.5)*
+- **B4.** Sanity check: on how many February days did the midnight census exceed 85% of 36 beds (i.e. more than 30.6 patients)? *(Hint: COUNTIF(range, ">30.6"), a preview of Lesson 2.5)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. What was February's average daily census (ADC)? Use only the February rows.**
 
@@ -346,7 +366,7 @@ Beds needed (≈38.6) minus the 36 staffed beds ≈ 2.6, rounded up to 3. ROUND 
 - **Answer:** 25
 - **Solution:** `=COUNTIF(Census!E33:E60,">"&0.85*36)`
 
-COUNTIF counts cells that meet a condition. You'll master it in Lesson 2.5 — here it confirms that almost every February day ran above the 85% planning target.
+COUNTIF counts cells that meet a condition, and you'll master it in Lesson 2.5. Here it confirms that almost every February day ran above the 85% planning target.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

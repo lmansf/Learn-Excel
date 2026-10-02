@@ -29,8 +29,8 @@ You need three files from this lesson's folder: the workbook and the two starter
 1. Open `5.2-vba-fundamentals.xlsx` and save it as a macro-enabled workbook: **File → Save As**, then choose
    **Excel Macro-Enabled Workbook (\*.xlsm)** as the file type. An `.xlsx` file can't store macros, so Excel would throw your
    code away when you close it.
-2. Open the **Visual Basic Editor** (the **VBE**): press **Alt + F11** (Mac: **Option + F11**), or click
-   **Developer → Visual Basic**. To get back to Excel, press the same keys again or click the Excel window.
+2. Open the **Visual Basic Editor** (the **VBE**): press **Alt + F11** (Mac: **Option + F11**, or
+   **Developer → Visual Basic**). To get back to Excel, press the same keys again or click the Excel window.
 3. In the Project Explorer (**Ctrl + R**; Mac: **View → Project Explorer**), click **VBAProject (5.2-vba-fundamentals.xlsm)**.
    The VBE imports into whichever project is selected. If you made a Personal Macro Workbook in Lesson 5.1,
    **VBAProject (PERSONAL.XLSB)** is listed too, so make sure you've selected this workbook's project. Then choose
@@ -54,12 +54,12 @@ The VBE is a separate window with several panes. If one is missing, open it from
 
 | Pane | What it shows | Windows | Mac |
 |---|---|---|---|
-| **Project Explorer** | Every open workbook (each one is a *VBA project*) with its sheets, `ThisWorkbook`, and modules | Ctrl + R | View → Project Explorer |
-| **Properties** | Settings of the selected item, such as a module's `(Name)` | F4 | View → Properties Window |
+| **Project Explorer** | Every open workbook (each one is a *VBA project*) with its sheets, `ThisWorkbook`, and modules | Ctrl + R | **View → Project Explorer** |
+| **Properties** | Settings of the selected item, such as a module's `(Name)` | F4 | **View → Properties Window** |
 | **Code window** | The code of the item you double-clicked | F7, or double-click | double-click |
-| **Immediate window** | What `Debug.Print` writes. You can also type a line here and press Enter to run it | Ctrl + G | View → Immediate Window |
-| **Locals window** | Every variable in the paused procedure and its current value | View → Locals Window | View → Locals Window |
-| **Watch window** | Expressions you asked the VBE to keep an eye on | View → Watch Window | View → Watch Window |
+| **Immediate window** | What `Debug.Print` writes. You can also type a line here and press Enter to run it | Ctrl + G | **View → Immediate Window** |
+| **Locals window** | Every variable in the paused procedure and its current value | **View → Locals Window** | **View → Locals Window** |
+| **Watch window** | Expressions you asked the VBE to keep an eye on | **View → Watch Window** | **View → Watch Window** |
 
 A typical layout puts the Project Explorer at top left, Properties below it, the Code window on the right, and the Immediate
 window along the bottom. Drag a pane's title bar to dock it somewhere else.
@@ -625,7 +625,7 @@ time while you watch the variables change.
 | Action | Windows | Mac | What it does |
 |---|---|---|---|
 | Toggle breakpoint | **F9**, or click the gray margin | Click the gray margin, or use the Debug menu | Marks a line with a red dot. The code pauses *before* running it |
-| Step Into | **F8** | Debug menu (in recent versions ⇧ + ⌘ + I) | Runs one line. If it calls another Sub, steps into that Sub |
+| Step Into | **F8** | Debug menu (in recent versions ⌘ + Shift + I) | Runs one line. If it calls another Sub, steps into that Sub |
 | Step Over | **Shift + F8** | Debug menu | Runs one line. A called Sub runs all at once |
 | Step Out | **Ctrl + Shift + F8** | Debug menu | Runs the rest of the current Sub and pauses after it returns |
 | Run to Cursor | **Ctrl + F8** | Debug menu | Runs until the line the cursor is on |
@@ -701,15 +701,62 @@ End Sub
 
 Routine samples are batched, so long turnaround is expected. The same macro with `"STAT"` would find a real problem.
 
+### 14. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Save as a macro-enabled workbook | F12, then choose **.xlsm** | ⌘ + Shift + S, then choose **.xlsm** |
+| Open or switch to the VBE | Alt + F11 | Option + F11, or **Developer → Visual Basic** |
+| Run a macro from Excel | Alt + F8 | Option + F8 |
+| Project Explorer | Ctrl + R | **View → Project Explorer** |
+| Properties window | F4 | **View → Properties Window** |
+| Immediate window | Ctrl + G | **View → Immediate Window** |
+| Import a `.bas` module | Ctrl + M, or **File → Import File…** | **File → Import File…** |
+| Run the Sub the cursor is in | F5 | **Run → Run Sub/UserForm** |
+| Step Into | F8 | Debug menu (in recent versions ⌘ + Shift + I) |
+| Step Over | Shift + F8 | Debug menu |
+| Toggle a breakpoint | F9, or click the gray margin | Click the gray margin |
+| Stop a paused macro | **Run → Reset** | **Run → Reset** |
+| Find compile errors | **Debug → Compile VBAProject** | **Debug → Compile VBAProject** |
+| Interrupt a running macro | Esc or Ctrl + Break | ⌘ + . or Esc |
+
+On a Mac laptop whose top-row keys control brightness and volume, hold **Fn** as well: Fn + Option + F11.
+
+| Feature | Availability |
+|---|---|
+| VBA and the Visual Basic Editor | Desktop Excel for Windows and Mac. Excel for the web, iPad, iPhone, and Android can open an `.xlsm` file but can't run or edit its macros (Lesson 5.5 covers Office Scripts) |
+| Everything this lesson's macros use (`Dim`, `If`, `Select Case`, loops, `DateDiff`, `Debug.Print`) | Every version of Excel that runs VBA |
+| The `MAX(IF(…))` cross-check in section 13 | Microsoft 365 and Excel 2021 or later: press Enter. Excel 2019 or earlier: press Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return) |
+
 ## 🧪 Hands-on practice
 
 Set up the workbook as described in section 1. Then type each answer in a yellow cell on the **Practice** sheet, or run your
 macro so the gray cell fills in by itself. The **Check** column turns green when you're right.
 
-Tasks 2–7 ask you to predict what each snippet below prints. The same code is on the workbook's **Snippets** sheet and in
-`starter/Snippets.bas`. Commit to a prediction, then run the snippet (cursor inside it, then **F5**; Mac:
-**Run → Run Sub/UserForm**) and compare it with the Immediate window. Snippet B is supposed to fail: note the error number,
-then click **End**.
+<!-- BEGIN GENERATED: practice -->
+Save this workbook as .xlsm, then import starter/LabMacros.bas and starter/Snippets.bas (**File → Import File…** in the VBE). Tasks 2–7 are predict-the-output questions about the code on the Snippets sheet: type your prediction first, then run the snippet to check it. In tasks 1 and 8–13 you run macros, and the gray cells read what your macros wrote to the Output sheet (or to the TATFlag column on the Labs sheet).
+
+| # | Task | Hint |
+|:-:|------|------|
+| 1 | Import the starter module, then run the Warmup macro (it's already written). It writes the number of lab rows to Output!B5, and the gray cell reads it from there. | Click inside Warmup and press F5, or in Excel press Alt + F8 (Mac: Option + F8), pick Warmup, and click Run |
+| 2 | Snippet A: what number does the Immediate window show? Predict first, then run SnippetA_Typo to check. | Which variable does Debug.Print actually read? |
+| 3 | Snippet B: running SnippetB_Overflow stops with a run-time error. Type the error number. | Check the Integer row of the data-types table |
+| 4 | Snippet C: what exactly does the Immediate window show? Type the whole line in the same pattern, for example 1 h 5 min. | \ keeps the whole part of a division, and Mod keeps the remainder |
+| 5 | Snippet D: what number does Debug.Print hr show after the loop finishes? | List every value hr takes, then apply Step one more time |
+| 6 | Snippet E: which category does the Immediate window show? (Type the word.) | Select Case runs only the first Case that matches |
+| 7 | Snippet F: how many hours does the Immediate window show? | Write down level and hours after each pass, and test the condition before every pass |
+| 8 | Complete CountCriticals: use For Each to loop over the AbnormalFlag cells (Labs column I) and count the results flagged HH or LL (critical values). Write the count to Output!B6. | For Each cell In ws.Range("I2:I" & lastRow) … If … Or … Then |
+| 9 | Complete AveragePotassium: loop over the rows with For…Next, add up ResultValue for every potassium result (TestCode K) and count them, then write the average to Output!B7. (Full precision or 2 decimal places are both accepted.) | Two accumulators: a Double for the total and a Long for the count |
+| 10 | Complete FindFirstCritical: find the first row (from the top) whose AbnormalFlag is HH or LL, write its LabResultID to Output!B8, and leave the loop with Exit For. | Case "HH", "LL" matches either value, and Exit For stops the loop |
+| 11 | Complete FlagSlowStat: for every STAT result whose turnaround (ResultedDateTime minus CollectedDateTime, in minutes, with DateDiff) is more than 60 minutes, write SLOW in that row's TATFlag cell (Labs column M). Leave all other rows empty. The gray cell counts the SLOW flags. | Use DateDiff("n", start, finish), then combine the two tests with And or a nested If |
+| 12 | Complete CountAbove and WriteCountAbove. CountAbove asks for a TestCode (InputBox) and a limit (Application.InputBox with Type:=1), then calls WriteCountAbove, which counts the results of that test above the limit, writes the count to Output!B9, and shows it in a MsgBox. Run CountAbove and enter CREAT and 2. | Call a Sub that takes arguments without parentheses: SubName arg1, arg2. Convert the Variant limit with CDbl |
+| 13 | BuggyGlucoseCount (already in the starter module) should count glucose (GLU) results above 180 mg/dL and write the count to Output!B10. It has two bugs: the first stops it with a run-time error, and after you fix that one it writes 0. Use F8, the Locals window, and the Immediate window to find and fix both, then run it. | When it stops, click Debug and hover over r. While it's paused, try ? ws.Cells(5, 3).Value (a glucose row) in the Immediate window |
+<!-- END GENERATED: practice -->
+
+**Code for the predict-the-output tasks.** Tasks 2–7 ask you to predict what each snippet below prints. The same code
+is on the workbook's **Snippets** sheet and in [`starter/Snippets.bas`](starter/Snippets.bas). Commit to a prediction,
+then run the snippet (cursor inside it, then **F5**; Mac: **Run → Run Sub/UserForm**) and compare it with the Immediate
+window. Snippet B is supposed to fail: note the error number, then click **End**.
 
 **Snippet A** (task 2)
 
@@ -790,26 +837,6 @@ Sub SnippetF_HalfLife()
 End Sub
 ```
 
-<!-- BEGIN GENERATED: practice -->
-Save this workbook as .xlsm, then import starter/LabMacros.bas and starter/Snippets.bas (VBE → File → Import File…). Tasks 2–7 are predict-the-output questions about the code on the Snippets sheet: type your prediction first, then run the snippet to check it. In tasks 1 and 8–13 you run macros, and the gray cells read what your macros wrote to the Output sheet (or to the TATFlag column on the Labs sheet).
-
-| # | Task | Hint |
-|:-:|------|------|
-| 1 | Import the starter module, then run the Warmup macro (it's already written). It writes the number of lab rows to Output!B5, and the gray cell reads it from there. | Click inside Warmup and press F5, or in Excel press Alt+F8 (Mac: Option+F8), pick Warmup, and click Run |
-| 2 | Snippet A: what number does the Immediate window show? Predict first, then run SnippetA_Typo to check. | Which variable does Debug.Print actually read? |
-| 3 | Snippet B: running SnippetB_Overflow stops with a run-time error. Type the error number. | Check the Integer row of the data-types table |
-| 4 | Snippet C: what exactly does the Immediate window show? Type the whole line in the same pattern, for example 1 h 5 min. | \ keeps the whole part of a division, and Mod keeps the remainder |
-| 5 | Snippet D: what number does Debug.Print hr show after the loop finishes? | List every value hr takes, then apply Step one more time |
-| 6 | Snippet E: which category does the Immediate window show? (Type the word.) | Select Case runs only the first Case that matches |
-| 7 | Snippet F: how many hours does the Immediate window show? | Write down level and hours after each pass, and test the condition before every pass |
-| 8 | Complete CountCriticals: use For Each to loop over the AbnormalFlag cells (Labs column I) and count the results flagged HH or LL (critical values). Write the count to Output!B6. | For Each cell In ws.Range("I2:I" & lastRow) … If … Or … Then |
-| 9 | Complete AveragePotassium: loop over the rows with For…Next, add up ResultValue for every potassium result (TestCode K) and count them, then write the average to Output!B7. (Full precision or 2 decimal places are both accepted.) | Two accumulators: a Double for the total and a Long for the count |
-| 10 | Complete FindFirstCritical: find the first row (from the top) whose AbnormalFlag is HH or LL, write its LabResultID to Output!B8, and leave the loop with Exit For. | Case "HH", "LL" matches either value, and Exit For stops the loop |
-| 11 | Complete FlagSlowStat: for every STAT result whose turnaround (ResultedDateTime minus CollectedDateTime, in minutes, with DateDiff) is more than 60 minutes, write SLOW in that row's TATFlag cell (Labs column M). Leave all other rows empty. The gray cell counts the SLOW flags. | Use DateDiff("n", start, finish), then combine the two tests with And or a nested If |
-| 12 | Complete CountAbove and WriteCountAbove. CountAbove asks for a TestCode (InputBox) and a limit (Application.InputBox with Type:=1), then calls WriteCountAbove, which counts the results of that test above the limit, writes the count to Output!B9, and shows it in a MsgBox. Run CountAbove and enter CREAT and 2. | Call a Sub that takes arguments without parentheses: SubName arg1, arg2. Convert the Variant limit with CDbl |
-| 13 | BuggyGlucoseCount (already in the starter module) should count glucose (GLU) results above 180 mg/dL and write the count to Output!B10. It has two bugs: the first stops it with a run-time error, and after you fix that one it writes 0. Use F8, the Locals window, and the Immediate window to find and fix both, then run it. | When it stops, click Debug and hover over r. While it's paused, try ? ws.Cells(5, 3).Value (a glucose row) in the Immediate window |
-<!-- END GENERATED: practice -->
-
 ## ✅ Answer key
 
 The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…** → *Answer Key*). Its *Live result*
@@ -819,7 +846,7 @@ its procedure names don't clash with yours. The answers are also below, collapse
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Warmup: run your first macro**
 
@@ -839,7 +866,7 @@ End Sub
 ```
 
 
-Warmup finds the last filled row in column A, subtracts 1 for the header row, and writes the result into a cell. If the gray cell stays empty, check that you saved as .xlsm, enabled macros, and ran Warmup in **this** workbook. If you made a Personal Macro Workbook in Lesson 5.1, also check that LabMacros was imported into this workbook's project and not into PERSONAL.XLSB. Open the Immediate window (Ctrl + G; Mac: View → Immediate Window) to see the line Debug.Print wrote.
+Warmup finds the last filled row in column A, subtracts 1 for the header row, and writes the result into a cell. If the gray cell stays empty, check that you saved as .xlsm, enabled macros, and ran Warmup in **this** workbook. If you made a Personal Macro Workbook in Lesson 5.1, also check that LabMacros was imported into this workbook's project and not into PERSONAL.XLSB. Open the Immediate window (Ctrl + G; Mac: **View → Immediate Window**) to see the line Debug.Print wrote.
 
 **2. Snippet A: what number does the Immediate window show? Predict first, then run…**
 
@@ -1090,9 +1117,9 @@ The ICU medical director wants a one-click 'lab snapshot' for the morning huddle
 
 Don't use Scripting.Dictionary, because that's Lesson 5.4. A nested loop that searches the table you're building is enough.
 
-Work on the **Bonus** sheet of the workbook.
+LabSnapshot writes to the **Labs** and **Output** sheets. Type or check your answers on the **Bonus** sheet of the workbook.
 
-- **B1.** Run LabSnapshot. Then click the filter arrow on the Labs table's AbnormalFlag header and choose Filter by Color → your amber fill. How many rows are amber? (The status bar shows 'x of 505 records found'.) *(Hint: Select Case flag: Case "HH", "LL" … Case "H", "L" …)*
+- **B1.** Run LabSnapshot. Then click the filter arrow on the Labs table's AbnormalFlag header and choose **Filter by Color**, then your amber fill. How many rows are amber? (The status bar shows 'x of 505 records found'.) *(Hint: Select Case flag: Case "HH", "LL" … Case "H", "L" …)*
 - **B2.** How many TestCode rows does your summary table have? (The gray cell counts the codes in Output!E5:E40.) *(Hint: Search rows 5 to nextRow - 1 with an inner For loop. If the code isn't there, add a row)*
 - **B3.** How many creatinine (CREAT) results are abnormal (any flag other than N)? (The gray cell looks up CREAT in your table.) *(Hint: If flag <> "N" Then add 1 to column G of the test's row)*
 - **B4.** What percentage of lactate (LACT) results are abnormal? (The gray cell looks up LACT in your table.) *(Hint: Compute the percentages in a second loop, after every row has been counted)*
@@ -1103,7 +1130,7 @@ The reference solution is in [`solutions/LabSnapshot_Solution.bas`](solutions/La
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Run LabSnapshot, then count the amber rows**
 
@@ -1183,7 +1210,7 @@ End Sub
 ```
 
 
-A worksheet formula can't see fill colors, so Filter by Color (Lesson 1.6) is how you check the coloring. Clearing the old fills first matters: without it, a row that was amber yesterday would stay amber even if its flag changed. Clear the filter afterwards (Data → Clear). The full macro is also in solutions/LabSnapshot_Solution.bas.
+A worksheet formula can't see fill colors, so Filter by Color (Lesson 1.6) is how you check the coloring. Clearing the old fills first matters: without it, a row that was amber yesterday would stay amber even if its flag changed. Clear the filter afterwards (**Data → Clear**). The full macro is also in solutions/LabSnapshot_Solution.bas.
 
 **B2. How many TestCode rows does your summary table have? (The gray cell counts the codes…**
 

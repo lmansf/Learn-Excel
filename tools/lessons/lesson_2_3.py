@@ -606,8 +606,16 @@ def build() -> Lesson:
                          "The PaidTime column is formatted h:mm, so a shift that comes out negative shows ######## instead of a time."),
     ]
 
+    # Five tasks fill a yellow column on a data sheet, and a gray cell on Practice reads it, so Start Here says so.
+    fills = [str(i) for i, t in enumerate(L.tasks, 1) if t.summary]
+    L.practice_how = ("Go to the 'Practice' sheet. Type a formula or value into each yellow cell. For tasks "
+                      f"{', '.join(fills[:-1])}, and {fills[-1]}, fill the yellow column on the Stays, Claims, ED, or Shifts "
+                      "sheet instead, and the task's gray cell on Practice reads it.")
+
     # ------------------------------------------------------------------ bonus: two-midnight benchmark & weekday effect
     L.bonus_title = "Bonus: The two-midnight check"
+    L.bonus_where = ("Fill the Midnights, BenchMidnights, and AdmitDay columns on the **Stays** sheet, and answer the questions "
+                     "on the **Bonus** sheet.")
     L.bonus_scenario = (
         "Ashby Falls' utilization review nurse is preparing for a Medicare audit. Under the CMS two-midnight benchmark, an "
         "inpatient admission is generally expected to span at least two midnights of hospital care. This bonus uses a "
@@ -663,8 +671,8 @@ def build() -> Lesson:
              hint="TEXT(date, \"dddd\") gives the weekday name. AVERAGEIF (a preview of Lesson 2.5) or AVERAGE(IF(…)) averages the Friday rows",
              explanation=f"Fill AdmitDay with `=TEXT({scol('AdmitDateTime')},\"dddd\")`, which returns full weekday names. AVERAGEIF averages the "
                          "LOSDays values on rows where AdmitDay is \"Friday\", and × 24 converts days to hours. The array formula from Lesson 2.1, "
-                         f"`=ROUND(AVERAGE(IF({sr('AdmitDay')}=\"Friday\",{sr('LOSDays')}))*24,1)`, also works. Microsoft 365 and Excel 2021 "
-                         "calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). "
+                         f"`=ROUND(AVERAGE(IF({sr('AdmitDay')}=\"Friday\",{sr('LOSDays')}))*24,1)`, also works. Microsoft 365 and Excel 2021 or "
+                         "later calculate it automatically, and Excel 2019 and earlier need Ctrl + Shift + Enter (Mac: ⌘ + Shift + Return). "
                          "TEXT returns weekday names in your Office language, so a German Excel shows \"Freitag\"."),
         Task("Which weekday of admission has the LONGEST average length of stay? Type the weekday name.",
              answer=top_day, accept=[top_day[:3]], live=False,

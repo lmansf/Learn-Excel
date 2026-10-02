@@ -3,9 +3,10 @@ Attribute VB_Name = "modRefresh"
 ' Lesson 6.1 - Capstone: one-click refresh for the 2025 performance review
 ' SOLUTION (spoiler): try starter/RefreshReview_Starter.bas first.
 '
-' Import: in the VBE (Alt+F11; Mac: Option+F11) choose File > Import File...
-' Run:    Alt+F8 (Mac: Option+F8) > RefreshReview > Run, or a button on the
-'         Dashboard. Save the workbook as .xlsm to keep the code.
+' Import: in the VBE (Alt + F11; Mac: Option + F11), choose
+'         File > Import File...
+' Run:    Alt + F8 (Mac: Option + F8) > RefreshReview > Run, or a button on
+'         the Dashboard. Save the workbook as .xlsm to keep the code.
 '
 ' RefreshReview does five things, in order:
 '   1. Refreshes every Power Query query and PivotTable (Data > Refresh All).

@@ -125,7 +125,7 @@ value, for example *Series "Arrivals" Point "09:00" Value: 313*. Most practice t
 labels (Section 5) show the values permanently.
 
 To format one point only, click the series once to select every point, pause, and click the point again. Now only that point
-is selected. On Windows, the dropdown in **Format → Current Selection** lists every element of the chart, which helps with
+is selected. On Windows, the drop-down list in **Format → Current Selection** lists every element of the chart, which helps with
 small targets such as an axis title.
 
 ### 4. Axes: scale, number format, and order
@@ -265,7 +265,7 @@ bins keep a few extreme values from stretching the axis. LOSDays on the Stays sh
 time minus admit time, in days, to 1 decimal place). It runs from 1.0 to 17.0 days in the sample, so without
 an overflow bin the right-hand side of the chart would be a row of nearly empty bins.
 
-> 📋 Histogram, Pareto, box and whisker, and waterfall charts need Excel 2016 or later. In older versions, count each bin
+> 📋 **Version note:** Histogram, Pareto, box and whisker, and waterfall charts need Excel 2016 or later. In older versions, count each bin
 > with COUNTIFS (Lesson 2.5), chart the counts as a column chart, and set **Gap Width** to 0%. Lesson 4.5 builds histograms
 > with FREQUENCY and the Analysis ToolPak.
 
@@ -280,7 +280,7 @@ makes it the best way to compare distributions across groups:
 | Whiskers | Reach to the lowest and highest values that lie within 1.5 times the box's length (the interquartile range) of the box |
 | Dots beyond the whiskers | Outliers |
 
-To compare length of stay by service line, select B1:B301 on the Stays sheet, Ctrl+click (Mac: ⌘+click) D1:D301, and
+To compare length of stay by service line, select B1:B301 on the Stays sheet, Ctrl + click (Mac: ⌘ + click) D1:D301, and
 choose **Insert → Insert Statistic Chart → Box and Whisker**. Excel draws one box for each service line, and you can see at
 once that Behavioral Health has the highest median length of stay. In **Format Data Series** you can show or hide inner points,
 outlier points, mean markers, and the mean line, and choose the **Quartile Calculation** (Inclusive median or Exclusive
@@ -292,7 +292,7 @@ A **scatter chart** (also called an XY chart) plots pairs of numbers, one point 
 other up. Use it to ask whether two measures move together.
 
 - Select two adjacent columns with X on the left and Y on the right, then choose **Insert → Insert Scatter (X, Y) or Bubble
-  Chart → Scatter**. For columns that aren't adjacent, Ctrl+click (Mac: ⌘+click) the second one. The left-hand column still
+  Chart → Scatter**. For columns that aren't adjacent, Ctrl + click (Mac: ⌘ + click) the second one. The left-hand column still
   becomes X.
 - If Excel puts the wrong measure on X, open **Select Data**, select the series, click **Edit**, and swap the **Series X
   values** and **Series Y values** ranges.
@@ -402,7 +402,7 @@ category's variance, and finish at the actual margin.
 > 💡 **Tip:** Keep one sign convention and write it on the sheet, as the Budget sheet does: positive means favorable. For an
 > expense, favorable means *under* budget, so its variance is budget minus actual.
 
-> 📋 Before Excel 2016, people built waterfalls as stacked column charts with an invisible "base" series under each floating
+> 📋 **Version note:** Before Excel 2016, people built waterfalls as stacked column charts with an invisible "base" series under each floating
 > bar. The hidden Chart Key sheet in this workbook uses that method, because the program that generates the workbook can't
 > create Excel 2016's chart types.
 
@@ -569,7 +569,7 @@ winter."* **Review → Check Accessibility** lists any chart that's missing alt 
   chart, or any of the Excel 2016 types such as a histogram, Pareto, box and whisker, or waterfall. For those, build a regular
   chart from the values.
 
-### 19. Keyboard shortcuts
+### 19. Shortcuts and version notes
 
 | Action | Windows | Mac |
 |---|---|---|
@@ -582,8 +582,6 @@ winter."* **Review → Check Accessibility** lists any chart that's missing alt 
 | Undo | **Ctrl + Z** | **⌘ + Z** |
 | Link a title to a cell | Select the title, type **=** in the formula bar, click the cell, press **Enter** | Same |
 
-### 20. Version notes
-
 | Feature | Available in |
 |---|---|
 | Recommended Charts | Excel 2013 or later (Windows), Excel 2016 or later (Mac) |
@@ -592,6 +590,7 @@ winter."* **Review → Check Accessibility** lists any chart that's missing alt 
 | Histogram, Pareto, box and whisker, waterfall, treemap, and sunburst charts | Excel 2016 or later (Windows and Mac) and Microsoft 365 |
 | Funnel and map charts | Excel 2019 or later and Microsoft 365 |
 | Sparklines | Excel 2010 or later (Windows), Excel 2011 or later (Mac) |
+| XLOOKUP (the dynamic-title example and the answer key's cross-check formulas) | Microsoft 365 and Excel 2021 or later. INDEX/MATCH works in every version |
 | Excel for the web | Shows all of these charts and creates most of them, with fewer formatting options. Use desktop Excel for this lesson |
 
 ## 🧪 Hands-on practice
@@ -604,18 +603,18 @@ Each task names the sheet to work on. Build each chart on the same sheet as its 
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | On ED_Hourly, select A1:B25 (ArrivalHour and Arrivals) and insert a clustered column chart. Which hour of the day had the most ED arrivals in 2025? Type the hour as a number from 0 to 23 (for example, 9 for the 09:00 hour). | Insert → Insert Column or Bar Chart → Clustered Column. Hover over the tallest column |
-| 2 | On ED_Monthly, select A1:D25 (Month and the three hospitals) and insert a line chart. In which month did Cedar Ridge have its most ED visits? Type the month and year (for example, Jun 2025). | Insert → Insert Line or Area Chart → Line. Hover over the highest point of the Cedar Ridge line |
-| 3 | On Readmits, sort the table by ReadmitRate from largest to smallest. Then select ServiceLine and ReadmitRate (A1:A9, then Ctrl+click D1:D9, or ⌘+click on a Mac) and insert a clustered bar chart. Before you change anything else, which service line's bar is at the TOP of the chart? (Afterwards, fix the order so the highest rate is on top.) | Read the chart, not the table. Guide section 6 explains the bar order and how to fix it |
+| 1 | On ED_Hourly, select A1:B25 (ArrivalHour and Arrivals) and insert a clustered column chart. Which hour of the day had the most ED arrivals in 2025? Type the hour as a number from 0 to 23 (for example, 9 for the 09:00 hour). | **Insert → Insert Column or Bar Chart → Clustered Column**. Hover over the tallest column |
+| 2 | On ED_Monthly, select A1:D25 (Month and the three hospitals) and insert a line chart. In which month did Cedar Ridge have its most ED visits? Type the month and year (for example, Jun 2025). | **Insert → Insert Line or Area Chart → Line**. Hover over the highest point of the Cedar Ridge line |
+| 3 | On Readmits, sort the table by ReadmitRate from largest to smallest. Then select ServiceLine and ReadmitRate (A1:A9, then Ctrl + click D1:D9, or ⌘ + click on a Mac) and insert a clustered bar chart. Before you change anything else, which service line's bar is at the TOP of the chart? (Afterwards, fix the order so the highest rate is on top.) | Read the chart, not the table. Guide section 6 explains the bar order and how to fix it |
 | 4 | The Makeover sheet has a colleague's column chart of the same readmission rates. Its vertical axis starts at 5%, not 0%. Measured from that axis, how many times taller is the Cardiovascular bar than the Women & Children bar? Round to 1 decimal place. Then fix the chart in place, using the checklist in Guide section 16, and add alt text. | A bar's drawn height is its value minus the axis minimum (5%) |
-| 5 | On PayerMix, insert a pie chart of 2025 encounters by PayerType. Add data labels that show the Percentage (not the Value), formatted with 1 decimal place. What does the Commercial label show? | Format Data Labels → Label Options: tick Percentage, untick Value. Then Number → Percentage, 1 decimal |
-| 6 | On Stays, insert a histogram of LOSDays (all 300 stays). Format the horizontal axis with Bin width 1, Overflow bin 10, and Underflow bin 1. How many stays fall in the overflow bin (longer than 10 days)? | Select D1:D301, then Insert → Insert Statistic Chart → Histogram. Double-click the horizontal axis |
-| 7 | On Stays, select D1:E301 (LOSDays and TotalCharges) and insert an XY scatter chart, so LOSDays is on the horizontal axis. Add a linear trendline and display its equation. By how many dollars do charges rise for each extra day in the hospital? Confirm with SLOPE and round to the nearest dollar. | Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter. Right-click a point → Add Trendline, then tick Display Equation on chart. SLOPE takes the Y range first |
+| 5 | On PayerMix, insert a pie chart of 2025 encounters by PayerType. Add data labels that show the Percentage (not the Value), formatted with 1 decimal place. What does the Commercial label show? | **Format Data Labels → Label Options**: tick Percentage, untick Value. Then **Number → Percentage**, 1 decimal |
+| 6 | On Stays, insert a histogram of LOSDays (all 300 stays). Format the horizontal axis with Bin width 1, Overflow bin 10, and Underflow bin 1. How many stays fall in the overflow bin (longer than 10 days)? | Select D1:D301, then **Insert → Insert Statistic Chart → Histogram**. Double-click the horizontal axis |
+| 7 | On Stays, select D1:E301 (LOSDays and TotalCharges) and insert an XY scatter chart, so LOSDays is on the horizontal axis. Add a linear trendline and display its equation. By how many dollars do charges rise for each extra day in the hospital? Confirm with SLOPE and round to the nearest dollar. | **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**. Right-click a point → **Add Trendline**, then tick **Display Equation on chart**. SLOPE takes the Y range first |
 | 8 | Make a second scatter chart on Stays with AgeAtAdmit on the horizontal axis and LOSDays on the vertical axis (C1:D301). Add a linear trendline and display the R-squared value. What is R²? Confirm with RSQ and enter it to 4 decimal places. | RSQ(known_y's, known_x's) |
-| 9 | Back on ED_Hourly, select A1:C25 and insert a combo chart with Arrivals as clustered columns and AvgDoorToProviderMin as a line on the secondary axis. Which arrival hour has the longest average wait to see a provider? Type the hour as a number from 0 to 23. | Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis |
-| 10 | On Denials, select A1:B8 (DenialReason and Claims) and insert a Pareto chart. What cumulative percentage does the line reach at the second bar (the top two reasons together)? Enter it as a percentage to 1 decimal place. | Insert → Insert Statistic Chart → Pareto. Confirm with LARGE and SUM |
-| 11 | On Budget, select A4:B14 and insert a waterfall chart. Set the first and last bars as totals. Which step is the largest drop (the longest downward bar)? Type the Step name as it appears in the table. | Insert → Insert Waterfall, Funnel, Stock, Surface, or Radar Chart → Waterfall. Right-click a bar → Set as Total |
-| 12 | On ED_Monthly, insert line sparklines in the yellow cells B27:D27 (Data Range B2:D25), one per hospital. Turn on First Point and Last Point markers. For how many of the three hospitals is the last point (Dec 2025) higher than the first point (Jan 2024)? | Insert → Sparklines → Line. Then the Sparkline tab → Show → First Point, Last Point |
+| 9 | Back on ED_Hourly, select A1:C25 and insert a combo chart with Arrivals as clustered columns and AvgDoorToProviderMin as a line on the secondary axis. Which arrival hour has the longest average wait to see a provider? Type the hour as a number from 0 to 23. | **Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis** |
+| 10 | On Denials, select A1:B8 (DenialReason and Claims) and insert a Pareto chart. What cumulative percentage does the line reach at the second bar (the top two reasons together)? Enter it as a percentage to 1 decimal place. | **Insert → Insert Statistic Chart → Pareto**. Confirm with LARGE and SUM |
+| 11 | On Budget, select A4:B14 and insert a waterfall chart. Set the first and last bars as totals. Which step is the largest drop (the longest downward bar)? Type the Step name as it appears in the table. | **Insert → Insert Waterfall, Funnel, Stock, Surface, or Radar Chart → Waterfall**. Right-click a bar → **Set as Total** |
+| 12 | On ED_Monthly, insert line sparklines in the yellow cells B27:D27 (Data Range B2:D25), one per hospital. Turn on First Point and Last Point markers. For how many of the three hospitals is the last point (Dec 2025) higher than the first point (Jan 2024)? | **Insert → Sparklines → Line**. Then tick **First Point** and **Last Point** on the **Sparkline** tab |
 | 13 | Write a formula in the yellow cell that builds this chart title from tblEDMonthly: ED visits by facility, [first month] to [last month] ([total visits] visits). Show each month as a three-letter month and year, and the total with a thousands separator. Example of the pattern: ED visits by facility, Mar 2023 to Feb 2024 (9,876 visits). Then link the title of your Task 2 line chart to this cell. | TEXT(MIN(…),"mmm yyyy") and TEXT(SUM(…),"#,##0"), joined with & |
 <!-- END GENERATED: practice -->
 
@@ -627,7 +626,7 @@ reference version of every chart. The same answers are below, collapsed so you d
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Column chart: busiest arrival hour**
 
@@ -805,18 +804,18 @@ Build the title in a cell, because a chart title can show text or one cell refer
 <!-- BEGIN GENERATED: bonus -->
 Two directors bring questions to Bluestone's monthly operations review. The ED medical director believes patients leave without being seen (LWBS) mainly in busy months, and the ED's target is an LWBS rate of 2% or less. The revenue-cycle director wants to know which denial reasons to work first, ranked by dollars at risk (DeniedCharges) rather than by claim counts. Build a combo chart and a scatter chart for the first question and a Pareto chart for the second, then check the numbers behind them.
 
-Work on the **Bonus** sheet of the workbook.
+Fill the LWBSRate column and build the charts on the **ED_Monthly** and **Denials** sheets, then type your answers to B2–B5 in the yellow cells on the **Bonus** sheet. B1's gray cell reads your LWBSRate column.
 
 - **B1.** On ED_Monthly, fill the yellow LWBSRate column with LWBS ÷ Total for each month. The column is already formatted as a percentage. The gray cell counts the months above the 2% target. How many of the 24 months missed the target? *(Hint: Write one formula in G2 with [@Column] references (Lesson 3.1). The Table fills the other 23 rows)*
-- **B2.** Build a combo chart on ED_Monthly with Total as clustered columns and LWBSRate as a line on the secondary axis (select Month, then Ctrl+click or ⌘+click Total and LWBSRate). Which month had the highest LWBS rate? Type the month and year. *(Hint: Select A1:A25, Ctrl+click E1:E25 and G1:G25, then Insert → Insert Combo Chart)*
-- **B3.** Test the director's theory with a scatter chart of Total (horizontal axis) against LWBSRate (vertical axis), with a linear trendline and its R². What is R²? Enter it to 3 decimal places. *(Hint: Select E1:E25, Ctrl+click G1:G25, then Insert → Scatter. RSQ(known_y's, known_x's) confirms it)*
+- **B2.** Build a combo chart on ED_Monthly with Total as clustered columns and LWBSRate as a line on the secondary axis (select Month, then Ctrl + click or ⌘ + click Total and LWBSRate). Which month had the highest LWBS rate? Type the month and year. (Hint: Select A1:A25, Ctrl + click E1:E25 and G1:G25, then **Insert → Insert Combo Chart**)
+- **B3.** Test the director's theory with a scatter chart of Total (horizontal axis) against LWBSRate (vertical axis), with a linear trendline and its R². What is R²? Enter it to 3 decimal places. (Hint: Select E1:E25, Ctrl + click G1:G25, then **Insert → Scatter**. RSQ(known_y's, known_x's) confirms it)
 - **B4.** On Denials, build a Pareto chart by DeniedCharges by hand: sort the table by DeniedCharges (largest first), fill CumulativePct with each row's running share of total DeniedCharges, then insert a combo chart with DeniedCharges as columns and CumulativePct as a line on the secondary axis (fix that axis at 0% to 100%). How many reasons does it take to reach at least 80% of denied charges? *(Hint: Follow 'A Pareto by hand' in Guide section 12. DeniedCharges is column C. Sort before you chart)*
 - **B5.** Compare this Pareto with the one you built by claim count in Task 10. Exactly one reason ranks higher by denied charges than by number of claims. Which one? Type it as it appears in the table. *(Hint: Compare the order of the bars in the two Pareto charts)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. LWBSRate column (months above the 2% target)**
 
@@ -843,7 +842,7 @@ Sep 2024 had 15 LWBS out of 403 visits (3.72%), yet it was the quietest month of
 - **Answer:** 0.121
 - **Solution:**
 
-1. Select **E1:E25**, then **Ctrl+click** (Mac: **⌘+click**) **G1:G25**. The left column (Total) becomes X.
+1. Select **E1:E25**, then **Ctrl + click** (Mac: **⌘ + click**) **G1:G25**. The left column (Total) becomes X.
 2. Choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**.
 3. Right-click a point → **Add Trendline…** → **Linear**, tick **Display R-squared value on chart**.
 4. Confirm: `=RSQ(ED_Monthly!G2:G25,ED_Monthly!E2:E25)`.
@@ -858,7 +857,7 @@ R² = 0.121. The trendline slopes upward (about 0.43 percentage points of LWBS p
 
 1. Click a DeniedCharges cell → **Data → Sort Largest to Smallest**.
 2. In **D2** type `=SUM($C$2:C2)/SUM($C$2:$C$8)` and press **Enter**. The Table fills it down, and the column is already formatted as a percentage.
-3. Select **A1:A8**, then **Ctrl+click** (Mac: **⌘+click**) **C1:D8**, and choose **Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis**.
+3. Select **A1:A8**, then **Ctrl + click** (Mac: **⌘ + click**) **C1:D8**, and choose **Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis**.
 4. Double-click the secondary axis and set **Minimum** `0` and **Maximum** `1`. Optionally set the column **Gap Width** to about 10%.
 5. Find the first bar where the line reaches 80%.
 

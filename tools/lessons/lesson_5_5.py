@@ -216,10 +216,10 @@ def build() -> Lesson:
 
     # 7 · bed-board edits: each changed Status cell → one "Bed status" log row; Notes edits → none
     edits = [(["4W-405B"], "Status", "Dirty"),
-             (["4W-410A", "4W-410B", "4W-411A"], "Status", "Clean"),   # one Ctrl+Enter action, Target = 3 cells
+             (["4W-410A", "4W-410B", "4W-411A"], "Status", "Clean"),   # one Ctrl + Enter action, Target = 3 cells
              (["4W-415A"], "Notes", "Bed alarm on")]
     for cells, col, _ in edits:
-        if col == "Status" and len(cells) > 1:     # Ctrl+Enter needs adjacent cells
+        if col == "Status" and len(cells) > 1:     # Ctrl + Enter needs adjacent cells
             rows_ = [bed_ids.index(c) for c in cells]
             assert rows_ == list(range(rows_[0], rows_[0] + len(rows_)))
     bed_log_rows = sum(len(cells) for cells, col, _ in edits if col == "Status")
@@ -265,15 +265,28 @@ def build() -> Lesson:
         "workbook as an .xlsm first, import the starter modules, and work in order. The gray cells read what your "
         "macros write, so they stay blank until your code has run.")
     L.start_notes = [
-        "Save this file as an Excel Macro-Enabled Workbook (.xlsm) before you write any code: File → Save As → "
-        "Excel Macro-Enabled Workbook.",
+        "Macros can't be saved in an .xlsx file. Before you write any code, choose File → Save As and pick "
+        "'Excel Macro-Enabled Workbook (*.xlsm)'.",
         "Put the census_monthly folder (from the lesson's data folder or census_monthly.zip) in the same folder as "
         "your .xlsm. CombineCensusFiles looks for it there.",
-        "Starter code: the lesson's starter folder. Import the .bas files with File → Import File… in the VBE. Paste "
-        "the .cls and .vba files into the module named at the top of each file.",
-        "Other sheets: Log (WriteLog appends a row here), Combined (CombineCensusFiles fills it from the CSV files), "
-        "Settings (cells the report macros read and write), Lists (drop-down lists for the intake form).",
+        "Starter code is in the lesson's starter/ folder. Open the Visual Basic Editor with Alt + F11 (Mac: Option + F11, "
+        "or Developer → Visual Basic), then choose File → Import File… for modLog.bas and modReports.bas. Don't import "
+        "the .cls and .vba files: paste each one into the module named at the top of the file (ThisWorkbook, the "
+        "BedBoard sheet, or the frmIntake form you build in Guide §7).",
+        "The bonus macro creates Report_yyyy-mm sheets. The gray cells on the Bonus sheet read them, so they stay blank "
+        "until the macro has run.",
     ]
+    # Log, Combined, Settings and Lists are made in the customize hook, so list them under "Sheets in this workbook".
+    # The Report_yyyy-mm sheets aren't listed: they don't exist until the learner's bonus macro creates them.
+    L.sheet_notes = [
+        ("Log", "Timestamp, Event, Detail, User. WriteLog adds a row here each time your code calls it (tasks 6–7)."),
+        ("Combined", "Headers only. CombineCensusFiles fills it with the rows of the 12 monthly census CSV files "
+                     "(tasks 11–12 and the bonus)."),
+        ("Settings", "ReportMonth, CsvFolder, ReportFolder, and LastExport: the cells your report macros read and write "
+                     "(task 11 and the bonus)."),
+        ("Lists", "Arrival modes and chief complaints for the intake form's drop-down lists (tasks 8–10)."),
+    ]
+    L.sheet_order = ["Start Here", "Practice", "BedBoard", "Intake", "Log", "Combined", "Settings", "Lists", "Bonus"]
 
     L.tasks = [
         Task(f"On the BedBoard sheet, the Status column of tblBeds is {status_addr}. Suppose you select {sel_addr} "
@@ -299,7 +312,8 @@ def build() -> Lesson:
              explanation="EnableEvents belongs to the whole Excel application, not to one workbook or sheet. It stays "
                          "False after the macro stops, for every open workbook, until something sets it back. That's "
                          "why every handler that turns it off needs an error handler that always turns it back on. "
-                         "The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or Developer → Macros)."),
+                         "The EventsOn macro in modLog does the same job from Alt + F8 (Mac: Option + F8, or "
+                         "**Developer → Macros**)."),
         Task("Your archive macro runs at 5:07 PM on 12/31/2025 and calls ThisWorkbook.SaveCopyAs folder & "
              "\"CensusReport_\" & Format(Now, \"yyyy-mm-dd_hhnn\") & \".xlsm\". What file name does it create? "
              "Type the name only, without the folder.",
@@ -354,7 +368,7 @@ def build() -> Lesson:
              "stamp StatusTime with Now and call WriteLog \"Bed status\", … once. Delete any \"Bed status\" rows "
              "that your testing left on the Log sheet, then make exactly these edits:\n"
              "• Change 4W-405B's Status to Dirty.\n"
-             "• Select the Status cells of 4W-410A, 4W-410B and 4W-411A, type Clean, and press Ctrl + Enter "
+             "• Select the Status cells of 4W-410A, 4W-410B, and 4W-411A, type Clean, and press Ctrl + Enter "
              "(Mac: ⌘ + Return) to fill all three at once.\n"
              "• In 4W-415A's Notes cell, type Bed alarm on.\n"
              "The gray cell counts the Log's \"Bed status\" rows.",
@@ -387,7 +401,7 @@ def build() -> Lesson:
                          f"{rows_after + 1}, the {len(bad_mrn)}-digit MRN got through, so check your "
                          "Like \"########\" test (# matches exactly one digit). An extra, half-empty row instead "
                          "means a run-time error stopped AddIntakeRow after ListRows.Add: delete that row "
-                         "(right-click → Delete → Table Rows) and fix the error. ListRows.Add grows the Table itself, "
+                         "(right-click → **Delete → Table Rows**) and fix the error. ListRows.Add grows the Table itself, "
                          "so formats, formulas, and anything that refers to tblIntake pick up the new row "
                          "automatically. The full form code is in solutions/frmIntake.vba."),
         Task("How many MRNs in tblIntake are stored as 8-character text? The gray cell counts them with ISTEXT and "
@@ -542,6 +556,24 @@ def build() -> Lesson:
                          "works with Windows and Mac paths."),
     ]
 
+    # Tasks 1-5 and 12 are yellow answer cells, while tasks 6-11 and the whole bonus are gray cells that read macro
+    # output, so the generic "type a formula or value in each yellow cell" lines don't fit.
+    assert [i for i, t in enumerate(L.tasks, 1) if t.summary] == list(range(6, 12))
+    assert all(t.summary for t in L.bonus)
+    L.practice_how = ("Go to the 'Practice' sheet. Type your answers for tasks 1–5 and 12 in the yellow cells. For "
+                      "tasks 6–11, finish and run your macros, and the gray cells fill in by themselves.")
+    L.practice_instructions = (
+        "Type your answers for tasks 1–5 and 12 in the yellow cells. The gray cells for tasks 6–11 fill in once your "
+        "macros have run. The Check column turns green when your answer matches. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.key_sheet}'.")
+    L.bonus_instructions = (
+        "There's nothing to type on this sheet. The gray cells fill in once BuildCensusReport has run for December "
+        "and January, and the Check column turns green when they match. "
+        f"Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → '{L.bonus_key_sheet}'.")
+    L.bonus_where = (f"Write the macro in the VBE and run it as described. The gray cells on the workbook's **Bonus** "
+                     f"sheet read the **{rep_dec}** and **{rep_jan}** sheets it creates and the path in "
+                     "**Settings!B6**, so there's nothing to type there.")
+
     # ------------------------------------------------------------------ extra sheets & self-test simulation
     @L.customize
     def extras(wb, lesson, selftest):
@@ -599,23 +631,13 @@ def build() -> Lesson:
         ls.column_dimensions["A"].width = 16
         ls.column_dimensions["C"].width = 32
 
-        # BedBoard: Status dropdown
+        # BedBoard: Status drop-down list
         bb = wb["BedBoard"]
         dv = DataValidation(type="list", formula1='"Occupied,Clean,Dirty,Blocked"', allow_blank=True,
                             showErrorMessage=True, errorTitle="Bed status",
                             error="Choose Occupied, Clean, Dirty, or Blocked.")
         bb.add_data_validation(dv)
         dv.add(f"{st_col}{st_first}:{st_col}{st_last}")
-
-        sh = wb["Start Here"]
-        for row in sh.iter_rows():
-            for cell in row:
-                if isinstance(cell.value, str) and cell.value.startswith("Go to the 'Practice' sheet."):
-                    cell.value = ("Go to the 'Practice' sheet. Type answers in the yellow cells. The gray cells fill "
-                                  "in by themselves once your macros have run.")
-
-        lesson.sheet_order = ["Start Here", "Practice", "BedBoard", "Intake", "Log", "Combined", "Settings", "Lists",
-                              "Bonus"]
 
         if not selftest:
             return

@@ -29,7 +29,7 @@ open each `.bas` file and click **Download raw file**.
 1. Open `5.3-vba-ranges-worksheets.xlsx` and save it as a macro-enabled workbook: **File → Save As**, then choose
    **Excel Macro-Enabled Workbook (\*.xlsm)**. Save it in an ordinary folder on your computer rather than a synced OneDrive
    folder, because task 11 saves a second file next to it (section 9 explains why).
-2. Open the Visual Basic Editor (the VBE) with **Alt + F11** (Mac: **Developer → Visual Basic**).
+2. Open the **Visual Basic Editor** (the **VBE**) with **Alt + F11** (Mac: **Option + F11**, or **Developer → Visual Basic**).
 3. Choose **File → Import File…** (Windows shortcut: **Ctrl + M**) and import `EncounterMacros.bas`, then `Snippets.bas`.
    Both appear in the **Modules** folder of the Project Explorer.
 4. Open the **Immediate window** with **Ctrl + G** (Mac: **View → Immediate Window**). The snippets print there, and you can
@@ -243,7 +243,7 @@ Read a chain from left to right. Each step works on the result of the step befor
 **CurrentRegion** is the block of data around a cell. Excel grows the range from that cell until every side meets a completely
 empty row or column (or the edge of the sheet). On Encounters, `Range("A1").CurrentRegion` is A1:L2001. The LOSDays header in L1
 is part of it even though the cells below it are empty, because a header is data too. To see a cell's current region in Excel,
-select the cell, press **F5** (Mac: **Ctrl + G**), click **Special…**, and choose **Current region**.
+select the cell, press **F5** (Mac: **Control + G**), click **Special…**, and choose **Current region**.
 
 Watch for two things with CurrentRegion:
 
@@ -905,15 +905,64 @@ End Sub
 
 Task 8 uses the same steps inside a loop, once for each facility.
 
+### 17. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Save as a macro-enabled workbook | F12, then choose **.xlsm** | ⌘ + Shift + S, then choose **.xlsm** |
+| Open or switch to the VBE | Alt + F11 | Option + F11, or **Developer → Visual Basic** |
+| Import a `.bas` module | Ctrl + M, or **File → Import File…** | **File → Import File…** |
+| Immediate window | Ctrl + G | **View → Immediate Window** |
+| Properties window | F4 | **View → Properties Window** |
+| Object Browser | F2 | **View → Object Browser** |
+| Run the Sub the cursor is in | F5 | **Run → Run Sub/UserForm** |
+| Step Into | F8 | **Debug → Step Into** |
+| Interrupt a running macro | Esc or Ctrl + Break | ⌘ + . or Esc |
+| Jump to the last filled cell, as `End(xlUp)` does | Ctrl + ↑ | ⌘ + ↑ |
+| Show a cell's current region | F5, then **Special…** → **Current region** | Control + G, then **Special…** → **Current region** |
+| Turn a filter on or off, as `AutoFilter` does | Ctrl + Shift + L | ⌘ + Shift + F |
+| Undo (it can't undo a macro) | Ctrl + Z | ⌘ + Z |
+
+On a Mac laptop whose top-row keys control brightness and volume, hold **Fn** as well: Fn + Option + F11.
+
+| Feature | Availability |
+|---|---|
+| VBA and the Visual Basic Editor | Desktop Excel for Windows and Mac. Excel for the web, iPad, iPhone, and Android can open an `.xlsm` file but can't run its macros |
+| Everything this lesson's macros use (ranges, `CurrentRegion`, `End`, AutoFilter, `Range.Sort`, ListObjects, arrays, `SaveAs`) | Excel 2013 or later on Windows, and Excel 2016 or later on a Mac |
+| `FileFormat:=xlCSVUTF8` (62) | Microsoft 365 and Excel 2019 or later |
+| `SortFields.Add2` in recorded sort code | Recent versions record it. `.Add` works in every version |
+| A folder-access prompt the first time a macro saves or opens a file | Excel for Mac only, because it runs in a sandbox (section 9) |
+| **F1** help on a selected member | Windows. On a Mac, search the Object Browser instead |
+
 ## 🧪 Hands-on practice
 
 Set up the workbook as described in section 1. Then type each prediction in a yellow cell on the **Practice** sheet, or run
-your macro so the gray cell fills in by itself. The **Check** column turns green when you're right.
+your macro so the gray cell fills in by itself. The **Check** column turns green when you're right. Tasks 7–12 build on each
+other, so do them in order: SplitByFacility (task 8) creates the facility sheets that tasks 9–11 use.
 
-Tasks 1–6 ask what each snippet below prints, or which error stops it. The same code is on the workbook's **Snippets** sheet and
-in `starter/Snippets.bas`. Commit to a prediction, then run the snippet: click inside it and press **F5**
-(Mac: **Run → Run Sub/UserForm**), and compare the Immediate window with your prediction. Snippets D and E are supposed to
-fail: read the error number, then click **End**.
+<!-- BEGIN GENERATED: practice -->
+Save the workbook as .xlsm, then import starter/EncounterMacros.bas and starter/Snippets.bas (**File → Import File…** in the VBE). Tasks 1–6 ask what the code on the Snippets sheet prints: type your prediction, then run the snippet to check it. In tasks 7–12 you complete macros, and the gray cells read the sheets and cells your macros create.
+
+| # | Task | Hint |
+|:-:|------|------|
+| 1 | Snippet A: what address does the Immediate window show? Type it as printed (the \$ signs are optional). | Offset moves the top-left corner, and Resize sets the size from that corner |
+| 2 | Snippet B: what address does the Immediate window show? | CurrentRegion is the whole block around E50 (**Go To Special → Current region** shows it). The last two steps drop the header row |
+| 3 | Snippet C: line 1 prints 2001, the last row of column A. What number does line 2 print (the same idiom on column F, AdmitSource)? | Which encounter types leave AdmitSource blank? Look at the bottom of column F |
+| 4 | Snippet C: what number does line 3 print? | End(xlDown) works like Ctrl + ↓ (Mac: ⌘ + ↓): it stops at the last filled cell before a gap |
+| 5 | Snippet D: running SnippetD_WhichSheet stops with a run-time error. Type the error number. | Which sheet does a Cells(…) with nothing in front of it belong to? |
+| 6 | Snippet E: running SnippetE_DeleteOld stops with a run-time error. Type the error number. | What does a collection do when you ask for an item it doesn't have? |
+| 7 | Complete SheetExists and BuildTypeSummary in the starter module. BuildTypeSummary deletes any old TypeSummary sheet (with DeleteSheetIfExists, which calls your SheetExists), adds a new sheet named TypeSummary at the end of the workbook, and writes one row per EncounterType (Emergency, Inpatient, Observation, Outpatient) with the columns EncounterType (A), Encounters (B, the count), and TotalCharges (C), headers in row 1. Run it twice: the second run must not stop with an error or ask a question. The gray cell looks up the Inpatient TotalCharges on your sheet. | SheetExists: For Each ws In ThisWorkbook.Worksheets … StrComp(ws.Name, sheetName, vbTextCompare) = 0 |
+| 8 | Complete SplitByFacility: for each FacilityID in the Facilities table (tblFacilities), delete any old sheet with that name, add a new sheet named after the ID (F01, F02, F03, F04), AutoFilter the Encounters block on FacilityID, and copy the visible cells (header included) to A1 of the new sheet. Turn the filter off at the end. The gray cell lists the number of data rows on F01, F02, F03, and F04. | block.AutoFilter Field:=4, Criteria1:=facID, then block.SpecialCells(xlCellTypeVisible).Copy |
+| 9 | Complete SortAndReconcile, part 1: loop through every worksheet and, for each sheet whose name is Like "F0#", sort its block by TotalCharges (column K), largest first, with Range.Sort and a header row. Which EncounterID is now in A2 of sheet F03? (The gray cell reads F03!A2.) | Test ws.Name Like "F0#" inside the loop, then sort ws.Range("A1").CurrentRegion with Key1 in column K and Order1:=xlDescending (guide section 12) |
+| 10 | SortAndReconcile, part 2: in the same loop, add each facility sheet's data rows and TotalCharges to two running totals, then write the row total to Output!B4 and the charge total to Output!B5. What is the total charge on the facility sheets? (The gray cell reads Output!B5.) | Find each sheet's last row with LastRow(ws, "A"), then WorksheetFunction.Sum the K cells |
+| 11 | Complete ExportFacility: copy sheet F02 into a new workbook (Worksheet.Copy with no arguments), save it in the same folder as this workbook as F02_encounters_2025.xlsx with SaveAs and FileFormat:=xlOpenXMLWorkbook, and close it. Then reopen the file with Workbooks.Open, add up its TotalCharges column, write the total to Output!B7 (and the file name to Output!B6), and close it without saving. The gray cell reads Output!B7. | After Worksheet.Copy the new workbook is the ActiveWorkbook, so write results through ThisWorkbook |
+| 12 | Complete FillLOSDays: read AdmitDateTime and DischargeDateTime (Encounters G2:H2001) into a Variant array with one .Value2 read, calculate each row's length of stay in days with Int(discharge) - Int(admit) (the number of midnights, ignoring the times), and write all the results to the yellow LOSDays column (L) with one assignment. The gray cell adds up your column. | stay = ws.Range("G2:H" & lastR).Value2, then ReDim los(1 To UBound(stay, 1), 1 To 1) |
+<!-- END GENERATED: practice -->
+
+**Code for the predict-the-output tasks.** Tasks 1–6 ask what each snippet below prints, or which error stops it. The same
+code is on the workbook's **Snippets** sheet and in [`starter/Snippets.bas`](starter/Snippets.bas). Commit to a prediction,
+then run the snippet: click inside it and press **F5** (Mac: **Run → Run Sub/UserForm**), and compare the Immediate window
+with your prediction. Snippets D and E are supposed to fail: read the error number, then click **End**.
 
 **Snippet A** (task 1)
 
@@ -971,27 +1020,6 @@ Sub SnippetE_DeleteOld()
 End Sub
 ```
 
-Tasks 7–12 build on each other, so do them in order. SplitByFacility (task 8) creates the facility sheets that tasks 9–11 use.
-
-<!-- BEGIN GENERATED: practice -->
-Save the workbook as .xlsm, then import starter/EncounterMacros.bas and starter/Snippets.bas (VBE → File → Import File…). Tasks 1–6 ask what the code on the Snippets sheet prints: type your prediction, then run the snippet to check it. In tasks 7–12 you complete macros, and the gray cells read the sheets and cells your macros create.
-
-| # | Task | Hint |
-|:-:|------|------|
-| 1 | Snippet A: what address does the Immediate window show? Type it as printed (the \$ signs are optional). | Offset moves the top-left corner, and Resize sets the size from that corner |
-| 2 | Snippet B: what address does the Immediate window show? | CurrentRegion is the whole block around E50 (Go To Special → Current region shows it). The last two steps drop the header row |
-| 3 | Snippet C: line 1 prints 2001, the last row of column A. What number does line 2 print (the same idiom on column F, AdmitSource)? | Which encounter types leave AdmitSource blank? Look at the bottom of column F |
-| 4 | Snippet C: what number does line 3 print? | End(xlDown) works like Ctrl + ↓: it stops at the last filled cell before a gap |
-| 5 | Snippet D: running SnippetD_WhichSheet stops with a run-time error. Type the error number. | Which sheet does a Cells(…) with nothing in front of it belong to? |
-| 6 | Snippet E: running SnippetE_DeleteOld stops with a run-time error. Type the error number. | What does a collection do when you ask for an item it doesn't have? |
-| 7 | Complete SheetExists and BuildTypeSummary in the starter module. BuildTypeSummary deletes any old TypeSummary sheet (with DeleteSheetIfExists, which calls your SheetExists), adds a new sheet named TypeSummary at the end of the workbook, and writes one row per EncounterType (Emergency, Inpatient, Observation, Outpatient) with the columns EncounterType (A), Encounters (B, the count), and TotalCharges (C), headers in row 1. Run it twice: the second run must not stop with an error or ask a question. The gray cell looks up the Inpatient TotalCharges on your sheet. | SheetExists: For Each ws In ThisWorkbook.Worksheets … StrComp(ws.Name, sheetName, vbTextCompare) = 0 |
-| 8 | Complete SplitByFacility: for each FacilityID in the Facilities table (tblFacilities), delete any old sheet with that name, add a new sheet named after the ID (F01, F02, F03, F04), AutoFilter the Encounters block on FacilityID, and copy the visible cells (header included) to A1 of the new sheet. Turn the filter off at the end. The gray cell lists the number of data rows on F01, F02, F03, and F04. | block.AutoFilter Field:=4, Criteria1:=facID, then block.SpecialCells(xlCellTypeVisible).Copy |
-| 9 | Complete SortAndReconcile, part 1: loop through every worksheet and, for each sheet whose name is Like "F0#", sort its block by TotalCharges (column K), largest first, with Range.Sort and a header row. Which EncounterID is now in A2 of sheet F03? (The gray cell reads F03!A2.) | Test ws.Name Like "F0#" inside the loop, then sort ws.Range("A1").CurrentRegion with Key1 in column K and Order1:=xlDescending (guide section 12) |
-| 10 | SortAndReconcile, part 2: in the same loop, add each facility sheet's data rows and TotalCharges to two running totals, then write the row total to Output!B4 and the charge total to Output!B5. What is the total charge on the facility sheets? (The gray cell reads Output!B5.) | Find each sheet's last row with LastRow(ws, "A"), then WorksheetFunction.Sum the K cells |
-| 11 | Complete ExportFacility: copy sheet F02 into a new workbook (Worksheet.Copy with no arguments), save it in the same folder as this workbook as F02_encounters_2025.xlsx with SaveAs and FileFormat:=xlOpenXMLWorkbook, and close it. Then reopen the file with Workbooks.Open, add up its TotalCharges column, write the total to Output!B7 (and the file name to Output!B6), and close it without saving. The gray cell reads Output!B7. | After Worksheet.Copy the new workbook is the ActiveWorkbook, so write results through ThisWorkbook |
-| 12 | Complete FillLOSDays: read AdmitDateTime and DischargeDateTime (Encounters G2:H2001) into a Variant array with one .Value2 read, calculate each row's length of stay in days with Int(discharge) - Int(admit) (the number of midnights, ignoring the times), and write all the results to the yellow LOSDays column (L) with one assignment. The gray cell adds up your column. | stay = ws.Range("G2:H" & lastR).Value2, then ReDim los(1 To UBound(stay, 1), 1 To 1) |
-<!-- END GENERATED: practice -->
-
 ## ✅ Answer key
 
 The workbook has a hidden **Answer Key** sheet (right-click any sheet tab → **Unhide…** → *Answer Key*). Its *Live result*
@@ -1001,7 +1029,7 @@ workbook so its procedure names don't clash with yours. The answers are also bel
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Snippet A: Offset and Resize**
 
@@ -1277,7 +1305,7 @@ Finance wants a monthly packet of inpatient encounters, one sheet per month of 2
 
 After the loop, write the name of the packet sheet with the largest total charges to Output!B9 (it's formatted as Text, so Excel keeps 2025-xx as text and doesn't turn it into a date). Turn ScreenUpdating off while the macro runs, and make sure it comes back on even if something fails.
 
-Work on the **Bonus** sheet of the workbook.
+Complete BuildMonthlyPackets in the EncounterMacros module and run it. It adds the monthly packet sheets and writes to the **Output** sheet, and the gray cells on the **Bonus** sheet read your results.
 
 - **B1.** How many inpatient encounters are in the 2025-03 packet? (The gray cell counts the data rows from row 7 down.) *(Hint: Test src(i, 3) = "Inpatient" And src(i, 7) >= monthStart And src(i, 7) < nextMonth)*
 - **B2.** What total charges does the 2025-07 packet show in its header (cell B4)? *(Hint: Reset total = 0 at the start of every month)*
@@ -1289,7 +1317,7 @@ The reference solution is in [`solutions/MonthlyPackets_Solution.bas`](solutions
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Encounters in the 2025-03 packet**
 

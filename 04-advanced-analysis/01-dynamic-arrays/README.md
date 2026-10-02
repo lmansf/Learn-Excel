@@ -25,7 +25,7 @@ The examples use three Excel Tables from the lesson workbook: **tblEncounters** 
 partner for dynamic arrays, because a Table grows when you paste in new rows and every formula that refers to it sees
 the new rows automatically.
 
-> 📋 **Version check:** this lesson needs **Microsoft 365** (Windows, Mac, or Excel for the web) or **Excel 2024**.
+> 📋 **Version note:** This lesson needs **Microsoft 365** (Windows, Mac, or Excel for the web) or **Excel 2024**.
 > Excel 2021 has FILTER, SORT, SORTBY, UNIQUE, SEQUENCE, XLOOKUP, and LET, but not VSTACK, HSTACK, TAKE, DROP, or
 > CHOOSECOLS. Section 13 has the full table.
 
@@ -48,7 +48,7 @@ What you see on the sheet tells you what's going on:
   the formula, so that's the only cell you can edit.
 - Delete the anchor and the whole spill disappears. Change the data and the spill grows or shrinks to fit.
 
-| | Legacy array formula (Excel 2019 and earlier) | Dynamic array formula (Microsoft 365, Excel 2021+) |
+| | Legacy array formula (Excel 2019 and earlier) | Dynamic array formula (Microsoft 365 and Excel 2021 or later) |
 |---|---|---|
 | How you enter it | Select the output range first, then **Ctrl + Shift + Enter** (Mac: **⌘ + Shift + Return**) | Type in one cell, press **Enter** |
 | How it looks | Curly braces in the formula bar: `{=…}` | No braces |
@@ -113,9 +113,10 @@ Two related errors come from the functions themselves rather than from the sheet
 
 Before dynamic arrays, typing `=tblEncounters[TotalCharges]` into a single cell didn't return the whole column. Excel
 quietly returned the one value in the **same row** as the formula. That old behavior is called **implicit
-intersection**, and Microsoft 365 now writes it with the `@` operator:
+intersection**, and dynamic-array Excel (Microsoft 365 and Excel 2021 or later) now writes it with the `@`
+operator:
 
-| Formula | In Microsoft 365 |
+| Formula | In Microsoft 365 and Excel 2021 or later |
 |---|---|
 | `=tblEncounters[TotalCharges]` | Spills all 2,000 charges |
 | `=@tblEncounters[TotalCharges]` | Returns only the charge in the formula's own row (or `#VALUE!` if that row isn't in the Table) |
@@ -179,7 +180,7 @@ cell.
 `sort_order` is `1` for ascending (the default) or `-1` for descending. The two functions differ in **how you name the
 sort key**:
 
-| | SORT | SORTBY | Data → Sort (Lesson 1.6) |
+| | SORT | SORTBY | **Data → Sort** (Lesson 1.6) |
 |---|---|---|---|
 | Sort key | A column **number** inside `array` | Any range or array of the same height, **inside or outside** the result | Columns you pick in a dialog |
 | Several keys | `{2,5}` with orders `{1,-1}` | Add more `by_array, order` pairs | Add Level |
@@ -505,35 +506,35 @@ LET takes pairs of *name, value*, and its last argument is the result.
 [Lesson 4.2](../02-advanced-formulas-let-lambda/README.md) covers LET in depth. For now, use it whenever the same piece
 appears more than once in a report formula. It makes the formula shorter, easier to read, and faster.
 
-> 💡 **Build from the inside out.** Write the innermost piece in a spare cell and check that it spills what you expect.
-> Then wrap it in the next function and check again. Long formulas are easier to read with line breaks: press
-> **Alt + Enter** (Mac: **⌃ + ⌥ + Return**) inside the formula bar, and **Ctrl + Shift + U** (Mac: **⌃ + Shift + U**) to
-> expand the formula bar.
+> 💡 **Tip:** Build from the inside out. Write the innermost piece in a spare cell and check that it spills what you
+> expect. Then wrap it in the next function and check again. Long formulas are easier to read with line breaks: press
+> **Alt + Enter** (Mac: **Control + Option + Return**) inside the formula bar, and **Ctrl + Shift + U** (Mac:
+> **Control + Shift + U**) to expand the formula bar.
 
-> 💡 **Formatting doesn't travel with a spill.** Spilled values take on whatever formatting the destination cells
+> 💡 **Tip:** Formatting doesn't travel with a spill. Spilled values take on whatever formatting the destination cells
 > already have. Format a generous block in advance, as the Workspace sheet does, or use conditional formatting with a
 > rule such as `=$I6<>""`.
 
-> 📋 Current Microsoft 365 builds also have **GROUPBY** and **PIVOTBY**, which build summary tables like this in one
-> function. They aren't in Excel 2024, so this course builds reports from the functions above.
+> 📋 **Version note:** Current Microsoft 365 builds also have **GROUPBY** and **PIVOTBY**, which build summary tables
+> like this in one function. They aren't in Excel 2024, so this course builds reports from the functions above.
 
 ### 13. Shortcuts and version notes
 
 | Action | Windows | Mac |
 |---|---|---|
-| Create a Table from a range | Ctrl + T | ⌃ + T (or ⌘ + T) |
-| Edit the active cell | F2 | ⌃ + U |
+| Create a Table from a range | Ctrl + T | Control + T (or ⌘ + T) |
+| Edit the active cell | F2 | Control + U |
 | Accept a function or Table name from AutoComplete | Tab | Tab |
-| Expand or collapse the formula bar | Ctrl + Shift + U | ⌃ + Shift + U |
-| Line break inside a formula | Alt + Enter | ⌃ + ⌥ + Return |
-| Show formulas instead of results | Ctrl + `` ` `` (grave accent) | ⌃ + `` ` `` |
+| Expand or collapse the formula bar | Ctrl + Shift + U | Control + Shift + U |
+| Line break inside a formula | Alt + Enter | Control + Option + Return |
+| Show formulas instead of results | Ctrl + `` ` `` (grave accent) | Control + `` ` `` |
 | Undo (for example, a value that blocks a spill) | Ctrl + Z | ⌘ + Z |
 | Enter a legacy array formula (Excel 2019 and earlier) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
 
 | Functions | Available in |
 |---|---|
-| FILTER, SORT, SORTBY, UNIQUE, SEQUENCE, RANDARRAY, XLOOKUP, XMATCH, LET | Microsoft 365, Excel 2021, Excel 2024, Excel for the web, and the matching Mac versions |
-| VSTACK, HSTACK, TAKE, DROP, CHOOSECOLS, CHOOSEROWS, TOCOL, TOROW | Microsoft 365, Excel 2024, Excel for the web, and the matching Mac versions |
+| FILTER, SORT, SORTBY, UNIQUE, SEQUENCE, RANDARRAY, XLOOKUP, XMATCH, LET | Microsoft 365 and Excel 2021 or later (including Excel for the web and the matching Mac versions) |
+| VSTACK, HSTACK, TAKE, DROP, CHOOSECOLS, CHOOSEROWS, TOCOL, TOROW | Microsoft 365 and Excel 2024 (including Excel for the web and the matching Mac versions) |
 | GROUPBY, PIVOTBY | Current Microsoft 365 only |
 
 If someone opens your workbook in Excel 2019 or earlier, they see the formulas with an `_xlfn.` prefix (for example
@@ -574,7 +575,7 @@ collapsed so you don't see them by accident.
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Distinct payers (Workspace!B6)**
 
@@ -714,7 +715,7 @@ Build it from the inside out. FILTER(tblEncounters, …) returns all 16 columns 
 <!-- BEGIN GENERATED: bonus -->
 The CFO wants a 'unit leaderboard' she can refresh every month: every unit (Facility + Department) with at least 50 encounters in the extract, with four columns (Facility, Department, Encounters, AvgCharge), where Encounters is the unit's number of encounters and AvgCharge is the average TotalCharges of those encounters. Sort it by AvgCharge from highest to lowest and put a header row on top. Build it in Workspace!N6 as ONE formula. Section 12 of the lesson guide shows how to lift COUNTIFS and AVERAGEIFS over a two-column list, and LET (previewed there) keeps the formula readable. Then answer the questions below with formulas that refer to your leaderboard through N6#.
 
-Work on the **Bonus** sheet of the workbook.
+Build the leaderboard in cell N6 of the **Workspace** sheet, and type your answers in the yellow cells on the **Bonus** sheet.
 
 - **B1.** How many units qualify for the leaderboard? Count data rows only, not the header. *(Hint: ROWS of the spill, minus the header row)*
 - **B2.** Which Department tops the leaderboard? *(Hint: Row 2 of the spill is the first data row)*
@@ -724,7 +725,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Units on the leaderboard**
 

@@ -3,11 +3,13 @@ Attribute VB_Name = "modCensusReport"
 ' Lesson 5.1 - Recording Your First Macros - reference solution
 ' SPOILER: record your own macro first, then compare.
 ' 
-' To import: open the VBE (Alt+F11, Mac: Option+F11), choose File > Import File...
-' and pick this .bas file. If your workbook already has a macro with the same
-' name, rename or delete one of them first so it's clear which one runs.
+' To import: open the VBE with Alt + F11 (Mac: Option + F11, or Developer >
+' Visual Basic), choose File > Import File..., and pick this .bas file. If your
+' workbook already has a macro with the same name, rename or delete one of them
+' first so it's clear which one runs.
 ' An imported macro has no shortcut key (the 'Keyboard Shortcut' line is only a
-' comment). Set one with Macros (Alt+F8, Mac: Option+F8) > select it > Options...
+' comment). To set one, open Macros (Alt + F8; Mac: Option + F8), select it, and
+' click Options...
 ' Save the workbook as .xlsm to keep the code.
 ' ==========================================================================
 Option Explicit
@@ -72,7 +74,7 @@ Sub FormatCensusReport_Clean()
     Columns("A").NumberFormat = "mm/dd/yyyy"
 
     ' The TOTAL row goes one row below the last date in column A
-    ' (the same cell Ctrl+Down and then Down arrow would reach).
+    ' (the same cell that Ctrl + Down arrow, then Down arrow, would reach).
     With Range("A1").End(xlDown).Offset(1, 0)
         .Value = "TOTAL"
         ' Columns D:G: from row 2 (fixed) down to the row above (relative).

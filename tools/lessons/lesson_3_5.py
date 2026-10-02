@@ -479,13 +479,25 @@ def build() -> Lesson:
         "each chart. The yellow LWBSRate and CumulativePct columns are for the Bonus.")
     L.start_notes = [
         "Build every chart next to its table. Each data sheet has empty columns on the right for that.",
-        "The Makeover sheet holds a deliberately misleading chart for Task 4. Fix it in place.",
         "The hidden 'Chart Key' sheet shows a reference version of every chart. Unhide it the same way as the Answer Key. "
         "It draws the histogram, Pareto, and waterfall the classic way (column charts with helper data), so they look "
         "slightly different from Excel 2016's built-in versions.",
         "Histogram, Pareto, and waterfall charts need Excel 2016 or later (Windows or Mac) or Microsoft 365.",
         "On the Stays sheet, LOSDays is the exact length of stay (discharge time minus admit time, in days, rounded to 1 decimal "
         "place), so it can differ slightly from the count of midnights used in Lesson 3.4.",
+    ]
+    L.practice_how = ("Go to the 'Practice' sheet. Build each chart on the sheet the task names, then type the number or name "
+                      "it shows into the task's yellow cell. Task 13 asks for a formula.")
+    L.bonus_instructions = (
+        "For B1, fill the yellow LWBSRate column on ED_Monthly, and the gray cell here reads it. For B2–B5, build the charts "
+        "on ED_Monthly and Denials, then type what they show in the yellow cell. The Check column turns green when your "
+        "answer matches. Stuck? Read the hint, then the lesson guide. Answers: right-click a sheet tab → Unhide… → "
+        f"'{L.bonus_key_sheet}' (or 'Chart Key' for the reference charts).")
+    L.bonus_where = ("Fill the LWBSRate column and build the charts on the **ED_Monthly** and **Denials** sheets, then type "
+                     "your answers to B2–B5 in the yellow cells on the **Bonus** sheet. B1's gray cell reads your LWBSRate "
+                     "column.")
+    L.sheet_notes = [  # the Makeover sheet is made in the customize hook below
+        ("Makeover", "A misleading chart of the 2025 readmission rates. Measure it for Task 4, then fix it in place."),
     ]
 
     hour_txt = lambda h: f"{h:02d}:00"  # noqa: E731
@@ -494,7 +506,7 @@ def build() -> Lesson:
              "day had the most ED arrivals in 2025? Type the hour as a number from 0 to 23 (for example, 9 for the "
              "09:00 hour).",
              answer=t1, accept=[t1 / 24], title="Column chart: busiest arrival hour",
-             hint="Insert → Insert Column or Bar Chart → Clustered Column. Hover over the tallest column",
+             hint="**Insert → Insert Column or Bar Chart → Clustered Column**. Hover over the tallest column",
              solution="1. On **ED_Hourly**, select **A1:B25**: the ArrivalHour labels and the Arrivals numbers, headers "
                       "included.\n2. Choose **Insert → Insert Column or Bar Chart → 2-D Column → Clustered Column**. "
                       "On Windows you can also press **Alt + F1**, which inserts the default chart type (clustered "
@@ -513,7 +525,7 @@ def build() -> Lesson:
              f"{T2_FACILITY} have its most ED visits? Type the month and year (for example, Jun 2025).",
              answer=t2, fmt="mmm yyyy", answer_display=_month_label(t2),
              title=f"Line chart: {T2_FACILITY}'s busiest month",
-             hint="Insert → Insert Line or Area Chart → Line. Hover over the highest point of the Cedar Ridge line",
+             hint="**Insert → Insert Line or Area Chart → Line**. Hover over the highest point of the Cedar Ridge line",
              solution="1. On **ED_Monthly**, select **A1:D25**.\n2. Choose **Insert → Insert Line or Area Chart → 2-D "
                       "Line → Line** (or **Line with Markers**). Excel recognizes the Month column as dates and builds a "
                       "date axis, one point per month.\n3. Hover over the highest point of the "
@@ -526,7 +538,7 @@ def build() -> Lesson:
                          "smaller hospitals' swings shrink. When a small series matters, give it its own chart. "
                          + cross(f2)),
         Task("On Readmits, sort the table by ReadmitRate from largest to smallest. Then select ServiceLine and ReadmitRate "
-             "(A1:A9, then Ctrl+click D1:D9, or ⌘+click on a Mac) and insert a clustered bar chart. Before you change anything else, which "
+             "(A1:A9, then Ctrl + click D1:D9, or ⌘ + click on a Mac) and insert a clustered bar chart. Before you change anything else, which "
              "service line's bar is at the TOP of the chart? (Afterwards, fix the order so the highest rate is on top.)",
              answer=t3, accept=[t3.replace("&", "and")], title="Bar chart: which bar Excel puts on top",
              hint="Read the chart, not the table. Guide section 6 explains the bar order and how to fix it",
@@ -570,7 +582,7 @@ def build() -> Lesson:
         Task("On PayerMix, insert a pie chart of 2025 encounters by PayerType. Add data labels that show the Percentage "
              "(not the Value), formatted with 1 decimal place. What does the Commercial label show?",
              answer=t5, fmt="0.0%", title="Pie chart: Commercial share",
-             hint="Format Data Labels → Label Options: tick Percentage, untick Value. Then Number → Percentage, 1 decimal",
+             hint="**Format Data Labels → Label Options**: tick Percentage, untick Value. Then **Number → Percentage**, 1 decimal",
              solution="1. Click any cell in tblPayerMix and choose **Insert → Insert Pie or Doughnut Chart → 2-D Pie**.\n"
                       "2. Add labels: click the **Chart Elements** button (**+**) → **Data Labels → More Options…** (Mac: "
                       "**Chart Design → Add Chart Element → Data Labels → More Data Label Options**).\n"
@@ -588,7 +600,7 @@ def build() -> Lesson:
              f"{1}, Overflow bin {HIST_OVER}, and Underflow bin {HIST_UNDER}. How many stays fall in the overflow bin "
              f"(longer than {HIST_OVER} days)?",
              answer=t6, title="Histogram: stays in the overflow bin",
-             hint="Select D1:D301, then Insert → Insert Statistic Chart → Histogram. Double-click the horizontal axis",
+             hint="Select D1:D301, then **Insert → Insert Statistic Chart → Histogram**. Double-click the horizontal axis",
              solution="1. On **Stays**, select **D1:D301** (the LOSDays column with its header).\n"
                       "2. Choose **Insert → Insert Statistic Chart → Histogram**. On a Mac, the same Statistic Chart "
                       "button is on the Insert tab.\n3. Double-click the horizontal axis. Under **Axis Options → Bins**, choose **Bin "
@@ -606,8 +618,8 @@ def build() -> Lesson:
              "horizontal axis. Add a linear trendline and display its equation. By how many dollars do charges rise for "
              "each extra day in the hospital? Confirm with SLOPE and round to the nearest dollar.",
              answer=t7, fmt="#,##0", tol=0.5, answer_display=f"{t7:,.0f} (dollars per extra day)", title="Scatter + trendline: dollars per extra day",
-             hint="Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter. Right-click a point → Add Trendline, then "
-                  "tick Display Equation on chart. SLOPE takes the Y range first",
+             hint="**Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**. Right-click a point → **Add Trendline**, "
+                  "then tick **Display Equation on chart**. SLOPE takes the Y range first",
              solution="1. Select **D1:E301**. The left column (LOSDays) becomes X, the right one (TotalCharges) becomes Y.\n"
                       "2. Choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**.\n"
                       "3. Right-click any point → **Add Trendline…**. In **Format Trendline**, keep **Linear** and tick "
@@ -639,7 +651,7 @@ def build() -> Lesson:
              "AvgDoorToProviderMin as a line on the secondary axis. Which arrival hour has the longest average wait to see "
              "a provider? Type the hour as a number from 0 to 23.",
              answer=t9, accept=[t9 / 24], title="Combo chart: hour with the longest wait",
-             hint="Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis",
+             hint="**Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis**",
              solution="1. Select **A1:C25** on **ED_Hourly**.\n2. Choose **Insert → Insert Combo Chart → Clustered Column "
                       "– Line on Secondary Axis**. (Or insert any chart, then **Chart Design → Change Chart Type → "
                       "Combo**, set AvgDoorToProviderMin to **Line** and tick its **Secondary Axis** box.)\n"
@@ -658,7 +670,7 @@ def build() -> Lesson:
         Task("On Denials, select A1:B8 (DenialReason and Claims) and insert a Pareto chart. What cumulative percentage does "
              "the line reach at the second bar (the top two reasons together)? Enter it as a percentage to 1 decimal place.",
              answer=t10, fmt="0.0%", title="Pareto: cumulative share of the top two denial reasons",
-             hint="Insert → Insert Statistic Chart → Pareto. Confirm with LARGE and SUM",
+             hint="**Insert → Insert Statistic Chart → Pareto**. Confirm with LARGE and SUM",
              solution="1. Select **A1:B8** on **Denials**.\n2. Choose **Insert → Insert Statistic Chart → Pareto**. Excel "
                       "sorts the reasons from most to fewest claims and adds a cumulative-percentage line on a secondary "
                       "axis that runs to 100%.\n3. Hover over the line at the second bar.\n4. To get the exact value, "
@@ -678,7 +690,8 @@ def build() -> Lesson:
              "the largest drop (the longest downward bar)? Type the Step name as it appears in the table.",
              answer=t11, accept=["Revenue", "Net patient service revenue", "Net revenue", "Patient revenue"],
              title="Waterfall: the largest unfavorable variance",
-             hint="Insert → Insert Waterfall, Funnel, Stock, Surface, or Radar Chart → Waterfall. Right-click a bar → Set as Total",
+             hint="**Insert → Insert Waterfall, Funnel, Stock, Surface, or Radar Chart → Waterfall**. Right-click a bar → "
+                  "**Set as Total**",
              solution="1. Select **A4:B14** on **Budget**.\n2. Choose **Insert → Insert Waterfall, Funnel, Stock, Surface, "
                       "or Radar Chart → Waterfall** (Mac: **Insert → Waterfall**).\n3. Click the first bar once to "
                       "select the series and once more to select only that bar. Right-click it → **Set as Total**. Do the "
@@ -695,7 +708,7 @@ def build() -> Lesson:
              "Turn on First Point and Last Point markers. For how many of the three hospitals is the last point (Dec 2025) "
              "higher than the first point (Jan 2024)?",
              answer=t12, title="Sparklines: hospitals that ended higher than they started",
-             hint="Insert → Sparklines → Line. Then the Sparkline tab → Show → First Point, Last Point",
+             hint="**Insert → Sparklines → Line**. Then tick **First Point** and **Last Point** on the **Sparkline** tab",
              solution="1. Select **B27:D27** on **ED_Monthly**.\n2. Choose **Insert → Sparklines → Line**. In **Data "
                       "Range** type `B2:D25`. **Location Range** already shows `$B$27:$D$27`. Click **OK**. Excel draws "
                       "one sparkline per column.\n3. On the **Sparkline** tab, tick **First Point** and **Last Point** "
@@ -752,10 +765,10 @@ def build() -> Lesson:
                          f"months. The gray cell runs `COUNTIF({rate_col}{mfirst}:{rate_col}{mlast},\">{LWBS_TARGET}\")` on "
                          f"your column, and {b1} of the 24 months were above {LWBS_TARGET:.0%}."),
         Task("Build a combo chart on ED_Monthly with Total as clustered columns and LWBSRate as a line on the secondary "
-             "axis (select Month, then Ctrl+click or ⌘+click Total and LWBSRate). Which month had the highest LWBS rate? Type the "
+             "axis (select Month, then Ctrl + click or ⌘ + click Total and LWBSRate). Which month had the highest LWBS rate? Type the "
              "month and year.",
              answer=b2, fmt="mmm yyyy", answer_display=_month_label(b2), title="Combo chart: month with the highest LWBS rate",
-             hint="Select A1:A25, Ctrl+click E1:E25 and G1:G25, then Insert → Insert Combo Chart",
+             hint="Select A1:A25, Ctrl + click E1:E25 and G1:G25, then **Insert → Insert Combo Chart**",
              solution="1. Select **A1:A25**, then hold **Ctrl** (Mac: **⌘**) and select **E1:E25** and **G1:G25**.\n"
                       "2. Choose **Insert → Insert Combo Chart → Clustered Column – Line on Secondary Axis**.\n"
                       "3. Title both axes (*ED visits* and *LWBS rate*). If the secondary axis shows too many decimals, set "
@@ -769,8 +782,8 @@ def build() -> Lesson:
         Task("Test the director's theory with a scatter chart of Total (horizontal axis) against LWBSRate (vertical axis), "
              "with a linear trendline and its R². What is R²? Enter it to 3 decimal places.",
              answer=b3, fmt="0.000", tol=0.0006, title="Scatter: how much volume explains LWBS",
-             hint="Select E1:E25, Ctrl+click G1:G25, then Insert → Scatter. RSQ(known_y's, known_x's) confirms it",
-             solution="1. Select **E1:E25**, then **Ctrl+click** (Mac: **⌘+click**) **G1:G25**. The left column (Total) "
+             hint="Select E1:E25, Ctrl + click G1:G25, then **Insert → Scatter**. RSQ(known_y's, known_x's) confirms it",
+             solution="1. Select **E1:E25**, then **Ctrl + click** (Mac: **⌘ + click**) **G1:G25**. The left column (Total) "
                       "becomes X.\n2. Choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**.\n"
                       "3. Right-click a point → **Add Trendline…** → **Linear**, tick **Display R-squared value on "
                       "chart**.\n4. Confirm: `=RSQ(ED_Monthly!G2:G25,ED_Monthly!E2:E25)`.",
@@ -789,7 +802,7 @@ def build() -> Lesson:
              solution="1. Click a DeniedCharges cell → **Data → Sort Largest to Smallest**.\n"
                       "2. In **D2** type `=SUM($C$2:C2)/SUM($C$2:$C$8)` and press **Enter**. The Table fills it down, and "
                       "the column is already formatted as a percentage.\n"
-                      "3. Select **A1:A8**, then **Ctrl+click** (Mac: **⌘+click**) **C1:D8**, and choose **Insert → Insert "
+                      "3. Select **A1:A8**, then **Ctrl + click** (Mac: **⌘ + click**) **C1:D8**, and choose **Insert → Insert "
                       "Combo Chart → Clustered Column – Line on Secondary Axis**.\n"
                       "4. Double-click the secondary axis and set **Minimum** `0` and **Maximum** `1`. Optionally set the "
                       "column **Gap Width** to about 10%.\n"

@@ -212,8 +212,8 @@ Q3 with the median inside it, and marks values beyond the IQR fences from Lesson
 ### 5. Relationships: scatter plots and correlation
 
 A **scatter plot** (the scatter chart from Lesson 3.5) puts one measure on each axis and draws a dot for every row. Select two
-columns and choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**. Excel puts the left column on the horizontal (x) axis, so arrange the columns with the
-explanatory measure first.
+columns and choose **Insert → Insert Scatter (X, Y) or Bubble Chart → Scatter**. Excel puts the left column on the horizontal (x)
+axis, so arrange the columns with the explanatory measure first.
 
 The **correlation coefficient**, written **r**, measures how closely the dots follow a straight line. It runs from −1 to +1:
 
@@ -303,7 +303,8 @@ chart**. The chart shows `y = 0.3746x + 40.911` and `R² = 0.5654`, the same num
 > ⚠️ **Don't extrapolate.** The line was fit on months with 403 to 631 ED visits. A prediction for 1,000 visits assumes the
 > straight line keeps going, and nothing in the data shows that it does.
 
-> 📋 `FORECAST.LINEAR` (Excel 2016 and later) replaced the older `FORECAST`, which takes the same arguments and still works.
+> 📋 **Version note:** `FORECAST.LINEAR` (Excel 2016 and later) replaced the older `FORECAST`, which takes the same arguments
+> and still works.
 
 ### 7. Regression output: is the slope real?
 
@@ -652,7 +653,7 @@ Try it twice on the monthly ED visits: once with seasonality detected automatica
 years of monthly history, automatic detection has very little to go on. Compare the January 2026 forecast with the straight-line
 forecast from Task 11, and with the two Januaries already in the data.
 
-> 📋 **Versions and platforms.** The FORECAST.ETS functions work in Excel 2016 and later on Windows and Mac. The **Forecast Sheet**
+> 📋 **Version note:** The FORECAST.ETS functions work in Excel 2016 and later on Windows and Mac. The **Forecast Sheet**
 > button is Windows-only, so on a Mac you type the FORECAST.ETS formulas yourself and build the chart by hand. Excel optimizes the
 > smoothing weights internally, and other programs implement ETS differently, so expect small differences between tools and even
 > between Excel versions.
@@ -702,8 +703,8 @@ LCL = mean − 3 × σ̂        (set to 0 if it's negative and the measure can't
 ```
 
 **MR̄** (say "MR-bar") is the average moving range, and **σ̂** (say "sigma-hat") is the estimated standard deviation of the
-short-term noise. The constant 1.128, called d₂, converts the average range of two consecutive points into a standard deviation. 3 ÷ 1.128 ≈ 2.66,
-which is why many references write the limits as mean ± 2.66 × MR̄.
+short-term noise. The constant 1.128, called d₂, converts the average range of two consecutive points into a standard
+deviation. 3 ÷ 1.128 ≈ 2.66, which is why many references write the limits as mean ± 2.66 × MR̄.
 
 **Worked example: Cedar Ridge daily arrivals, 2024 baseline** (EDDaily column E, rows 2–367).
 
@@ -800,7 +801,17 @@ standard errors a month sits from the center line, so anything beyond ±3 is a s
 | What will next month look like? | FORECAST.LINEAR with a seasonal index, or FORECAST.ETS (sections 11–12) |
 | Has something changed, or is this noise? | I-chart for single values, p-chart for rates (sections 13–14) |
 
-### 16. Versions and compatibility
+### 16. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Turn on the Analysis ToolPak | **File → Options → Add-ins**, set **Manage** to *Excel Add-ins*, then **Go…** | **Tools → Excel Add-ins…** |
+| Open the ToolPak tools | **Data → Data Analysis** | **Data → Data Analysis** |
+| Enter a legacy array formula (FREQUENCY or LINEST in Excel 2019 and earlier) | Ctrl + Shift + Enter | ⌘ + Shift + Return |
+| Toggle absolute references (\$) while editing a formula | F4 | ⌘ + T |
+| Undo a Table's automatic calculated-column fill | Ctrl + Z | ⌘ + Z |
+| Add a non-adjacent range to a selection | Ctrl + drag | ⌘ + drag |
+| Build a forecast with a chart | **Data → Forecast Sheet** | Not available (type FORECAST.ETS formulas) |
 
 | Functions or features | Available in |
 |---|---|
@@ -826,12 +837,12 @@ Stays (rows 2–401) holds the 400 sampled inpatient stays: Bluestone Memorial i
 
 | # | Task | Hint |
 |:-:|------|------|
-| 1 | Run Data Analysis → Descriptive Statistics on LOSDays for all 400 stays (tick Summary statistics). What Skewness does the output report? Enter it to 2 decimal places, or use the worksheet function that calculates it. | The ToolPak's Skewness row is the SKEW function |
+| 1 | Run **Data → Data Analysis → Descriptive Statistics** on LOSDays for all 400 stays (tick Summary statistics). What Skewness does the output report? Enter it to 2 decimal places, or use the worksheet function that calculates it. | The ToolPak's Skewness row is the SKEW function |
 | 2 | Build a histogram of LOSDays (all 400 stays) using the bins on the Bins sheet, with the Histogram tool or FREQUENCY. How many stays fall in the bin labeled 6? Enter that one count. | A bin's number is its upper limit. Which LOS values does that bin collect? |
 | 3 | How strongly is a patient's age related to length of stay? Calculate the correlation coefficient between Age and LOSDays for all 400 stays, to 3 decimal places. | CORREL(array1, array2) |
 | 4 | Finance wants to know how much a day of stay adds to the bill. Fit a straight line that predicts TotalCharges from LOSDays (all 400 stays). What is the slope, in dollars per day? Enter it to 2 decimal places. | SLOPE(known_y's, known_x's). The thing you predict goes first |
 | 5 | Using the straight line that predicts LOSDays from Age (all 400 stays), what LOS does it predict for an 80-year-old patient? Enter days to 2 decimal places. | FORECAST.LINEAR(x, known_y's, known_x's), or INTERCEPT + SLOPE × 80 |
-| 6 | Is the age effect from Task 5 real, or could it be chance? Run Regression (Data Analysis) with LOSDays as the Y range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it report for the Age coefficient? Enter it to 4 decimal places. | t Stat = coefficient ÷ its standard error. T.DIST.2T turns t into a two-tailed p-value |
+| 6 | Is the age effect from Task 5 real, or could it be chance? Run **Data → Data Analysis → Regression** with LOSDays as the Y range and Age as the X range, or build the p-value from LINEST as in guide section 7. What p-value does it report for the Age coefficient? Enter it to 4 decimal places. | t Stat = coefficient ÷ its standard error. T.DIST.2T turns t into a two-tailed p-value |
 | 7 | Finance would rather quote a range than a single number. For the TotalCharges-on-LOSDays line from Task 4, what is the lower end of the 95% confidence interval for the slope? It's the "Lower 95%" value the Regression tool reports for LOSDays. Enter dollars per day to 2 decimal places. | slope − t × (standard error of the slope), where t = T.INV.2T(0.05, residual df) |
 | 8 | Do Bluestone Memorial and Cedar Ridge differ in average LOS? Run a two-tailed t-test that does not assume equal variances, comparing Memorial's LOSDays (rows 2–201) with Cedar Ridge's (rows 202–401). Enter the p-value to 3 decimal places. | T.TEST(array1, array2, tails, type). Type 3 = two-sample, unequal variance |
 | 9 | Estimate Ashby Falls' true average door-to-provider time with a 95% confidence interval, using its Q4 2025 visits (EDWaits rows 1158–1383). What is the interval's half-width (the ± margin), in minutes to 2 decimal places? Blank cells are patients who left without being seen. | CONFIDENCE.T(alpha, standard_dev, size). Alpha for 95% is 0.05 |
@@ -848,9 +859,9 @@ runs each sample formula against the data. The same answers are below, collapsed
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
-**1. Run Data Analysis → Descriptive Statistics on LOSDays for all 400 stays (tick Summary…**
+**1. Skewness of LOSDays (Descriptive Statistics)**
 
 - **Answer:** 1.78
 - **Solution:** `=SKEW(Stays!F2:F401)`
@@ -885,7 +896,7 @@ Each extra day of stay goes with about \$6,665.43 more in charges. The line is C
 
 The line is LOS = 3.726 + 0.0173 × Age, so at age 80 it predicts 5.11 days. That's the average LOS the line expects for 80-year-olds, not a forecast for one patient. The typical miss around the line (`STEYX`) is 2.80 days, far more than the 0.52-day difference the line predicts between a 50-year-old and an 80-year-old. `=TREND(Stays!F2:F401,Stays!D2:D401,80)` and `=INTERCEPT(Stays!F2:F401,Stays!D2:D401)+SLOPE(Stays!F2:F401,Stays!D2:D401)*80` give the same result. The older `FORECAST` function does too.
 
-**6. Is the age effect from Task 5 real, or could it be chance? Run Regression (Data…**
+**6. p-value of the Age slope (Regression tool or LINEST)**
 
 - **Answer:** 0.0093
 - **Solution:**
@@ -962,9 +973,9 @@ The trend line is almost flat (slope -0.16 visits a month, R² = 0.0003), so the
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The quality committee wants a p-chart of Bluestone's system-wide 30-day readmission rate by discharge month, January 2024 to December 2025 (Monthly sheet, rows 2–25). For each month, n = IndexStays (inpatient discharges of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of this sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much easier. Put them in empty columns to the right of the Monthly table.
+The quality committee wants a p-chart of Bluestone's system-wide 30-day readmission rate by discharge month, January 2024 to December 2025 (Monthly sheet, rows 2–25). For each month, n = IndexStays (inpatient discharges of patients who didn't die) and the rate = Readmits30 ÷ IndexStays. The center line p̄ = total readmissions ÷ total index stays, and each month gets its own limits: p̄ ± 3 × √(p̄ × (1 − p̄) ÷ n). Your B1 answer lands in cell D6 of the Bonus sheet, so later parts can refer to it. Helper columns for each month's rate, UCL, and LCL make this much easier. Put them in empty columns to the right of the Monthly Table.
 
-Work on the **Bonus** sheet of the workbook.
+Enter your answers on the **Bonus** sheet of the workbook, and build any helper columns on the **Monthly** sheet.
 
 - **B1.** What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal places. *(Hint: Total readmissions ÷ total index stays. Don't average the 24 monthly rates)*
 - **B2.** September 2024 had the fewest index stays (177). What is its upper control limit? Enter it as a percentage to 2 decimal places. *(Hint: p̄ + 3 × SQRT(p̄ × (1 − p̄) / n), with this month's n)*
@@ -975,7 +986,7 @@ Work on the **Bonus** sheet of the workbook.
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. What is the center line p̄ for all 24 months? Enter it as a percentage to 2 decimal…**
 

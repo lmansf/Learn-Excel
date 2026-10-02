@@ -20,7 +20,9 @@ a single formula. This lesson teaches those moves on a patient registration list
 ## 📖 Guide
 
 This guide describes Excel for Microsoft 365, which looks the same as Excel 2021 and 2024 for everything in this lesson.
-Excel 2016 and 2019 differ only where a version note says so. Shortcuts are given for Windows first, then Mac.
+Excel 2016 and 2019 differ only where a version note says so. Shortcuts are given for Windows first, then Mac. In the Mac
+shortcuts, ⌘ is the Command key, and the Control and Option keys are written as words: **Control + G** means hold Control
+and press G. The rest of the course writes Mac shortcuts the same way.
 
 ### 1. A tour of the Excel window
 
@@ -61,7 +63,7 @@ type `N2:N501`, and press **Enter** to select every patient's height. You'll see
 |---|---|---|
 | **Ribbon** | Across the top | Holds the commands, organized into **tabs** (Home, Insert, Data, View…) and, inside each tab, **groups** (Font, Alignment, Editing…). In this course, a path like **View → Freeze Panes** means "click the View tab, then the Freeze Panes button." |
 | **File tab** | Left end of the ribbon | Opens the Backstage view: Save As, Open, Print, Export, and Options. |
-| **Quick Access Toolbar** (QAT) | Above or below the ribbon | A small strip of favorite commands (Save, Undo, Redo) that stays visible whichever tab is open. Click its dropdown arrow to add more. |
+| **Quick Access Toolbar** (QAT) | Above or below the ribbon | A small strip of favorite commands (Save, Undo, Redo) that stays visible whichever tab is open. Click its drop-down arrow to add more. |
 | **Search box** | Title bar | Type what you want to do, such as "freeze", and Excel finds the command. Windows: **Alt + Q** jumps there. |
 | **Name Box** | Left of the formula bar | Shows the address of the active cell. Type an address here and press Enter to jump to it (section 5). |
 | **Formula bar** | Right of the Name Box | Shows what's really stored in the active cell. A cell can *display* something shorter or rounded, but the formula bar shows the true content. |
@@ -81,7 +83,7 @@ type `N2:N501`, and press **Enter** to select every patient's height. You'll see
 > 💡 **Tip:** Need more room for data? Press **Ctrl + F1** (Mac: **⌘ + Option + R**) to collapse the ribbon to just its tab
 > names, and press it again to bring it back. On Windows you can also press and release **Alt** to show **KeyTips**, the small
 > letters on every ribbon command. Typing them in order runs the command without the mouse: **Alt, W, F, F** is
-> View → Freeze Panes → Freeze Panes. Excel for Mac doesn't have KeyTips.
+> **View → Freeze Panes → Freeze Panes**. Excel for Mac doesn't have KeyTips.
 
 ### 2. Workbooks, worksheets, cells, and ranges
 
@@ -437,6 +439,36 @@ Here's how the pieces fit together on the Patients sheet, without a single formu
 
 That last step matters as much as the shortcuts. **Always ask whether a number is plausible** before you pass it on.
 
+### 12. Shortcuts and version notes
+
+| Action | Windows | Mac |
+|---|---|---|
+| Jump to the edge of the data | Ctrl + arrow | ⌘ + arrow |
+| Select to the edge of the data | Ctrl + Shift + arrow | ⌘ + Shift + arrow |
+| Go to A1 | Ctrl + Home | Control + Home, or Control + Fn + ← |
+| Go to the last used cell | Ctrl + End | Control + End, or Control + Fn + → |
+| Select the column / row | Ctrl + Space / Shift + Space | Control + Space / Shift + Space |
+| Select the data block, then the whole sheet | Ctrl + A | ⌘ + A |
+| Next / previous sheet | Ctrl + Page Down / Ctrl + Page Up | Option + → / Option + ← |
+| Scroll back to the active cell | Ctrl + Backspace | Control + Delete |
+| Go To | F5 or Ctrl + G | Control + G |
+| Find / Find Next after closing the dialog | Ctrl + F / Shift + F4 | Control + F / ⌘ + G |
+| Hide / unhide rows | Ctrl + 9 / Ctrl + Shift + 9 | Control + 9 / Control + Shift + 9 |
+| Hide / unhide columns | Ctrl + 0 / Ctrl + Shift + 0 (or right-click → **Unhide**) | Control + 0 / Control + Shift + 0 |
+| Select visible cells only | Alt + ; | ⌘ + Shift + Z |
+| Collapse or expand the ribbon | Ctrl + F1 | ⌘ + Option + R |
+| Freeze Panes | Alt, W, F, F | **View → Freeze Panes** |
+
+| Feature | Version |
+|---|---|
+| 1,048,576 rows × 16,384 columns (A to XFD) | `.xlsx` files in Excel 2007 and later. An `.xls` file in Compatibility Mode has 65,536 rows × 256 columns |
+| Find All on a Mac | Excel for Mac 16.60 (April 2022) and later |
+| KeyTips (Alt, W, F, F) | Excel for Windows only |
+| Quick Access Toolbar hidden by default | Recent Microsoft 365 updates for Windows. Right-click the ribbon → **Show Quick Access Toolbar** |
+| Click a status bar value to copy it | Microsoft 365 (version 2206 or later) and Excel 2024, on Windows |
+| Unhide several sheets at once | Microsoft 365 (Windows 16.0.13525 or later, Mac 16.45 or later) and Excel for the web |
+| Settings on a Mac | **Excel → Settings**, called **Excel → Preferences** in older versions |
+
 ## 🧪 Hands-on practice
 
 Download [`1.1-excel-interface-navigation.xlsx`](1.1-excel-interface-navigation.xlsx) and open the **Practice** sheet. Each
@@ -444,22 +476,22 @@ answer is something you read off the screen, so type the value itself (a name, a
 yellow cell and press **Enter**. The **Check** column turns green when you're right.
 
 <!-- BEGIN GENERATED: practice -->
-Every task uses the Patients sheet (500 patients, rows 2–501) unless it says otherwise. No formulas needed: navigate, look, and type what you find. Mac users: for Ctrl+arrow shortcuts such as Ctrl+↓ and Ctrl+Shift+↓, press ⌘ instead of Ctrl.
+Every task uses the Patients sheet (500 patients, rows 2–501) unless it says otherwise. No formulas needed: navigate, look, and type what you find. Mac users: for Ctrl + arrow shortcuts such as Ctrl + ↓ and Ctrl + Shift + ↓, press ⌘ instead of Ctrl.
 
 | # | Task | Hint |
 |:-:|------|------|
 | 1 | On the Patients sheet, click in the Name Box (the box at the left end of the formula bar), type C347, and press Enter. What last name is in that cell? | The Name Box jumps to any address you type |
-| 2 | What is the address of the bottom-right cell of the patient data? From A1, press Ctrl+↓ to find the last row, go back with Ctrl+↑, then press Ctrl+→ to find the last column. Type the address as column letter + row number (like B12). | Column letter from Ctrl+→, row number from Ctrl+↓. Ctrl+End confirms |
-| 3 | Use the Name Box to go to cell A600, which is in an empty row below the data, then press Ctrl+→. Excel races across the empty row to the very last column of the worksheet. What is the address of the cell you land on? | A worksheet has 16,384 columns |
-| 4 | Click M1 (the PCPProviderID header) and press Ctrl+↓ once. On which row number does Excel stop? | Ctrl+arrow stops at the edge of a block of filled cells |
+| 2 | What is the address of the bottom-right cell of the patient data? From A1, press Ctrl + ↓ to find the last row, go back with Ctrl + ↑, then press Ctrl + → to find the last column. Type the address as column letter + row number (like B12). | Column letter from Ctrl + →, row number from Ctrl + ↓. Ctrl + End confirms |
+| 3 | Use the Name Box to go to cell A600, which is in an empty row below the data, then press Ctrl + →. Excel races across the empty row to the very last column of the worksheet. What is the address of the cell you land on? | A worksheet has 16,384 columns |
+| 4 | Click M1 (the PCPProviderID header) and press Ctrl + ↓ once. On which row number does Excel stop? | Ctrl + arrow stops at the edge of a block of filled cells |
 | 5 | Select the Email data cells J2:J501: type J2:J501 in the Name Box and press Enter. How many patients have an email address on file? Read Count on the status bar. | Count = cells that aren't empty |
-| 6 | Select the WeightLb values O2:O501 with Go To: press F5 or Ctrl+G (Mac: Control+G), type O2:O501, and press Enter. What is the average weight in pounds? Round to 1 decimal place. | Average is on the status bar by default |
-| 7 | Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first DOB) and press Ctrl+Shift+↓ to select every date of birth. What is the date of birth of the oldest patient? Type it as month/day/year, the way the status bar shows it. (If your computer uses day/month dates, type the month as a word instead, such as 15 Mar 1950.) | The oldest patient has the earliest date, so look at Minimum |
-| 8 | How many patients live in Millbrook? On the Patients sheet, click a single cell such as A1 so Find searches the whole sheet. Then press Ctrl+F (Mac: Control+F), type Millbrook, click Find All, and read the count at the bottom of the dialog. | Find All shows '… cell(s) found' |
-| 9 | Column I is hidden (the column letters jump from H to J). Unhide it, then click cell A1 and use Ctrl+F (Mac: Control+F) to find patient PT12376. What is that patient's phone number? | Select the columns on both sides of the gap, right-click → Unhide |
-| 10 | Patient PT13312 has a PrimaryPayerID in column L. The payer names are on the Payers sheet, which is hidden. Unhide it (right-click any sheet tab → Unhide…) and type the name of this patient's payer. | Right-click a sheet tab → Unhide… |
-| 11 | How many worksheets does this workbook contain in total, hidden ones included? Count the tabs you can see, then right-click a tab → Unhide… to see what's still hidden. Look, but don't unhide the answer keys yet! | Visible tabs + the names listed in the Unhide dialog |
-| 12 | You want row 1 (the headers) and columns A:B (PatientID and MRN) to stay on screen while you scroll. Which cell must you select before choosing View → Freeze Panes → Freeze Panes? Type its address. | Excel freezes everything above and to the left of the selected cell |
+| 6 | Select the WeightLb values O2:O501 with Go To: press F5 or Ctrl + G (Mac: Control + G), type O2:O501, and press Enter. What is the average weight in pounds? Round to 1 decimal place. | Average is on the status bar by default |
+| 7 | Turn on Minimum in the status bar: right-click the status bar and tick Minimum. Then click cell F2 (the first DOB) and press Ctrl + Shift + ↓ to select every date of birth. What is the date of birth of the oldest patient? Type it as month/day/year, the way the status bar shows it. (If your computer uses day/month dates, type the month as a word instead, such as 15 Mar 1950.) | The oldest patient has the earliest date, so look at Minimum |
+| 8 | How many patients live in Millbrook? On the Patients sheet, click a single cell such as A1 so Find searches the whole sheet. Then press Ctrl + F (Mac: Control + F), type Millbrook, click Find All, and read the count at the bottom of the dialog. | Find All shows '… cell(s) found' |
+| 9 | Column I is hidden (the column letters jump from H to J). Unhide it, then click cell A1 and use Ctrl + F (Mac: Control + F) to find patient PT12376. What is that patient's phone number? | Select the columns on both sides of the gap, right-click → **Unhide** |
+| 10 | Patient PT13312 has a PrimaryPayerID in column L. The payer names are on the Payers sheet, which is hidden. Unhide it (right-click any sheet tab → **Unhide…**) and type the name of this patient's payer. | Right-click a sheet tab → **Unhide…** |
+| 11 | How many worksheets does this workbook contain in total, hidden ones included? Count the tabs you can see, then right-click a tab → **Unhide…** to see what's still hidden. Look, but don't unhide the answer keys yet! | Visible tabs + the names listed in the Unhide dialog |
+| 12 | You want row 1 (the headers) and columns A:B (PatientID and MRN) to stay on screen while you scroll. Which cell must you select before choosing **View → Freeze Panes → Freeze Panes**? Type its address. | Excel freezes everything above and to the left of the selected cell |
 <!-- END GENERATED: practice -->
 
 ## ✅ Answer key
@@ -470,7 +502,7 @@ from the data. The same answers are below, collapsed so you don't see them by ac
 
 <!-- BEGIN GENERATED: answers -->
 <details>
-<summary><b>🔑 Show the answer key</b> — Try every task before opening this.</summary>
+<summary><b>🔑 Show the answer key</b> (try every task before you open this)</summary>
 
 **1. Name Box jump to C347**
 
@@ -488,12 +520,12 @@ The Name Box always shows the address of the active cell, and it works in revers
 - **Answer:** Q501
 - **Solution:**
 
-1. Click A1 and press Ctrl+↓: the active cell becomes A501.
-2. Press Ctrl+↑ to return to A1, then Ctrl+→: the active cell becomes Q1.
-3. Combine them: Q501. Press Ctrl+End (Mac: Control+End, or Control+Fn+→) to confirm. It jumps straight there.
+1. Click A1 and press Ctrl + ↓: the active cell becomes A501.
+2. Press Ctrl + ↑ to return to A1, then Ctrl + →: the active cell becomes Q1.
+3. Combine them: Q501. Press Ctrl + End (Mac: Control + End, or Control + Fn + →) to confirm. It jumps straight there.
 
 
-Ctrl+arrow jumps to the edge of the block of filled cells. Column A and row 1 have no gaps, so the jumps land on the true last row (501: 500 patients plus the header row) and the true last column (Q). Ctrl+End goes straight to the last used cell, Q501. The hidden column I doesn't change the answer, because hiding a column doesn't remove it.
+Ctrl + arrow jumps to the edge of the block of filled cells. Column A and row 1 have no gaps, so the jumps land on the true last row (501: 500 patients plus the header row) and the true last column (Q). Ctrl + End goes straight to the last used cell, Q501. The hidden column I doesn't change the answer, because hiding a column doesn't remove it.
 
 **3. The last column of a worksheet**
 
@@ -501,22 +533,22 @@ Ctrl+arrow jumps to the edge of the block of filled cells. Column A and row 1 ha
 - **Solution:**
 
 1. Type A600 in the Name Box and press Enter.
-2. Press Ctrl+→. The Name Box shows XFD600.
-3. Press Ctrl+← to come back to column A.
+2. Press Ctrl + →. The Name Box shows XFD600.
+3. Press Ctrl + ← to come back to column A.
 
 
-When the row is empty, Ctrl+→ has no data to stop at, so it goes to the edge of the sheet: column XFD, the 16,384th column. Ctrl+↓ in an empty column goes to row 1,048,576. Every modern worksheet has exactly 1,048,576 rows × 16,384 columns.
+When the row is empty, Ctrl + → has no data to stop at, so it goes to the edge of the sheet: column XFD, the 16,384th column. Ctrl + ↓ in an empty column goes to row 1,048,576. Every modern worksheet has exactly 1,048,576 rows × 16,384 columns.
 
-**4. Ctrl+↓ stops at a gap**
+**4. Ctrl + ↓ stops at a gap**
 
 - **Answer:** 34
 - **Solution:**
 
 1. Click M1 (or type M1 in the Name Box).
-2. Press Ctrl+↓. The Name Box shows M34.
+2. Press Ctrl + ↓. The Name Box shows M34.
 
 
-M35 is empty because that patient has no primary care provider on file. Ctrl+↓ stops at the last filled cell before the gap, M34, even though the data continues to row 501. Never assume Ctrl+↓ found the bottom of a column with blanks. Check the row number, or press Ctrl+↓ again to keep jumping.
+M35 is empty because that patient has no primary care provider on file. Ctrl + ↓ stops at the last filled cell before the gap, M34, even though the data continues to row 501. Never assume Ctrl + ↓ found the bottom of a column with blanks. Check the row number, or press Ctrl + ↓ again to keep jumping.
 
 **5. Status bar Count (patients with an email)**
 
@@ -527,14 +559,14 @@ M35 is empty because that patient has no primary care provider on file. Ctrl+↓
 2. Read Count on the status bar.
 
 
-The status bar's Count counts every non-empty cell, text included, so it counts the email addresses and skips the blanks. Typing the range in the Name Box selects exactly 500 cells. Ctrl+Shift+↓ from J2 would be a trap, because the Email column has gaps: it would select only J2:J3. In a Table you can also click any Email cell and press Ctrl+Space (Mac: Control+Space) to select just that column's data.
+The status bar's Count counts every non-empty cell, text included, so it counts the email addresses and skips the blanks. Typing the range in the Name Box selects exactly 500 cells. Ctrl + Shift + ↓ from J2 would be a trap, because the Email column has gaps: it would select only J2:J3. In a Table you can also click any Email cell and press Ctrl + Space (Mac: Control + Space) to select just that column's data.
 
 **6. Status bar Average (weight, lb)**
 
 - **Answer:** 167.8
 - **Solution:**
 
-1. Press F5 (or Ctrl+G), type O2:O501 in Reference, press Enter.
+1. Press F5 (or Ctrl + G), type O2:O501 in Reference, press Enter.
 2. Read Average on the status bar and round it to 1 decimal place.
 
 
@@ -546,11 +578,11 @@ Go To selects any range you type, however large. The status bar's Average is 167
 - **Solution:**
 
 1. Right-click the status bar and tick Minimum (and Maximum while you're there).
-2. Click cell F2 and press Ctrl+Shift+↓ to select F2:F501.
+2. Click cell F2 and press Ctrl + Shift + ↓ to select F2:F501.
 3. Read Minimum on the status bar.
 
 
-Excel stores dates as numbers that grow by 1 each day, so the earliest date is the smallest number and Minimum finds it. The status bar shows it as a date because the cells are formatted as dates. (If you see a plain number such as 9534 instead, that's the date's serial number, and the check accepts it.) Ctrl+Shift+↓ is safe here because the DOB column has no blanks.
+Excel stores dates as numbers that grow by 1 each day, so the earliest date is the smallest number and Minimum finds it. The status bar shows it as a date because the cells are formatted as dates. (If you see a plain number such as 9534 instead, that's the date's serial number, and the check accepts it.) Ctrl + Shift + ↓ is safe here because the DOB column has no blanks.
 
 **8. Find All: patients in Millbrook**
 
@@ -558,7 +590,7 @@ Excel stores dates as numbers that grow by 1 each day, so the earliest date is t
 - **Solution:**
 
 1. Click A1 (one cell, so Find searches the whole sheet).
-2. Press Ctrl+F, type Millbrook, and click Find All.
+2. Press Ctrl + F, type Millbrook, and click Find All.
 3. Read '… cell(s) found' at the bottom of the dialog.
 
 
@@ -569,8 +601,8 @@ Find All lists every matching cell on the sheet and counts them. That's a count 
 - **Answer:** (555) 740-8462
 - **Solution:**
 
-1. Click the H column header, Shift+click the J header, then right-click → Unhide.
-2. Click A1, press Ctrl+F, type PT12376, click Find Next, then close the dialog.
+1. Click the H column header, Shift + click the J header, then right-click → **Unhide**.
+2. Click A1, press Ctrl + F, type PT12376, click Find Next, then close the dialog.
 3. Read column I on row 298.
 
 
@@ -581,8 +613,8 @@ You can't click a hidden column, so you select the columns on both sides of it (
 - **Answer:** Summit Choice PPO
 - **Solution:**
 
-1. On the Patients sheet, click A1, press Ctrl+F, and find PT13312: row 415, payer ID PY06.
-2. Right-click any sheet tab → Unhide… → Payers → OK.
+1. On the Patients sheet, click A1, press Ctrl + F, and find PT13312: row 415, payer ID PY06.
+2. Right-click any sheet tab → **Unhide…**, pick Payers, and click OK.
 3. On the Payers sheet, PY06 is Summit Choice PPO.
 
 
@@ -594,7 +626,7 @@ Hidden sheets don't show a tab, so the only clue is the Unhide… command becomi
 - **Solution:**
 
 1. Count the visible tabs: Start Here, Practice, Patients, Payers (now unhidden), Bonus.
-2. Right-click a tab → Unhide…: the list shows Answer Key and Bonus Key. Click Cancel.
+2. Right-click a tab → **Unhide…**: the list shows Answer Key and Bonus Key. Click Cancel.
 3. 5 + 2 = 7.
 
 
@@ -606,8 +638,8 @@ A workbook is the file, and each worksheet is one tab inside it. This file has 7
 - **Solution:**
 
 1. Click C2.
-2. View → Freeze Panes → Freeze Panes.
-3. Scroll down and right: row 1 and columns A:B stay put. (View → Freeze Panes → Unfreeze Panes undoes it.)
+2. Choose **View → Freeze Panes → Freeze Panes**.
+3. Scroll down and right: row 1 and columns A:B stay put. (**View → Freeze Panes → Unfreeze Panes** undoes it.)
 
 
 Freeze Panes freezes the rows above the active cell and the columns to its left. To keep 1 row and 2 columns, select the cell just below row 1 and just right of column B: C2. Selecting B2 would keep row 1 but only column A, and A2 would freeze only row 1, which is the same as Freeze Top Row.
@@ -618,19 +650,19 @@ Freeze Panes freezes the rows above the active cell and the columns to its left.
 ## 🏆 Bonus challenge
 
 <!-- BEGIN GENERATED: bonus -->
-The population-health team is starting a blood-pressure outreach program and will build its mailing list from this patient index. Before the letters go out, the data steward asks you to check four facts. Set up the Patients sheet first: if you froze panes earlier, choose View → Freeze Panes → Unfreeze Panes. Then press Ctrl+Home (Mac: Control+Home), click B2, and choose View → Freeze Panes → Freeze Panes so the headers and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look everything up on the Patients sheet and type your answers on the Bonus sheet, without a single formula.
+The population-health team is starting a blood-pressure outreach program and will build its mailing list from this patient index. Before the letters go out, the data steward asks you to check four facts. Set up the Patients sheet first: if you froze panes earlier, choose **View → Freeze Panes → Unfreeze Panes**. Then press Ctrl + Home (Mac: Control + Home), click B2, and choose **View → Freeze Panes → Freeze Panes** so the headers and the PatientID column stay in view. Also turn on Minimum and Maximum in the status bar. You'll look everything up on the Patients sheet and type your answers on the Bonus sheet, without a single formula.
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Each outreach letter is signed by the patient's primary care provider (PCP), and a blank PCPProviderID means no PCP is on file. Use Go To (F5 or Ctrl+G, Mac: Control+G) to select M2:M501. How many of the 500 patients have no PCP? *(Hint: The status bar counts filled cells, but you want the empty ones)*
-- **B2.** The program targets every patient with hypertension, coded HTN. Click a single cell such as A1, so Find searches the whole sheet rather than the column you just selected. Press Ctrl+F (Mac: Control+F), click Options >> and make sure Match entire cell contents is OFF, then Find All for HTN. How many patients have HTN anywhere in their ChronicConditions list? *(Hint: Partial matches count: 'HTN;DM' contains HTN)*
+- **B1.** Each outreach letter is signed by the patient's primary care provider (PCP), and a blank PCPProviderID means no PCP is on file. Use Go To (F5 or Ctrl + G, Mac: Control + G) to select M2:M501. How many of the 500 patients have no PCP? *(Hint: The status bar counts filled cells, but you want the empty ones)*
+- **B2.** The program targets every patient with hypertension, coded HTN. Click a single cell such as A1, so Find searches the whole sheet rather than the column you just selected. Press Ctrl + F (Mac: Control + F), click Options >> and make sure Match entire cell contents is OFF, then Find All for HTN. How many patients have HTN anywhere in their ChronicConditions list? *(Hint: Partial matches count: 'HTN;DM' contains HTN)*
 - **B3.** Patients whose only condition is hypertension will get a shorter letter. Turn ON Match entire cell contents and Find All for HTN again. How many patients have hypertension as their ONLY recorded chronic condition? *(Hint: Match entire cell contents finds cells that are exactly HTN)*
-- **B4.** Finally, the steward wants to confirm that the largest weight on file is real and not a typo. Which patient is the heaviest? Select O2:O501, read Maximum on the status bar, then use Find to locate that weight and read the PatientID in the frozen column A. Type the PatientID. *(Hint: Status bar Maximum, then Ctrl+F for that number)*
+- **B4.** Finally, the steward wants to confirm that the largest weight on file is real and not a typo. Which patient is the heaviest? Select O2:O501, read Maximum on the status bar, then use Find to locate that weight and read the PatientID in the frozen column A. Type the PatientID. *(Hint: Status bar Maximum, then Ctrl + F for that number)*
 <!-- END GENERATED: bonus -->
 
 <!-- BEGIN GENERATED: bonus-answers -->
 <details>
-<summary><b>🔑 Show the bonus solution</b> — Give it a real try first!</summary>
+<summary><b>🔑 Show the bonus solution</b> (give it a real try first)</summary>
 
 **B1. Patients with no PCP on file**
 
@@ -649,7 +681,7 @@ Count only counts non-empty cells, so it tells you how many patients do have a P
 - **Answer:** 144
 - **Solution:**
 
-1. Click A1, then Ctrl+F → Options >> → untick Match entire cell contents.
+1. Click A1, press Ctrl + F, click **Options >>**, and untick Match entire cell contents.
 2. Type HTN and click Find All.
 3. Read the count at the bottom of the dialog.
 
@@ -674,7 +706,7 @@ With Match entire cell contents on, a cell must equal HTN exactly, so HTN;DM no 
 - **Solution:**
 
 1. Select O2:O501 (Name Box or Go To) and read Maximum: 319.2.
-2. With the weights still selected, press Ctrl+F → Find what: 319.2 → Find Next. (Match entire cell contents can be on or off here, because no other cell on the sheet contains 319.2.)
+2. With the weights still selected, press Ctrl + F, type 319.2 in Find what, and click Find Next. (Match entire cell contents can be on or off here, because no other cell on the sheet contains 319.2.)
 3. Excel selects O474. The frozen column A shows PT13784.
 
 
