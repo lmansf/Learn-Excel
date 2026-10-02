@@ -522,12 +522,12 @@ The tasks use the Inventory sheet: supply stock in 15 storerooms across three Bl
 | 3 | Fill the yellow ExtendedValue column (column R) with a calculated column: each row's QtyOnHand × UnitCost. Type the formula once in R2 and press Enter, and the Table fills every row. The gray cell totals the column: what's the value of all stock on hand across the system? | Click the QtyOnHand cell in the same row while you type, and Excel writes [@QtyOnHand] |
 | 4 | What share of the system's total inventory value (ExtendedValue) is Orthopedic Implants stock? Divide the category's value by the total of all rows and enter it as a percentage, to 1 decimal place. | SUMIFS(…)/SUM(…), both with structured references |
 | 5 | Fill the yellow NeedsReorder column (column S) with a calculated column that returns TRUE when QtyOnHand is at or below ReorderPoint, and FALSE otherwise. The gray cell counts the TRUE rows: how many stock rows need reordering? | A comparison already returns TRUE or FALSE, so you don't need IF |
-| 6 | Turn on the Table's Total Row and set the LeadTimeDays total to Average. Then, in the yellow cell, type = and click that Total Row cell, so Excel writes a [#Totals] reference. What's the average vendor lead time in days, to 2 decimal places? | Table Design → Total Row (Windows: Ctrl + Shift + T), then use the dropdown in the Total Row cell |
+| 6 | Turn on the Table's Total Row and set the LeadTimeDays total to Average. Then, in the yellow cell, type = and click that Total Row cell, so Excel writes a [#Totals] reference. What's the average vendor lead time in days, to 2 decimal places? | Table Design → Total Row (Windows: Ctrl + Shift + T; Mac: Table → Total Row), then use the dropdown in the Total Row cell |
 | 7 | With the Total Row still on, what does =ROWS(tblInventory[#All]) return? Predict it first, then type the formula to check. | #All is everything: which rows does it include that tblInventory[QtyOnHand] doesn't? |
-| 8 | Insert slicers for Facility and Category (Table Design → Insert Slicer). Select Cedar Ridge Medical Center in the Facility slicer and Surgical in the Category slicer. Set the Total Row's ExtendedValue cell to Sum. What value does it show? Type the number, then clear both slicers, because while they filter the Table the Total Row (and task 6) only summarizes the visible rows. | Slicers filter the Table, and SUBTOTAL ignores rows the filter hides |
+| 8 | Insert slicers for Facility and Category (Table Design → Insert Slicer; Mac: Table → Insert Slicer). Select Cedar Ridge Medical Center in the Facility slicer and Surgical in the Category slicer. Set the Total Row's ExtendedValue cell to Sum. What value does it show? Type the number, then clear both slicers, because while they filter the Table the Total Row (and task 6) only summarizes the visible rows. | Slicers filter the Table, and SUBTOTAL ignores rows the filter hides |
 | 9 | On the Settings sheet, select A2:B3 and use Formulas → Create from Selection (tick only Left column) to name cell B2 ReportDate and cell B3 ExpiringWindowDays. The gray cell looks up both names and adds them: what date does it show? | The labels in column A become the names of the cells beside them |
 | 10 | How many stock rows expire inside the expiry window? Count rows whose ExpirationDate is later than ReportDate and no later than ReportDate + ExpiringWindowDays. Use the two names in a COUNTIFS (rows with no ExpirationDate don't count). | Join an operator to a name the way you join it to a cell: ">"&ReportDate |
-| 11 | Expired stock must be pulled from the shelves and written off. What's the total ExtendedValue of rows whose ExpirationDate is before ReportDate? | SUMIFS with a "<"&ReportDate criterion |
+| 11 | Expired stock must be pulled from the shelves and written off. What's the total ExtendedValue of rows whose ExpirationDate is before ReportDate? Enter it to the cent. | SUMIFS with a "<"&ReportDate criterion |
 | 12 | Policy says every stock row must be cycle-counted at least every 30 days. Create a named constant CycleCountDays that refers to =30 with Formulas → Define Name. It doesn't live in any cell. How many rows are overdue, meaning ReportDate − LastCountDate is greater than CycleCountDays? | Rearrange: overdue means LastCountDate < ReportDate − CycleCountDays |
 <!-- END GENERATED: practice -->
 
@@ -599,7 +599,7 @@ The Total Row's dropdown writes `=SUBTOTAL(101,[LeadTimeDays])`. Function number
 - **Answer:** 259
 - **Solution:** `=ROWS(tblInventory[#All])`
 
-`[#All]` covers the header row, the 257 data rows, and the Total Row: 1 + 257 + 1 = 259. `tblInventory[#Data]` (or just `tblInventory`) is the 257 data rows, `[#Headers]` is the header row alone, and `[#Totals]` is the Total Row alone.
+ROWS counts the rows a reference covers. `[#All]` covers the header row, the 257 data rows, and the Total Row: 1 + 257 + 1 = 259. `tblInventory[#Data]` (or just `tblInventory`) is the 257 data rows, `[#Headers]` is the header row alone, and `[#Totals]` is the Total Row alone.
 
 **8. Slicers: Surgical stock at Cedar Ridge Medical Center**
 
@@ -664,9 +664,9 @@ Every Monday, Bluestone's purchasing team turns the inventory snapshot into purc
 
 Work on the **Bonus** sheet of the workbook.
 
-- **B1.** Add a new column to tblInventory by typing OrderCost in cell T1, just right of the NeedsReorder header. The Table expands to include it. Make it a calculated column that returns ReorderQty × UnitCost for rows where NeedsReorder is TRUE, and 0 for every other row. The gray cell totals the column: what's the total cost of this week's orders? *(Hint: IF can test a TRUE/FALSE column directly: IF([@NeedsReorder], …, 0))*
+- **B1.** Add a new column to tblInventory by typing OrderCost in cell T1, just right of the NeedsReorder header. The Table expands to include it. Make it a calculated column that returns ReorderQty × UnitCost for rows where NeedsReorder is TRUE, and 0 for every other row. The gray cell totals the column: what's the total cost of this week's orders? *(Hint: IF's test can be the TRUE/FALSE value in [@NeedsReorder] itself, with no comparison needed)*
 - **B2.** On the Vendors sheet, convert the vendor list to a Table named tblVendors. Fill its yellow ReorderCost column with a calculated column that adds up tblInventory[OrderCost] for that row's vendor. Which vendor gets the largest purchase order? (Type the vendor's name, or return it with a formula.) *(Hint: In tblVendors, SUMIFS can add up another Table's column, with [@Vendor] as the criterion)*
-- **B3.** What's the value of that vendor's purchase order? *(Hint: The largest value in tblVendors[ReorderCost])*
+- **B3.** What's the value of that vendor's purchase order, to the cent? *(Hint: The largest value in tblVendors[ReorderCost])*
 - **B4.** The group purchasing contract gives a 2% discount on any single vendor order of $20,000 or more. Define two named constants, DiscountMin (=20000) and DiscountPct (=0.02), then calculate the total discount on this week's orders, to the cent. *(Hint: SUMIFS can use the same column as the sum range and the criteria range)*
 <!-- END GENERATED: bonus -->
 
@@ -688,19 +688,19 @@ Typing in the first empty column next to a Table adds a column to it (Excel's *A
 
 The calculated column in tblVendors is `=SUMIFS(tblInventory[OrderCost],tblInventory[Vendor],[@Vendor])`. It mixes whole columns from *another* Table with `[@Vendor]` from this row, which is how Tables talk to each other. INDEX/MATCH (Lesson 2.6) then returns the vendor on the row with the largest total. `=XLOOKUP(MAX(tblVendors[ReorderCost]),tblVendors[ReorderCost],tblVendors[Vendor])` works too in Excel 2021 or Microsoft 365. All four reorder lines for Summit Orthopedic Systems are orthopedic implants, and three of them cost more than $2,000 per unit, so a handful of lines makes the largest order.
 
-**B3. What's the value of that vendor's purchase order?**
+**B3. What's the value of that vendor's purchase order, to the cent?**
 
 - **Answer:** 62,855.33
 - **Solution:** `=MAX(tblVendors[ReorderCost])`
 
-That's 36% of the week's spend on a single purchase order. In practice, a buyer would confirm implant orders with the OR schedule before sending them.
+MAX scans the ReorderCost column of tblVendors, so it returns the largest vendor total, the same row that INDEX/MATCH found in B2. That's 36% of the week's spend on a single purchase order. In practice, a buyer would confirm implant orders with the OR schedule before sending them.
 
 **B4. The group purchasing contract gives a 2% discount on any single vendor order of…**
 
 - **Answer:** 2,431.66
 - **Solution:** `=SUMIFS(tblVendors[ReorderCost],tblVendors[ReorderCost],">="&DiscountMin)*DiscountPct`
 
-Orders from 3 vendors reach $20,000. Together they total $121,583.18, and 2% of that is the discount. With the thresholds in named constants, Purchasing can test a new contract (say 3% at $15,000) by editing two names in Name Manager, and every formula that uses them updates.
+The criteria range and the sum range are the same column, so SUMIFS adds only the vendor totals that pass the test against DiscountMin. Orders from 3 vendors reach $20,000. Together they total $121,583.18, and 2% of that is the discount. With the thresholds in named constants, Purchasing can test a new contract (say 3% at $15,000) by editing two names in Name Manager, and every formula that uses them updates.
 
 </details>
 <!-- END GENERATED: bonus-answers -->

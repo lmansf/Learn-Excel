@@ -84,7 +84,7 @@ def build() -> Lesson:
          "Notes": "Perishable stock expiring within this many days after ReportDate gets flagged for use-first."},
     ]
     st = L.add_table_sheet("Settings", settings_rows, columns=["Setting", "Value", "Notes"], as_table=False,
-                           widths={"Setting": 22, "Value": 13, "Notes": 70})
+                           widths={"Setting": 22, "Value": 13, "Notes": 96})
     vendor_names = sorted({r["Vendor"] for r in inv})
     vendors = [{"Vendor": v, "AccountNo": f"BHS-V{1001 + i}"} for i, v in enumerate(vendor_names)]
     vd = L.add_table_sheet("Vendors", vendors, columns=["Vendor", "AccountNo"], as_table=False,
@@ -350,7 +350,7 @@ def build() -> Lesson:
              fill={"range": f"Inventory!{oc_letter}{first}:{oc_letter}{last}",
                    "formula": "=IF([@NeedsReorder],[@ReorderQty]*[@UnitCost],0)"},
              live=f"=SUMPRODUCT(({qty}<={rp})*{a1('ReorderQty')}*{cost})", table=TBL,
-             hint="IF can test a TRUE/FALSE column directly, with no comparison such as =TRUE",
+             hint="IF's test can be the TRUE/FALSE value in [@NeedsReorder] itself, with no comparison needed",
              explanation=f"Typing in the first empty column next to a Table adds a column to it (Excel's "
                          f"*AutoExpansion*). `IF([@NeedsReorder],…)` reuses the calculated column you built in task 5 "
                          f"instead of repeating the comparison. The {needs_reorder} rows that need an order return their "
@@ -398,12 +398,15 @@ def build() -> Lesson:
             for c in row:
                 c.alignment = Alignment(vertical="top", wrap_text=c.column == 3)
         ws[f"B{st.first_row + 1}"].number_format = "0"
-        note_row = st.last_row + 2
-        ws.cell(row=note_row, column=1,
-                value="Task 9 names B2 and B3 from the labels in column A. Task 12 and the bonus add named "
-                      "constants (CycleCountDays, DiscountMin, DiscountPct) with Formulas → Define Name. Named "
-                      "constants don't live in cells.")
-        ws.cell(row=note_row, column=1).font = Font(italic=True, color="595959")
+        # Short lines so the notes stay on screen (one long line ran far past column C).
+        notes = [
+            "Task 9 names B2 and B3 after the labels in column A (Formulas → Create from Selection).",
+            "Task 12 and the bonus add named constants (CycleCountDays, DiscountMin, DiscountPct) with Formulas → Define Name.",
+            "Named constants live only in Name Manager, so you won't see them on this sheet.",
+        ]
+        for i, text in enumerate(notes):
+            c = ws.cell(row=st.last_row + 2 + i, column=1, value=text)
+            c.font = Font(italic=True, color="595959")
         vws = wb["Vendors"]
         vnote = vd.last_row + 2
         vws.cell(row=vnote, column=1, value="Bonus: convert this list to a Table named tblVendors, then fill ReorderCost "

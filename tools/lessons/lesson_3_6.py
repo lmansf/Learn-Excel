@@ -509,9 +509,9 @@ def build() -> Lesson:
                     f"(B{R['vpd']}), and fills every intersection. If you swap the two input cells, the table still fills "
                     f"without any warning, but with wrong numbers. So check one cell by hand. The base case is {VISITS_PER_DAY} "
                     f"visits at ${rate['Commercial']} ({money(base['oi'])}), so the cell at {VISITS_PER_DAY} visits and $140 should "
-                    f"be about {money(base['oi'] - dt2[(VISITS_PER_DAY, 140)])} lower: $2 less on each of the "
-                    f"{s_c:.1%} of visits that are commercial, after the {BILLING_FEE:.0%} fee. With swapped input cells that "
-                    "cell would show 140 visits a day at $200, a far bigger loss.")
+                    f"be about {money(base['oi'] - dt2[(VISITS_PER_DAY, 140)])} lower, because the clinic's "
+                    f"{s_c * base['vpm']:,.0f} commercial visits a month each pay $2 less, minus the {BILLING_FEE:.0%} fee on "
+                    "those dollars. With swapped input cells that cell would show 140 visits a day at $200, a far bigger loss.")
     t_dtcount = Task(
         f"How many of the 45 combinations in your two-variable table (G{DT2_FIRST}:K{DT2_LAST}) are profitable (operating "
         "income above 0)? Use a formula.",
